@@ -1,0 +1,134 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+:root {
+  /* Background Colors */
+  --bg-primary: #07090F;
+  --bg-secondary: #0E1220;
+  --bg-card: #13182A;
+
+  /* Accent Colors */
+  --accent-orange: #E8963A;
+  --accent-orange-light: #F2AA5E;
+  --accent-blue: #3A6FE8;
+  --accent-gold: #C9A84C;
+
+  /* Text Colors */
+  --text-primary: #F5F5F0;
+  --text-secondary: #9DA3B4;
+  --text-muted: #5C6378;
+
+  /* Border Colors */
+  --border-subtle: #1E2538;
+  --border-glow: rgba(232, 150, 58, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    line-height: 1.6;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent-orange);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-orange-light);
+  }
+}
+
+/* Infinite scroll animation for media logos marquee */
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 30s linear infinite;
+}
+
+.animate-infinite-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Shimmer animation for Black tier card hover */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.shimmer-on-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 168, 76, 0.15),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.shimmer-on-hover:hover::after {
+  opacity: 1;
+  animation: shimmer-sweep 0.8s ease-in-out;
+}
+
+/* CTA button pulse glow animation */
+@keyframes ctaPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(232, 150, 58, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(232, 150, 58, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(232, 150, 58, 0);
+  }
+}
+
+.animate-cta-pulse {
+  animation: ctaPulse 1.5s ease-out infinite;
+}
