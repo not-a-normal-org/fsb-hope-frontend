@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -17,6 +17,31 @@ interface CounterProps {
 function StatCounter({ stat, index }: CounterProps) {
   const counterRef = useRef<HTMLDivElement>(null);
   const [displayValue, setDisplayValue] = useState('0');
+  // Always holds the last real (non-scrambled) formatted value
+  const realValueRef = useRef('0');
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Clear the interval on unmount
+  useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
+
+  const handleMouseEnter = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    const real = realValueRef.current;
+    const STEP = 60;   // ms between frames
+    const TOTAL = 600; // ms total duration
+    let elapsed = 0;
+    intervalRef.current = setInterval(() => {
+      elapsed += STEP;
+      if (elapsed >= TOTAL) {
+        clearInterval(intervalRef.current!);
+        intervalRef.current = null;
+        setDisplayValue(real);
+      } else {
+        // Randomize each digit independently, leave non-digits untouched
+        setDisplayValue(real.replace(/\d/g, () => String(Math.floor(Math.random() * 10))));
+      }
+    }, STEP);
+  };
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -45,7 +70,9 @@ function StatCounter({ stat, index }: CounterProps) {
           }
 
           // Add prefix and suffix
-          setDisplayValue(`${stat.prefix}${formattedValue}${stat.suffix}`);
+          const display = `${stat.prefix}${formattedValue}${stat.suffix}`;
+          realValueRef.current = display;
+          setDisplayValue(display);
         },
       });
     });
@@ -67,7 +94,8 @@ function StatCounter({ stat, index }: CounterProps) {
         </p>
         <div
           ref={counterRef}
-          className="font-mono text-5xl sm:text-6xl lg:text-5xl xl:text-6xl font-bold text-accent-orange mb-4 leading-none whitespace-nowrap"
+          onMouseEnter={handleMouseEnter}
+          className="font-mono text-5xl sm:text-6xl lg:text-5xl xl:text-6xl font-bold text-accent-orange mb-4 leading-none whitespace-nowrap cursor-default select-none"
         >
           {displayValue}
         </div>
@@ -84,7 +112,7 @@ export default function StatsSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="text-center mb-16"
         >
@@ -100,7 +128,7 @@ export default function StatsSection() {
           variants={staggerContainerVariant}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0 }}
           className="grid grid-cols-3 gap-8"
         >
           {STATS.map((stat, idx) => (
@@ -111,7 +139,7 @@ export default function StatsSection() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
           className="text-center mt-16 pt-12 border-t border-border-subtle"
         >

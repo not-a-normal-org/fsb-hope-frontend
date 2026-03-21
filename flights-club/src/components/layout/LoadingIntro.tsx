@@ -5,32 +5,31 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 export default function LoadingIntro() {
-  const [showLoader, setShowLoader] = useState(true);
+  // Start hidden — avoids the overlay flashing on back navigation before useEffect fires.
+  // We only opt-in to showing the intro after confirming it's a first visit.
+  const [showLoader, setShowLoader] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    // Check if user has already seen the intro in this session
-    const introShown = sessionStorage.getItem('intro_shown');
-    if (introShown) {
+    // Already seen this session → don't show
+    if (sessionStorage.getItem('intro_shown')) return;
+
+    // First visit: show overlay, start fade-out at 1.8s, dismiss after fade (2.4s total)
+    setShowLoader(true);
+    const fadeTimer = setTimeout(() => setIsAnimating(false), 1800);
+    const dismissTimer = setTimeout(() => {
       setShowLoader(false);
-      setIsAnimating(false);
-      return;
-    }
+      sessionStorage.setItem('intro_shown', 'true');
+    }, 2400);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(dismissTimer);
+    };
   }, []);
 
-  // Don't render if already seen in this session
-  if (!showLoader) {
-    return null;
-  }
+  if (!showLoader) return null;
 
   const handleSkip = () => {
-    // Immediately hide and mark as shown
-    setShowLoader(false);
-    sessionStorage.setItem('intro_shown', 'true');
-  };
-
-  const handleAnimationComplete = () => {
-    // Mark as shown and remove from DOM
     setShowLoader(false);
     sessionStorage.setItem('intro_shown', 'true');
   };
@@ -39,9 +38,8 @@ export default function LoadingIntro() {
     <motion.div
       initial={{ opacity: 1 }}
       animate={{ opacity: isAnimating ? 1 : 0 }}
-      transition={{ delay: isAnimating ? 1.8 : 0, duration: 0.5, ease: 'easeInOut' }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
       className="fixed inset-0 bg-[#07090F] z-[9999] flex items-center justify-center"
-      onAnimationComplete={handleAnimationComplete}
     >
       {/* Main content - centered */}
       <div className="text-center">

@@ -17,7 +17,7 @@ export default function TwoPathsSection() {
             variants={slideInLeftVariant}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0 }}
             className="relative group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-accent-blue/20 to-transparent rounded-2xl blur-xl" />
@@ -54,7 +54,7 @@ export default function TwoPathsSection() {
             variants={slideInRightVariant}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0 }}
             className="relative group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-accent-orange/20 to-transparent rounded-2xl blur-xl" />

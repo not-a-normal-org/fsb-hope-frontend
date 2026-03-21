@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  // reactCompiler disabled — conflicts with Framer Motion animation lifecycle hooks
+  reactCompiler: false,
 };
 
 export default nextConfig;

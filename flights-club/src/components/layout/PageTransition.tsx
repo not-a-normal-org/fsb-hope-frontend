@@ -1,53 +1,50 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 interface PageTransitionProps {
   children: ReactNode;
 }
 
-const pageVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.4,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-    },
-  },
-};
-
 export default function PageTransition({ children }: PageTransitionProps) {
-  const [isClient, setIsClient] = useState(false);
-
-  // Ensure component only renders on client to avoid hydration mismatch
   useEffect(() => {
-    setIsClient(true);
+    // BFCache restoration (hard back from external page)
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) window.location.reload();
+    };
+    window.addEventListener('pageshow', handlePageShow);
+
+    // Navigation API — available in Chromium ≥ 102 (Brave, Chrome, Edge).
+    // Fires before Next.js's router, letting us intercept back/forward traversal
+    // and replace it with a full page reload so Framer Motion always starts fresh.
+    const nav = (window as any).navigation;
+    if (nav) {
+      const handleNavigate = (e: any) => {
+        if (e.navigationType === 'traverse' && e.canIntercept) {
+          e.intercept({
+            handler: async () => {
+              window.location.assign(e.destination.url);
+            },
+          });
+        }
+      };
+      nav.addEventListener('navigate', handleNavigate);
+      return () => {
+        window.removeEventListener('pageshow', handlePageShow);
+        nav.removeEventListener('navigate', handleNavigate);
+      };
+    }
+
+    // Fallback for browsers without Navigation API
+    const handlePopState = () => {
+      setTimeout(() => window.location.reload(), 50);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
-  if (!isClient) {
-    return <>{children}</>;
-  }
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key="page-transition"
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
-  );
+  return <>{children}</>;
 }

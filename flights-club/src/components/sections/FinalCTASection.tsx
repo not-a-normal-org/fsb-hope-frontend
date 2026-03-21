@@ -4,6 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FINAL_CTA } from '@/lib/constants';
 
+// Deterministic particle config — avoids hydration mismatch on SSR
+const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
+  id: i,
+  left: ((i * 17 + 7) * 4.97) % 100,          // 0–100 % x position
+  duration: 8 + ((i * 0.73 + 1.1) % 7),        // 8–15 s
+  delay: (i * 0.42 + 0.1) % 8,                 // 0–8 s
+}));
+
 const wordVariant = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
@@ -62,7 +70,23 @@ export default function FinalCTASection() {
       <div className="absolute top-20 right-10 w-96 h-96 bg-accent-orange rounded-full mix-blend-screen filter blur-3xl opacity-8 -z-10" />
       <div className="absolute bottom-10 left-5 w-96 h-96 bg-accent-blue rounded-full mix-blend-screen filter blur-3xl opacity-8 -z-10" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-16 text-center">
+      {/* Floating particles */}
+      {PARTICLES.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute w-1 h-1 rounded-full bg-[#E8963A]/20 pointer-events-none z-0"
+          style={{ left: `${p.left}%`, top: '100%' }}
+          animate={{ y: [0, -800] }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'linear',
+          }}
+        />
+      ))}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 text-center">
         {/* Headline with word-by-word animation */}
         <motion.h2
           className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold text-text-primary mb-8 leading-tight flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto"

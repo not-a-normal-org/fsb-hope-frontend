@@ -58,9 +58,25 @@ export default function FAQSection() {
             {FAQ_ITEMS.map((item, idx) => (
               <motion.div
                 key={idx}
-                className="group relative"
+                className="group relative sm:pl-14"
                 variants={staggerChildVariant}
               >
+                {/* Animated question number */}
+                <AnimatePresence>
+                  {expandedIdx === idx && (
+                    <motion.span
+                      key={`num-${idx}`}
+                      className="hidden sm:block absolute left-0 top-6 font-mono text-4xl font-bold text-[#E8963A]/40 pointer-events-none select-none leading-none"
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: -20, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                    >
+                      {String(idx + 1).padStart(2, '0')}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+
                 {/* Accordion container */}
                 <motion.div
                   className="border border-border-subtle rounded-xl overflow-hidden bg-bg-card hover:bg-bg-secondary transition-colors duration-300"
@@ -123,7 +139,7 @@ export default function FAQSection() {
                 {expandedIdx === idx && (
                   <motion.div
                     layoutId={`accent-${idx}`}
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-orange to-accent-orange/50 rounded-b-xl"
+                    className="absolute bottom-0 left-0 sm:left-14 right-0 h-1 bg-gradient-to-r from-accent-orange to-accent-orange/50 rounded-b-xl"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     exit={{ scaleX: 0 }}
