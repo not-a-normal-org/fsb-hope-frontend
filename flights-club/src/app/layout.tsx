@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageTransition from "@/components/layout/PageTransition";
+import GSAPProvider from "@/components/layout/GSAPProvider";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
 /* ========== FONT CONFIGURATION ========== */
@@ -162,9 +163,10 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="flex flex-col min-h-screen bg-bg-primary text-text-primary">
+      <body className="flex flex-col min-h-screen bg-bg-primary text-text-primary" suppressHydrationWarning>
         {/* Layout wrapper */}
         <Navbar />
+        <GSAPProvider />
         <main className="flex-1">
           <PageTransition>
             {children}

@@ -1,31 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 export default function LoadingIntro() {
-  // Start hidden — avoids the overlay flashing on back navigation before useEffect fires.
-  // We only opt-in to showing the intro after confirming it's a first visit.
-  const [showLoader, setShowLoader] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
+  const [showLoader, setShowLoader] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Already seen this session → don't show
-    if (sessionStorage.getItem('intro_shown')) return;
+    setIsMounted(true);
 
-    // First visit: show overlay, start fade-out at 1.8s, dismiss after fade (2.4s total)
-    setShowLoader(true);
-    const fadeTimer = setTimeout(() => setIsAnimating(false), 1800);
+    // Check if intro was already shown
+    const introShown = sessionStorage.getItem('intro_shown');
+    if (introShown) {
+      setShowLoader(false);
+      return;
+    }
+
+    // First visit — schedule fade-out and dismiss
+    const fadeOutTimer = setTimeout(() => setIsAnimating(false), 1800);
     const dismissTimer = setTimeout(() => {
       setShowLoader(false);
       sessionStorage.setItem('intro_shown', 'true');
     }, 2400);
+
     return () => {
-      clearTimeout(fadeTimer);
+      clearTimeout(fadeOutTimer);
       clearTimeout(dismissTimer);
     };
   }, []);
+
+  // Don't render anything until client-side hydration is complete
+  if (!isMounted) return null;
 
   if (!showLoader) return null;
 
