@@ -56,7 +56,7 @@ export default function StatementTextSection() {
         { opacity: 1, duration: 0.5 },
         0.5
       );
-    });
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);

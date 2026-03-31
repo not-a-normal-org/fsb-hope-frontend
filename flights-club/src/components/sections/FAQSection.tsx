@@ -5,22 +5,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FAQ_ITEMS } from '@/lib/constants';
 import { ChevronDown } from 'lucide-react';
 import { staggerContainerVariant, staggerChildVariant } from '@/lib/animations';
+import type { FAQItem } from '@/lib/types';
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQ_ITEMS.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: item.a,
-    },
-  })),
-};
+interface FAQSectionProps {
+  /** Override items — falls back to the global FAQ_ITEMS from constants */
+  items?: FAQItem[];
+}
 
-export default function FAQSection() {
+export default function FAQSection({ items = FAQ_ITEMS }: FAQSectionProps) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
 
   return (
     <>
@@ -28,6 +31,7 @@ export default function FAQSection() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        suppressHydrationWarning
       />
 
       <section className="relative py-24 bg-bg-primary overflow-hidden" id="faq">
@@ -55,7 +59,7 @@ export default function FAQSection() {
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
           >
-            {FAQ_ITEMS.map((item, idx) => (
+            {items.map((item, idx) => (
               <motion.div
                 key={idx}
                 className="group relative sm:pl-14"

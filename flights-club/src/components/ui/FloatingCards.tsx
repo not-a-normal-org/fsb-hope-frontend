@@ -74,31 +74,38 @@ interface FloatingCardProps {
   index: number;
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
-  flipped: number | null;
-  onFlip: (i: number | null) => void;
   scrollY: MotionValue<number>;
-  /** Show the "click me" hint on the back face */
   isTeaser?: boolean;
+  startFlipped?: boolean;
 }
 
 function FloatingCard({
   config, design, offer, drift, index,
-  mouseX, mouseY, flipped, onFlip, scrollY,
+  mouseX, mouseY, scrollY,
   isTeaser = false,
+  startFlipped = false,
 }: FloatingCardProps) {
-  const isFlipped     = flipped === index;
-  const controls      = useAnimationControls();
-  const isFirstMount  = useRef(true);
+  const [isFlipped, setIsFlipped]   = useState(startFlipped);
+  const [isShaking, setIsShaking]   = useState(false);
+  const controls                    = useAnimationControls();
+  const isFirstMount                = useRef(true);
+
+  // Refs — always current, no stale-closure issues
+  const isHoveredRef        = useRef(false);
+  const isClickPendingRef   = useRef(false);
+  const autoFlipTimerRef    = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clickTimerRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shakeTimerRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Mouse parallax — ±5° tilt on front face
   const mouseRotateX = useTransform(mouseY, [-0.5, 0.5], [5, -5]);
   const mouseRotateY = useTransform(mouseX, [-0.5, 0.5], [-5, 5]);
 
-  // Scroll drop — each card falls a different distance and fades out
+  // Scroll drop
   const scrollYOffset = useTransform(scrollY, [0, 600], [0, 80 + index * 25]);
   const scrollOpacity = useTransform(scrollY, [0, 300, 600], [1, 0.8, 0]);
 
-  // Stable drift keyframes — deterministic, never changes
+  // Stable drift keyframes
   const driftAnim = useMemo(() => ({
     x:      [0, drift.x1, drift.x2, 0] as number[],
     y:      [0, drift.y1, drift.y2, 0] as number[],
@@ -125,10 +132,82 @@ function FloatingCard({
     }
   }, [isFlipped]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleClick = () => onFlip(isFlipped ? null : index);
+  // ── Auto-flip helpers ──────────────────────────────────────────────────────
+
+  const clearAutoFlip = () => {
+    if (autoFlipTimerRef.current) {
+      clearTimeout(autoFlipTimerRef.current);
+      autoFlipTimerRef.current = null;
+    }
+  };
+
+  // scheduleAutoFlip only uses refs + stable setters — no stale closure risk
+  const scheduleAutoFlip = () => {
+    clearAutoFlip();
+    if (isHoveredRef.current || isClickPendingRef.current) return;
+    const delay = 3000 + Math.random() * 4000; // 3–7 s
+    autoFlipTimerRef.current = setTimeout(() => {
+      autoFlipTimerRef.current = null;
+      setIsFlipped(prev => !prev);
+      scheduleAutoFlip(); // schedule the next toggle
+    }, delay);
+  };
+
+  // Kick off auto-flip on mount, staggered so cards don't all flip together
+  useEffect(() => {
+    const initTimer = setTimeout(() => {
+      if (!isHoveredRef.current && !isClickPendingRef.current) scheduleAutoFlip();
+    }, index * 800);
+    return () => {
+      clearTimeout(initTimer);
+      clearAutoFlip();
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Event handlers ─────────────────────────────────────────────────────────
+
+  const handleMouseEnter = () => {
+    isHoveredRef.current = true;
+    clearAutoFlip(); // pause while hovered
+  };
+
+  const handleMouseLeave = () => {
+    isHoveredRef.current = false;
+    if (!isClickPendingRef.current) scheduleAutoFlip(); // resume
+  };
+
+  const handleClick = () => {
+    // Cancel current auto-flip schedule — user has expressed intent
+    clearAutoFlip();
+    // Reset any existing click-initiated sequence
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+
+    // Flip immediately on click
+    setIsFlipped(prev => !prev);
+
+    isClickPendingRef.current = true;
+
+    // After 5 s: shake, then flip back
+    clickTimerRef.current = setTimeout(() => {
+      clickTimerRef.current = null;
+      setIsShaking(true);
+
+      shakeTimerRef.current = setTimeout(() => {
+        shakeTimerRef.current = null;
+        setIsShaking(false);
+        setIsFlipped(prev => !prev);
+        isClickPendingRef.current = false;
+        // Resume auto-flip unless still hovered
+        if (!isHoveredRef.current) scheduleAutoFlip();
+      }, 600); // shake lasts 0.5 s + 100 ms buffer
+    }, 5000);
+  };
 
   return (
-    // ① Scroll drop — y and opacity driven by page scroll
+    // ① Scroll drop
     <motion.div
       style={{
         position: 'absolute',
@@ -139,142 +218,147 @@ function FloatingCard({
         opacity: scrollOpacity,
       }}
     >
-      {/* ② Entrance — fade + slide-up + scale pop */}
+      {/* ② Entrance */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5, y: 60 }}
         animate={{ opacity: 1, scale: config.scale, y: 0 }}
         transition={{ duration: 0.8, delay: index * 0.1, ease: 'easeOut' }}
         style={{ cursor: 'pointer' }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onClick={handleClick}
       >
-        {/* ③ Drift — slow wandering path; initial sets base 3-D tilt (rx/ry/rz) */}
+        {/* ③ Drift */}
         <motion.div
           initial={{ rotateX: config.rx, rotateY: config.ry, rotate: config.rz }}
           animate={controls}
           style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
         >
-          {/* ④ CSS flip wrapper — 0° (front) ↔ 180° (back) */}
-          <div
-            style={{
-              width: 224,
-              height: 160,
-              transformStyle: 'preserve-3d',
-              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              position: 'relative',
-            }}
+          {/* ④ Shake wrapper — translates on x/y only so drift rotation is unaffected */}
+          <motion.div
+            animate={isShaking
+              ? { x: [0, -10, 10, -10, 10, -5, 5, 0], y: [0, -4, 4, -4, 4, 0] }
+              : { x: 0, y: 0 }
+            }
+            transition={isShaking
+              ? { duration: 0.5, ease: 'easeInOut' }
+              : { duration: 0 }
+            }
           >
-
-            {/* ⑤ FRONT FACE */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl overflow-hidden backface-hidden"
-              style={{
-                background: design.background,
-                border: design.border,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.5)',
-                rotateX: mouseRotateX,
-                rotateY: mouseRotateY,
-              }}
-            >
-              {/* Gloss */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none rounded-2xl" />
-
-              {/* Card content */}
-              <div className="relative z-10 p-4 h-full flex flex-col justify-between">
-                <div>
-                  <span className="text-xs font-bold text-white/80 tracking-[0.25em]">TFC</span>
-                </div>
-                <div>
-                  <div
-                    className="w-10 h-7 rounded-md"
-                    style={{
-                      background: 'linear-gradient(135deg, #C9A84C 0%, #F2AA5E 100%)',
-                      boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
-                    }}
-                  />
-                </div>
-                <div className="flex items-end justify-between">
-                  <span className="font-mono text-sm text-white/70 tracking-widest leading-none">
-                    •••• •••• •••• {design.last4}
-                  </span>
-                  <span className="text-xs font-bold text-white/50 tracking-wide">
-                    {design.network}
-                  </span>
-                </div>
-              </div>
-
-              {/* Tap-to-flip hint */}
-              {isTeaser ? (
-                <motion.span
-                  className="absolute top-3 right-3 text-[9px] font-semibold tracking-wider text-[#E8963A] border border-[#E8963A]/40 rounded-full px-2 py-0.5 pointer-events-none"
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-                >
-                  click me
-                </motion.span>
-              ) : (
-                <motion.div
-                  className="absolute bottom-3 right-3 w-1.5 h-1.5 rounded-full bg-white/30 pointer-events-none"
-                  animate={{ scale: [1, 1.5, 1] }}
-                  transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                />
-              )}
-            </motion.div>
-
-            {/* ⑥ BACK FACE — flight offer */}
+            {/* ⑤ CSS flip wrapper */}
             <div
-              className="absolute inset-0 rounded-2xl overflow-hidden backface-hidden"
               style={{
-                transform: 'rotateY(180deg)',
-                background: design.background,
-                border: design.border,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.5)',
+                width: 224,
+                height: 160,
+                transformStyle: 'preserve-3d',
+                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                position: 'relative',
               }}
             >
-              {/* Gloss */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-2xl" />
 
-              {/* Offer content */}
-              <div className="relative z-10 p-4 h-full flex flex-col justify-between">
+              {/* ⑥ FRONT FACE */}
+              <motion.div
+                className="absolute inset-0 rounded-2xl overflow-hidden backface-hidden"
+                style={{
+                  background: design.background,
+                  border: design.border,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.5)',
+                  rotateX: mouseRotateX,
+                  rotateY: mouseRotateY,
+                }}
+              >
+                {/* Gloss */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none rounded-2xl" />
 
-                {/* Label */}
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-[#E8963A]">
-                    Redeem with Points
-                  </span>
-                </div>
-
-                {/* Route */}
-                <div>
-                  <div className="text-2xl font-bold text-white leading-none">
-                    {offer.route}
-                  </div>
-                  <div className="text-xs text-white/60 mt-1">{offer.cabin}</div>
-                </div>
-
-                {/* Points vs retail */}
-                <div className="flex justify-between items-end">
+                {/* Card content */}
+                <div className="relative z-10 p-4 h-full flex flex-col justify-between">
                   <div>
-                    <div className="text-base font-bold text-[#E8963A]">{offer.pts} pts</div>
-                    <div className="text-[10px] text-white/50 mt-0.5">Using Points</div>
+                    <span className="text-xs font-bold text-white/80 tracking-[0.25em]">TFC</span>
                   </div>
-                  <div className="text-right">
-                    <div className="text-base text-white/40 line-through">{offer.retail}</div>
-                    <div className="text-[10px] text-white/40 mt-0.5">Retail Price</div>
+                  <div>
+                    <div
+                      className="w-10 h-7 rounded-md"
+                      style={{
+                        background: 'linear-gradient(135deg, #C9A84C 0%, #F2AA5E 100%)',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-end justify-between">
+                    <span className="font-mono text-sm text-white/70 tracking-widest leading-none">
+                      •••• •••• •••• {design.last4}
+                    </span>
+                    <span className="text-xs font-bold text-white/50 tracking-wide">
+                      {design.network}
+                    </span>
                   </div>
                 </div>
 
-                {/* Footer */}
-                <div>
-                  <span className="text-[10px] text-white/40">
-                    Saved with The Flights Club ✈
-                  </span>
-                </div>
+                {/* Tap-to-flip hint */}
+                {isTeaser ? (
+                  <motion.span
+                    className="absolute top-3 right-3 text-[9px] font-semibold tracking-wider text-[#E8963A] border border-[#E8963A]/40 rounded-full px-2 py-0.5 pointer-events-none"
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+                  >
+                    click me
+                  </motion.span>
+                ) : (
+                  <motion.div
+                    className="absolute bottom-3 right-3 w-1.5 h-1.5 rounded-full bg-white/30 pointer-events-none"
+                    animate={{ scale: [1, 1.5, 1] }}
+                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                  />
+                )}
+              </motion.div>
 
+              {/* ⑦ BACK FACE — flight offer */}
+              <div
+                className="absolute inset-0 rounded-2xl overflow-hidden backface-hidden"
+                style={{
+                  transform: 'rotateY(180deg)',
+                  background: design.background,
+                  border: design.border,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 60px rgba(0,0,0,0.5)',
+                }}
+              >
+                {/* Gloss */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-2xl" />
+
+                {/* Offer content */}
+                <div className="relative z-10 p-4 h-full flex flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#E8963A]">
+                      Redeem with Points
+                    </span>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white leading-none">
+                      {offer.route}
+                    </div>
+                    <div className="text-xs text-white/60 mt-1">{offer.cabin}</div>
+                  </div>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <div className="text-base font-bold text-[#E8963A]">{offer.pts} pts</div>
+                      <div className="text-[10px] text-white/50 mt-0.5">Using Points</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-base text-white/40 line-through">{offer.retail}</div>
+                      <div className="text-[10px] text-white/40 mt-0.5">Retail Price</div>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-white/40">
+                      Saved with The Flights Club ✈
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-          </div>
+            </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </motion.div>
@@ -285,13 +369,9 @@ function FloatingCard({
 
 export default function FloatingCards() {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Card 2 starts pre-flipped as a teaser to show the interaction
-  const [flipped, setFlipped] = useState<number | null>(2);
 
-  // Page scroll position for the drop effect
   const { scrollY } = useScroll();
 
-  // Deterministic drift paths — seeded by card index, SSR-safe
   const driftValues = useMemo<DriftValues[]>(() => CARDS.map((_, i) => ({
     x1:  (i * 47  % 160) - 80,
     x2:  (i * 83  % 160) - 80,
@@ -301,7 +381,6 @@ export default function FloatingCards() {
     del: i * 0.6,
   })), []);
 
-  // Mouse parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -338,10 +417,9 @@ export default function FloatingCards() {
           index={idx}
           mouseX={mouseX}
           mouseY={mouseY}
-          flipped={flipped}
-          onFlip={setFlipped}
           scrollY={scrollY}
           isTeaser={idx === 0}
+          startFlipped={idx === 2}
         />
       ))}
     </div>

@@ -75,7 +75,7 @@ function StatCounter({ stat, index }: CounterProps) {
           setDisplayValue(display);
         },
       });
-    });
+    }, counterRef);
 
     return () => ctx.revert();
   }, [stat]);
