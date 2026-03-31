@@ -299,6 +299,67 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   },
 ];
 
+/* ========== MEMBERSHIP TIERS — DETAIL (membership page) ========== */
+export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
+  {
+    id: "explore",
+    name: "Explore",
+    badge: null,
+    target: "Spending $300K–$1M annually",
+    key_benefit: "Start turning everyday expenses into Business Class seats",
+    included: [
+      "Annual points strategy session",
+      "Up to 2 concierge seat bookings/year",
+      "Access to member-only deals",
+      "The Flights Club community access",
+      "Quarterly points program updates",
+    ],
+    cta_label: "Apply for Explore",
+    cta_href: "/apply?tier=explore",
+    visual_style: "Standard dark card with blue accent border",
+    price: "From $2,997/year",
+  },
+  {
+    id: "platinum",
+    name: "Platinum",
+    badge: "MOST POPULAR",
+    target: "Spending $1M–$5M annually",
+    key_benefit: "Guaranteed Business Class flights every year",
+    included: [
+      "Everything in Explore",
+      "Guaranteed Business Class seat allocation",
+      "Priority concierge — 24hr response",
+      "Up to 6 concierge bookings/year",
+      "Exclusive member events and retreats",
+      "Dedicated points advisor",
+    ],
+    cta_label: "Apply for Platinum",
+    cta_href: "/apply?tier=platinum",
+    visual_style: "Slightly elevated card, orange accent border, badge: MOST POPULAR",
+    price: "From $7,997/year",
+  },
+  {
+    id: "black",
+    name: "Black",
+    badge: "ELITE",
+    target: "Spending $5M+ annually",
+    key_benefit: "$100K+ in premium travel value annually",
+    included: [
+      "Everything in Platinum",
+      "$100K+ guaranteed travel value/year",
+      "First Class upgrades where available",
+      "Private events and experiences",
+      "Dedicated full-time account manager",
+      "Bespoke travel itinerary planning",
+      "VIP airport lounge access globally",
+    ],
+    cta_label: "Enquire About Black",
+    cta_href: "/apply?tier=black",
+    visual_style: "Dark charcoal card with gold border, shimmer animation, badge: ELITE",
+    price: "By invitation / enquiry",
+  },
+];
+
 /* ========== PODCAST SECTION ========== */
 export const PODCAST_SECTION = {
   section_label: "ALWAYS BUSINESS CLASS PODCAST",
@@ -359,6 +420,22 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     q: "Can my partner or family use the membership?",
     a: "Yes. Depending on your tier, membership benefits can extend to travel companions. Our team will walk you through what applies to your situation.",
+  },
+];
+
+/* ========== FAQ — CONCIERGE PAGE ========== */
+export const FAQ_ITEMS_CONCIERGE: FAQItem[] = [
+  {
+    q: "Do I need a lot of points to get started?",
+    a: "You need enough to cover the redemption — typically 80,000–360,000 points depending on the route. We'll tell you if you have enough before you commit.",
+  },
+  {
+    q: "What if no reward seats are available?",
+    a: "We'll tell you upfront if your route has limited availability. If we can't find suitable seats, you don't pay.",
+  },
+  {
+    q: "How long does it take?",
+    a: "Most bookings are presented within 48 hours. Complex or high-demand routes may take 3–5 business days.",
   },
 ];
 

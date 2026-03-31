@@ -16,6 +16,7 @@ export interface CTAButton {
 export interface MembershipTier {
   id: "explore" | "platinum" | "black";
   name: string;
+  badge?: string | null;
   target: string;
   key_benefit: string;
   included: string[];
