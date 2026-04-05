@@ -9,14 +9,9 @@ import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
 import { CTAButton } from '@/components/ui/CTAButton';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { FAQ_ITEMS_CONCIERGE } from '@/lib/constants';
-import {
-  wordContainerVariant,
-  wordVariant,
-  staggerContainerVariant,
-  staggerChildVariant,
-  fadeUpVariant,
-} from '@/lib/animations';
+import { wordContainerVariant, wordVariant } from '@/lib/animations';
 
 // ── Hero background data ───────────────────────────────────────────────────────
 // viewBox: 1400 × 800. Cities placed at approximate relative screen positions.
@@ -477,18 +472,12 @@ function HowItWorksSection() {
     <section ref={sectionRef} className="relative py-28 bg-bg-secondary overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         {/* Header */}
-        <motion.div
-          className="text-center mb-20"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <ScrollReveal className="text-center mb-20">
           <SectionLabel label="The Process" className="flex justify-center" />
           <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
             How the Concierge Works
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Desktop: horizontal steps with connecting line */}
         <div className="hidden md:block relative">
@@ -500,84 +489,72 @@ function HowItWorksSection() {
 
           <AnimatedHorizontalPlane inView={inView} onStepChange={setActiveStep} />
 
-          <motion.div
-            className="grid grid-cols-4 gap-6"
-            variants={staggerContainerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
+          <div className="grid grid-cols-4 gap-6">
             {STEPS.map(({ num, title, body }, idx) => (
-              <motion.div
-                key={num}
-                className="flex flex-col items-center text-center"
-                variants={staggerChildVariant}
-              >
-                {/* Step circle */}
-                <div
-                  className={`w-16 h-16 rounded-full border flex items-center justify-center mb-6 z-10 relative transition-all duration-500 ${
-                    activeStep === idx
-                      ? 'border-accent-orange bg-accent-orange/10 shadow-[0_0_20px_rgba(232,150,58,0.4)]'
-                      : 'border-border-subtle bg-bg-card'
-                  }`}
-                >
-                  <span className="text-accent-orange font-mono font-bold text-sm">{num}</span>
+              <ScrollReveal key={num} delay={idx * 0.1}>
+                <div className="flex flex-col items-center text-center">
+                  {/* Step circle */}
+                  <div
+                    className={`w-16 h-16 rounded-full border flex items-center justify-center mb-6 z-10 relative transition-all duration-500 ${
+                      activeStep === idx
+                        ? 'border-accent-orange bg-accent-orange/10 shadow-[0_0_20px_rgba(232,150,58,0.4)]'
+                        : 'border-border-subtle bg-bg-card'
+                    }`}
+                  >
+                    <span className="text-accent-orange font-mono font-bold text-sm">{num}</span>
+                  </div>
+                  <h3
+                    className={`text-sm font-display font-bold mb-2 leading-snug transition-colors duration-500 ${
+                      activeStep === idx ? 'text-accent-orange' : 'text-text-primary'
+                    }`}
+                  >
+                    {title}
+                  </h3>
+                  <p className="text-text-secondary text-xs leading-relaxed">{body}</p>
                 </div>
-                <h3
-                  className={`text-sm font-display font-bold mb-2 leading-snug transition-colors duration-500 ${
-                    activeStep === idx ? 'text-accent-orange' : 'text-text-primary'
-                  }`}
-                >
-                  {title}
-                </h3>
-                <p className="text-text-secondary text-xs leading-relaxed">{body}</p>
-              </motion.div>
+              </ScrollReveal>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Mobile: vertical timeline */}
         <div className="md:hidden relative">
           <AnimatedVerticalPlane inView={inView} onStepChange={setActiveStep} />
 
-          <motion.div
-            className="space-y-0"
-            variants={staggerContainerVariant}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
+          <div className="space-y-0">
             {STEPS.map(({ num, title, body }, idx) => (
-              <motion.div key={num} className="flex gap-5" variants={staggerChildVariant}>
-                {/* Number + vertical line */}
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full border flex items-center justify-center flex-shrink-0 z-10 transition-all duration-500 ${
-                      activeStep === idx
-                        ? 'border-accent-orange bg-accent-orange/10 shadow-[0_0_16px_rgba(232,150,58,0.4)]'
-                        : 'border-border-subtle bg-bg-card'
-                    }`}
-                  >
-                    <span className="text-accent-orange font-mono font-bold text-xs">{num}</span>
+              <ScrollReveal key={num} delay={idx * 0.1}>
+                <div className="flex gap-5">
+                  {/* Number + vertical line */}
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-10 h-10 rounded-full border flex items-center justify-center flex-shrink-0 z-10 transition-all duration-500 ${
+                        activeStep === idx
+                          ? 'border-accent-orange bg-accent-orange/10 shadow-[0_0_16px_rgba(232,150,58,0.4)]'
+                          : 'border-border-subtle bg-bg-card'
+                      }`}
+                    >
+                      <span className="text-accent-orange font-mono font-bold text-xs">{num}</span>
+                    </div>
+                    {idx < STEPS.length - 1 && (
+                      <div className="flex-1 w-px bg-border-subtle my-2 min-h-[2rem]" />
+                    )}
                   </div>
-                  {idx < STEPS.length - 1 && (
-                    <div className="flex-1 w-px bg-border-subtle my-2 min-h-[2rem]" />
-                  )}
+                  {/* Content */}
+                  <div className={`${idx < STEPS.length - 1 ? 'pb-10' : 'pb-0'} pt-1`}>
+                    <h3
+                      className={`text-base font-display font-bold mb-2 leading-snug transition-colors duration-500 ${
+                        activeStep === idx ? 'text-accent-orange' : 'text-text-primary'
+                      }`}
+                    >
+                      {title}
+                    </h3>
+                    <p className="text-text-secondary text-sm leading-relaxed">{body}</p>
+                  </div>
                 </div>
-                {/* Content */}
-                <div className={`${idx < STEPS.length - 1 ? 'pb-10' : 'pb-0'} pt-1`}>
-                  <h3
-                    className={`text-base font-display font-bold mb-2 leading-snug transition-colors duration-500 ${
-                      activeStep === idx ? 'text-accent-orange' : 'text-text-primary'
-                    }`}
-                  >
-                    {title}
-                  </h3>
-                  <p className="text-text-secondary text-sm leading-relaxed">{body}</p>
-                </div>
-              </motion.div>
+              </ScrollReveal>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -609,73 +586,59 @@ function WhatsIncludedSection() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         {/* Header */}
-        <motion.div
-          className="text-center mb-14"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <ScrollReveal className="text-center mb-14">
           <SectionLabel label="What You Get" className="flex justify-center" />
           <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
             Everything Included for $1,900
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Two columns */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          variants={staggerContainerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Included */}
-          <motion.div
-            className="rounded-xl border border-border-subtle bg-bg-card p-8"
-            variants={staggerChildVariant}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-green-500/15 flex items-center justify-center flex-shrink-0">
-                <Check size={16} className="text-green-400" strokeWidth={2.5} />
-              </div>
-              <h3 className="text-lg font-display font-bold text-text-primary">
-                Included in $1,900
-              </h3>
-            </div>
-            <div className="space-y-4">
-              {INCLUDED.map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <Check size={15} className="text-green-400 flex-shrink-0 mt-0.5" strokeWidth={2.5} />
-                  <span className="text-text-secondary text-sm leading-snug">{item}</span>
+          <ScrollReveal delay={0}>
+            <div className="rounded-xl border border-border-subtle bg-bg-card p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-green-500/15 flex items-center justify-center flex-shrink-0">
+                  <Check size={16} className="text-green-400" strokeWidth={2.5} />
                 </div>
-              ))}
+                <h3 className="text-lg font-display font-bold text-text-primary">
+                  Included in $1,900
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {INCLUDED.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <Check size={15} className="text-green-400 flex-shrink-0 mt-0.5" strokeWidth={2.5} />
+                    <span className="text-text-secondary text-sm leading-snug">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Not included */}
-          <motion.div
-            className="rounded-xl border border-border-subtle bg-bg-card p-8"
-            variants={staggerChildVariant}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0">
-                <X size={16} className="text-text-muted" strokeWidth={2.5} />
-              </div>
-              <h3 className="text-lg font-display font-bold text-text-secondary">
-                Not Included
-              </h3>
-            </div>
-            <div className="space-y-4">
-              {NOT_INCLUDED.map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <X size={15} className="text-text-muted flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <span className="text-text-muted text-sm leading-snug">{item}</span>
+          <ScrollReveal delay={0.1}>
+            <div className="rounded-xl border border-border-subtle bg-bg-card p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0">
+                  <X size={16} className="text-text-muted" strokeWidth={2.5} />
                 </div>
-              ))}
+                <h3 className="text-lg font-display font-bold text-text-secondary">
+                  Not Included
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {NOT_INCLUDED.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <X size={15} className="text-text-muted flex-shrink-0 mt-0.5" strokeWidth={2} />
+                    <span className="text-text-muted text-sm leading-snug">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </ScrollReveal>
+        </div>
       </div>
     </section>
   );
@@ -698,38 +661,27 @@ function PointsProgramsSection() {
   return (
     <section className="relative py-20 bg-bg-secondary overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
-        <motion.div
-          className="text-center mb-10"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <ScrollReveal className="text-center mb-10">
           <SectionLabel label="Compatible Programs" className="flex justify-center" />
           <h2 className="text-3xl md:text-4xl font-display font-bold text-text-primary">
             Works With Your Existing Points
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
-        <motion.div
-          className="flex flex-wrap justify-center gap-3"
-          variants={staggerContainerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {PROGRAMS.map((program) => (
-            <motion.span
-              key={program}
-              className="inline-block bg-bg-card border border-border-subtle rounded-full px-4 py-2 text-text-secondary text-sm cursor-default transition-all duration-200 hover:border-accent-orange/40 hover:text-text-primary"
-              variants={staggerChildVariant}
-              whileHover={{ y: -2 }}
-              transition={{ duration: 0.2 }}
-            >
-              {program}
-            </motion.span>
-          ))}
-        </motion.div>
+        <ScrollReveal>
+          <div className="flex flex-wrap justify-center gap-3">
+            {PROGRAMS.map((program) => (
+              <motion.span
+                key={program}
+                className="inline-block bg-bg-card border border-border-subtle rounded-full px-4 py-2 text-text-secondary text-sm cursor-default transition-all duration-200 hover:border-accent-orange/40 hover:text-text-primary"
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
+              >
+                {program}
+              </motion.span>
+            ))}
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

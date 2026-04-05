@@ -4,13 +4,18 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, useInView, type Variants } from 'framer-motion';
 import type { FlightRoute } from '@/lib/types';
 
-// ── Animated dotted route line with flying plane ──────────────────────────────
+// ── Animated dotted SVG route line with flying plane ─────────────────────────
 
-function AnimatedRouteLine({ inView }: { inView: boolean }) {
+function AnimatedRouteLine({
+  inView,
+  hovered,
+}: {
+  inView: boolean;
+  hovered: boolean;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [lineWidth, setLineWidth] = useState(0);
 
-  // Measure container width; keep updated on resize
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -21,6 +26,7 @@ function AnimatedRouteLine({ inView }: { inView: boolean }) {
   }, []);
 
   const shouldAnimate = inView && lineWidth > 0;
+  const duration = hovered ? 0.8 : 2;
 
   return (
     <div
@@ -28,12 +34,31 @@ function AnimatedRouteLine({ inView }: { inView: boolean }) {
       className="relative flex-1 mx-3 overflow-hidden"
       style={{ height: '22px' }}
     >
-      {/* Dotted track */}
-      <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 border-t-2 border-dashed border-white/15" />
+      {/* SVG dotted track */}
+      {lineWidth > 0 && (
+        <svg
+          className="absolute left-0 top-1/2 -translate-y-1/2 overflow-visible"
+          width={lineWidth}
+          height={2}
+          aria-hidden="true"
+        >
+          <line
+            x1={0}
+            y1={1}
+            x2={lineWidth}
+            y2={1}
+            stroke="rgba(255,255,255,0.15)"
+            strokeWidth={2}
+            strokeDasharray="3 6"
+            strokeLinecap="round"
+          />
+        </svg>
+      )}
 
       {/* Flying plane */}
       <motion.span
-        className="absolute top-1/2 -translate-y-1/2 text-accent-orange text-sm leading-none pointer-events-none"
+        key={`plane-${duration}`}
+        className="absolute top-1/2 -translate-y-1/2 text-accent-orange text-sm leading-none pointer-events-none select-none"
         style={{ left: 0 }}
         animate={
           shouldAnimate
@@ -43,10 +68,10 @@ function AnimatedRouteLine({ inView }: { inView: boolean }) {
         transition={
           shouldAnimate
             ? {
-                duration: 2,
+                duration,
                 ease: 'easeInOut',
                 repeat: Infinity,
-                repeatDelay: 2,
+                repeatDelay: duration === 0.8 ? 0.5 : 2,
               }
             : { duration: 0 }
         }
@@ -61,11 +86,8 @@ function AnimatedRouteLine({ inView }: { inView: boolean }) {
 
 interface FlightRouteCardProps {
   route: FlightRoute;
-  /** Framer Motion stagger variants (desktop grid) */
   variants?: Variants;
-  /** Extra classes on the root element */
   className?: string;
-  /** Mobile mode — adds w-80 snap / CSS hover instead of framer whileHover */
   isMobile?: boolean;
 }
 
@@ -76,14 +98,15 @@ export function FlightRouteCard({
   isMobile = false,
 }: FlightRouteCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-
-  // Trigger once the card enters the viewport; keep looping after that
   const inView = useInView(cardRef, { once: true, margin: '-60px' });
+  const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       ref={cardRef}
       variants={variants}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
       whileHover={
         !isMobile
           ? {
@@ -123,7 +146,7 @@ export function FlightRouteCard({
             <p className="text-2xl font-bold text-text-primary">{route.from}</p>
           </div>
 
-          <AnimatedRouteLine inView={inView} />
+          <AnimatedRouteLine inView={inView} hovered={hovered} />
 
           <div className="shrink-0 text-right">
             <p className="text-text-muted text-sm">To</p>
@@ -146,7 +169,7 @@ export function FlightRouteCard({
         {/* Saving equivalent */}
         <div className="bg-bg-secondary rounded-lg p-4 border border-border-subtle">
           <p className="text-sm text-text-secondary italic">
-            That's the same as:{' '}
+            That&apos;s the same as:{' '}
             <span className="text-accent-orange font-semibold">
               {route.saving_equivalent}
             </span>

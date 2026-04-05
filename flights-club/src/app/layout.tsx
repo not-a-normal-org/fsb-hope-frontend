@@ -5,6 +5,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageTransition from "@/components/layout/PageTransition";
 import GSAPProvider from "@/components/layout/GSAPProvider";
+import CustomCursor from "@/components/ui/CustomCursor";
+import ParticleCanvas from "@/components/ui/ParticleCanvas";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
 /* ========== FONT CONFIGURATION ========== */
@@ -164,6 +166,8 @@ export default function RootLayout({
       </head>
 
       <body className="flex flex-col min-h-screen bg-bg-primary text-text-primary" suppressHydrationWarning>
+        <ParticleCanvas />
+        <CustomCursor />
         {/* Layout wrapper */}
         <Navbar />
         <GSAPProvider />

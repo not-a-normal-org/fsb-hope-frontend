@@ -5,11 +5,15 @@ import { motion } from 'framer-motion';
 import { FINAL_CTA } from '@/lib/constants';
 
 // Deterministic particle config — avoids hydration mismatch on SSR
+// Negative delay pre-seeds each particle mid-loop so the section is
+// populated with drifting dots from the very first frame.
 const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  left: ((i * 17 + 7) * 4.97) % 100,          // 0–100 % x position
-  duration: 8 + ((i * 0.73 + 1.1) % 7),        // 8–15 s
-  delay: (i * 0.42 + 0.1) % 8,                 // 0–8 s
+  id:       i,
+  left:     ((i * 17 + 7) * 4.97) % 100,                 // 0–100% x
+  size:     i % 3 === 0 ? 3 : i % 3 === 1 ? 2 : 1.5,    // px: 3 / 2 / 1.5
+  opacity:  0.25 + ((i * 0.11) % 0.35),                  // 0.25–0.60
+  duration: 8 + ((i * 0.73 + 1.1) % 7),                  // 8–15 s
+  delay:   -((i * 0.42 + 0.1) % 8),                      // negative = pre-seeded
 }));
 
 const wordVariant = {
@@ -82,10 +86,22 @@ export default function FinalCTASection({
       {PARTICLES.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute w-1 h-1 rounded-full bg-[#E8963A]/20 pointer-events-none z-0"
-          style={{ left: `${p.left}%`, top: '100%' }}
-          animate={{ y: [0, -800] }}
-          transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
+          className="absolute rounded-full pointer-events-none z-0"
+          style={{
+            left:            `${p.left}%`,
+            bottom:          '-8px',
+            width:           p.size,
+            height:          p.size,
+            backgroundColor: `rgba(232, 150, 58, ${p.opacity})`,
+          }}
+          animate={{ y: [0, -900] }}
+          transition={{
+            duration:    p.duration,
+            delay:       p.delay,
+            repeat:      Infinity,
+            ease:        'linear',
+            repeatDelay: 0,
+          }}
         />
       ))}
 

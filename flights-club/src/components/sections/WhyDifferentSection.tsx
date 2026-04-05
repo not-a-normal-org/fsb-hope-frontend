@@ -35,8 +35,8 @@ function FeatureCard({ feature }: { feature: typeof WHY_DIFFERENT_FEATURES[numbe
   const iconRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 300, damping: 30 });
-  const springY = useSpring(y, { stiffness: 300, damping: 30 });
+  const springX = useSpring(x, { stiffness: 300, damping: 25 });
+  const springY = useSpring(y, { stiffness: 300, damping: 25 });
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
     if (!iconRef.current) return;
