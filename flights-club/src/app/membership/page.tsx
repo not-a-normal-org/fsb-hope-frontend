@@ -8,14 +8,8 @@ import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
 import TierCard from '@/components/ui/TierCard';
+import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { MEMBERSHIP_TIERS_DETAIL } from '@/lib/constants';
-import {
-  wordContainerVariant,
-  wordVariant,
-  staggerContainerVariant,
-  staggerChildVariant,
-  fadeUpVariant,
-} from '@/lib/animations';
 
 
 // ── Section 1: Hero ────────────────────────────────────────────────────────────
@@ -43,38 +37,37 @@ function MembershipHero() {
           className="text-xs uppercase tracking-[0.35em] text-text-secondary mb-6"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
         >
           The Flights Club
         </motion.p>
 
         {/* Headline — word by word */}
         <h1 className="font-display font-bold leading-tight mb-8">
-          <motion.span
-            className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-5xl sm:text-6xl lg:text-7xl text-text-primary mb-2"
-            variants={wordContainerVariant}
-            initial="hidden"
-            animate="visible"
-          >
+          <span className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-5xl sm:text-6xl lg:text-7xl text-text-primary mb-2">
             {line1.map((word, i) => (
-              <motion.span key={i} variants={wordVariant}>
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.05, duration: 0.5 }}
+              >
                 {word}
               </motion.span>
             ))}
-          </motion.span>
-          <motion.span
-            className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-5xl sm:text-6xl lg:text-7xl text-accent-orange"
-            variants={wordContainerVariant}
-            initial="hidden"
-            animate="visible"
-            transition={{ delayChildren: 0.4 }}
-          >
+          </span>
+          <span className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-5xl sm:text-6xl lg:text-7xl text-accent-orange">
             {line2.map((word, i) => (
-              <motion.span key={i} variants={wordVariant}>
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.05, duration: 0.5 }}
+              >
                 {word}
               </motion.span>
             ))}
-          </motion.span>
+          </span>
         </h1>
 
         {/* Subheadline */}
@@ -136,65 +129,53 @@ function HowItWorksSection() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         {/* Header */}
-        <motion.div
-          className="text-center mb-20"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <ScrollReveal className="text-center mb-20">
           <p className="text-xs uppercase tracking-[0.35em] text-text-secondary mb-4">
             The Process
           </p>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
             Three Steps to Business Class
           </h2>
-        </motion.div>
+        </ScrollReveal>
 
         {/* Steps */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          variants={staggerContainerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {STEPS.map(({ num, icon: Icon, title, body }) => (
-            <motion.div
-              key={num}
-              className="group relative rounded-xl border border-border-subtle bg-bg-card p-8 overflow-hidden hover:border-accent-orange/30 transition-colors duration-300"
-              variants={staggerChildVariant}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Faded step number */}
-              <span
-                className="absolute -top-4 -left-2 text-[7rem] font-display font-black leading-none select-none pointer-events-none"
-                style={{ color: 'rgba(232,150,58,0.08)' }}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {STEPS.map(({ num, icon: Icon, title, body }, idx) => (
+            <ScrollReveal key={num} delay={idx * 0.1}>
+              <motion.div
+                className="group relative rounded-xl border border-border-subtle bg-bg-card p-8 overflow-hidden hover:border-accent-orange/30 transition-colors duration-300"
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.3 }}
               >
-                {num}
-              </span>
+                {/* Faded step number */}
+                <span
+                  className="absolute -top-4 -left-2 text-[7rem] font-display font-black leading-none select-none pointer-events-none"
+                  style={{ color: 'rgba(232,150,58,0.08)' }}
+                >
+                  {num}
+                </span>
 
-              {/* Icon */}
-              <div className="relative z-10 mb-6 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-accent-orange/10 border border-accent-orange/20">
-                <Icon size={22} className="text-accent-orange" strokeWidth={1.8} />
-              </div>
+                {/* Icon */}
+                <div className="relative z-10 mb-6 inline-flex items-center justify-center w-12 h-12 rounded-lg bg-accent-orange/10 border border-accent-orange/20">
+                  <Icon size={22} className="text-accent-orange" strokeWidth={1.8} />
+                </div>
 
-              {/* Title */}
-              <h3 className="relative z-10 text-xl font-display font-bold text-text-primary mb-3">
-                {title}
-              </h3>
+                {/* Title */}
+                <h3 className="relative z-10 text-xl font-display font-bold text-text-primary mb-3">
+                  {title}
+                </h3>
 
-              {/* Body */}
-              <p className="relative z-10 text-text-secondary text-sm leading-relaxed">
-                {body}
-              </p>
+                {/* Body */}
+                <p className="relative z-10 text-text-secondary text-sm leading-relaxed">
+                  {body}
+                </p>
 
-              {/* Hover glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent-orange/0 to-accent-orange/0 group-hover:from-accent-orange/5 group-hover:to-transparent transition-all duration-300 pointer-events-none" />
-            </motion.div>
+                {/* Hover glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-accent-orange/0 to-accent-orange/0 group-hover:from-accent-orange/5 group-hover:to-transparent transition-all duration-300 pointer-events-none" />
+              </motion.div>
+            </ScrollReveal>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -210,13 +191,7 @@ function TierComparisonSection() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          variants={fadeUpVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
-        >
+        <ScrollReveal className="text-center mb-16">
           <p className="text-xs uppercase tracking-[0.35em] text-text-secondary mb-4">
             Membership Tiers
           </p>
@@ -226,32 +201,24 @@ function TierComparisonSection() {
           <p className="text-lg text-text-secondary max-w-2xl mx-auto">
             Built for Australian business owners at every stage of growth.
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        {/* Cards — reusing shared TierCard with detail-level data */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start"
-          variants={staggerContainerVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-        >
-          {MEMBERSHIP_TIERS_DETAIL.map((tier) => (
-            <TierCard key={tier.id} tier={tier} elevated />
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          {MEMBERSHIP_TIERS_DETAIL.map((tier, i) => (
+            <ScrollReveal key={tier.id} delay={i * 0.1}>
+              <TierCard tier={tier} elevated />
+            </ScrollReveal>
           ))}
-        </motion.div>
+        </div>
 
         {/* Satisfaction guarantee */}
-        <motion.p
-          className="text-center text-[#9DA3B4] text-sm mt-12 max-w-xl mx-auto leading-relaxed"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          All memberships include a 30-day satisfaction review. If we haven&apos;t
-          delivered value in the first 30 days, we&apos;ll refund your membership fee.
-        </motion.p>
+        <ScrollReveal className="text-center mt-12 max-w-xl mx-auto">
+          <p className="text-[#9DA3B4] text-sm leading-relaxed">
+            All memberships include a 30-day satisfaction review. If we haven&apos;t
+            delivered value in the first 30 days, we&apos;ll refund your membership fee.
+          </p>
+        </ScrollReveal>
       </div>
     </section>
   );

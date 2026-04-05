@@ -35,6 +35,11 @@
     box-sizing: border-box;
   }
 
+  /* Hide default cursor on pointer devices; restore on touch/coarse */
+  * {
+    cursor: none !important;
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -62,6 +67,13 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: var(--accent-orange-light);
+  }
+}
+
+/* Restore cursor on touch / coarse-pointer devices (phones, tablets) */
+@media (pointer: coarse) {
+  * {
+    cursor: auto !important;
   }
 }
 

@@ -31,14 +31,5 @@ export default function GSAPProvider() {
     return () => window.removeEventListener('pageshow', handlePageShow)
   }, [])
 
-  // Prevent scroll position conflicts between bfcache scroll restoration
-  // and GSAP's internal scroll tracking
-  useEffect(() => {
-    ScrollTrigger.normalizeScroll(true)
-    return () => {
-      ScrollTrigger.normalizeScroll(false)
-    }
-  }, [])
-
   return null
 }
