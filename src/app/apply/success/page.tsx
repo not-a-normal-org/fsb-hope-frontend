@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function ApplySuccessPage() {
   return (
@@ -10,51 +10,47 @@ export default function ApplySuccessPage() {
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-[480px] bg-[#0E1220] border border-[#1E2538] rounded-2xl p-8 md:p-10 text-center"
+        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        className="w-full max-w-[480px] text-center"
       >
         {/* Icon */}
         <motion.div
-          initial={{ scale: 0.6, opacity: 0 }}
+          initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 18 }}
-          className="flex justify-center mb-6"
+          transition={{ delay: 0.15, type: 'spring', stiffness: 180, damping: 16 }}
+          className="flex justify-center mb-8"
         >
-          <div className="w-16 h-16 rounded-full bg-[#E8963A]/10 flex items-center justify-center">
-            <CheckCircle size={32} className="text-[#E8963A]" strokeWidth={1.5} />
+          <div className="w-20 h-20 rounded-full bg-[#E8963A]/10 flex items-center justify-center">
+            <CheckCircle2 size={40} className="text-[#E8963A]" strokeWidth={1.5} />
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35 }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
         >
-          <p className="font-[family-name:var(--font-dm-mono)] text-[#E8963A] text-[10px] tracking-widest uppercase mb-3">
-            Application Received
-          </p>
-          <h1 className="text-2xl font-semibold text-white mb-3">
-            You&apos;re in the queue.
-          </h1>
-          <p className="text-[#9DA3B4] text-sm leading-relaxed mb-8">
-            Thank you for applying to The Flights Club. We&apos;ll review your application
-            and be in touch within 2 business days to discuss next steps.
+          <p className="font-[family-name:var(--font-dm-mono)] text-[#E8963A] text-[10px] tracking-widest uppercase mb-4">
+            Submitted
           </p>
 
-          <div className="space-y-3">
+          <h1 className="text-3xl font-semibold text-white mb-4">
+            Application Received
+          </h1>
+
+          <p className="text-[#9DA3B4] text-sm leading-relaxed mb-10 max-w-sm mx-auto">
+            We'll review your application and be in touch within 2 business days.
+            Check your email for a confirmation.
+          </p>
+
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/"
-              className="block w-full bg-[#E8963A] hover:bg-[#F2AA5E] text-[#07090F] font-semibold text-sm px-6 py-3 rounded-lg transition-colors text-center"
+              className="inline-block bg-[#E8963A] hover:bg-[#F2AA5E] text-[#07090F] font-semibold text-sm px-8 py-3.5 rounded-lg transition-colors"
             >
-              Back to Home
+              Back to Homepage
             </Link>
-            <Link
-              href="/membership"
-              className="block w-full text-[#9DA3B4] hover:text-white text-sm py-2 transition-colors"
-            >
-              Explore membership tiers
-            </Link>
-          </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>

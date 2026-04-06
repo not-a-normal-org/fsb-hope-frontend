@@ -12,7 +12,7 @@ interface FormData {
   fullName: string;
   email: string;
   phone: string;
-  hearAboutUs: string;
+  referralSource: string;
   // Step 2
   companyName: string;
   businessType: string;
@@ -31,7 +31,7 @@ const INITIAL_FORM: FormData = {
   fullName: '',
   email: '',
   phone: '',
-  hearAboutUs: '',
+  referralSource: '',
   companyName: '',
   businessType: '',
   annualSpend: '',
@@ -140,7 +140,7 @@ function ApplyForm() {
       } else if ((form.phone.match(/\d/g) ?? []).length < 8) {
         e.phone = 'Must contain at least 8 digits';
       }
-      if (!form.hearAboutUs)            e.hearAboutUs  = 'Please select an option';
+      if (!form.referralSource)            e.referralSource  = 'Please select an option';
     }
     if (s === 2) {
       if (!form.companyName.trim())     e.companyName  = 'Company name is required';
@@ -313,8 +313,8 @@ function ApplyForm() {
                     <div className="relative">
                       <select
                         className={inputCls}
-                        value={form.hearAboutUs}
-                        onChange={field('hearAboutUs')}
+                        value={form.referralSource}
+                        onChange={field('referralSource')}
                       >
                         <option value="" disabled>Select an option</option>
                         {HOW_DID_YOU_HEAR.map(o => (
@@ -323,7 +323,7 @@ function ApplyForm() {
                       </select>
                       <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6378] rotate-90 pointer-events-none" />
                     </div>
-                    {errors.hearAboutUs && <p className={errCls}>{errors.hearAboutUs}</p>}
+                    {errors.referralSource && <p className={errCls}>{errors.referralSource}</p>}
                   </div>
                 </div>
               )}
