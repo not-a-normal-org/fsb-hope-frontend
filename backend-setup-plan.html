@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Flights Club — Backend Setup Plan</title>
+<style>
+  :root {
+    --bg-primary: #07090F;
+    --bg-secondary: #0E1220;
+    --bg-card: #13182A;
+    --accent-orange: #E8963A;
+    --accent-blue: #3A6FE8;
+    --accent-gold: #C9A84C;
+    --text-primary: #F5F5F0;
+    --text-secondary: #9DA3B4;
+    --text-muted: #5C6378;
+    --border-subtle: #1E2538;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* HEADER */
+  .doc-header {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 32px;
+    margin-bottom: 48px;
+  }
+
+  .doc-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .doc-header .subtitle {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .doc-header .tag-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .tag.orange { border-color: var(--accent-orange); color: var(--accent-orange); }
+  .tag.blue { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+  /* TOC */
+  .toc {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+
+  .toc h3 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 24px;
+  }
+
+  .toc a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    transition: color 0.15s;
+  }
+
+  .toc a:hover { color: var(--accent-orange); }
+
+  .toc-num {
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    min-width: 24px;
+  }
+
+  /* SECTION */
+  .step-section {
+    margin-bottom: 52px;
+    scroll-margin-top: 24px;
+  }
+
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .step-badge {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 4px;
+    min-width: 52px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .step-badge.copilot {
+    background: rgba(232, 150, 58, 0.1);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+  }
+
+  .step-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .step-desc {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* CONTENT */
+  p {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 20px 0 10px;
+  }
+
+  /* COPILOT PROMPT BOX */
+  .copilot-box {
+    background: rgba(232, 150, 58, 0.04);
+    border: 1px solid rgba(232, 150, 58, 0.2);
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+
+  .copilot-box-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(232, 150, 58, 0.08);
+    border-bottom: 1px solid rgba(232, 150, 58, 0.15);
+  }
+
+  .copilot-box-header .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-orange);
+  }
+
+  .copilot-box pre {
+    padding: 16px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .copilot-box pre::-webkit-scrollbar { width: 6px; }
+  .copilot-box pre::-webkit-scrollbar-track { background: transparent; }
+  .copilot-box pre::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+
+  .code-block-header {
+    padding: 8px 14px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .code-block pre {
+    padding: 14px;
+    margin: 0;
+    overflow-x: auto;
+    white-space: pre;
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+
+  /* INFO BOXES */
+  .info-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+
+  .info-box.warning {
+    border-left: 3px solid var(--accent-orange);
+    background: rgba(232, 150, 58, 0.04);
+  }
+
+  /* PRODUCT CARDS */
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .product-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .product-card .price {
+    font-size: 13px;
+    color: var(--accent-orange);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 4px;
+  }
+
+  .product-card p {
+    font-size: 12px;
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* PHASE TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  td:first-child { color: var(--text-primary); font-weight: 500; }
+
+  tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  /* LISTS */
+  ul, ol {
+    padding-left: 20px;
+    margin: 10px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  li { margin-bottom: 6px; }
+
+  /* DIVIDER */
+  .phase-divider {
+    border: none;
+    border-top: 2px solid var(--border-subtle);
+    margin: 48px 0;
+  }
+
+  /* SUMMARY BOX */
+  .summary-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+
+  .summary-box h3 {
+    font-size: 16px;
+    color: var(--accent-orange);
+    margin-bottom: 16px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .summary-item h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .summary-item p {
+    font-size: 13px;
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 24px 16px 60px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .product-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <div class="doc-header">
+    <h1>The Flights Club — Backend Setup Plan</h1>
+    <p class="subtitle">Full system setup: Supabase + Stripe + Admin Panel + Checkout + Newsletter</p>
+    <div class="tag-row">
+      <span class="tag orange">Phase 4</span>
+      <span class="tag blue">Next.js 14</span>
+      <span class="tag">Supabase</span>
+      <span class="tag">Stripe</span>
+      <span class="tag">Resend</span>
+      <span class="tag">Cal.com</span>
+      <span class="tag">16 Steps</span>
+      <span class="tag">11 Copilot Prompts</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <h3>Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#step1"><span class="toc-num">01</span> Install Dependencies</a>
+      <a href="#step2"><span class="toc-num">02</span> Create Supabase Project</a>
+      <a href="#step3"><span class="toc-num">03</span> Create Stripe Account</a>
+      <a href="#step4"><span class="toc-num">04</span> Environment Variables</a>
+      <a href="#step5"><span class="toc-num">05</span> Database Schema (SQL)</a>
+      <a href="#step6"><span class="toc-num">06</span> Create Stripe Products</a>
+      <a href="#step7"><span class="toc-num">07</span> Supabase Client Files</a>
+      <a href="#step8"><span class="toc-num">08</span> Stripe Utility File</a>
+      <a href="#step9"><span class="toc-num">09</span> Stripe Webhook Handler</a>
+      <a href="#step10"><span class="toc-num">10</span> Checkout API Routes</a>
+      <a href="#step11"><span class="toc-num">11</span> Newsletter Route</a>
+      <a href="#step12"><span class="toc-num">12</span> Admin Panel Setup</a>
+      <a href="#step13"><span class="toc-num">13</span> Admin Dashboard Pages</a>
+      <a href="#step14"><span class="toc-num">14</span> Connect Checkout to Frontend</a>
+      <a href="#step15"><span class="toc-num">15</span> Cal.com Booking Embed</a>
+      <a href="#step16"><span class="toc-num">16</span> Deploy to Vercel</a>
+    </div>
+  </div>
+
+  <!-- WHAT YOU'RE BUILDING -->
+  <div class="step-section">
+    <h2>What You're Building</h2>
+    <p>A fully managed backend that goes live fast. No custom backend from scratch.</p>
+
+    <div class="summary-box">
+      <h3>System Overview</h3>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <h4>Database + Auth + Admin</h4>
+          <p>Supabase handles your database, user auth, and row-level security. Supabase Studio is your raw admin panel.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Payments + Subscriptions</h4>
+          <p>Stripe handles all money. Subscriptions, one-off payments, invoices, refunds, and customer portal. Zero billing UI to build.</p>
+        </div>
+        <div class="summary-item">
+          <h4>Custom Admin Panel</h4>
+          <p>A /admin dashboard inside your Next.js app. Your branded view for customers, orders, newsletters, and products.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Your 4 Products</h3>
+    <div class="product-grid">
+      <div class="product-card">
+        <h4>Explore Membership</h4>
+        <div class="price">Recurring / Annual</div>
+        <p>Stripe subscription. Members billed yearly. Managed in Stripe Billing.</p>
+      </div>
+      <div class="product-card">
+        <h4>Platinum Membership</h4>
+        <div class="price">Recurring / Annual</div>
+        <p>Stripe subscription. Same flow, higher tier. Upgrade path via Stripe Portal.</p>
+      </div>
+      <div class="product-card">
+        <h4>Black Membership</h4>
+        <div class="price">Recurring / Annual</div>
+        <p>Stripe subscription with gold treatment. Same infrastructure, premium positioning.</p>
+      </div>
+      <div class="product-card">
+        <h4>Points Concierge</h4>
+        <div class="price">One-off / $1,900 AUD</div>
+        <p>Stripe one-time payment. No recurring. Tracked in orders table.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- STEP 1 -->
+  <div class="step-section" id="step1">
+    <div class="step-header">
+      <div class="step-badge">01</div>
+      <div>
+        <div class="step-title">Install Dependencies</div>
+        <div class="step-desc">Run this once in your terminal</div>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">terminal</div>
+      <pre>npm install @supabase/supabase-js @supabase/ssr stripe @stripe/stripe-js resend
+npm install -D supabase</pre>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-section" id="step2">
+    <div class="step-header">
+      <div class="step-badge">02</div>
+      <div>
+        <div class="step-title">Create Supabase Project</div>
+        <div class="step-desc">Your database, auth, and raw admin panel</div>
+      </div>
+    </div>
+    <ol>
+      <li>Go to <strong>supabase.com</strong> and create a new project named <code>flights-club</code></li>
+      <li>Save your database password somewhere safe</li>
+      <li>Go to <strong>Settings &gt; API</strong> and copy these three values:</li>
+    </ol>
+    <div class="code-block">
+      <div class="code-block-header">values to copy from Supabase Settings &gt; API</div>
+      <pre>Project URL          → NEXT_PUBLIC_SUPABASE_URL
+anon public key      → NEXT_PUBLIC_SUPABASE_ANON_KEY
+service_role key     → SUPABASE_SERVICE_ROLE_KEY  ← never expose client-side</pre>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-section" id="step3">
+    <div class="step-header">
+      <div class="step-badge">03</div>
+      <div>
+        <div class="step-title">Create Stripe Account</div>
+        <div class="step-desc">Payments, subscriptions, and customer billing portal</div>
+      </div>
+    </div>
+    <ol>
+      <li>Go to <strong>stripe.com</strong> and create your account</li>
+      <li>Go to <strong>Developers &gt; API Keys</strong> and copy both keys</li>
+      <li>Go to <strong>Developers &gt; Webhooks &gt; Add endpoint</strong> (you'll fill the URL in Step 16 after deploy)</li>
+    </ol>
+    <div class="code-block">
+      <div class="code-block-header">webhook events to select in Stripe</div>
+      <pre>checkout.session.completed
+customer.subscription.updated
+customer.subscription.deleted
+invoice.paid
+invoice.payment_failed</pre>
+    </div>
+    <div class="info-box warning">
+      Copy the webhook signing secret immediately after creating it. Stripe only shows it once.
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-section" id="step4">
+    <div class="step-header">
+      <div class="step-badge">04</div>
+      <div>
+        <div class="step-title">Set Up Environment Variables</div>
+        <div class="step-desc">Create .env.local in your project root</div>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">.env.local</div>
+      <pre># Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_publishable_key
+STRIPE_SECRET_KEY=your_secret_key
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+
+# Stripe Price IDs (fill after Step 6)
+NEXT_PUBLIC_STRIPE_PRICE_EXPLORE=price_xxx
+NEXT_PUBLIC_STRIPE_PRICE_PLATINUM=price_xxx
+NEXT_PUBLIC_STRIPE_PRICE_BLACK=price_xxx
+NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE=price_xxx
+
+# Resend
+RESEND_API_KEY=your_resend_key
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+ADMIN_SECRET=pick_a_strong_random_password_here</pre>
+    </div>
+    <div class="info-box warning">
+      Add all these same values to Vercel &gt; Settings &gt; Environment Variables before deploying.
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-section" id="step5">
+    <div class="step-header">
+      <div class="step-badge">05</div>
+      <div>
+        <div class="step-title">Build the Supabase Database Schema</div>
+        <div class="step-desc">Go to Supabase &gt; SQL Editor and run this SQL</div>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-block-header">supabase sql editor — run this entire block</div>
+      <pre>-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- PRODUCTS TABLE
+create table products (
+  id uuid default uuid_generate_v4() primary key,
+  stripe_product_id text unique not null,
+  stripe_price_id text unique not null,
+  name text not null,
+  description text,
+  type text check (type in ('subscription', 'one_off')) not null,
+  price_cents integer not null,
+  currency text default 'aud',
+  billing_interval text check (billing_interval in ('month', 'year', null)),
+  features jsonb default '[]',
+  is_active boolean default true,
+  sort_order integer default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- CUSTOMERS TABLE
+create table customers (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users(id) on delete cascade,
+  stripe_customer_id text unique,
+  email text not null,
+  full_name text,
+  phone text,
+  company_name text,
+  business_type text,
+  annual_spend_range text,
+  abn text,
+  address jsonb,
+  notes text,
+  tags text[] default '{}',
+  status text check (status in ('active', 'inactive', 'blocked', 'pending')) default 'pending',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- SUBSCRIPTIONS TABLE
+create table subscriptions (
+  id uuid default uuid_generate_v4() primary key,
+  customer_id uuid references customers(id) on delete cascade,
+  stripe_subscription_id text unique,
+  stripe_price_id text not null,
+  product_id uuid references products(id),
+  status text check (status in ('active', 'canceled', 'past_due', 'trialing', 'incomplete', 'paused')) not null,
+  current_period_start timestamptz,
+  current_period_end timestamptz,
+  cancel_at_period_end boolean default false,
+  canceled_at timestamptz,
+  trial_end timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- ORDERS TABLE (one-off payments like Concierge)
+create table orders (
+  id uuid default uuid_generate_v4() primary key,
+  customer_id uuid references customers(id) on delete set null,
+  stripe_payment_intent_id text unique,
+  stripe_session_id text unique,
+  product_id uuid references products(id),
+  amount_cents integer not null,
+  currency text default 'aud',
+  status text check (status in ('pending', 'paid', 'refunded', 'failed')) default 'pending',
+  metadata jsonb default '{}',
+  notes text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- NEWSLETTER SUBSCRIBERS TABLE
+create table newsletter_subscribers (
+  id uuid default uuid_generate_v4() primary key,
+  email text unique not null,
+  full_name text,
+  source text,
+  is_active boolean default true,
+  subscribed_at timestamptz default now(),
+  unsubscribed_at timestamptz
+);
+
+-- APPOINTMENTS TABLE
+create table appointments (
+  id uuid default uuid_generate_v4() primary key,
+  customer_id uuid references customers(id) on delete set null,
+  cal_booking_id text unique,
+  event_type text,
+  title text,
+  attendee_name text,
+  attendee_email text,
+  attendee_phone text,
+  start_time timestamptz,
+  end_time timestamptz,
+  status text check (status in ('upcoming', 'completed', 'cancelled', 'no_show')) default 'upcoming',
+  notes text,
+  metadata jsonb default '{}',
+  created_at timestamptz default now()
+);
+
+-- ADMIN AUDIT LOG
+create table admin_audit_log (
+  id uuid default uuid_generate_v4() primary key,
+  admin_user text,
+  action text not null,
+  table_name text,
+  record_id text,
+  old_value jsonb,
+  new_value jsonb,
+  created_at timestamptz default now()
+);
+
+-- AUTO-UPDATE updated_at
+create or replace function update_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger update_customers_updated_at
+  before update on customers for each row execute function update_updated_at();
+create trigger update_subscriptions_updated_at
+  before update on subscriptions for each row execute function update_updated_at();
+create trigger update_products_updated_at
+  before update on products for each row execute function update_updated_at();
+create trigger update_orders_updated_at
+  before update on orders for each row execute function update_updated_at();
+
+-- ROW LEVEL SECURITY
+alter table customers enable row level security;
+alter table subscriptions enable row level security;
+alter table orders enable row level security;
+alter table newsletter_subscribers enable row level security;
+alter table appointments enable row level security;
+alter table products enable row level security;
+
+-- Policies
+create policy "Public can view active products"
+  on products for select using (is_active = true);
+
+create policy "Customers see own data"
+  on customers for select using (auth.uid() = user_id);
+
+create policy "Customers see own subscriptions"
+  on subscriptions for select using (
+    customer_id in (select id from customers where user_id = auth.uid())
+  );
+
+create policy "Customers see own orders"
+  on orders for select using (
+    customer_id in (select id from customers where user_id = auth.uid())
+  );</pre>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step-section" id="step6">
+    <div class="step-header">
+      <div class="step-badge">06</div>
+      <div>
+        <div class="step-title">Create Stripe Products</div>
+        <div class="step-desc">Go to Stripe Dashboard &gt; Products &gt; Add Product</div>
+      </div>
+    </div>
+    <p>Create these 4 products in Stripe. After creating each one, copy the Price ID into your .env.local file.</p>
+    <table>
+      <thead>
+        <tr><th>Product Name</th><th>Type</th><th>Price</th><th>Env Variable</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Explore Membership</td><td>Recurring</td><td>$X,XXX AUD/year</td><td>NEXT_PUBLIC_STRIPE_PRICE_EXPLORE</td></tr>
+        <tr><td>Platinum Membership</td><td>Recurring</td><td>$X,XXX AUD/year</td><td>NEXT_PUBLIC_STRIPE_PRICE_PLATINUM</td></tr>
+        <tr><td>Black Membership</td><td>Recurring</td><td>$X,XXX AUD/year</td><td>NEXT_PUBLIC_STRIPE_PRICE_BLACK</td></tr>
+        <tr><td>Points Flight Concierge</td><td>One-time</td><td>$1,900 AUD</td><td>NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box warning">
+      To change a price later: archive the old price in Stripe, create a new price, update the env variable. Existing subscribers automatically stay on the old price.
+    </div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- STEP 7 -->
+  <div class="step-section" id="step7">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 1</div>
+      <div>
+        <div class="step-title">Create Supabase Client Files</div>
+        <div class="step-desc">3 files — browser client, server client, admin client</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 1 — paste this exactly</span></div>
+      <pre>Create three Supabase client utility files in my Next.js 14 App Router project.
+
+File 1: src/lib/supabase/client.ts
+- Creates a browser-side Supabase client using createBrowserClient from @supabase/ssr
+- Uses NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+- Export as: export const supabase = createBrowserClient(...)
+
+File 2: src/lib/supabase/server.ts
+- Creates a server-side Supabase client using createServerClient from @supabase/ssr
+- Reads cookies using next/headers cookies()
+- Export as an async function: export async function createSupabaseServerClient()
+- This is used in Server Components and API route handlers
+
+File 3: src/lib/supabase/admin.ts
+- Creates a Supabase admin client using createClient from @supabase/supabase-js
+- Uses SUPABASE_SERVICE_ROLE_KEY (bypasses RLS — only use server-side)
+- Export as: export const supabaseAdmin = createClient(url, serviceRoleKey)
+- Add a comment warning this must never be imported in client components
+
+All files must be TypeScript with proper types. Use environment variables exactly as named in .env.local.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 8 -->
+  <div class="step-section" id="step8">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 2</div>
+      <div>
+        <div class="step-title">Create Stripe Utility File</div>
+        <div class="step-desc">Stripe client + product fetching + currency formatter</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 2 — paste this exactly</span></div>
+      <pre>Create src/lib/stripe.ts in my Next.js 14 TypeScript project.
+
+This file should:
+1. Import and initialise the Stripe Node.js client using STRIPE_SECRET_KEY
+   - export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-04-10' })
+
+2. Export a TypeScript interface called StripeProduct:
+   - id: string
+   - name: string
+   - description: string | null
+   - priceId: string
+   - unitAmount: number | null
+   - currency: string
+   - interval: 'month' | 'year' | null
+   - type: 'recurring' | 'one_time'
+   - active: boolean
+
+3. Export an async function getActiveProducts() that:
+   - Fetches all active products from Stripe with prices expanded
+   - Filters to only active prices
+   - Returns an array of StripeProduct objects
+   - Is cached with next: { revalidate: 3600 }
+
+4. Export a function formatCurrency(amount: number, currency: string): string
+   - Formats cents to display currency (e.g. 190000 AUD → "AU$1,900")
+   - Uses Intl.NumberFormat
+
+Add 'server-only' import at the top. TypeScript throughout.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 9 -->
+  <div class="step-section" id="step9">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 3</div>
+      <div>
+        <div class="step-title">Create the Stripe Webhook Handler</div>
+        <div class="step-desc">The most important file — keeps your DB in sync with Stripe</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 3 — paste this exactly</span></div>
+      <pre>Create src/app/api/webhooks/stripe/route.ts in my Next.js 14 App Router project.
+
+This is a POST route handler for Stripe webhooks.
+
+It must:
+1. Read the raw request body as text (not JSON) — required for Stripe signature verification
+2. Get the stripe-signature header from the request
+3. Verify the webhook using:
+   stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+4. Use supabaseAdmin (from src/lib/supabase/admin.ts) for all DB operations
+
+Handle these Stripe events:
+
+checkout.session.completed
+- Get the session with customer and subscription/payment_intent expanded
+- If mode is 'subscription':
+  - Upsert a row in customers: stripe_customer_id, email from session.customer_details.email
+  - Insert a row in subscriptions: stripe_subscription_id, stripe_price_id, status, period dates
+- If mode is 'payment':
+  - Upsert a row in customers
+  - Insert a row in orders: stripe_payment_intent_id, stripe_session_id, amount_cents, status 'paid'
+
+customer.subscription.updated
+- Find subscription by stripe_subscription_id
+- Update: status, current_period_start, current_period_end, cancel_at_period_end
+
+customer.subscription.deleted
+- Find subscription by stripe_subscription_id
+- Update status to 'canceled', set canceled_at to now()
+
+invoice.paid
+- Find customer by stripe_customer_id
+- Update subscription status to 'active' if it was 'past_due'
+
+invoice.payment_failed
+- Find subscription by stripe_customer_id
+- Update subscription status to 'past_due'
+
+Return 200 for handled events, 400 for signature failures, 200 for unhandled events.
+TypeScript throughout. Wrap everything in try/catch with console.error logging.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 10 -->
+  <div class="step-section" id="step10">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 4</div>
+      <div>
+        <div class="step-title">Create Checkout API Routes</div>
+        <div class="step-desc">POST /api/checkout and POST /api/portal</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 4 — paste this exactly</span></div>
+      <pre>Create two API routes in my Next.js 14 App Router project.
+
+FILE 1: src/app/api/checkout/route.ts
+
+POST route that creates a Stripe Checkout session.
+
+Request body (JSON): { priceId: string, mode: 'subscription' | 'payment', customerEmail?: string, metadata?: Record&lt;string, string&gt; }
+
+The route should:
+1. Import stripe from src/lib/stripe.ts
+2. Validate priceId and mode are present — return 400 if missing
+3. Create a Stripe Checkout session with:
+   - payment_method_types: ['card']
+   - mode: from request
+   - line_items: [{ price: priceId, quantity: 1 }]
+   - success_url: process.env.NEXT_PUBLIC_APP_URL + '/dashboard?success=true'
+   - cancel_url: process.env.NEXT_PUBLIC_APP_URL + '/membership'
+   - customer_email: if provided
+   - billing_address_collection: 'required'
+   - For subscriptions: allow_promotion_codes: true
+4. Return { url: session.url }
+
+FILE 2: src/app/api/portal/route.ts
+
+POST route that creates a Stripe Customer Portal session.
+Takes { customerId: string } in request body.
+Returns { url: portalSession.url }
+This lets members manage their own billing, cancel, and upgrade without any UI work.
+
+TypeScript throughout.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 11 -->
+  <div class="step-section" id="step11">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 5</div>
+      <div>
+        <div class="step-title">Create Newsletter Subscribe Route</div>
+        <div class="step-desc">Saves to Supabase and sends welcome email via Resend</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 5 — paste this exactly</span></div>
+      <pre>Create src/app/api/newsletter/route.ts in my Next.js 14 App Router project.
+
+POST route. Request body: { email: string, name?: string, source?: string }
+
+It should:
+1. Validate email format
+2. Use supabaseAdmin to upsert into newsletter_subscribers:
+   - email (unique key for upsert)
+   - full_name from name if provided
+   - source from request body
+   - is_active: true
+3. If RESEND_API_KEY exists, send a welcome email:
+   - From: 'hello@theflightsclub.com.au'
+   - To: subscriber's email
+   - Subject: 'Welcome to The Flights Club'
+   - Simple HTML: thank them, mention they'll get exclusive tips on Business Class travel
+4. Return { success: true } on success
+5. Return { error: 'Already subscribed' } with status 409 if email already active
+6. Return 400 for invalid email, 500 for server errors
+
+TypeScript throughout.</pre>
+    </div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- STEP 12 -->
+  <div class="step-section" id="step12">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 6</div>
+      <div>
+        <div class="step-title">Build the Admin Panel (Structure + Auth)</div>
+        <div class="step-desc">Protected /admin section with sidebar, login page, and middleware</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 6 — paste this exactly</span></div>
+      <pre>Create a protected admin section in my Next.js 14 App Router project.
+
+Files to create:
+- src/app/admin/layout.tsx
+- src/app/admin/page.tsx (dashboard overview with summary stats)
+- src/app/admin/login/page.tsx
+- src/app/api/admin/login/route.ts
+- src/middleware.ts
+
+MIDDLEWARE (src/middleware.ts):
+- Protect all routes matching /admin/:path* EXCEPT /admin/login
+- Check for cookie named 'admin_token'
+- If cookie value does not equal process.env.ADMIN_SECRET, redirect to /admin/login
+- Export a config matcher for /admin/:path*
+
+ADMIN LAYOUT (src/app/admin/layout.tsx):
+- 'use client' directive
+- Dark sidebar navigation (240px wide, fixed)
+- Sidebar uses project colors: bg-[#0E1220], border-r border-[#1E2538]
+- Navigation links (with Lucide React icons):
+  - Dashboard (LayoutDashboard icon) → /admin
+  - Customers (Users icon) → /admin/customers
+  - Subscriptions (CreditCard icon) → /admin/subscriptions
+  - Orders (ShoppingBag icon) → /admin/orders
+  - Products (Package icon) → /admin/products
+  - Newsletter (Mail icon) → /admin/newsletter
+  - Appointments (Calendar icon) → /admin/appointments
+- Active link gets bg-[#13182A] and left border accent #E8963A
+- Top bar: page title on left, logout button on right
+- Logout button: clears 'admin_token' cookie, redirects to /admin/login
+- Main content area: bg-[#07090F], padding 32px
+- Use Inter font
+
+LOGIN PAGE (src/app/admin/login/page.tsx):
+- Dark centered card, project colors
+- Title: "The Flights Club Admin"
+- Single password input field
+- Submit button using project's primary button style (bg #E8963A)
+- On submit: POST to /api/admin/login, redirect to /admin on success, show error on failure
+
+LOGIN API (src/app/api/admin/login/route.ts):
+- POST route taking { password: string }
+- Compare to process.env.ADMIN_SECRET
+- On match: set httpOnly cookie 'admin_token' with 24hr maxAge, return { success: true }
+- On fail: return 401 { error: 'Invalid password' }
+
+DASHBOARD PAGE (src/app/admin/page.tsx):
+- Server component
+- Fetch summary stats using supabaseAdmin:
+  - Total customers count
+  - Active subscriptions count
+  - Total paid orders count
+  - Total revenue (sum of orders.amount_cents where status='paid')
+  - Newsletter subscribers count
+- Display as 5 stat cards in a grid: dark cards, big number, label below
+- Add a recent activity section showing last 10 customers (name, email, joined date)
+
+Tailwind, TypeScript throughout.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 13 -->
+  <div class="step-section" id="step13">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 7+</div>
+      <div>
+        <div class="step-title">Build Admin Dashboard Pages</div>
+        <div class="step-desc">Customers, Subscriptions, Orders, Products, Newsletter — 3 prompts</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 7 — Customers Page</span></div>
+      <pre>Build src/app/admin/customers/page.tsx and src/app/admin/customers/actions.ts
+in my Next.js 14 project.
+
+CUSTOMERS PAGE (server component):
+1. Fetch all customers with latest active subscription joined:
+   - customer fields: id, email, full_name, company_name, status, created_at
+   - joined: subscription status, current_period_end, product name
+   - Order by created_at DESC
+
+2. Render a data table with columns:
+   - Name + Company (stacked)
+   - Email
+   - Status (colored badge: active=green, blocked=red, pending=yellow, inactive=gray)
+   - Membership tier (Explore / Platinum / Black / None)
+   - Member since date
+   - Actions: Block button (or Unblock if currently blocked)
+
+3. Client-side search input that filters table by name or email using useState + useTransition
+   (wrap the table in a 'use client' component, pass data as props)
+
+4. Status filter: All / Active / Blocked / Pending
+
+5. Summary stats bar at top: Total customers, Active subscriptions, Blocked count
+
+ACTIONS FILE (src/app/admin/customers/actions.ts):
+- 'use server' directive
+- Export async function toggleCustomerStatus(customerId: string, currentStatus: string): Promise&lt;void&gt;
+  - Updates customer status: if 'active' → 'blocked', if 'blocked' → 'active'
+  - Logs to admin_audit_log table
+  - Calls revalidatePath('/admin/customers')
+
+Dark theme, project colors, TypeScript.</pre>
+    </div>
+
+    <div class="copilot-box" style="margin-top: 16px;">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 8 — Subscriptions, Orders, Newsletter Pages</span></div>
+      <pre>Build three admin pages in my Next.js 14 project. All server components using supabaseAdmin.
+
+PAGE 1: src/app/admin/subscriptions/page.tsx
+- Fetch subscriptions joined with customers and products
+- Table columns: Customer name + email, Tier/product name, Status badge, Renewal date, Cancel at period end flag, Price
+- Status badges: active=green, past_due=red, canceled=gray, trialing=blue, paused=yellow
+- Summary bar: Active count, Past due count, Est. annual recurring revenue
+- Cancel button per active row — Server Action that calls stripe.subscriptions.cancel() then updates Supabase
+- Create src/app/admin/subscriptions/actions.ts with cancelSubscription(subscriptionId: string, stripeSubId: string)
+
+PAGE 2: src/app/admin/orders/page.tsx
+- Fetch orders joined with customers and products, order by created_at DESC
+- Table columns: Order ID (first 8 chars of id), Customer name + email, Product, Amount (AUD formatted), Status, Date
+- Status filter tabs: All / Paid / Pending / Refunded / Failed
+- Status badges with colors
+- Total revenue from paid orders displayed at top as a stat card
+- No actions needed on this page — read only
+
+PAGE 3: src/app/admin/newsletter/page.tsx
+- Fetch all newsletter_subscribers ordered by subscribed_at DESC
+- Table columns: Email, Name, Source, Subscribed date, Active badge
+- Unsubscribe button per row — Server Action sets is_active=false, unsubscribed_at=now()
+- Stats: Total subscribers, Active count
+- Export CSV button — client component that triggers download of active subscriber emails as CSV
+  Format: email,name,subscribed_at (no external libraries, use native Blob and URL.createObjectURL)
+- Create src/app/admin/newsletter/actions.ts with unsubscribeUser(id: string)
+
+All pages: dark theme #07090F, cards #13182A, borders #1E2538, accent #E8963A. TypeScript.</pre>
+    </div>
+
+    <div class="copilot-box" style="margin-top: 16px;">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 9 — Products Management Page</span></div>
+      <pre>Build src/app/admin/products/page.tsx and src/app/admin/products/actions.ts
+in my Next.js 14 project.
+
+PRODUCTS PAGE:
+1. Fetch all products from Supabase products table ordered by sort_order
+2. Display as cards in a 2-column grid (not a table)
+3. Each card shows:
+   - Product name (large)
+   - Type badge: Subscription (blue) or One-off (gray)
+   - Price formatted as AUD
+   - Billing interval if subscription
+   - Feature list from features jsonb (render as bullet list)
+   - Active / Inactive toggle switch
+   - Sort order number
+   - Stripe IDs in small muted text (for reference)
+   - Edit button (opens inline edit form below the card)
+   - The card dims when is_active is false
+
+4. "Add Product" button at top opens an inline form above the cards:
+   Fields: name, description, type (select), price_cents (number), billing_interval (select: year/month/null),
+   features (textarea, one feature per line — stored as JSON array), stripe_product_id, stripe_price_id, sort_order
+
+5. Edit form (inline, replaces card content):
+   - Editable fields: name, description, features (textarea), is_active, sort_order
+   - Save and Cancel buttons
+   - Note displayed: "To change the price, update it in Stripe first, then update the stripe_price_id here"
+
+ACTIONS FILE (src/app/admin/products/actions.ts):
+- 'use server' directive
+- createProduct(formData: FormData): Promise&lt;void&gt; — insert new row, revalidatePath
+- updateProduct(id: string, formData: FormData): Promise&lt;void&gt; — update row, revalidatePath
+- toggleProductActive(id: string, currentActive: boolean): Promise&lt;void&gt; — flip is_active, revalidatePath
+
+All revalidate '/admin/products'. TypeScript. Dark theme.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 14 -->
+  <div class="step-section" id="step14">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 10</div>
+      <div>
+        <div class="step-title">Connect Checkout to Frontend</div>
+        <div class="step-desc">CheckoutButton component wired to all membership and concierge pages</div>
+      </div>
+    </div>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 10 — paste this exactly</span></div>
+      <pre>Create a reusable CheckoutButton component at src/components/ui/CheckoutButton.tsx
+in my Next.js 14 project.
+
+COMPONENT PROPS:
+interface CheckoutButtonProps {
+  priceId: string
+  mode: 'subscription' | 'payment'
+  label: string
+  variant?: 'primary' | 'secondary' | 'ghost'
+  className?: string
+  customerEmail?: string
+}
+
+BEHAVIOR:
+1. 'use client' directive
+2. useState for loading (boolean) and error (string | null)
+3. On click:
+   - Set loading to true
+   - POST to /api/checkout with { priceId, mode, customerEmail }
+   - On success: window.location.href = response.url
+   - On error: set error message, set loading to false
+4. Shows Lucide React Loader2 icon with animate-spin class when loading
+5. Disables button while loading
+6. If error, show error message below button in red text
+7. Style using project CTAButton classes from the existing design system
+
+Then update these pages to use CheckoutButton:
+
+src/app/membership/page.tsx:
+- Replace CTA buttons on Explore, Platinum, Black tier sections with:
+  &lt;CheckoutButton priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_EXPLORE!} mode="subscription" label="Join Explore" /&gt;
+  (and equivalent for Platinum and Black)
+
+src/app/points-concierge/page.tsx:
+- Replace the main CTA button with:
+  &lt;CheckoutButton priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE!} mode="payment" label="Book My Seat — $1,900" /&gt;
+
+TypeScript throughout.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 15 -->
+  <div class="step-section" id="step15">
+    <div class="step-header">
+      <div class="step-badge copilot">CP 11</div>
+      <div>
+        <div class="step-title">Add Cal.com Booking Embed</div>
+        <div class="step-desc">Free appointment booking on the concierge page</div>
+      </div>
+    </div>
+    <p>First: Go to <strong>cal.com</strong>, create an account, set up an event type called "Points Concierge Consultation" (30 min), connect your Google Calendar. Get your cal link (e.g. <code>yourname/points-concierge</code>).</p>
+    <div class="copilot-box">
+      <div class="copilot-box-header"><span class="label">Copilot Prompt 11 — paste this exactly</span></div>
+      <pre>Create src/components/ui/CalEmbed.tsx in my Next.js 14 project.
+
+This is a 'use client' component that embeds a Cal.com booking widget.
+
+Props: { calLink: string }
+
+It should:
+1. Use useEffect to dynamically load the Cal.com embed script:
+   const script = document.createElement('script')
+   script.src = 'https://app.cal.com/embed/embed.js'
+   script.onload = () => {
+     (window as any).Cal("init", { origin: "https://app.cal.com" })
+     (window as any).Cal("inline", { elementOrSelector: "#cal-embed", calLink: props.calLink })
+   }
+   document.head.appendChild(script)
+
+2. Show a loading skeleton (animated pulse div, dark background) while the script loads
+3. Render a div with id="cal-embed" and min-height of 600px
+
+Then add to src/app/points-concierge/page.tsx:
+- Add a section below the pricing area with:
+  - Section heading: "Book Your Free 20-Minute Strategy Call"
+  - Subtext: "Talk to our team about whether Points Concierge is right for your situation."
+  - &lt;CalEmbed calLink="[YOUR_CAL_LINK_HERE]" /&gt;
+- Replace [YOUR_CAL_LINK_HERE] with a placeholder — I'll update it manually
+
+TypeScript.</pre>
+    </div>
+  </div>
+
+  <!-- STEP 16 -->
+  <div class="step-section" id="step16">
+    <div class="step-header">
+      <div class="step-badge">16</div>
+      <div>
+        <div class="step-title">Deploy and Configure Vercel</div>
+        <div class="step-desc">Final step to go live</div>
+      </div>
+    </div>
+    <ol>
+      <li>Push your code to GitHub</li>
+      <li>Connect the repo to Vercel (vercel.com &gt; New Project)</li>
+      <li>Add all env variables from <code>.env.local</code> to Vercel &gt; Settings &gt; Environment Variables</li>
+      <li>Deploy</li>
+      <li>Once deployed, go to Stripe &gt; Developers &gt; Webhooks &gt; Add endpoint:
+        <div class="code-block" style="margin-top: 8px;">
+          <div class="code-block-header">stripe webhook url</div>
+          <pre>https://yoursite.vercel.app/api/webhooks/stripe</pre>
+        </div>
+      </li>
+      <li>Add all 5 webhook events from Step 3</li>
+      <li>Copy the signing secret into Vercel as <code>STRIPE_WEBHOOK_SECRET</code></li>
+      <li>Trigger a Vercel redeploy to pick up the new variable</li>
+    </ol>
+    <div class="info-box warning" style="margin-top: 16px;">
+      Test with Stripe's webhook CLI locally before going live: <code>stripe listen --forward-to localhost:3000/api/webhooks/stripe</code>
+    </div>
+  </div>
+
+  <hr class="phase-divider">
+
+  <!-- SUMMARY TABLE -->
+  <div class="step-section">
+    <h2>What Each Tool Manages</h2>
+    <table>
+      <thead>
+        <tr><th>What you need to see</th><th>Where to find it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Revenue, MRR, failed payments</td><td>Stripe Dashboard</td></tr>
+        <tr><td>Customer billing, upgrades, cancels</td><td>Stripe Customer Portal (zero UI needed)</td></tr>
+        <tr><td>Raw database, user auth</td><td>Supabase Studio</td></tr>
+        <tr><td>Block/unblock users, view customers</td><td>Your /admin panel</td></tr>
+        <tr><td>Orders + subscription status</td><td>Your /admin panel</td></tr>
+        <tr><td>Newsletter subscribers + CSV export</td><td>Your /admin panel</td></tr>
+        <tr><td>Products, add/edit/archive</td><td>Your /admin panel (prices in Stripe)</td></tr>
+        <tr><td>Bookings / appointments</td><td>Cal.com dashboard</td></tr>
+        <tr><td>Email campaigns</td><td>Resend dashboard</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top: 32px;">Adding a New Product Later</h3>
+    <ol>
+      <li>Create the product and price in Stripe Dashboard</li>
+      <li>Copy the new Price ID</li>
+      <li>Add a row in your Supabase <code>products</code> table using your admin panel</li>
+      <li>Add a <code>&lt;CheckoutButton priceId="..." /&gt;</code> anywhere on the site</li>
+      <li>Done — no other code changes needed</li>
+    </ol>
+
+    <h3 style="margin-top: 24px;">Monthly Running Cost at Launch</h3>
+    <table>
+      <thead>
+        <tr><th>Service</th><th>Cost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Supabase</td><td>$0 (free tier, upgrade to $25/month at scale)</td></tr>
+        <tr><td>Stripe</td><td>2.9% + 30c per transaction (no monthly fee)</td></tr>
+        <tr><td>Resend</td><td>$0 (3,000 emails/month free)</td></tr>
+        <tr><td>Cal.com</td><td>$0 (free tier)</td></tr>
+        <tr><td>Vercel</td><td>$0 (already on free tier)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
