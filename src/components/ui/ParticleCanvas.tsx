@@ -55,6 +55,7 @@ export default function ParticleCanvas() {
 
     // ── Draw loop ────────────────────────────────────────────────────────────
     function draw() {
+      if (!canvas || !ctx) return;
       const w = canvas.width;
       const h = canvas.height;
       const mobile = isMobile();
