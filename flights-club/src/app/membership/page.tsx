@@ -8,9 +8,24 @@ import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
 import TierCard from '@/components/ui/TierCard';
+import CheckoutButton from '@/components/ui/CheckoutButton';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { MEMBERSHIP_TIERS_DETAIL } from '@/lib/constants';
 
+
+// ── Stripe price ID map (populated from env vars) ─────────────────────────────
+
+const TIER_PRICE_IDS: Record<string, string> = {
+  explore:  process.env.NEXT_PUBLIC_STRIPE_PRICE_EXPLORE  ?? '',
+  platinum: process.env.NEXT_PUBLIC_STRIPE_PRICE_PLATINUM ?? '',
+  black:    process.env.NEXT_PUBLIC_STRIPE_PRICE_BLACK    ?? '',
+};
+
+const TIER_LABELS: Record<string, string> = {
+  explore:  'Join Explore',
+  platinum: 'Join Platinum',
+  black:    'Join Black',
+};
 
 // ── Section 1: Hero ────────────────────────────────────────────────────────────
 
@@ -207,7 +222,19 @@ function TierComparisonSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {MEMBERSHIP_TIERS_DETAIL.map((tier, i) => (
             <ScrollReveal key={tier.id} delay={i * 0.1}>
-              <TierCard tier={tier} elevated />
+              <TierCard
+                tier={tier}
+                elevated
+                ctaSlot={
+                  <CheckoutButton
+                    priceId={TIER_PRICE_IDS[tier.id] ?? ''}
+                    mode="subscription"
+                    label={TIER_LABELS[tier.id] ?? tier.cta_label}
+                    variant={tier.id === 'black' || tier.id === 'platinum' ? 'primary' : 'secondary'}
+                    className="w-full justify-center"
+                  />
+                }
+              />
             </ScrollReveal>
           ))}
         </div>

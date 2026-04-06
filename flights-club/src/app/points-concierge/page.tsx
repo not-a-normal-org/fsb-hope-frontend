@@ -7,7 +7,8 @@ import Navbar from '@/components/layout/Navbar';
 import FlightSavingsSection from '@/components/sections/FlightSavingsSection';
 import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
-import { CTAButton } from '@/components/ui/CTAButton';
+import CheckoutButton from '@/components/ui/CheckoutButton';
+import CalEmbed from '@/components/ui/CalEmbed';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { FAQ_ITEMS_CONCIERGE } from '@/lib/constants';
@@ -290,7 +291,11 @@ function ConciergeHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.15, duration: 0.6 }}
           >
-            <CTAButton label="Book With Your Points →" href="/contact" variant="primary" />
+            <CheckoutButton
+              priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE!}
+              mode="payment"
+              label="Book My Seat — $1,900"
+            />
           </motion.div>
         </div>
       </div>
@@ -687,6 +692,35 @@ function PointsProgramsSection() {
   );
 }
 
+// ── Section: Cal.com booking ───────────────────────────────────────────────────
+
+function StrategyCallSection() {
+  return (
+    <section className="relative py-28 bg-bg-primary overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-accent-orange/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
+      <div className="max-w-3xl mx-auto px-6 lg:px-16">
+        <ScrollReveal className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.35em] text-text-secondary mb-4">
+            Free Consultation
+          </p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary mb-5 leading-tight">
+            Book Your Free 20-Minute Strategy Call
+          </h2>
+          <p className="text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
+            Talk to our team about whether Points Concierge is right for your situation.
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <CalEmbed calLink="YOUR_CAL_LINK_HERE" />
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default function PointsConciergePage() {
@@ -699,6 +733,7 @@ export default function PointsConciergePage() {
         <WhatsIncludedSection />
         <FlightSavingsSection />
         <PointsProgramsSection />
+        <StrategyCallSection />
         <FAQSection items={FAQ_ITEMS_CONCIERGE} />
         <FinalCTASection
           headline="Ready to Use Your Points?"

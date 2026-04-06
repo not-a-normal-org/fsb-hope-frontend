@@ -10,9 +10,11 @@ interface TierCardProps {
   tier: MembershipTier;
   /** Elevate the card (md:scale-105) — used on the Platinum tier */
   elevated?: boolean;
+  /** Optional slot that replaces the default CTA anchor (e.g. <CheckoutButton />) */
+  ctaSlot?: React.ReactNode;
 }
 
-export default function TierCard({ tier, elevated = false }: TierCardProps) {
+export default function TierCard({ tier, elevated = false, ctaSlot }: TierCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isPopular = tier.id === 'platinum';
   const isElite   = tier.id === 'black';
@@ -159,21 +161,25 @@ export default function TierCard({ tier, elevated = false }: TierCardProps) {
           ))}
         </div>
 
-        {/* CTA button */}
-        <motion.a
-          href={tier.cta_href}
-          className={`block w-full py-3 px-4 rounded-lg font-semibold text-center text-sm uppercase tracking-wide transition-all duration-300 ${
-            isElite
-              ? 'bg-accent-gold text-bg-primary hover:bg-accent-gold/90'
-              : isPopular
-              ? 'bg-accent-orange text-bg-primary hover:bg-accent-orange/90'
-              : 'border border-accent-blue text-accent-blue hover:bg-accent-blue/10'
-          }`}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          {tier.cta_label}
-        </motion.a>
+        {/* CTA — slot takes priority over default anchor */}
+        {ctaSlot ? (
+          <div className="w-full">{ctaSlot}</div>
+        ) : (
+          <motion.a
+            href={tier.cta_href}
+            className={`block w-full py-3 px-4 rounded-lg font-semibold text-center text-sm uppercase tracking-wide transition-all duration-300 ${
+              isElite
+                ? 'bg-accent-gold text-bg-primary hover:bg-accent-gold/90'
+                : isPopular
+                ? 'bg-accent-orange text-bg-primary hover:bg-accent-orange/90'
+                : 'border border-accent-blue text-accent-blue hover:bg-accent-blue/10'
+            }`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {tier.cta_label}
+          </motion.a>
+        )}
       </div>
 
       {/* Blue tier hover glow */}
