@@ -11,7 +11,7 @@ import { ArrowLeft } from 'lucide-react';
 const fadeUp = (delay = 0) => ({
   initial:   { opacity: 0, y: 28 },
   animate:   { opacity: 1, y: 0 },
-  transition: { duration: 0.65, ease: 'easeOut', delay },
+  transition: { duration: 0.65, ease: 'easeOut' as const, delay },
 });
 
 // ── Success particles — deterministic (no hydration mismatch) ─────────────────
