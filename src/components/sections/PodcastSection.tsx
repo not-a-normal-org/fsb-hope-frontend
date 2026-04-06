@@ -77,7 +77,7 @@ export default function PodcastSection() {
           <CTAButton
             label={PODCAST_SECTION.cta_label}
             href={PODCAST_SECTION.cta_href}
-            variant="secondary"
+            variant="ghost"
           />
         </div>
       </div>
