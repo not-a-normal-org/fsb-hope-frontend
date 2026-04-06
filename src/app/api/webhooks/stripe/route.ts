@@ -22,72 +22,101 @@ function bad(message: string): NextResponse {
 async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
 ): Promise<void> {
-  // Expand customer and payment instrument so we have full objects
-  const expanded = await stripe.checkout.sessions.retrieve(session.id, {
-    expand: ['customer', 'subscription', 'payment_intent'],
-  });
+  // Use event data directly — do NOT re-fetch the session.
+  // stripe trigger creates synthetic fixtures that don't exist as real sessions.
+  const customerEmail    = session.customer_details?.email ?? null;
+  const stripeCustomerId = session.customer as string;
 
-  const stripeCustomerId =
-    typeof expanded.customer === 'string'
-      ? expanded.customer
-      : expanded.customer?.id ?? null;
+  // ── DEBUG (remove after confirming Supabase writes) ───────────────────────
+  console.log('SESSION DATA:', JSON.stringify({
+    id:               session.id,
+    mode:             session.mode,
+    customer:         session.customer,
+    customer_details: session.customer_details,
+    subscription:     session.subscription,
+    payment_intent:   session.payment_intent,
+    amount_total:     session.amount_total,
+  }, null, 2));
+  // ─────────────────────────────────────────────────────────────────────────
 
-  const email = expanded.customer_details?.email ?? null;
+  if (session.mode === 'subscription') {
+    const stripeSubscriptionId = session.subscription as string;
 
-  // Always upsert the customer row first
-  const { error: customerError } = await supabaseAdmin
-    .from('customers')
-    .upsert(
-      { stripe_customer_id: stripeCustomerId, email },
-      { onConflict: 'stripe_customer_id' },
-    );
+    // Upsert customer first so we have the internal customer_id FK
+    const { data: customer, error: customerError } = await supabaseAdmin
+      .from('customers')
+      .upsert(
+        { stripe_customer_id: stripeCustomerId, email: customerEmail },
+        { onConflict: 'stripe_customer_id' },
+      )
+      .select()
+      .single();
 
-  if (customerError) {
-    throw new Error(`customers upsert failed: ${customerError.message}`);
-  }
+    // ── DEBUG ──────────────────────────────────────────────────────────────
+    console.log('CUSTOMER RESULT:', { customer, customerError });
+    // ──────────────────────────────────────────────────────────────────────
 
-  if (expanded.mode === 'subscription') {
-    const sub =
-      typeof expanded.subscription === 'string'
-        ? await stripe.subscriptions.retrieve(expanded.subscription)
-        : (expanded.subscription as Stripe.Subscription);
+    if (customerError) {
+      throw new Error(`customers upsert failed: ${customerError.message}`);
+    }
 
-    // In Stripe SDK v22, current_period_* moved from Subscription to SubscriptionItem
-    const subItem  = sub.items.data[0];
-    const priceId  = subItem?.price.id ?? null;
+    // Fetch subscription from Stripe to get period dates — this ID is real
+    const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+    // SDK v22: current_period_* live on SubscriptionItem, not Subscription
+    const subItem = subscription.items.data[0];
 
     const { error: subError } = await supabaseAdmin
       .from('subscriptions')
       .insert({
-        stripe_subscription_id: sub.id,
-        stripe_customer_id:     stripeCustomerId,
-        stripe_price_id:        priceId,
-        status:                 sub.status,
+        customer_id:            customer?.id,
+        stripe_subscription_id: stripeSubscriptionId,
+        stripe_price_id:        subItem?.price.id ?? null,
+        status:                 subscription.status,
         current_period_start:   subItem ? new Date(subItem.current_period_start * 1000).toISOString() : null,
         current_period_end:     subItem ? new Date(subItem.current_period_end   * 1000).toISOString() : null,
-        cancel_at_period_end:   sub.cancel_at_period_end,
+        cancel_at_period_end:   subscription.cancel_at_period_end,
       });
+
+    // ── DEBUG ────────────────────────────────────────────────────────────────
+    console.log('SUBSCRIPTION INSERT ERROR:', subError);
+    // ────────────────────────────────────────────────────────────────────────
 
     if (subError) {
       throw new Error(`subscriptions insert failed: ${subError.message}`);
     }
   }
 
-  if (expanded.mode === 'payment') {
-    const paymentIntentId =
-      typeof expanded.payment_intent === 'string'
-        ? expanded.payment_intent
-        : expanded.payment_intent?.id ?? null;
+  if (session.mode === 'payment') {
+    const { data: customer, error: customerError } = await supabaseAdmin
+      .from('customers')
+      .upsert(
+        { stripe_customer_id: stripeCustomerId, email: customerEmail },
+        { onConflict: 'stripe_customer_id' },
+      )
+      .select()
+      .single();
+
+    // ── DEBUG ────────────────────────────────────────────────────────────────
+    console.log('CUSTOMER RESULT (payment):', { customer, customerError });
+    // ────────────────────────────────────────────────────────────────────────
+
+    if (customerError) {
+      throw new Error(`customers upsert failed: ${customerError.message}`);
+    }
 
     const { error: orderError } = await supabaseAdmin
       .from('orders')
       .insert({
-        stripe_payment_intent_id: paymentIntentId,
-        stripe_session_id:        expanded.id,
-        stripe_customer_id:       stripeCustomerId,
-        amount_cents:             expanded.amount_total,
+        customer_id:              customer?.id,
+        stripe_payment_intent_id: session.payment_intent as string,
+        stripe_session_id:        session.id,
+        amount_cents:             session.amount_total,
         status:                   'paid',
       });
+
+    // ── DEBUG ────────────────────────────────────────────────────────────────
+    console.log('ORDER INSERT ERROR:', orderError);
+    // ────────────────────────────────────────────────────────────────────────
 
     if (orderError) {
       throw new Error(`orders insert failed: ${orderError.message}`);
@@ -131,18 +160,19 @@ async function handleSubscriptionDeleted(
 }
 
 async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
-  const stripeCustomerId =
-    typeof invoice.customer === 'string'
-      ? invoice.customer
-      : invoice.customer?.id ?? null;
+  const stripeSubscriptionId =
+    typeof invoice.subscription === 'string'
+      ? invoice.subscription
+      : (invoice.subscription as Stripe.Subscription | null)?.id ?? null;
 
-  if (!stripeCustomerId) return;
+  // Invoice isn't tied to a subscription (e.g. one-off invoice) — nothing to do
+  if (!stripeSubscriptionId) return;
 
-  // Recover a subscription that had fallen into past_due
+  // Recover the exact subscription that had fallen into past_due
   const { error } = await supabaseAdmin
     .from('subscriptions')
     .update({ status: 'active' })
-    .eq('stripe_customer_id', stripeCustomerId)
+    .eq('stripe_subscription_id', stripeSubscriptionId)
     .eq('status', 'past_due');
 
   if (error) {
@@ -153,17 +183,17 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
 async function handleInvoicePaymentFailed(
   invoice: Stripe.Invoice,
 ): Promise<void> {
-  const stripeCustomerId =
-    typeof invoice.customer === 'string'
-      ? invoice.customer
-      : invoice.customer?.id ?? null;
+  const stripeSubscriptionId =
+    typeof invoice.subscription === 'string'
+      ? invoice.subscription
+      : (invoice.subscription as Stripe.Subscription | null)?.id ?? null;
 
-  if (!stripeCustomerId) return;
+  if (!stripeSubscriptionId) return;
 
   const { error } = await supabaseAdmin
     .from('subscriptions')
     .update({ status: 'past_due' })
-    .eq('stripe_customer_id', stripeCustomerId);
+    .eq('stripe_subscription_id', stripeSubscriptionId);
 
   if (error) {
     throw new Error(`invoice.payment_failed — status update failed: ${error.message}`);
