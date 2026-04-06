@@ -10,6 +10,7 @@ import {
   Package,
   Mail,
   Calendar,
+  ClipboardList,
   LogOut,
 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { label: 'Products',      href: '/admin/products',      icon: Package         },
   { label: 'Newsletter',    href: '/admin/newsletter',    icon: Mail            },
   { label: 'Appointments',  href: '/admin/appointments',  icon: Calendar        },
+  { label: 'Applications',  href: '/admin/applications',  icon: ClipboardList   },
 ] as const;
 
 // ── Page title derived from pathname ─────────────────────────────────────────
