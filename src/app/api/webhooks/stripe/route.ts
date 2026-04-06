@@ -159,11 +159,15 @@ async function handleSubscriptionDeleted(
   }
 }
 
+// SDK v22: invoice.subscription moved to invoice.parent.subscription_details.subscription
+function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
+  const sub = invoice.parent?.subscription_details?.subscription;
+  if (!sub) return null;
+  return typeof sub === 'string' ? sub : sub.id;
+}
+
 async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
-  const stripeSubscriptionId =
-    typeof invoice.subscription === 'string'
-      ? invoice.subscription
-      : (invoice.subscription as Stripe.Subscription | null)?.id ?? null;
+  const stripeSubscriptionId = getInvoiceSubscriptionId(invoice);
 
   // Invoice isn't tied to a subscription (e.g. one-off invoice) — nothing to do
   if (!stripeSubscriptionId) return;
@@ -183,10 +187,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
 async function handleInvoicePaymentFailed(
   invoice: Stripe.Invoice,
 ): Promise<void> {
-  const stripeSubscriptionId =
-    typeof invoice.subscription === 'string'
-      ? invoice.subscription
-      : (invoice.subscription as Stripe.Subscription | null)?.id ?? null;
+  const stripeSubscriptionId = getInvoiceSubscriptionId(invoice);
 
   if (!stripeSubscriptionId) return;
 
