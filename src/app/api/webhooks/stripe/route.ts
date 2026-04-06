@@ -52,7 +52,9 @@ async function handleCheckoutSessionCompleted(
         ? await stripe.subscriptions.retrieve(expanded.subscription)
         : (expanded.subscription as Stripe.Subscription);
 
-    const priceId = sub.items.data[0]?.price.id ?? null;
+    // In Stripe SDK v22, current_period_* moved from Subscription to SubscriptionItem
+    const subItem  = sub.items.data[0];
+    const priceId  = subItem?.price.id ?? null;
 
     const { error: subError } = await supabaseAdmin
       .from('subscriptions')
@@ -61,8 +63,8 @@ async function handleCheckoutSessionCompleted(
         stripe_customer_id:     stripeCustomerId,
         stripe_price_id:        priceId,
         status:                 sub.status,
-        current_period_start:   new Date(sub.current_period_start * 1000).toISOString(),
-        current_period_end:     new Date(sub.current_period_end   * 1000).toISOString(),
+        current_period_start:   subItem ? new Date(subItem.current_period_start * 1000).toISOString() : null,
+        current_period_end:     subItem ? new Date(subItem.current_period_end   * 1000).toISOString() : null,
         cancel_at_period_end:   sub.cancel_at_period_end,
       });
 
@@ -96,12 +98,13 @@ async function handleCheckoutSessionCompleted(
 async function handleSubscriptionUpdated(
   sub: Stripe.Subscription,
 ): Promise<void> {
+  const subItem = sub.items.data[0];
   const { error } = await supabaseAdmin
     .from('subscriptions')
     .update({
       status:               sub.status,
-      current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
-      current_period_end:   new Date(sub.current_period_end   * 1000).toISOString(),
+      current_period_start: subItem ? new Date(subItem.current_period_start * 1000).toISOString() : null,
+      current_period_end:   subItem ? new Date(subItem.current_period_end   * 1000).toISOString() : null,
       cancel_at_period_end: sub.cancel_at_period_end,
     })
     .eq('stripe_subscription_id', sub.id);
