@@ -124,10 +124,15 @@ function rejectionEmail(firstName: string): string {
 
 // ── Audit log helper ──────────────────────────────────────────────────────────
 
-async function logAudit(action: string, customerId: string, meta: Record<string, unknown> = {}) {
+async function logAudit(action: string, recordId: string, newValue: Record<string, unknown> = {}) {
   const { error } = await supabaseAdmin
     .from('admin_audit_log')
-    .insert({ action, customer_id: customerId, meta });
+    .insert({
+      action,
+      table_name: 'customers',
+      record_id:  recordId,
+      new_value:  newValue,
+    });
   if (error) {
     console.warn('[audit] log failed:', error.message);
   }
