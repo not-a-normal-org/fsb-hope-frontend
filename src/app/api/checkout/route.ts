@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import type Stripe from 'stripe';
 
 import { stripe } from '@/lib/stripe';
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
   // 2. Build session params — subscription-only fields added conditionally
-  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+  const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
     payment_method_types:       ['card'],
     mode,
     line_items:                 [{ price: priceId, quantity: 1 }],
