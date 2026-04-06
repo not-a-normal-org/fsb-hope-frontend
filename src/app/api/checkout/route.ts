@@ -50,7 +50,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     payment_method_types:       ['card'],
     mode,
     line_items:                 [{ price: priceId, quantity: 1 }],
-    success_url:                `${appUrl}/dashboard?success=true`,
+    success_url:                `${appUrl}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url:                 `${appUrl}/membership`,
     billing_address_collection: 'required',
     ...(customerEmail ? { customer_email: customerEmail } : {}),
