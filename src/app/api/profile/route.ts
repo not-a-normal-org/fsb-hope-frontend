@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
@@ -11,10 +12,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { email, fullName, phone, companyName, businessType } = body;
+  const { sessionId, fullName, phone, companyName, businessType } = body;
+
+  if (!sessionId) {
+    return NextResponse.json({ error: 'sessionId is required' }, { status: 400 });
+  }
+
+  // Derive the target email from the Stripe session — never from the request
+  // body — so a caller can only update the profile tied to their own checkout.
+  let email: string | null;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    email = session.customer_details?.email ?? null;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('[api/profile] session retrieve failed:', message);
+    return NextResponse.json({ error: 'Invalid session' }, { status: 400 });
+  }
 
   if (!email) {
-    return NextResponse.json({ error: 'email is required' }, { status: 400 });
+    return NextResponse.json({ error: 'Session has no associated email' }, { status: 400 });
   }
 
   // Fetch current status so we only promote pending → active, not demote anything else

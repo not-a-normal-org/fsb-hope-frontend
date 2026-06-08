@@ -4,9 +4,11 @@ import Stripe from 'stripe';
 
 // ── Client ────────────────────────────────────────────────────────────────────
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-04-10',
-});
+// No explicit apiVersion — use the version this SDK (v22) is built against.
+// The webhook reads item-level current_period_* and invoice.parent.* which only
+// exist on the newer API; pinning an older version would return a different
+// shape and crash those handlers at runtime.
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

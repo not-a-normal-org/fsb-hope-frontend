@@ -19,46 +19,74 @@ function bad(message: string): NextResponse {
 
 // ── Event handlers ────────────────────────────────────────────────────────────
 
+/**
+ * Resolve the internal customer row for a completed checkout session.
+ *
+ * Approved applicants carry their internal `customer_id` in the session
+ * metadata (stamped onto the admin payment link). When present we link the
+ * Stripe customer onto that existing row and activate it — otherwise we'd
+ * create a duplicate keyed only by stripe_customer_id, orphaning the
+ * application row and breaking the email-keyed profile lookup.
+ *
+ * Direct purchases (membership/concierge buttons) carry no metadata and fall
+ * back to an upsert keyed by stripe_customer_id.
+ */
+async function resolveCustomer(
+  session: Stripe.Checkout.Session,
+): Promise<{ id: string } | null> {
+  const email            = session.customer_details?.email ?? null;
+  const stripeCustomerId = session.customer as string;
+  const linkedId         = session.metadata?.customer_id;
+
+  if (linkedId) {
+    const { data, error } = await supabaseAdmin
+      .from('customers')
+      .update({
+        stripe_customer_id: stripeCustomerId,
+        ...(email ? { email } : {}),
+        status: 'active',
+      })
+      .eq('id', linkedId)
+      .select('id')
+      .maybeSingle();
+
+    if (error) {
+      throw new Error(`customers link failed: ${error.message}`);
+    }
+    if (data) return data;
+    // Row missing (e.g. deleted) — fall through to the upsert below.
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('customers')
+    .upsert(
+      { stripe_customer_id: stripeCustomerId, email },
+      { onConflict: 'stripe_customer_id' },
+    )
+    .select('id')
+    .single();
+
+  if (error) {
+    throw new Error(`customers upsert failed: ${error.message}`);
+  }
+  return data;
+}
+
 async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
 ): Promise<void> {
-  // Use event data directly — do NOT re-fetch the session.
-  // stripe trigger creates synthetic fixtures that don't exist as real sessions.
-  const customerEmail    = session.customer_details?.email ?? null;
-  const stripeCustomerId = session.customer as string;
-
-  // ── DEBUG (remove after confirming Supabase writes) ───────────────────────
-  console.log('SESSION DATA:', JSON.stringify({
-    id:               session.id,
-    mode:             session.mode,
-    customer:         session.customer,
-    customer_details: session.customer_details,
-    subscription:     session.subscription,
-    payment_intent:   session.payment_intent,
-    amount_total:     session.amount_total,
-  }, null, 2));
-  // ─────────────────────────────────────────────────────────────────────────
+  const customer = await resolveCustomer(session);
 
   if (session.mode === 'subscription') {
     const stripeSubscriptionId = session.subscription as string;
 
-    // Upsert customer first so we have the internal customer_id FK
-    const { data: customer, error: customerError } = await supabaseAdmin
-      .from('customers')
-      .upsert(
-        { stripe_customer_id: stripeCustomerId, email: customerEmail },
-        { onConflict: 'stripe_customer_id' },
-      )
-      .select()
-      .single();
-
-    // ── DEBUG ──────────────────────────────────────────────────────────────
-    console.log('CUSTOMER RESULT:', { customer, customerError });
-    // ──────────────────────────────────────────────────────────────────────
-
-    if (customerError) {
-      throw new Error(`customers upsert failed: ${customerError.message}`);
-    }
+    // Idempotency — Stripe delivers at-least-once; bail if already recorded.
+    const { data: existingSub } = await supabaseAdmin
+      .from('subscriptions')
+      .select('id')
+      .eq('stripe_subscription_id', stripeSubscriptionId)
+      .maybeSingle();
+    if (existingSub) return;
 
     // Fetch subscription from Stripe to get period dates — this ID is real
     const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
@@ -77,32 +105,19 @@ async function handleCheckoutSessionCompleted(
         cancel_at_period_end:   subscription.cancel_at_period_end,
       });
 
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('SUBSCRIPTION INSERT ERROR:', subError);
-    // ────────────────────────────────────────────────────────────────────────
-
     if (subError) {
       throw new Error(`subscriptions insert failed: ${subError.message}`);
     }
   }
 
   if (session.mode === 'payment') {
-    const { data: customer, error: customerError } = await supabaseAdmin
-      .from('customers')
-      .upsert(
-        { stripe_customer_id: stripeCustomerId, email: customerEmail },
-        { onConflict: 'stripe_customer_id' },
-      )
-      .select()
-      .single();
-
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('CUSTOMER RESULT (payment):', { customer, customerError });
-    // ────────────────────────────────────────────────────────────────────────
-
-    if (customerError) {
-      throw new Error(`customers upsert failed: ${customerError.message}`);
-    }
+    // Idempotency — guard on the unique checkout session id.
+    const { data: existingOrder } = await supabaseAdmin
+      .from('orders')
+      .select('id')
+      .eq('stripe_session_id', session.id)
+      .maybeSingle();
+    if (existingOrder) return;
 
     const { error: orderError } = await supabaseAdmin
       .from('orders')
@@ -113,10 +128,6 @@ async function handleCheckoutSessionCompleted(
         amount_cents:             session.amount_total,
         status:                   'paid',
       });
-
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('ORDER INSERT ERROR:', orderError);
-    // ────────────────────────────────────────────────────────────────────────
 
     if (orderError) {
       throw new Error(`orders insert failed: ${orderError.message}`);
