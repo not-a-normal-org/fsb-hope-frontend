@@ -1,3 +1,16 @@
+import { notFound } from 'next/navigation';
+
+// Podcast is disabled until we actually launch one. The route 404s so a stray
+// direct visit doesn't show a fake podcast. The original implementation is kept
+// commented below for easy restoration.
+export default function PodcastPage() {
+  notFound();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ORIGINAL PODCAST PAGE — disabled until we launch a podcast.
+   To restore: delete the notFound() stub above and uncomment everything below.
+
 'use client';
 
 import { useState } from 'react';
@@ -5,7 +18,7 @@ import { motion } from 'framer-motion';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
-/* ─── Episode data ─── */
+// ─── Episode data ───
 const EPISODES = [
   {
     ep: '01',
@@ -51,7 +64,7 @@ const EPISODES = [
   },
 ];
 
-/* ─── Platform badges ─── */
+// ─── Platform badges ───
 const PLATFORMS = [
   {
     label: 'Apple Podcasts',
@@ -79,7 +92,7 @@ const PLATFORMS = [
   },
 ];
 
-/* ─── Waveform bar heights (20 bars) ─── */
+// ─── Waveform bar heights (20 bars) ───
 const BAR_HEIGHTS = [30, 55, 45, 70, 40, 60, 80, 35, 65, 50, 75, 42, 58, 68, 38, 72, 48, 62, 44, 56];
 
 function Waveform({ active }: { active: boolean }) {
@@ -115,7 +128,7 @@ function Waveform({ active }: { active: boolean }) {
   );
 }
 
-/* ─── Episode card ─── */
+// ─── Episode card ───
 function EpisodeCard({ ep, title, guest, role, duration }: (typeof EPISODES)[0]) {
   const [hovered, setHovered] = useState(false);
 
@@ -125,7 +138,6 @@ function EpisodeCard({ ep, title, guest, role, duration }: (typeof EPISODES)[0])
       onMouseLeave={() => setHovered(false)}
       className="group relative bg-bg-card border border-border-subtle rounded-2xl overflow-hidden hover:border-accent-orange/40 transition-colors duration-300 flex flex-col"
     >
-      {/* Waveform header */}
       <div className="relative bg-bg-secondary px-6 pt-6 pb-4 flex items-end justify-between">
         <Waveform active={hovered} />
         <span className="ml-4 flex-shrink-0 text-xs font-bold bg-accent-orange text-black px-3 py-1 rounded-full">
@@ -133,7 +145,6 @@ function EpisodeCard({ ep, title, guest, role, duration }: (typeof EPISODES)[0])
         </span>
       </div>
 
-      {/* Content */}
       <div className="p-6 flex flex-col flex-1 gap-3">
         <h3 className="text-lg font-bold text-text-primary leading-snug group-hover:text-accent-orange transition-colors duration-200">
           {title}
@@ -175,10 +186,6 @@ export default function PodcastPage() {
 
   return (
     <main className="w-full">
-
-      {/* ══════════════════════════════════════
-          SECTION 1 — HERO
-      ══════════════════════════════════════ */}
       <section className="pt-32 pb-24 bg-bg-primary">
         <div className="max-w-4xl mx-auto px-6 lg:px-16">
           <motion.div
@@ -199,7 +206,6 @@ export default function PodcastPage() {
               turned everyday spending into premium travel.
             </p>
 
-            {/* Platform badges */}
             <div className="flex flex-wrap gap-3">
               {PLATFORMS.map((p) => (
                 <a
@@ -216,9 +222,6 @@ export default function PodcastPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          SECTION 2 — EPISODE GRID
-      ══════════════════════════════════════ */}
       <section className="py-24 bg-bg-secondary border-y border-border-subtle">
         <div className="max-w-7xl mx-auto px-6 lg:px-16">
           <ScrollReveal className="mb-12">
@@ -237,9 +240,6 @@ export default function PodcastPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          SECTION 3 — SUBSCRIBE STRIP
-      ══════════════════════════════════════ */}
       <section className="py-12 bg-[#13182A]">
         <div className="max-w-2xl mx-auto px-6 lg:px-16 text-center">
           <ScrollReveal>
@@ -275,7 +275,8 @@ export default function PodcastPage() {
           </ScrollReveal>
         </div>
       </section>
-
     </main>
   );
 }
+
+───────────────────────────────────────────────────────────────────────────── */

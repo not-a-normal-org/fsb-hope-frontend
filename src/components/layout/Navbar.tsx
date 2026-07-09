@@ -9,7 +9,8 @@ import { CTAButton } from '@/components/ui/CTAButton';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  // Which dropdown is open on desktop, keyed by the link label (null = none)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { scrollY } = useScroll();
 
   // Navbar background opacity: 0 at top, 1 after 80px scroll
@@ -18,14 +19,6 @@ export default function Navbar() {
     navBgOpacity,
     (opacity) => `rgba(7, 9, 15, ${opacity})`
   );
-
-  // Dropdown menu items for "The Flights Club"
-  const membershipDropdownItems = [
-    { label: 'Explore Tier', href: '/membership#explore' },
-    { label: 'Platinum Tier', href: '/membership#platinum' },
-    { label: 'Black Tier', href: '/membership#black' },
-    { label: 'How It Works', href: '/membership#how-it-works' },
-  ];
 
   return (
     <>
@@ -48,28 +41,30 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-2 xl:space-x-4 flex-grow justify-center">
               {NAV_LINKS.map((link) => {
-                // Handle dropdown for "The Flights Club" link
-                if (link.has_dropdown) {
+                // Handle any link that carries a dropdown
+                if (link.has_dropdown && link.dropdown_items) {
+                  const isOpen = openDropdown === link.label;
+                  const items = link.dropdown_items;
                   return (
                     <div
                       key={link.label}
                       className="relative group"
-                      onMouseEnter={() => setDesktopDropdownOpen(true)}
-                      onMouseLeave={() => setDesktopDropdownOpen(false)}
+                      onMouseEnter={() => setOpenDropdown(link.label)}
+                      onMouseLeave={() => setOpenDropdown(null)}
                     >
-                      <button className="flex items-center space-x-1 text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30">
+                      <button className="flex items-center space-x-1 whitespace-nowrap text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30">
                         <span>{link.label}</span>
                         <ChevronDown
                           size={16}
                           className={`transition-transform duration-300 ${
-                            desktopDropdownOpen ? 'rotate-180' : ''
+                            isOpen ? 'rotate-180' : ''
                           }`}
                         />
                       </button>
 
                       {/* Dropdown Menu */}
                       <AnimatePresence>
-                        {desktopDropdownOpen && (
+                        {isOpen && (
                           <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -77,13 +72,15 @@ export default function Navbar() {
                             transition={{ duration: 0.2 }}
                             className="absolute top-full left-0 mt-2 w-56 bg-bg-secondary border border-border-subtle rounded-lg shadow-2xl overflow-hidden z-50"
                           >
-                            {membershipDropdownItems.map((item, idx) => (
+                            {items.map((item, idx) => (
                               <Link
                                 key={item.label}
                                 href={item.href}
-                                onClick={() => setDesktopDropdownOpen(false)}
-                                className={`block px-4 py-3 text-sm text-text-secondary hover:text-accent-orange hover:bg-bg-card/50 transition-all duration-200 ${
-                                  idx !== membershipDropdownItems.length - 1
+                                target={item.external ? '_blank' : undefined}
+                                rel={item.external ? 'noopener noreferrer' : undefined}
+                                onClick={() => setOpenDropdown(null)}
+                                className={`block px-4 py-3 text-sm whitespace-nowrap text-text-secondary hover:text-accent-orange hover:bg-bg-card/50 transition-all duration-200 ${
+                                  idx !== items.length - 1
                                     ? 'border-b border-border-subtle/30'
                                     : ''
                                 }`}
@@ -105,7 +102,7 @@ export default function Navbar() {
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30"
+                    className="whitespace-nowrap text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30"
                   >
                     {link.label}
                   </Link>
@@ -148,21 +145,25 @@ export default function Navbar() {
                 <div className="px-4 py-4 space-y-2">
                   {NAV_LINKS.map((link) => {
                     // Handle dropdown for mobile
-                    if (link.has_dropdown) {
+                    if (link.has_dropdown && link.dropdown_items) {
                       return (
                         <div key={link.label}>
                           <Link
                             href={link.href}
+                            target={link.external ? '_blank' : undefined}
+                            rel={link.external ? 'noopener noreferrer' : undefined}
                             onClick={() => setMobileMenuOpen(false)}
                             className="block text-text-secondary hover:text-accent-orange transition-colors py-2 px-3 text-sm font-medium hover:bg-bg-card/50 rounded-lg"
                           >
                             {link.label}
                           </Link>
                           <div className="pl-4 space-y-1 mt-1">
-                            {membershipDropdownItems.map((item) => (
+                            {link.dropdown_items.map((item) => (
                               <Link
                                 key={item.label}
                                 href={item.href}
+                                target={item.external ? '_blank' : undefined}
+                                rel={item.external ? 'noopener noreferrer' : undefined}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block text-text-muted hover:text-accent-orange transition-colors py-1.5 px-3 text-xs font-medium hover:bg-bg-primary/50 rounded-lg"
                               >

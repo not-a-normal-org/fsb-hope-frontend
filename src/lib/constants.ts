@@ -7,7 +7,7 @@ import type {
   StatItem,
   Feature,
   FAQItem,
-  PodcastEpisode,
+  // PodcastEpisode, // Podcast disabled until we launch one
   TwoPathCard,
   MediaLogo,
   PageMeta,
@@ -45,14 +45,34 @@ export const COLORS = {
 /* ========== NAVIGATION ========== */
 export const NAV_LINKS: NavLink[] = [
   { label: "About", href: "/about" },
-  { label: "The Flights Club", href: "/membership", has_dropdown: true },
-  { label: "Points Concierge", href: "/points-concierge" },
-  { label: "Podcast", href: "/podcast" },
   {
-    label: "Events",
-    href: "https://events.humanitix.com/host/the-iflyflat-flights-club",
-    external: true,
+    label: "The Flights Club",
+    href: "/membership",
+    has_dropdown: true,
+    dropdown_items: [
+      { label: "Explore Tier", href: "/membership#explore" },
+      { label: "Platinum Tier", href: "/membership#platinum" },
+      { label: "Black Tier", href: "/membership#black" },
+      { label: "How It Works", href: "/membership#how-it-works" },
+    ],
   },
+  {
+    label: "Best Cards",
+    href: "https://10xtravel.com/creditcards/",
+    external: true,
+    has_dropdown: true,
+    dropdown_items: [
+      { label: "Best Credit Cards", href: "https://10xtravel.com/best-credit-cards/", external: true },
+      { label: "Best Business Cards", href: "https://10xtravel.com/best-business-credit-cards/", external: true },
+      { label: "Best Airline Credit Cards", href: "https://10xtravel.com/best-airline-credit-cards/", external: true },
+      { label: "Best Hotel Cards", href: "https://10xtravel.com/best-hotel-credit-cards/", external: true },
+      { label: "Best Travel Credit Cards", href: "https://10xtravel.com/best-travel-credit-cards/", external: true },
+      { label: "Best Cash Back Cards", href: "https://10xtravel.com/best-cash-back-credit-cards/", external: true },
+    ],
+  },
+  { label: "Case Study", href: "/case-studies" },
+  { label: "Points Concierge", href: "/points-concierge" },
+  // { label: "Podcast", href: "/podcast" }, // Podcast disabled until we launch one
   { label: "Contact", href: "/contact" },
 ];
 
@@ -263,6 +283,7 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
     cta_label: "Learn About Explore",
     cta_href: "/membership#explore",
     visual_style: "Standard dark card with blue accent border",
+    price: "From $2,997/year",
   },
   {
     id: "platinum",
@@ -279,6 +300,7 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
     cta_href: "/membership#platinum",
     visual_style:
       "Slightly elevated card, orange accent border, badge: MOST POPULAR",
+    price: "From $7,997/year",
   },
   {
     id: "black",
@@ -296,6 +318,7 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
     cta_href: "/membership#black",
     visual_style:
       "Dark charcoal card with gold border, shimmer animation, badge: ELITE",
+    price: "By invitation / enquiry",
   },
 ];
 
@@ -360,7 +383,8 @@ export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
   },
 ];
 
-/* ========== PODCAST SECTION ========== */
+/* ========== PODCAST SECTION (disabled until we launch one) ========== */
+/*
 export const PODCAST_SECTION = {
   section_label: "ALWAYS BUSINESS CLASS PODCAST",
   section_title: "Real Conversations About Flying Smarter",
@@ -394,6 +418,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     listen_url: "#",
   },
 ];
+*/
 
 /* ========== FAQ ========== */
 export const FAQ_ITEMS: FAQItem[] = [
@@ -468,7 +493,7 @@ export const FOOTER_COLUMNS = [
     heading: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Podcast", href: "/podcast" },
+      // { label: "Podcast", href: "/podcast" }, // Podcast disabled until we launch one
       { label: "Contact", href: "/contact" },
       { label: "Media & Press", href: "/about#media" },
     ],
@@ -506,11 +531,11 @@ export const PAGES: PageMeta[] = [
       "statement_text",
       "two_paths",
       "flight_savings",
+      "membership_tiers",
       "stats",
       "case_studies",
       "why_different",
-      "membership_tiers",
-      "podcast",
+      // "podcast", // Podcast disabled until we launch one
       "faq",
       "final_cta",
       "footer",

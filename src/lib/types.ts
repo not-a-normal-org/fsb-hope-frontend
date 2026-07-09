@@ -3,6 +3,8 @@ export interface NavLink {
   label: string;
   href: string;
   has_dropdown?: boolean;
+  /** Items shown in the dropdown when has_dropdown is true */
+  dropdown_items?: { label: string; href: string; external?: boolean }[];
   external?: boolean;
 }
 
