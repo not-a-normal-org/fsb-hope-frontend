@@ -6,7 +6,56 @@
       "original": "https://iflyflat.com.au/",
       "animation_inspiration": "https://www.flexfume.com/"
     },
-    "status": "planning"
+    "status": "phases 1-3 complete; backend + admin console in progress on branch fix/stripe-supabase-flow"
+  },
+
+  "progress": {
+    "last_updated": "2026-07-10",
+    "branch": "fix/stripe-supabase-flow",
+    "summary": "Homepage build (Phases 1-3) is complete and type-clean. Backend (Stripe + Supabase + Resend) and the admin console are built and functional. Two admin gaps remain and the site is not yet deployed.",
+    "stack_as_built": {
+      "note": "Shipped stack has advanced well beyond this plan's original targets.",
+      "framework": "Next.js 16.2 (App Router) — plan targeted 14; note 'middleware.ts' is now 'proxy.ts'",
+      "react": "19.2",
+      "styling": "Tailwind CSS v4 — plan targeted v3",
+      "payments": "Stripe SDK v22 + @stripe/stripe-js",
+      "data_and_auth": "Supabase (@supabase/ssr; service-role admin client)",
+      "email": "Resend",
+      "scheduling": "Cal.com embed (CalEmbed.tsx)"
+    },
+    "phases": {
+      "phase_1_clone_and_fix": "complete — all homepage sections built",
+      "phase_2_add_the_power": "complete — LoadingIntro, GSAP pin/counters, hover states, parallax, page transitions",
+      "phase_3_polish_and_launch": "partial — /membership, /points-concierge, /about, /contact, /privacy, /terms, /case-studies built; JSON-LD (Organization + FAQPage) present; sitemap.xml, robots.txt and Vercel deploy still TODO"
+    },
+    "backend": {
+      "checkout_flow": "done — checkout -> Stripe webhook -> Supabase -> dashboard",
+      "membership_application": "done — multi-step apply form -> customers table -> Resend emails",
+      "customer_portal": "done — Stripe billing portal (/api/portal)",
+      "post_payment_profile_setup": "done — profile step on /dashboard"
+    },
+    "admin_console": {
+      "status": "mostly done",
+      "working": [
+        "Dashboard with live Supabase stats (customers, subscriptions, orders, revenue, newsletter)",
+        "Applications — approve/reject with Stripe payment links, Resend emails, audit log",
+        "Orders, Subscriptions (with cancel), Products, Newsletter (+CSV export, unsubscribe)",
+        "Cookie login/logout gated by proxy.ts"
+      ],
+      "gaps": [
+        "OPEN DECISION: sidebar links /admin/customers and /admin/appointments have no page (currently 404) — build the pages or remove the links",
+        "FIXED 2026-07-10: /api/admin/* now behind proxy auth; previously applications-data and products-data leaked customer PII to unauthenticated requests"
+      ]
+    },
+    "disabled": [
+      "Podcast section + /podcast nav — re-enable when a podcast launches (PodcastSection stubbed to null; PODCAST_* data commented out in constants.ts)"
+    ],
+    "remaining": [
+      "Decide on admin Customers + Appointments pages (build or remove links)",
+      "Add sitemap.xml and robots.txt",
+      "Deploy to Vercel",
+      "Final mobile responsiveness + Lighthouse pass"
+    ]
   },
 
   "stack": {
