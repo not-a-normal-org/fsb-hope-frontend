@@ -14,6 +14,72 @@ export interface CTAButton {
   variant?: "primary" | "secondary" | "ghost";
 }
 
+/* Pricing Products (shown on /pricing hub + Pricing nav dropdown) */
+export interface PricingProduct {
+  id: "flight-club" | "points-concierge" | "one-off-research" | "alert-service";
+  name: string;
+  href: string;
+  /** lucide-react icon name */
+  icon: string;
+  tagline: string;
+  description: string;
+  accent_color: string;
+}
+
+/* A single one-click checkout target (a Stripe price) */
+export interface HubCheckoutOption {
+  label: string;
+  priceId: string;
+  mode: "payment" | "subscription";
+  metadata?: Record<string, string>;
+}
+
+/* A card on the /pricing hub — carries both a "details" route and a way to buy now */
+export interface PricingHubCard {
+  id: PricingProduct["id"];
+  name: string;
+  /** italic, quote-style positioning line */
+  tagline: string;
+  description: string;
+  /** e.g. "From A$2,997 + GST /year" */
+  price_line: string;
+  /** dedicated detail page */
+  href: string;
+  /** lucide-react icon name */
+  icon: string;
+  accent_color: string;
+  /** Single-price product → one-click buy button */
+  checkout?: HubCheckoutOption;
+  /** Multi-price product → inline plan picker */
+  checkoutOptions?: HubCheckoutOption[];
+}
+
+/* One row of the /pricing comparison table (cells are display strings; a leading
+   "✓" renders green, "—" renders muted). */
+export interface PricingComparisonRow {
+  feature: string;
+  flightClub: string;
+  concierge: string;
+  research: string;
+  alerts: string;
+}
+
+/* Seat Alert Service tier */
+export interface AlertTier {
+  id: "essential" | "pro";
+  name: string;
+  badge?: string | null;
+  price_monthly: string;
+  price_annual: string;
+  /** e.g. "save A$167" */
+  annual_saving: string;
+  routes: string;
+  alerts: string;
+  included: string[];
+  priceId_monthly: string;
+  priceId_annual: string;
+}
+
 /* Membership Tiers */
 export interface MembershipTier {
   id: "explore" | "platinum" | "black";
