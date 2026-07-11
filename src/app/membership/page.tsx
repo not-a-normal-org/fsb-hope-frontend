@@ -1,9 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, Map, Plane } from 'lucide-react';
+import { Search, Map, TrendingUp, Plane } from 'lucide-react';
 
-import Navbar from '@/components/layout/Navbar';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
@@ -120,20 +119,26 @@ const STEPS = [
   {
     num: '01',
     icon: Search,
-    title: 'We Audit Your Spend',
-    body: 'We look at your existing business expenses — suppliers, rent, wages, subscriptions — and identify where points are being left behind.',
+    title: 'Points Audit',
+    body: 'We map your current spend, identify which cards and programs earn the most, and show you exactly what you’re already worth in Business Class seats.',
   },
   {
     num: '02',
     icon: Map,
-    title: 'We Build Your Strategy',
-    body: 'Your dedicated advisor maps out the fastest path to Business Class using your specific spend patterns and preferred programs.',
+    title: 'Strategy Session',
+    body: 'Your dedicated call with Steve Hui’s team. We build your earn plan, transfer logic, and redemption target — tailored to your business.',
   },
   {
     num: '03',
+    icon: TrendingUp,
+    title: 'Earn & Accumulate',
+    body: 'You spend as normal. We make sure every dollar goes into the right program, at the best earn rate, with nothing leaking.',
+  },
+  {
+    num: '04',
     icon: Plane,
-    title: 'We Book Your Seats',
-    body: 'Our concierge team handles every redemption. You get the confirmation. We handle the rest.',
+    title: 'Fly Business Class',
+    body: 'When you’re ready to travel, we find and book your seat. Your partner. Your family. Your route. We handle it.',
   },
 ];
 
@@ -149,12 +154,12 @@ function HowItWorksSection() {
             The Process
           </p>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
-            Three Steps to Business Class
+            Four Steps to Business Class
           </h2>
         </ScrollReveal>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {STEPS.map(({ num, icon: Icon, title, body }, idx) => (
             <ScrollReveal key={num} delay={idx * 0.1}>
               <motion.div
@@ -255,24 +260,21 @@ function TierComparisonSection() {
 
 export default function MembershipPage() {
   return (
-    <>
-      <Navbar />
-      <main className="w-full bg-bg-primary">
-        <MembershipHero />
-        <HowItWorksSection />
-        <TierComparisonSection />
-        <CaseStudiesSection />
-        <FAQSection />
-        <FinalCTASection
-          headline="Ready to Never Fly Economy Again?"
-          highlight_word="Economy"
-          subheadline="Applications are reviewed monthly. We personally review every application to ensure the fit is right — for you and for the club."
-          cta_label="Submit Your Application"
-          cta_href="/apply"
-          urgency_line="Next intake opens April. Limited spots."
-          secondary_link={{ label: 'Or book a free 15-min discovery call →', href: '/contact' }}
-        />
-      </main>
-    </>
+    <main className="w-full bg-bg-primary">
+      <MembershipHero />
+      <HowItWorksSection />
+      <TierComparisonSection />
+      <CaseStudiesSection />
+      <FAQSection />
+      <FinalCTASection
+        headline="Ready to Never Fly Economy Again?"
+        highlight_word="Economy"
+        subheadline="Applications are reviewed monthly. We personally review every application to ensure the fit is right — for you and for the club."
+        cta_label="Submit Your Application"
+        cta_href="/apply"
+        urgency_line="Next intake opens April. Limited spots."
+        secondary_link={{ label: 'Or book a free 15-min discovery call →', href: '/contact' }}
+      />
+    </main>
   );
 }
