@@ -52,7 +52,12 @@ export default function Navbar() {
                       onMouseEnter={() => setOpenDropdown(link.label)}
                       onMouseLeave={() => setOpenDropdown(null)}
                     >
-                      <button className="flex items-center space-x-1 whitespace-nowrap text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30">
+                      <Link
+                        href={link.href}
+                        target={link.external ? '_blank' : undefined}
+                        rel={link.external ? 'noopener noreferrer' : undefined}
+                        className="flex items-center space-x-1 whitespace-nowrap text-text-secondary hover:text-accent-orange transition-colors duration-300 text-sm py-2 px-3 rounded-lg hover:bg-bg-secondary/30"
+                      >
                         <span>{link.label}</span>
                         <ChevronDown
                           size={16}
@@ -60,7 +65,7 @@ export default function Navbar() {
                             isOpen ? 'rotate-180' : ''
                           }`}
                         />
-                      </button>
+                      </Link>
 
                       {/* Dropdown Menu */}
                       <AnimatePresence>

@@ -13,6 +13,8 @@ interface CheckoutButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost';
   className?: string;
   customerEmail?: string;
+  /** Forwarded to Stripe as session metadata (e.g. { product_key: 'research' }) */
+  metadata?: Record<string, string>;
 }
 
 // ── Variant styles ─────────────────────────────────────────────────────────────
@@ -35,6 +37,7 @@ export default function CheckoutButton({
   variant = 'primary',
   className = '',
   customerEmail,
+  metadata,
 }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState<string | null>(null);
@@ -48,7 +51,7 @@ export default function CheckoutButton({
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, mode, customerEmail }),
+        body: JSON.stringify({ priceId, mode, customerEmail, metadata }),
       });
 
       const json = await res.json();
