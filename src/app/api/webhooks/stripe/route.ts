@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -15,6 +16,73 @@ function ok(message = 'ok'): NextResponse {
 
 function bad(message: string): NextResponse {
   return NextResponse.json({ error: message }, { status: 400 });
+}
+
+/** Fire-and-forget transactional email. No-ops if Resend isn't configured. */
+async function sendResend(to: string | null | undefined, subject: string, html: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey === 'your_resend_key' || !to) return;
+  const resend = new Resend(apiKey);
+  await resend.emails.send({
+    from: 'The Flights Club <hello@theflightsclub.com.au>',
+    to,
+    subject,
+    html,
+  });
+}
+
+/** First active line-item price ID for a checkout session (best-effort). */
+async function getSessionPriceId(sessionId: string): Promise<string | null> {
+  try {
+    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 1 });
+    return lineItems.data[0]?.price?.id ?? null;
+  } catch (err) {
+    console.warn('[stripe/webhook] could not read line items:', err);
+    return null;
+  }
+}
+
+/**
+ * Post-purchase onboarding emails. Product is identified by the `product_key`
+ * we stamp into session metadata from CheckoutButton. Non-fatal — a failed
+ * email must not make the webhook 500 (that would retry and re-send).
+ */
+async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<void> {
+  const productKey = session.metadata?.product_key;
+  if (!productKey) return;
+
+  const email = session.customer_details?.email ?? null;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@theflightsclub.com.au';
+
+  try {
+    if (productKey === 'research') {
+      const link = `${appUrl}/research/intake?session=${session.id}`;
+      await sendResend(
+        email,
+        'Your report is next — a couple of quick details',
+        `<p>Thanks for ordering a Redemption Research Report.</p>
+         <p>Tell us your points balances and destinations so we can get started:</p>
+         <p><a href="${link}">Complete your intake form →</a></p>
+         <p>We'll deliver your report within 5 business days.</p>
+         <p>— The Flights Club by iFLYflat</p>`,
+      );
+      await sendResend(adminEmail, 'New Research Report purchase', `<p>Research Report purchased. Session: ${session.id}. Awaiting intake.</p>`);
+    } else if (productKey.startsWith('alerts_')) {
+      const link = `${appUrl}/alerts/preferences?session=${session.id}`;
+      await sendResend(
+        email,
+        'Set up your Business Class seat alerts',
+        `<p>Welcome to the Seat Alert Service.</p>
+         <p>Tell us which routes and dates to monitor and we'll start watching:</p>
+         <p><a href="${link}">Set your routes →</a></p>
+         <p>— The Flights Club by iFLYflat</p>`,
+      );
+      await sendResend(adminEmail, `New Alerts subscription (${productKey})`, `<p>New alerts subscription: ${productKey}. Session: ${session.id}.</p>`);
+    }
+  } catch (err) {
+    console.error('[stripe/webhook] follow-up email failed:', err);
+  }
 }
 
 // ── Event handlers ────────────────────────────────────────────────────────────
@@ -108,6 +176,8 @@ async function handleCheckoutSessionCompleted(
     if (subError) {
       throw new Error(`subscriptions insert failed: ${subError.message}`);
     }
+
+    await sendPurchaseFollowup(session);
   }
 
   if (session.mode === 'payment') {
@@ -119,12 +189,16 @@ async function handleCheckoutSessionCompleted(
       .maybeSingle();
     if (existingOrder) return;
 
+    // Record which product was bought so the admin orders view can label it.
+    const stripePriceId = await getSessionPriceId(session.id);
+
     const { error: orderError } = await supabaseAdmin
       .from('orders')
       .insert({
         customer_id:              customer?.id,
         stripe_payment_intent_id: session.payment_intent as string,
         stripe_session_id:        session.id,
+        stripe_price_id:          stripePriceId,
         amount_cents:             session.amount_total,
         status:                   'paid',
       });
@@ -132,6 +206,8 @@ async function handleCheckoutSessionCompleted(
     if (orderError) {
       throw new Error(`orders insert failed: ${orderError.message}`);
     }
+
+    await sendPurchaseFollowup(session);
   }
 }
 
