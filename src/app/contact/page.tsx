@@ -13,7 +13,7 @@ const CONTACT_OPTIONS = [
     icon: Calendar,
     heading: 'Book a Discovery Call',
     body: "15 minutes, no pitch, no pressure. We'll tell you if we can help.",
-    cta: { label: 'Book a Free Call →', href: '#' },
+    cta: { label: 'Book a Free Call →', href: '#contact-form' },
   },
   {
     icon: Mail,
@@ -60,6 +60,8 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -67,9 +69,26 @@ export default function ContactPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
+    if (submitting) return;
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? 'Something went wrong. Please try again.');
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -143,6 +162,7 @@ export default function ContactPage() {
             </div>
 
             {/* ── Right: contact form ── */}
+            <div id="contact-form" className="scroll-mt-24">
             <ScrollReveal delay={0.15} className="bg-bg-card border border-border-subtle rounded-2xl p-8">
               <AnimatePresence mode="wait">
                 {submitted ? (
@@ -282,16 +302,22 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {error && (
+                      <p className="text-sm text-red-400 -mt-1">{error}</p>
+                    )}
+
                     <button
                       type="submit"
-                      className="w-full bg-[#E8963A] text-black font-semibold rounded-full py-4 text-base hover:bg-[#F2AA5E] transition-colors duration-200 mt-1"
+                      disabled={submitting}
+                      className="w-full bg-[#E8963A] text-black font-semibold rounded-full py-4 text-base hover:bg-[#F2AA5E] transition-colors duration-200 mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      Send Message
+                      {submitting ? 'Sending…' : 'Send Message'}
                     </button>
                   </motion.form>
                 )}
               </AnimatePresence>
             </ScrollReveal>
+            </div>
 
           </div>
         </div>
