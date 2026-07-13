@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Flights Club — Pricing & Product Spec</title>
+<style>
+:root {
+  --bg: #07090F;
+  --bg2: #0E1220;
+  --card: #13182A;
+  --orange: #E8963A;
+  --orange-light: #F2AA5E;
+  --gold: #C9A84C;
+  --blue: #3A6FE8;
+  --text: #F5F5F0;
+  --text2: #9DA3B4;
+  --muted: #5C6378;
+  --border: #1E2538;
+  --glow: rgba(232,150,58,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ── LAYOUT ── */
+.wrapper { max-width: 1000px; margin: 0 auto; padding: 48px 28px 100px; }
+
+/* ── HEADER ── */
+.doc-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 36px;
+  margin-bottom: 52px;
+}
+.doc-header h1 {
+  font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--text); margin-bottom: 6px;
+}
+.doc-header p { color: var(--text2); font-size: 13px; margin-bottom: 20px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--muted); font-size: 11px; font-family: monospace;
+  padding: 4px 10px; border-radius: 4px;
+}
+.tag.o { border-color: var(--orange); color: var(--orange); }
+.tag.g { border-color: var(--gold); color: var(--gold); }
+.tag.b { border-color: var(--blue); color: var(--blue); }
+
+/* ── BENCHMARKS BOX ── */
+.bench {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 24px 28px; margin-bottom: 52px;
+}
+.bench h3 {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+}
+.bench-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.bench-item h4 { font-size: 12px; color: var(--orange); font-weight: 600; margin-bottom: 6px; }
+.bench-item p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* ── PRODUCT CARD ── */
+.product {
+  border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-bottom: 48px;
+}
+.product-header {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: start; gap: 16px;
+  padding: 24px 28px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.product-header h2 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.product-header .sub { color: var(--text2); font-size: 13px; margin-top: 2px; }
+.badge {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.badge.mem { background: rgba(232,150,58,0.12); border: 1px solid var(--orange); color: var(--orange); }
+.badge.one { background: rgba(58,111,232,0.12); border: 1px solid var(--blue); color: var(--blue); }
+.badge.new { background: rgba(201,168,76,0.12); border: 1px solid var(--gold); color: var(--gold); }
+
+.product-body { padding: 0; }
+
+/* ── SECTION ── */
+.spec-section { border-bottom: 1px solid var(--border); padding: 24px 28px; }
+.spec-section:last-child { border-bottom: none; }
+.sec-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ── COPY BLOCK ── */
+.copy-block {
+  background: rgba(232,150,58,0.04); border: 1px solid rgba(232,150,58,0.15);
+  border-left: 3px solid var(--orange);
+  border-radius: 0 6px 6px 0; padding: 14px 18px; margin-bottom: 10px;
+}
+.copy-block .hl { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+.copy-block .body { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+/* ── SECTION STRUCTURE ── */
+.section-list { list-style: none; }
+.section-list li {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.section-list li:last-child { border-bottom: none; }
+.section-list .name { color: var(--orange); font-weight: 600; font-family: monospace; }
+.section-list .desc { color: var(--text2); }
+
+/* ── PRICING TABLE ── */
+.price-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.price-table th {
+  text-align: left; padding: 10px 12px; background: var(--card);
+  color: var(--muted); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.price-table td {
+  padding: 11px 12px; border-bottom: 1px solid var(--border);
+  color: var(--text2); vertical-align: top;
+}
+.price-table td:first-child { color: var(--text); font-weight: 600; }
+.price-table td .price { color: var(--orange); font-family: monospace; font-weight: 700; font-size: 14px; }
+.price-table tr:last-child td { border-bottom: none; }
+.price-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ── CTA TABLE ── */
+.cta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cta-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.cta-table td:first-child { color: var(--text); font-weight: 600; width: 160px; }
+.cta-table td:nth-child(2) { color: var(--orange); font-family: monospace; }
+.cta-table td:last-child { color: var(--text2); }
+.cta-table tr:last-child td { border-bottom: none; }
+
+/* ── FAQ ── */
+.faq-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.faq-a { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── HUB PAGE ── */
+.hub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.hub-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 18px;
+}
+.hub-card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.hub-card .tagline { font-size: 12px; color: var(--orange); margin-bottom: 8px; font-style: italic; }
+.hub-card p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.hub-card .price-line { font-size: 12px; color: var(--muted); margin-top: 8px; font-family: monospace; }
+
+/* ── COMPARISON TABLE ── */
+.comp-wrap { overflow-x: auto; }
+.comp { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 640px; }
+.comp th {
+  padding: 10px 12px; background: var(--card);
+  color: var(--muted); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border-bottom: 2px solid var(--border); text-align: left;
+}
+.comp th:first-child { width: 180px; }
+.comp td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+.comp td:first-child { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.comp tr:last-child td { border-bottom: none; }
+.yes { color: #4ade80; }
+.no { color: var(--muted); }
+.partial { color: var(--orange); }
+
+/* ── DIVIDER ── */
+hr { border: none; border-top: 2px solid var(--border); margin: 52px 0; }
+
+/* ── NOTE BOX ── */
+.note {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 0; padding: 12px 16px;
+  font-size: 12px; color: var(--text2); margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .bench-grid { grid-template-columns: 1fr; }
+  .hub-grid { grid-template-columns: 1fr; }
+  .section-list li { grid-template-columns: 1fr; gap: 4px; }
+  .product-header { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- HEADER -->
+<div class="doc-header">
+  <h1>The Flights Club — Pricing &amp; Product Spec</h1>
+  <p>Developer-ready page specs for /pricing hub + 4 product detail pages. Copy, sections, CTAs, pricing tables, and FAQs ready to drop in.</p>
+  <div class="tags">
+    <span class="tag o">5 Pages</span>
+    <span class="tag">Next.js 16 · App Router</span>
+    <span class="tag g">Flight Club Membership</span>
+    <span class="tag b">Points Concierge</span>
+    <span class="tag">One-off Research</span>
+    <span class="tag">Alert Service</span>
+  </div>
+</div>
+
+<!-- MARKET BENCHMARKS -->
+<div class="bench">
+  <h3>Market Benchmarks — Grounding the Pricing</h3>
+  <div class="bench-grid">
+    <div class="bench-item">
+      <h4>Award Booking Concierge (Global)</h4>
+      <p>10xTravel: avg US$275 return/2 pax. Point.me: US$200/pax. AwardWallet: fee after feasibility check. Point Hacks AU: varies by route, no upfront fee. iFLYflat: A$950/seat one-way, A$1,900 return (rest of world). Your $1,900 return is at market rate.</p>
+    </div>
+    <div class="bench-item">
+      <h4>One-off Research / Consultation</h4>
+      <p>Point.me Points Strategy Consult: US$200 flat. Frequent Flyer Concierge AU: pay-on-unlock flight report model. No published flat-fee research product in AU market — gap exists. Proposed: A$497 for a full redemption strategy report.</p>
+    </div>
+    <div class="bench-item">
+      <h4>Seat Alert Subscriptions</h4>
+      <p>Seats.aero Pro: US$9.99/mo or US$99.99/yr. Point.me Standard: US$12/mo. These are DIY tools — no human curation. A curated, Australian-focused, human-monitored alert service can justify 3–5× premium. Proposed: A$47/mo or A$397/yr.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 0: /pricing HUB -->
+<!-- ══════════════════════════════════════════ -->
+<div class="product">
+  <div class="product-header">
+    <div>
+      <h2>/pricing — The Hub Page</h2>
+      <div class="sub">Self-selection page · All four products · Buyer routes themselves to the right offer</div>
+    </div>
+    <span class="badge mem">Hub</span>
+  </div>
+  <div class="product-body">
+
+    <div class="spec-section">
+      <div class="sec-label">Page Goal + Target Buyer</div>
+      <p style="color:var(--text2);font-size:13px;">A visitor who knows they want to work with you but isn't sure which product fits. Goal: get them to self-select and click through to the right detail page within 60 seconds. No hard sell — let the comparison do the work.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Hero Section</div>
+      <div class="copy-block">
+        <div class="hl">Four ways to fly Business Class on points.</div>
+        <div class="body">Whether you want us to handle everything, do it yourself with our help, or just know where your points stand — there's a path for where you are right now.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Self-Selection Cards (below hero)</div>
+      <div class="hub-grid">
+        <div class="hub-card">
+          <h4>Flight Club Membership</h4>
+          <div class="tagline">"I want Business Class every year, handled."</div>
+          <p>Ongoing membership with strategy, concierge bookings, and guaranteed Business Class seats. For business owners ready to make this a habit.</p>
+          <div class="price-line">From A$2,997 + GST /year</div>
+        </div>
+        <div class="hub-card">
+          <h4>Points Concierge</h4>
+          <div class="tagline">"I have points. I just need someone to book the seat."</div>
+          <p>Done-for-you award booking. You have the points; we find and book the Business Class seat. One trip. No membership needed.</p>
+          <div class="price-line">A$1,900 return (rest of world)</div>
+        </div>
+        <div class="hub-card">
+          <h4>One-off Research Report</h4>
+          <div class="tagline">"I want to understand my options before I commit."</div>
+          <p>A single expert report showing your best redemption options, exactly how many points you need, and a step-by-step plan — with no ongoing commitment.</p>
+          <div class="price-line">A$497 one-off</div>
+        </div>
+        <div class="hub-card">
+          <h4>Seat Alert Service</h4>
+          <div class="tagline">"I know what I want. Just tell me when seats open."</div>
+          <p>Human-curated Business Class reward seat alerts for your routes and dates. We monitor and notify you the moment a seat appears. You book it yourself.</p>
+          <div class="price-line">A$47/mo or A$397/year</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Comparison Table (below cards)</div>
+      <div class="comp-wrap">
+        <table class="comp">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Flight Club</th>
+              <th>Concierge</th>
+              <th>Research</th>
+              <th>Alerts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>We book the seat for you</td><td class="yes">✓ Included</td><td class="yes">✓ Core service</td><td class="no">— Report only</td><td class="no">— You book</td></tr>
+            <tr><td>Points strategy session</td><td class="yes">✓ Ongoing</td><td class="no">—</td><td class="yes">✓ In report</td><td class="no">—</td></tr>
+            <tr><td>Guaranteed annual seats</td><td class="yes">✓ Platinum+</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+            <tr><td>Route monitoring</td><td class="yes">✓ Ongoing</td><td class="partial">Per booking</td><td class="no">—</td><td class="yes">✓ Core</td></tr>
+            <tr><td>Need existing points?</td><td class="no">No — we build</td><td class="yes">Yes</td><td class="no">No</td><td class="yes">Yes</td></tr>
+            <tr><td>Best for</td><td>Business owners, recurring</td><td>One trip, points ready</td><td>Research, first step</td><td>DIY bookers, specific routes</td></tr>
+            <tr><td>Commitment</td><td>Annual membership</td><td>Per booking</td><td>Once-off</td><td>Monthly or annual sub</td></tr>
+            <tr><td>Price</td><td>From A$2,997+GST/yr</td><td>A$1,900 return</td><td>A$497</td><td>A$47/mo or A$397/yr</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Bottom CTA</div>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:10px;"><strong style="color:var(--text)">Headline:</strong> Not sure where to start?</p>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:10px;"><strong style="color:var(--text)">Body:</strong> Take the free Points Audit. In two minutes it shows what your business already earns, where value is leaking, and which path the numbers actually point to.</p>
+      <p style="color:var(--text2);font-size:13px;"><strong style="color:var(--text)">CTA:</strong> "Take the Free Points Audit" → /contact (or external audit tool)</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Dev Notes</div>
+      <div class="note">Route: /pricing · Self-selection cards link to /membership, /points-concierge, /research, /alerts · No checkout on this page · Comparison table is static HTML — no JS needed · Add JSON-LD BreadcrumbList for SEO</div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 1: FLIGHT CLUB MEMBERSHIP -->
+<!-- ══════════════════════════════════════════ -->
+<div class="product">
+  <div class="product-header">
+    <div>
+      <h2>Flight Club Membership</h2>
+      <div class="sub">/membership · Existing product · Three tiers: Explore, Platinum, Black</div>
+    </div>
+    <span class="badge mem">Membership</span>
+  </div>
+  <div class="product-body">
+
+    <div class="spec-section">
+      <div class="sec-label">Page Goal + Who This Is For</div>
+      <p style="color:var(--text2);font-size:13px;">Australian business owners spending $250K–$5M+ annually who want Business Class as a recurring outcome, not a one-off event. They want someone to manage the system for them. This is the highest-value, highest-commitment product — position it that way. Who should pick this over Concierge: someone who doesn't yet have points built up, or who wants ongoing strategy and multiple seats per year, not just one booking.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Section Structure</div>
+      <ul class="section-list">
+        <li><span class="name">Hero</span><span class="desc">Full-viewport. Headline + tier selector or anchor links. Subheadline states the core promise.</span></li>
+        <li><span class="name">Social proof strip</span><span class="desc">Logos + stat: A$1B+ redeemed · 6,000+ business owners · 13 years</span></li>
+        <li><span class="name">How it works</span><span class="desc">4-step process: Audit → Strategy → Earn → Fly. Simple, visual.</span></li>
+        <li><span class="name">Tier detail — Explore</span><span class="desc">Full feature list, who it's for, price, CTA</span></li>
+        <li><span class="name">Tier detail — Platinum</span><span class="desc">Full feature list, who it's for, price, CTA. "Most Popular" badge.</span></li>
+        <li><span class="name">Tier detail — Black</span><span class="desc">Elite treatment. Gold border shimmer. "By invitation or application." Price on application or displayed.</span></li>
+        <li><span class="name">Member case studies</span><span class="desc">3 member stories with business type, spend level, seats earned, saving vs cash.</span></li>
+        <li><span class="name">FAQ</span><span class="desc">6 questions. Accordion.</span></li>
+        <li><span class="name">Final CTA</span><span class="desc">Apply for membership. Urgency line.</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Hero Copy</div>
+      <div class="copy-block">
+        <div class="hl">Business Class, every year. Built into how your business already spends.</div>
+        <div class="body">The Flight Club Membership gives Australian business owners a points system, a concierge team, and guaranteed Business Class seats — using the money you're already spending to run your business.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">How It Works — 4 Steps</div>
+      <ul class="section-list">
+        <li><span class="name">1. Points Audit</span><span class="desc">We map your current spend, identify which cards and programs earn the most, and show you exactly what you're already worth in Business Class seats.</span></li>
+        <li><span class="name">2. Strategy Session</span><span class="desc">Your dedicated strategy call with Steve Hui's team. We build your earn plan, transfer logic, and redemption target — tailored to your business.</span></li>
+        <li><span class="name">3. Earn &amp; Accumulate</span><span class="desc">You spend as normal. We make sure every dollar goes into the right program, at the best earn rate, with nothing leaking.</span></li>
+        <li><span class="name">4. Fly Business Class</span><span class="desc">When you're ready to travel, we find and book your seat. Your partner. Your family. Your route. We handle it.</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Pricing — Three Tiers</div>
+      <table class="price-table">
+        <thead>
+          <tr><th>Tier</th><th>Price</th><th>Target Spend</th><th>What's Included</th><th>CTA</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Explore</td>
+            <td><div class="price">A$2,997 + GST /yr</div></td>
+            <td>$250K–$1.5M annual business spend</td>
+            <td>Points Blueprint system · Monthly group strategy calls with Steve Hui · Partner benefit stack (Pay.com.au fee waiver $1,980, Velocity Gold, Accor Gold) · 10% discount on additional Concierge bookings · Access to member community</td>
+            <td>Apply for Explore → /apply</td>
+          </tr>
+          <tr>
+            <td>Platinum</td>
+            <td><div class="price">A$7,997 + GST /yr</div></td>
+            <td>$1.5M–$5M annual business spend</td>
+            <td>Everything in Explore · Up to 4 guaranteed return Business Class bookings/year (using member's points) · Priority 1-on-1 strategy calls · First access to partner deals and flight inventory · 30% discount on additional Concierge bookings · Exclusive member events</td>
+            <td>Apply for Platinum → /apply</td>
+          </tr>
+          <tr>
+            <td>Black</td>
+            <td><div class="price">By application</div></td>
+            <td>$5M+ annual business spend</td>
+            <td>Everything in Platinum · Dedicated account manager · A$100K+ in premium travel value annually · Private member events and retreats · First Class upgrade access · Custom travel strategy for complex itineraries · Partner introductions</td>
+            <td>Apply for Black → /apply</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">Pricing note: $2,997 and $7,997 are psychologically anchored below the $3K and $8K thresholds while remaining premium. iflyflat publicly lists Explore at $1,999 and Platinum at $6,000 — your pricing is positioned higher, which requires stronger guarantee language and more explicit value proof in copy.</div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">CTAs</div>
+      <table class="cta-table">
+        <tr><td>Primary</td><td>"Apply for Membership"</td><td>→ /apply (multi-step application form, already built)</td></tr>
+        <tr><td>Secondary</td><td>"Take the Free Points Audit"</td><td>→ /contact or audit tool</td></tr>
+        <tr><td>Tertiary (nav)</td><td>"Not ready? Try the Concierge"</td><td>→ /points-concierge</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">FAQ — 6 Items</div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need existing points to join?</div>
+        <div class="faq-a">No. The membership is designed to build your points from the ground up using your existing business spend. Most members earn their first Business Class seat within 6–12 months of activation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the difference between Explore and Platinum?</div>
+        <div class="faq-a">Explore gives you the system and the strategy — you build points and book when you're ready, with team support. Platinum includes guaranteed return Business Class bookings each year, 1-on-1 strategy sessions, and priority access to award inventory. It's the difference between having a plan and having it executed for you.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is the membership fee tax-deductible?</div>
+        <div class="faq-a">This is a business travel optimisation membership. The GST component is likely claimable as an input tax credit on your BAS. Check with your accountant for your specific situation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What programs do you work with?</div>
+        <div class="faq-a">Qantas Frequent Flyer, Velocity Frequent Flyer, American Express Membership Rewards, Pay.com.au PayRewards, and their respective transfer partners including Singapore KrisFlyer, Air Canada Aeroplan, and more.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I use membership benefits for my partner or family?</div>
+        <div class="faq-a">Yes. Concierge bookings can be made for any traveller — you, your partner, your family, or business colleagues. The points are yours to use as you see fit.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens at renewal?</div>
+        <div class="faq-a">This is an annual membership. At the end of 12 months you choose whether to renew — there's no automatic lock-in. Most members renew because the points system keeps delivering value year after year.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 2: POINTS CONCIERGE -->
+<!-- ══════════════════════════════════════════ -->
+<div class="product">
+  <div class="product-header">
+    <div>
+      <h2>Points Concierge</h2>
+      <div class="sub">/points-concierge · Existing product · One-off done-for-you booking</div>
+    </div>
+    <span class="badge one">One-off</span>
+  </div>
+  <div class="product-body">
+
+    <div class="spec-section">
+      <div class="sec-label">Page Goal + Who This Is For</div>
+      <p style="color:var(--text2);font-size:13px;">Someone who already has Qantas, Velocity, or Amex MR points and wants Business Class on a specific trip — but doesn't want to do the legwork of finding award availability. They want to hand it over. Who should pick this over Membership: someone with a specific trip in mind who already has points. Not interested in ongoing strategy. Likely a one-time or occasional buyer.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Section Structure</div>
+      <ul class="section-list">
+        <li><span class="name">Hero</span><span class="desc">Bold headline. Price visible immediately. "No find, no fee" trust statement above fold.</span></li>
+        <li><span class="name">How it works</span><span class="desc">6-step async process (no phone calls). Numbered, visual.</span></li>
+        <li><span class="name">Example routes</span><span class="desc">3 route cards: SYD→LAX, SYD→LHR, SYD→CDG. Points required, retail cost, our fee.</span></li>
+        <li><span class="name">Pricing table</span><span class="desc">Asia-Pacific vs Rest of World, one-way vs return.</span></li>
+        <li><span class="name">Trust signals</span><span class="desc">200+ Google reviews, $1B+ booked, 13 years. Quote strip.</span></li>
+        <li><span class="name">Cal.com booking embed</span><span class="desc">Or submit-request form. Already built.</span></li>
+        <li><span class="name">FAQ</span><span class="desc">6 questions.</span></li>
+        <li><span class="name">Upsell block</span><span class="desc">"Booking multiple seats this year? Membership pays for itself." Link to /membership.</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Hero Copy</div>
+      <div class="copy-block">
+        <div class="hl">You have the points. We'll find and book the Business Class seat.</div>
+        <div class="body">Tell us where you want to go. Our team searches award inventory across every program you hold, presents your options, and handles the booking end-to-end. No upfront fee — you only pay when we find your seat.</div>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);">Trust statement (above or below CTA): "No find, no fee. You pay only when a seat is confirmed."</div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Pricing</div>
+      <table class="price-table">
+        <thead>
+          <tr><th>Route</th><th>One Way / Seat</th><th>Return / Seat</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Asia-Pacific (CN, HK, ID, JP, KR, PH, MY, SG, TW, TH)</td>
+            <td><div class="price">A$650</div></td>
+            <td><div class="price">A$1,300</div></td>
+            <td>Business Class only. Airline taxes additional.</td>
+          </tr>
+          <tr>
+            <td>Rest of World (US, UK, Europe, Middle East, Africa, etc.)</td>
+            <td><div class="price">A$950</div></td>
+            <td><div class="price">A$1,900</div></td>
+            <td>Business Class only. First Class: additional fee applies.</td>
+          </tr>
+          <tr>
+            <td>First Class (any route)</td>
+            <td colspan="2"><div class="price">Additional fee — quoted on request</div></td>
+            <td>Limited to 4 seats per booking.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">Member discounts: Explore members get 10% off. Platinum and Black members get 30% off. No discounts for multiple seats — finding multiple seats on the same flight is harder, not easier.</div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">CTAs</div>
+      <table class="cta-table">
+        <tr><td>Primary</td><td>"Submit a Booking Request"</td><td>→ booking request form (or Cal.com embed)</td></tr>
+        <tr><td>Secondary</td><td>"Book a 20-min Strategy Call"</td><td>→ Cal.com embed on page</td></tr>
+        <tr><td>Upsell</td><td>"Fly multiple times a year? See Membership"</td><td>→ /membership</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">FAQ — 6 Items</div>
+      <div class="faq-item">
+        <div class="faq-q">What programs can you book with?</div>
+        <div class="faq-a">We search Qantas Frequent Flyer, Velocity Frequent Flyer, American Express Membership Rewards, Pay.com.au PayRewards, and their airline transfer partners — including Singapore KrisFlyer, Air Canada Aeroplan, and Cathay Pacific Asia Miles.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if you can't find a seat?</div>
+        <div class="faq-a">You pay nothing. We only charge the service fee when we confirm a seat that you approve. If we can't find availability, we keep monitoring and come back with new options as they appear.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do you log into my points account?</div>
+        <div class="faq-a">We never access your credit card or bank account. To make the booking, we log into your frequent flyer account (with your permission) — the airline may send you a one-time SMS code to approve the login.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long does it take to find a seat?</div>
+        <div class="faq-a">First options on standard routes typically come back within 2–5 business days. Complex itineraries or hard-to-find routes may take longer. Award seats move fast — we run searches every 1–2 days.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can you book for my partner or family?</div>
+        <div class="faq-a">Yes. Bookings can be made for any traveller using your points. We cap bookings at 4 seats per flight — finding multiple seats on the same flight is significantly harder than finding one.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if the seat disappears after I confirm?</div>
+        <div class="faq-a">Award seats can disappear within hours of becoming available. We move quickly once you confirm, but if a seat is gone by the time we book, we find a replacement at no additional charge.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 3: ONE-OFF RESEARCH REPORT (NEW) -->
+<!-- ══════════════════════════════════════════ -->
+<div class="product">
+  <div class="product-header">
+    <div>
+      <h2>One-off Redemption Research Report</h2>
+      <div class="sub">/research · New product · Single expert report · No membership required</div>
+    </div>
+    <span class="badge new">New</span>
+  </div>
+  <div class="product-body">
+
+    <div class="spec-section">
+      <div class="sec-label">Page Goal + Who This Is For</div>
+      <p style="color:var(--text2);font-size:13px;">The curious, not-yet-committed buyer. They have points sitting in one or more programs and don't know what their best redemption options actually are. They're not ready to buy a membership and don't have a trip booked yet — they want expert clarity first. This is also a natural first step that converts to Concierge or Membership. Market gap: no other Australian service offers a flat-fee redemption strategy report. Point.me charges US$200 for a strategy call — we deliver a written report for A$497.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Product Scope (what the report includes)</div>
+      <ul style="color:var(--text2);font-size:13px;padding-left:20px;line-height:2;">
+        <li>Full audit of your current points balances across all programs you provide</li>
+        <li>Best available Business Class redemption options for your top 2 destinations</li>
+        <li>Points required, transfer partners, and airline routing for each option</li>
+        <li>Comparison: which program gets you there for the fewest points and lowest taxes</li>
+        <li>Step-by-step booking instructions you can follow yourself</li>
+        <li>Estimated cash value saved vs. retail airfare</li>
+        <li>Delivered within 5 business days as a PDF report + 15-min Loom video walkthrough</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Section Structure</div>
+      <ul class="section-list">
+        <li><span class="name">Hero</span><span class="desc">Clear offer statement. Price visible. Delivery timeframe. Trust anchor.</span></li>
+        <li><span class="name">What you get</span><span class="desc">Report contents in detail. Visual mockup of report cover.</span></li>
+        <li><span class="name">Who it's for</span><span class="desc">3 buyer scenarios: "You have points but don't know what they're worth." / "You want Business Class but not sure if you have enough." / "You want to understand your options before committing to a membership."</span></li>
+        <li><span class="name">Sample output</span><span class="desc">Blurred/anonymised sample section from a real report to build credibility.</span></li>
+        <li><span class="name">Process</span><span class="desc">3 steps: Submit your points + destinations → We research → You receive the report in 5 business days.</span></li>
+        <li><span class="name">Pricing + CTA</span><span class="desc">Single price, single CTA. No tiers.</span></li>
+        <li><span class="name">Upsell block</span><span class="desc">"Report recommends a specific redemption? Let us book it." → /points-concierge</span></li>
+        <li><span class="name">FAQ</span><span class="desc">5 questions.</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Hero Copy</div>
+      <div class="copy-block">
+        <div class="hl">Find out exactly what your points are worth — and how to use them.</div>
+        <div class="body">A personalised expert report on your best Business Class redemption options. Your programs, your destinations, your points. Delivered in 5 business days. No membership required.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Pricing Model</div>
+      <table class="price-table">
+        <thead>
+          <tr><th>Product</th><th>Price</th><th>Includes</th><th>Delivery</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Redemption Research Report</td>
+            <td><div class="price">A$497 one-off</div></td>
+            <td>Written PDF report covering 2 destinations · Transfer partner analysis · Step-by-step booking instructions · 15-min Loom video walkthrough · 1 round of follow-up questions via email</td>
+            <td>5 business days</td>
+          </tr>
+          <tr>
+            <td>Report + Booking Upgrade</td>
+            <td><div class="price">A$497 + Concierge fee</div></td>
+            <td>Everything above, plus we book the seat for you if you want us to. Concierge fee applies at standard rate (A$1,300–A$1,900 return).</td>
+            <td>Report: 5 days · Booking: 2–5 days after</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">Benchmark: Point.me charges US$200 (~A$310) for a Points Strategy Consultation (call only, no written report). Your A$497 report with PDF + Loom is positioned at a premium justified by the deliverable format. Consider offering a A$97 "Quick Check" for single-program, single-destination queries as a low-ticket entry product in Phase 2.</div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">CTAs</div>
+      <table class="cta-table">
+        <tr><td>Primary</td><td>"Order My Report — A$497"</td><td>→ /api/checkout with one-off Stripe price for Research Report</td></tr>
+        <tr><td>Secondary</td><td>"See what a report covers"</td><td>→ anchor to "What you get" section</td></tr>
+        <tr><td>Post-purchase</td><td>"Ready to book? Use our Concierge"</td><td>→ /points-concierge</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">FAQ — 5 Items</div>
+      <div class="faq-item">
+        <div class="faq-q">What information do I need to provide?</div>
+        <div class="faq-a">After checkout you'll complete a short intake form: your points balances across each program, your top 2 destinations, approximate travel dates (even a rough month or season), and any flexibility on airlines or routing.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this the same as a membership strategy session?</div>
+        <div class="faq-a">No. The report is a standalone deliverable focused on your best current redemption options for specific trips. Membership includes an ongoing strategy, earn plan, and annual reviews — it's built for people who want Business Class as a regular outcome, not a one-time event.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can you research any destination?</div>
+        <div class="faq-a">We cover any route from Australia in Business Class. We research across Qantas, Velocity, Amex MR, and their transfer partners. The report covers your top 2 destinations — additional destinations can be added for A$97 each.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if my points balance changes before I'm ready to book?</div>
+        <div class="faq-a">The report reflects your situation at the time of research. If your balance changes significantly, you can order a refreshed report at a discounted rate, or simply use the step-by-step instructions as a guide and adjust quantities accordingly.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I get a refund if I'm not happy?</div>
+        <div class="faq-a">If the report doesn't answer your question or we couldn't find redemption options for your routes, we'll refund in full. We'd rather tell you upfront if we don't think we can find value than take your money.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Dev Notes</div>
+      <div class="note">New Stripe product to create: "Redemption Research Report" — one-time payment, A$497 AUD. Add to Supabase products table. After checkout success, trigger a Resend email with an intake form link (Typeform or a custom /research/intake page with a short form). Orders tracked in orders table with product_id for this report. Build /research page at src/app/research/page.tsx.</div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PAGE 4: SEAT ALERT SERVICE (NEW) -->
+<!-- ══════════════════════════════════════════ -->
+<div class="product">
+  <div class="product-header">
+    <div>
+      <h2>Business Class Seat Alert Service</h2>
+      <div class="sub">/alerts · New product · Recurring subscription · Human-curated monitoring</div>
+    </div>
+    <span class="badge new">New</span>
+  </div>
+  <div class="product-body">
+
+    <div class="spec-section">
+      <div class="sec-label">Page Goal + Who This Is For</div>
+      <p style="color:var(--text2);font-size:13px;">The experienced points collector who knows exactly what they want and just needs to be told when it's available. They've probably tried Seats.aero or similar tools — but those are US-centric, DIY, and don't focus on Australian-departing routes or Qantas/Velocity inventory specifically. This buyer values speed of notification (award seats disappear in hours), Australian program expertise, and curated filtering over a raw firehose of alerts. Who picks this over Concierge: someone who wants to do their own booking but needs the monitoring done for them. Who picks this over Research: someone who already knows what they want and just needs to know when it's available.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Positioning (vs. Seats.aero)</div>
+      <p style="color:var(--text2);font-size:13px;">Seats.aero Pro: US$9.99/mo (~A$16). DIY, US-program-centric, no human curation. <strong style="color:var(--text)">Your service: A$47/mo.</strong> Justified by: Australian program focus (Qantas, Velocity, partner redemptions from AU), human verification before alerting (no stale cache), Business Class only (no noise from economy alerts), and SMS + email with context ("2 seats, SYD→LHR, 90K QFF points, taxes $350 — acts fast").</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Section Structure</div>
+      <ul class="section-list">
+        <li><span class="name">Hero</span><span class="desc">Urgency headline. SMS mockup visual. Speed is the selling point — "seats disappear in hours."</span></li>
+        <li><span class="name">How alerts work</span><span class="desc">4 steps: You set your routes → We monitor → Seat appears → You get a text + email with all details → You book directly.</span></li>
+        <li><span class="name">What makes ours different</span><span class="desc">3 differentiators vs. DIY tools.</span></li>
+        <li><span class="name">Pricing tiers</span><span class="desc">Essential and Pro. Annual saves vs monthly.</span></li>
+        <li><span class="name">Sample alert</span><span class="desc">Visual mockup of an SMS + email alert. Shows: route, date, program, points required, taxes, seats available.</span></li>
+        <li><span class="name">FAQ</span><span class="desc">5 questions.</span></li>
+        <li><span class="name">Upsell</span><span class="desc">"Found a seat? Let us book it." → /points-concierge</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Hero Copy</div>
+      <div class="copy-block">
+        <div class="hl">Business Class award seats disappear in hours. We'll tell you the moment one opens.</div>
+        <div class="body">Set your routes. We monitor Qantas, Velocity, and their partner airlines around the clock. The moment a Business Class award seat appears on your route, we send you a text with the details — points required, taxes, program, and how many seats are available. You book it yourself, fast.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Pricing — Two Tiers</div>
+      <table class="price-table">
+        <thead>
+          <tr><th>Plan</th><th>Monthly</th><th>Annual</th><th>Routes</th><th>Alerts</th><th>Includes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Essential</td>
+            <td><div class="price">A$47/mo</div></td>
+            <td><div class="price">A$397/yr <span style="font-size:11px;color:var(--muted)">(save A$167)</span></div></td>
+            <td>Up to 3 routes</td>
+            <td>Email alerts</td>
+            <td>Business Class only · Qantas + Velocity + partners · Human-verified · Cancel any time</td>
+          </tr>
+          <tr>
+            <td>Pro</td>
+            <td><div class="price">A$97/mo</div></td>
+            <td><div class="price">A$797/yr <span style="font-size:11px;color:var(--muted)">(save A$367)</span></div></td>
+            <td>Up to 10 routes</td>
+            <td>SMS + Email</td>
+            <td>Everything in Essential · Priority SMS alerts · Partner airline monitoring · Flexible date ranges (not just specific dates) · 10% off Concierge bookings</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">Benchmark: Seats.aero Pro (US$9.99/mo, ~A$16) is the closest competitor. Your 3× premium is justified by Australian focus, human verification, Business Class filter, and contextual alerts (not just "seat found" pings). In Phase 2 consider an "Enterprise" tier for members who want alerts across 20+ routes for corporate travel management.</div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Three Differentiators (for Why Us section)</div>
+      <ul class="section-list">
+        <li><span class="name">Australian-first</span><span class="desc">We monitor departures from Australian airports on Australian programs (Qantas FF, Velocity) and their international partners — not a US-centric tool repurposed for AU routes.</span></li>
+        <li><span class="name">Human-verified</span><span class="desc">Before we alert you, a team member checks the seat is still bookable and the redemption math is sound. No stale cache alerts that waste your time.</span></li>
+        <li><span class="name">Context-rich alerts</span><span class="desc">You don't just get "seat found." You get: route, date, airline, program to use, points required, taxes payable, seats available, and how fast you need to act.</span></li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">CTAs</div>
+      <table class="cta-table">
+        <tr><td>Primary</td><td>"Start Essential — A$47/mo"</td><td>→ /api/checkout with Essential monthly Stripe price</td></tr>
+        <tr><td>Secondary</td><td>"Get Pro Annual — A$797/yr"</td><td>→ /api/checkout with Pro annual Stripe price</td></tr>
+        <tr><td>Post-subscribe</td><td>"Found a seat? We'll book it."</td><td>→ /points-concierge (members get 10% discount)</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">FAQ — 5 Items</div>
+      <div class="faq-item">
+        <div class="faq-q">How quickly will I get an alert when a seat appears?</div>
+        <div class="faq-a">Our team runs checks multiple times daily on your routes. For high-demand routes, we check more frequently. When a seat appears, you get an alert within hours — not days. For routes where speed is critical, the Pro plan's SMS alerts let you act within minutes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need to book the seat myself?</div>
+        <div class="faq-a">Yes — the Alert Service tells you a seat is available and gives you the details to book it. If you'd rather we handle the booking, add our Points Concierge service. Alerts subscribers get 10% off Concierge fees.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What routes can I set alerts for?</div>
+        <div class="faq-a">Any route departing from an Australian airport in Business Class. Essential covers 3 routes; Pro covers 10. Routes can include flexible date ranges (e.g. "Sydney to London, any date in March–April") on the Pro plan.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Which programs do you monitor?</div>
+        <div class="faq-a">Qantas Frequent Flyer (and Oneworld partners), Velocity Frequent Flyer (and Star Alliance partners), American Express Membership Rewards transfer partners, and Pay.com.au PayRewards transfer partners.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I cancel my subscription?</div>
+        <div class="faq-a">Yes, anytime. Monthly plans cancel before the next billing date. Annual plans can be cancelled and access continues until the end of the paid period — no partial refunds on annual plans.</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="sec-label">Dev Notes</div>
+      <div class="note">New Stripe products to create: (1) Alerts Essential Monthly — A$47/mo recurring, (2) Alerts Essential Annual — A$397/yr recurring, (3) Alerts Pro Monthly — A$97/mo recurring, (4) Alerts Pro Annual — A$797/yr recurring. Add all 4 to Supabase products table. Build /alerts page at src/app/alerts/page.tsx. After subscription, send onboarding email via Resend with a route preferences form link. Customer portal (already built at /api/portal) handles cancellation and plan changes automatically.</div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<!-- IMPLEMENTATION ORDER -->
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:48px;">
+  <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Implementation Order</div>
+  <table class="price-table">
+    <thead><tr><th>Priority</th><th>Page</th><th>Route</th><th>Stripe Products Needed</th><th>Effort</th></tr></thead>
+    <tbody>
+      <tr><td>1 — Existing, update</td><td>Points Concierge</td><td>/points-concierge</td><td>Already in Stripe</td><td>Copy refresh only</td></tr>
+      <tr><td>2 — Existing, update</td><td>Flight Club Membership</td><td>/membership</td><td>Already in Stripe</td><td>Copy + tier detail sections</td></tr>
+      <tr><td>3 — New</td><td>Pricing Hub</td><td>/pricing</td><td>None (links only)</td><td>Low — static page</td></tr>
+      <tr><td>4 — New</td><td>Research Report</td><td>/research</td><td>1 new one-off product</td><td>Medium — + intake form</td></tr>
+      <tr><td>5 — New</td><td>Seat Alert Service</td><td>/alerts</td><td>4 new recurring products</td><td>High — + monitoring system</td></tr>
+    </tbody>
+  </table>
+  <div class="note" style="margin-top:16px;">Alert Service (Priority 5) requires backend infrastructure to actually monitor award availability and send alerts — this is the most complex product operationally. Consider launching it as a waitlist ("Join the Alert Waitlist") before the backend is built, to gauge demand before investing in the monitoring system.</div>
+</div>
+
+</div>
+</body>
+</html>

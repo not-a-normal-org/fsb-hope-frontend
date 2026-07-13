@@ -56,11 +56,11 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
 // ── State A — profile setup form ──────────────────────────────────────────────
 
 function ProfileSetupForm({
-  email,
+  sessionId,
   initialProfile,
   onComplete,
 }: {
-  email: string;
+  sessionId: string;
   initialProfile: CustomerProfile | null;
   onComplete: (profile: CustomerProfile) => void;
 }) {
@@ -101,7 +101,7 @@ function ProfileSetupForm({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email,
+          sessionId,
           fullName:     form.fullName,
           phone:        form.phone,
           companyName:  form.companyName,
@@ -110,7 +110,7 @@ function ProfileSetupForm({
       });
       if (!res.ok) throw new Error('Profile update failed');
       // Re-fetch to get updated data
-      const lookupRes = await fetch(`/api/profile/lookup?email=${encodeURIComponent(email)}`);
+      const lookupRes = await fetch(`/api/profile/lookup?session_id=${encodeURIComponent(sessionId)}`);
       const lookupData = await lookupRes.json();
       onComplete(lookupData.customer);
     } catch (e) {
@@ -326,39 +326,26 @@ function DashboardContent() {
 
   const [state, setState]       = useState<'loading' | 'setup' | 'complete'>('loading');
   const [profile, setProfile]   = useState<CustomerProfile | null>(null);
-  const [email, setEmail]       = useState('');
 
   useEffect(() => {
-    if (!isSuccess) {
+    if (!isSuccess || !sessionId) {
       setState('complete');
       return;
     }
 
     async function resolveProfile() {
-      // Fetch the Stripe session to get the customer email
-      let customerEmail = '';
-      if (sessionId) {
-        try {
-          const sessionRes = await fetch(`/api/session-email?session_id=${sessionId}`);
-          if (sessionRes.ok) {
-            const sessionData = await sessionRes.json();
-            customerEmail = sessionData.email ?? '';
-          }
-        } catch {
-          // Non-fatal — fall through to complete state
-        }
-      }
-
-      if (!customerEmail) {
-        setState('complete');
-        return;
-      }
-
-      setEmail(customerEmail);
-
       try {
-        const res  = await fetch(`/api/profile/lookup?email=${encodeURIComponent(customerEmail)}`);
+        // lookup derives the email from the Stripe session server-side
+        const res = await fetch(`/api/profile/lookup?session_id=${encodeURIComponent(sessionId!)}`);
+        if (!res.ok) {
+          setState('complete');
+          return;
+        }
         const data = await res.json();
+        if (!data.email) {
+          setState('complete');
+          return;
+        }
         setProfile(data.customer ?? null);
         setState(data.complete ? 'complete' : 'setup');
       } catch {
@@ -405,9 +392,9 @@ function DashboardContent() {
             </motion.div>
           )}
 
-          {state === 'setup' && (
+          {state === 'setup' && sessionId && (
             <ProfileSetupForm
-              email={email}
+              sessionId={sessionId}
               initialProfile={profile}
               onComplete={(updated) => {
                 setProfile(updated);

@@ -3,7 +3,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, animate, useMotionValue, useTransform, useInView } from 'framer-motion';
 import { Check, X } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
 import FlightSavingsSection from '@/components/sections/FlightSavingsSection';
 import FAQSection from '@/components/sections/FAQSection';
 import FinalCTASection from '@/components/sections/FinalCTASection';
@@ -269,7 +268,8 @@ function ConciergeHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.6 }}
           >
-            One Business Class return seat, fully handled by our expert team.
+            Tell us where you want to go. Our team searches award inventory across every
+            program you hold, presents your options, and handles the booking end-to-end.
             No membership required.
           </motion.p>
 
@@ -281,7 +281,7 @@ function ConciergeHero() {
             className="mb-6"
           >
             <span className="inline-block bg-accent-orange text-bg-primary text-sm font-bold px-5 py-2 rounded-full tracking-wide">
-              $1,900 per return Business Class seat
+              From $1,300 per return Business Class seat
             </span>
           </motion.div>
 
@@ -294,8 +294,12 @@ function ConciergeHero() {
             <CheckoutButton
               priceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE!}
               mode="payment"
-              label="Book My Seat — $1,900"
+              metadata={{ product_key: 'concierge' }}
+              label="Book My Seat"
             />
+            <p className="mt-3 text-xs text-text-muted">
+              No find, no fee. You pay only when a seat is confirmed.
+            </p>
           </motion.div>
         </div>
       </div>
@@ -594,7 +598,7 @@ function WhatsIncludedSection() {
         <ScrollReveal className="text-center mb-14">
           <SectionLabel label="What You Get" className="flex justify-center" />
           <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
-            Everything Included for $1,900
+            Everything Handled, End to End
           </h2>
         </ScrollReveal>
 
@@ -608,7 +612,7 @@ function WhatsIncludedSection() {
                   <Check size={16} className="text-green-400" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-lg font-display font-bold text-text-primary">
-                  Included in $1,900
+                  Included in your service fee
                 </h3>
               </div>
               <div className="space-y-4">
@@ -644,6 +648,80 @@ function WhatsIncludedSection() {
             </div>
           </ScrollReveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Section 4: Pricing (two regions) ───────────────────────────────────────────
+
+const PRICING_ROWS = [
+  {
+    region: 'Asia-Pacific',
+    detail: 'CN, HK, ID, JP, KR, PH, MY, SG, TW, TH',
+    oneWay: '$650',
+    ret: '$1,300',
+    note: 'Business Class. Airline taxes additional.',
+  },
+  {
+    region: 'Rest of World',
+    detail: 'US, UK, Europe, Middle East, Africa, etc.',
+    oneWay: '$950',
+    ret: '$1,900',
+    note: 'Business Class. First Class: additional fee.',
+  },
+];
+
+function ConciergePricingSection() {
+  return (
+    <section className="relative py-24 bg-bg-secondary overflow-hidden">
+      <div className="max-w-5xl mx-auto px-6 lg:px-16">
+        <ScrollReveal className="text-center mb-12">
+          <SectionLabel label="Pricing" className="flex justify-center" />
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-text-primary leading-tight">
+            Flat Fee, By Region
+          </h2>
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <div className="overflow-x-auto rounded-2xl border border-border-subtle">
+            <table className="w-full min-w-[560px] border-collapse text-sm">
+              <thead>
+                <tr className="bg-bg-card">
+                  <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider text-text-muted">Route</th>
+                  <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider text-text-muted">One Way / Seat</th>
+                  <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider text-text-muted">Return / Seat</th>
+                  <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider text-text-muted">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {PRICING_ROWS.map((row) => (
+                  <tr key={row.region} className="border-t border-border-subtle/60">
+                    <td className="px-5 py-4">
+                      <span className="block font-semibold text-text-primary">{row.region}</span>
+                      <span className="block text-xs text-text-muted">{row.detail}</span>
+                    </td>
+                    <td className="px-5 py-4 font-mono font-bold text-accent-orange">{row.oneWay}</td>
+                    <td className="px-5 py-4 font-mono font-bold text-accent-orange">{row.ret}</td>
+                    <td className="px-5 py-4 text-text-secondary">{row.note}</td>
+                  </tr>
+                ))}
+                <tr className="border-t border-border-subtle/60">
+                  <td className="px-5 py-4 font-semibold text-text-primary">First Class (any route)</td>
+                  <td className="px-5 py-4 font-mono text-accent-orange" colSpan={2}>Quoted on request</td>
+                  <td className="px-5 py-4 text-text-secondary">Limited to 4 seats per booking.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal className="mt-6 max-w-2xl mx-auto text-center">
+          <p className="text-sm text-text-muted leading-relaxed">
+            Member discounts: Explore members get 10% off. Platinum and Black members get 30% off.
+            Finding multiple seats on the same flight is harder, not easier — so no bulk discounts apply.
+          </p>
+        </ScrollReveal>
       </div>
     </section>
   );
@@ -725,24 +803,23 @@ function StrategyCallSection() {
 
 export default function PointsConciergePage() {
   return (
-    <>
-      <Navbar />
-      <main className="w-full bg-bg-primary">
-        <ConciergeHero />
-        <HowItWorksSection />
-        <WhatsIncludedSection />
-        <FlightSavingsSection />
-        <PointsProgramsSection />
-        <StrategyCallSection />
-        <FAQSection items={FAQ_ITEMS_CONCIERGE} />
-        <FinalCTASection
-          headline="Ready to Use Your Points?"
-          subheadline="Tell us where you want to go and we'll take it from there."
-          cta_label="Book Your Concierge Service →"
-          cta_href="/contact"
-          urgency_line="$1,900 flat fee · No hidden costs"
-        />
-      </main>
-    </>
+    <main className="w-full bg-bg-primary">
+      <ConciergeHero />
+      <HowItWorksSection />
+      <WhatsIncludedSection />
+      <ConciergePricingSection />
+      <FlightSavingsSection />
+      <PointsProgramsSection />
+      <StrategyCallSection />
+      <FAQSection items={FAQ_ITEMS_CONCIERGE} />
+      <FinalCTASection
+        headline="Ready to Use Your Points?"
+        subheadline="Tell us where you want to go and we'll take it from there."
+        cta_label="Book Your Concierge Service →"
+        cta_href="/contact"
+        urgency_line="Flat fee from $1,300 · No find, no fee"
+        secondary_link={{ label: 'Fly multiple times a year? See Membership →', href: '/membership' }}
+      />
+    </main>
   );
 }

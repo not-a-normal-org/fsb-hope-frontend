@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -17,48 +18,143 @@ function bad(message: string): NextResponse {
   return NextResponse.json({ error: message }, { status: 400 });
 }
 
+/** Fire-and-forget transactional email. No-ops if Resend isn't configured. */
+async function sendResend(to: string | null | undefined, subject: string, html: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey || apiKey === 'your_resend_key' || !to) return;
+  const resend = new Resend(apiKey);
+  await resend.emails.send({
+    from: 'The Flights Club <hello@theflightsclub.com.au>',
+    to,
+    subject,
+    html,
+  });
+}
+
+/** First active line-item price ID for a checkout session (best-effort). */
+async function getSessionPriceId(sessionId: string): Promise<string | null> {
+  try {
+    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 1 });
+    return lineItems.data[0]?.price?.id ?? null;
+  } catch (err) {
+    console.warn('[stripe/webhook] could not read line items:', err);
+    return null;
+  }
+}
+
+/**
+ * Post-purchase onboarding emails. Product is identified by the `product_key`
+ * we stamp into session metadata from CheckoutButton. Non-fatal — a failed
+ * email must not make the webhook 500 (that would retry and re-send).
+ */
+async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<void> {
+  const productKey = session.metadata?.product_key;
+  if (!productKey) return;
+
+  const email = session.customer_details?.email ?? null;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@theflightsclub.com.au';
+
+  try {
+    if (productKey === 'research') {
+      const link = `${appUrl}/research/intake?session=${session.id}`;
+      await sendResend(
+        email,
+        'Your report is next — a couple of quick details',
+        `<p>Thanks for ordering a Redemption Research Report.</p>
+         <p>Tell us your points balances and destinations so we can get started:</p>
+         <p><a href="${link}">Complete your intake form →</a></p>
+         <p>We'll deliver your report within 5 business days.</p>
+         <p>— The Flights Club by iFLYflat</p>`,
+      );
+      await sendResend(adminEmail, 'New Research Report purchase', `<p>Research Report purchased. Session: ${session.id}. Awaiting intake.</p>`);
+    } else if (productKey.startsWith('alerts_')) {
+      const link = `${appUrl}/alerts/preferences?session=${session.id}`;
+      await sendResend(
+        email,
+        'Set up your Business Class seat alerts',
+        `<p>Welcome to the Seat Alert Service.</p>
+         <p>Tell us which routes and dates to monitor and we'll start watching:</p>
+         <p><a href="${link}">Set your routes →</a></p>
+         <p>— The Flights Club by iFLYflat</p>`,
+      );
+      await sendResend(adminEmail, `New Alerts subscription (${productKey})`, `<p>New alerts subscription: ${productKey}. Session: ${session.id}.</p>`);
+    }
+  } catch (err) {
+    console.error('[stripe/webhook] follow-up email failed:', err);
+  }
+}
+
 // ── Event handlers ────────────────────────────────────────────────────────────
+
+/**
+ * Resolve the internal customer row for a completed checkout session.
+ *
+ * Approved applicants carry their internal `customer_id` in the session
+ * metadata (stamped onto the admin payment link). When present we link the
+ * Stripe customer onto that existing row and activate it — otherwise we'd
+ * create a duplicate keyed only by stripe_customer_id, orphaning the
+ * application row and breaking the email-keyed profile lookup.
+ *
+ * Direct purchases (membership/concierge buttons) carry no metadata and fall
+ * back to an upsert keyed by stripe_customer_id.
+ */
+async function resolveCustomer(
+  session: Stripe.Checkout.Session,
+): Promise<{ id: string } | null> {
+  const email            = session.customer_details?.email ?? null;
+  const stripeCustomerId = session.customer as string;
+  const linkedId         = session.metadata?.customer_id;
+
+  if (linkedId) {
+    const { data, error } = await supabaseAdmin
+      .from('customers')
+      .update({
+        stripe_customer_id: stripeCustomerId,
+        ...(email ? { email } : {}),
+        status: 'active',
+      })
+      .eq('id', linkedId)
+      .select('id')
+      .maybeSingle();
+
+    if (error) {
+      throw new Error(`customers link failed: ${error.message}`);
+    }
+    if (data) return data;
+    // Row missing (e.g. deleted) — fall through to the upsert below.
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('customers')
+    .upsert(
+      { stripe_customer_id: stripeCustomerId, email },
+      { onConflict: 'stripe_customer_id' },
+    )
+    .select('id')
+    .single();
+
+  if (error) {
+    throw new Error(`customers upsert failed: ${error.message}`);
+  }
+  return data;
+}
 
 async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session,
 ): Promise<void> {
-  // Use event data directly — do NOT re-fetch the session.
-  // stripe trigger creates synthetic fixtures that don't exist as real sessions.
-  const customerEmail    = session.customer_details?.email ?? null;
-  const stripeCustomerId = session.customer as string;
-
-  // ── DEBUG (remove after confirming Supabase writes) ───────────────────────
-  console.log('SESSION DATA:', JSON.stringify({
-    id:               session.id,
-    mode:             session.mode,
-    customer:         session.customer,
-    customer_details: session.customer_details,
-    subscription:     session.subscription,
-    payment_intent:   session.payment_intent,
-    amount_total:     session.amount_total,
-  }, null, 2));
-  // ─────────────────────────────────────────────────────────────────────────
+  const customer = await resolveCustomer(session);
 
   if (session.mode === 'subscription') {
     const stripeSubscriptionId = session.subscription as string;
 
-    // Upsert customer first so we have the internal customer_id FK
-    const { data: customer, error: customerError } = await supabaseAdmin
-      .from('customers')
-      .upsert(
-        { stripe_customer_id: stripeCustomerId, email: customerEmail },
-        { onConflict: 'stripe_customer_id' },
-      )
-      .select()
-      .single();
-
-    // ── DEBUG ──────────────────────────────────────────────────────────────
-    console.log('CUSTOMER RESULT:', { customer, customerError });
-    // ──────────────────────────────────────────────────────────────────────
-
-    if (customerError) {
-      throw new Error(`customers upsert failed: ${customerError.message}`);
-    }
+    // Idempotency — Stripe delivers at-least-once; bail if already recorded.
+    const { data: existingSub } = await supabaseAdmin
+      .from('subscriptions')
+      .select('id')
+      .eq('stripe_subscription_id', stripeSubscriptionId)
+      .maybeSingle();
+    if (existingSub) return;
 
     // Fetch subscription from Stripe to get period dates — this ID is real
     const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
@@ -77,32 +173,24 @@ async function handleCheckoutSessionCompleted(
         cancel_at_period_end:   subscription.cancel_at_period_end,
       });
 
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('SUBSCRIPTION INSERT ERROR:', subError);
-    // ────────────────────────────────────────────────────────────────────────
-
     if (subError) {
       throw new Error(`subscriptions insert failed: ${subError.message}`);
     }
+
+    await sendPurchaseFollowup(session);
   }
 
   if (session.mode === 'payment') {
-    const { data: customer, error: customerError } = await supabaseAdmin
-      .from('customers')
-      .upsert(
-        { stripe_customer_id: stripeCustomerId, email: customerEmail },
-        { onConflict: 'stripe_customer_id' },
-      )
-      .select()
-      .single();
+    // Idempotency — guard on the unique checkout session id.
+    const { data: existingOrder } = await supabaseAdmin
+      .from('orders')
+      .select('id')
+      .eq('stripe_session_id', session.id)
+      .maybeSingle();
+    if (existingOrder) return;
 
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('CUSTOMER RESULT (payment):', { customer, customerError });
-    // ────────────────────────────────────────────────────────────────────────
-
-    if (customerError) {
-      throw new Error(`customers upsert failed: ${customerError.message}`);
-    }
+    // Record which product was bought so the admin orders view can label it.
+    const stripePriceId = await getSessionPriceId(session.id);
 
     const { error: orderError } = await supabaseAdmin
       .from('orders')
@@ -110,17 +198,16 @@ async function handleCheckoutSessionCompleted(
         customer_id:              customer?.id,
         stripe_payment_intent_id: session.payment_intent as string,
         stripe_session_id:        session.id,
+        stripe_price_id:          stripePriceId,
         amount_cents:             session.amount_total,
         status:                   'paid',
       });
 
-    // ── DEBUG ────────────────────────────────────────────────────────────────
-    console.log('ORDER INSERT ERROR:', orderError);
-    // ────────────────────────────────────────────────────────────────────────
-
     if (orderError) {
       throw new Error(`orders insert failed: ${orderError.message}`);
     }
+
+    await sendPurchaseFollowup(session);
   }
 }
 

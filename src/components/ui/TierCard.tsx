@@ -124,6 +124,11 @@ export default function TierCard({ tier, elevated = false, ctaSlot }: TierCardPr
         {/* Tier name */}
         <h3 className={`text-3xl font-bold mb-2 ${accentText}`}>{tier.name}</h3>
 
+        {/* Price (optional — shown when a tier defines one) */}
+        {tier.price && (
+          <p className={`text-3xl font-bold mb-4 ${accentText}`}>{tier.price}</p>
+        )}
+
         {/* Target spend */}
         <p className="text-text-secondary text-sm mb-6 leading-relaxed min-h-10">
           {tier.target}
@@ -139,13 +144,6 @@ export default function TierCard({ tier, elevated = false, ctaSlot }: TierCardPr
             {tier.key_benefit}
           </p>
         </div>
-
-        {/* Price (optional — shown on detail pages) */}
-        {tier.price && (
-          <div className="mb-6">
-            <span className={`text-2xl font-bold ${accentText}`}>{tier.price}</span>
-          </div>
-        )}
 
         {/* Feature list */}
         <div className="space-y-3 mb-8 flex-1">

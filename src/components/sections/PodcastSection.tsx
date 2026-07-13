@@ -1,3 +1,18 @@
+// Podcast is disabled until we launch one. This section is not rendered anywhere
+// (its usage in src/app/page.tsx is commented out) and its data source
+// (PODCAST_SECTION / PODCAST_EPISODES in @/lib/constants) is commented out too.
+// Kept as a no-op stub so the project type-checks; the original implementation is
+// preserved in the block comment below for easy restoration.
+export default function PodcastSection() {
+  return null;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ORIGINAL PODCAST SECTION — disabled until we launch a podcast.
+   To restore: re-enable PODCAST_SECTION / PODCAST_EPISODES in @/lib/constants,
+   replace the stub above with the implementation below, and re-add
+   <PodcastSection /> + its import in src/app/page.tsx.
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -34,7 +49,6 @@ export default function PodcastSection() {
               variants={staggerChildVariant}
               className="bg-bg-secondary rounded-xl overflow-hidden border border-border-subtle hover:border-accent-orange/50 transition-all group"
             >
-              {/* Cover image placeholder */}
               <div className="relative aspect-square bg-gradient-to-br from-accent-orange/20 to-accent-blue/20 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-accent-orange/30 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -46,7 +60,6 @@ export default function PodcastSection() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="p-6">
                 <h3 className="text-lg font-bold text-text-primary mb-2 line-clamp-2">
                   {episode.title}
@@ -72,7 +85,6 @@ export default function PodcastSection() {
           ))}
         </motion.div>
 
-        {/* View all CTA */}
         <div className="flex justify-center">
           <CTAButton
             label={PODCAST_SECTION.cta_label}
@@ -84,3 +96,5 @@ export default function PodcastSection() {
     </section>
   );
 }
+
+───────────────────────────────────────────────────────────────────────────── */
