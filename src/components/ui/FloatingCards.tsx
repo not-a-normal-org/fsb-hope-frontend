@@ -351,7 +351,7 @@ function FloatingCard({
                   </div>
                   <div>
                     <span className="text-[10px] text-white/40">
-                      Saved with The Flights Club ✈
+                      Saved with PointIQ ✈
                     </span>
                   </div>
                 </div>

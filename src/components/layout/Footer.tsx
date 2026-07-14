@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
   Instagram,
@@ -15,19 +16,19 @@ import { fadeUpVariant, staggerContainerVariant, staggerChildVariant } from '@/l
 const SOCIAL_ICONS: Record<string, { Icon: React.ElementType; url: string }> = {
   Instagram: {
     Icon: Instagram,
-    url: 'https://instagram.com/theflightsclub',
+    url: 'https://instagram.com/pointiq',
   },
   Facebook: {
     Icon: Facebook,
-    url: 'https://facebook.com/theflightsclub',
+    url: 'https://facebook.com/pointiq',
   },
   LinkedIn: {
     Icon: Linkedin,
-    url: 'https://linkedin.com/company/the-flights-club',
+    url: 'https://linkedin.com/company/pointiq',
   },
   YouTube: {
     Icon: Youtube,
-    url: 'https://youtube.com/@theflightsclub',
+    url: 'https://youtube.com/@pointiq',
   },
 };
 
@@ -84,10 +85,17 @@ export default function Footer() {
           >
             {/* Logo and Description */}
             <motion.div variants={staggerChildVariant}>
-              <Link href="/" className="inline-block group mb-4">
-                <div className="text-2xl sm:text-3xl font-bold text-text-primary group-hover:text-accent-orange transition-colors duration-300">
-                  ✈️ The Flights Club
-                </div>
+              <Link href="/" className="inline-flex items-center gap-3 group mb-4" aria-label="PointIQ home">
+                <Image
+                  src="/img/pointiq-avatar.png"
+                  alt="PointIQ"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11"
+                />
+                <span className="text-2xl sm:text-3xl font-bold text-text-primary group-hover:text-accent-orange transition-colors duration-300">
+                  PointIQ
+                </span>
               </Link>
               <p className="text-text-secondary text-sm leading-relaxed max-w-sm">
                 Australia's premier Business Class travel membership for business owners.

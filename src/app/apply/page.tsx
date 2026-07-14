@@ -57,7 +57,7 @@ const TIERS = [
     benefits: [
       'Annual points strategy session',
       'Up to 2 concierge seat bookings/year',
-      'The Flights Club community access',
+      'PointIQ community access',
     ],
   },
   {
@@ -202,7 +202,7 @@ function ApplyForm() {
             Membership Application
           </p>
           <h1 className="text-2xl md:text-3xl font-semibold text-white">
-            Join The Flights Club
+            Join PointIQ
           </h1>
         </motion.div>
 
@@ -396,7 +396,7 @@ function ApplyForm() {
 
                   <div>
                     <label className={labelCls}>
-                      What Are You Hoping to Get From The Flights Club?{' '}
+                      What Are You Hoping to Get From PointIQ?{' '}
                       <span className="text-[#5C6378] normal-case tracking-normal font-normal">(optional)</span>
                     </label>
                     <textarea

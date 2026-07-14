@@ -130,7 +130,7 @@ function ProfileSetupForm({
     >
       <div className="text-center mb-8">
         <p className="font-[family-name:var(--font-dm-mono)] text-[#E8963A] text-[10px] tracking-widest uppercase mb-3">
-          Welcome to The Flights Club
+          Welcome to PointIQ
         </p>
         <h1 className="text-2xl md:text-3xl font-semibold text-white mb-2">
           You&apos;re in. Let&apos;s set up your profile.
@@ -222,8 +222,8 @@ function DashboardComplete({ profile }: { profile: CustomerProfile | null }) {
     {
       icon: <Mail size={18} className="text-[#E8963A]" />,
       label: 'Questions?',
-      value: 'hello@theflightsclub.com.au',
-      href: 'mailto:hello@theflightsclub.com.au',
+      value: 'hello@pointiq.club',
+      href: 'mailto:hello@pointiq.club',
     },
   ];
 
@@ -265,7 +265,7 @@ function DashboardComplete({ profile }: { profile: CustomerProfile | null }) {
         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
         className="text-3xl font-semibold text-white mb-3"
       >
-        Welcome to The Flights Club
+        Welcome to PointIQ
       </motion.h1>
 
       <motion.p

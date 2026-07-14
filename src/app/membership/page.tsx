@@ -53,7 +53,7 @@ function MembershipHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
         >
-          The Flights Club
+          PointIQ
         </motion.p>
 
         {/* Headline — word by word */}
@@ -126,7 +126,7 @@ const STEPS = [
     num: '02',
     icon: Map,
     title: 'Strategy Session',
-    body: 'Your dedicated call with Steve Hui’s team. We build your earn plan, transfer logic, and redemption target — tailored to your business.',
+    body: 'Your dedicated call with our points strategy team. We build your earn plan, transfer logic, and redemption target — tailored to your business.',
   },
   {
     num: '03',

@@ -24,7 +24,7 @@ async function sendResend(to: string | null | undefined, subject: string, html: 
   if (!apiKey || apiKey === 'your_resend_key' || !to) return;
   const resend = new Resend(apiKey);
   await resend.emails.send({
-    from: 'The Flights Club <hello@theflightsclub.com.au>',
+    from: 'PointIQ <hello@pointiq.club>',
     to,
     subject,
     html,
@@ -53,7 +53,7 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
 
   const email = session.customer_details?.email ?? null;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@theflightsclub.com.au';
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@pointiq.club';
 
   try {
     if (productKey === 'research') {
@@ -65,7 +65,7 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
          <p>Tell us your points balances and destinations so we can get started:</p>
          <p><a href="${link}">Complete your intake form →</a></p>
          <p>We'll deliver your report within 5 business days.</p>
-         <p>— The Flights Club by iFLYflat</p>`,
+         <p>— PointIQ</p>`,
       );
       await sendResend(adminEmail, 'New Research Report purchase', `<p>Research Report purchased. Session: ${session.id}. Awaiting intake.</p>`);
     } else if (productKey.startsWith('alerts_')) {
@@ -76,7 +76,7 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
         `<p>Welcome to the Seat Alert Service.</p>
          <p>Tell us which routes and dates to monitor and we'll start watching:</p>
          <p><a href="${link}">Set your routes →</a></p>
-         <p>— The Flights Club by iFLYflat</p>`,
+         <p>— PointIQ</p>`,
       );
       await sendResend(adminEmail, `New Alerts subscription (${productKey})`, `<p>New alerts subscription: ${productKey}. Session: ${session.id}.</p>`);
     }

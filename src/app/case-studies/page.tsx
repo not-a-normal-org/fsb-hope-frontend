@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 
 export const metadata: Metadata = {
-  title: 'Case Studies — The Flights Club by iFLYflat',
+  title: 'Case Studies — PointIQ',
   description:
     'Real member stories: how Australian business owners turned everyday spending into Business Class flights and premium travel.',
 };

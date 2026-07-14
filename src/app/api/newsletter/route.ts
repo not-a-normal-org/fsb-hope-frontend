@@ -30,15 +30,15 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
   const firstName = name?.split(' ')[0] ?? 'there';
 
   await resend.emails.send({
-    from:    'The Flights Club <hello@theflightsclub.com.au>',
+    from:    'PointIQ <hello@pointiq.club>',
     to:      email,
-    subject: 'Welcome to The Flights Club ✈',
+    subject: 'Welcome to PointIQ ✈',
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to The Flights Club</title>
+  <title>Welcome to PointIQ</title>
 </head>
 <body style="margin:0;padding:0;background-color:#07090F;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#07090F;padding:48px 16px;">
@@ -49,7 +49,7 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <!-- Header -->
           <tr>
             <td style="padding:40px 48px 32px;border-bottom:1px solid #1E2538;">
-              <p style="margin:0;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#E8963A;font-weight:600;">The Flights Club</p>
+              <p style="margin:0;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#E8963A;font-weight:600;">PointIQ</p>
               <h1 style="margin:12px 0 0;font-size:28px;font-weight:700;color:#F5F5F0;line-height:1.3;">
                 Welcome aboard, ${firstName}.
               </h1>
@@ -111,7 +111,7 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <tr>
             <td style="padding:24px 48px;border-top:1px solid #1E2538;">
               <p style="margin:0;font-size:13px;color:#5C6378;line-height:1.6;">
-                You're receiving this because you signed up at theflightsclub.com.au.
+                You're receiving this because you signed up at pointiq.club.
                 If this was a mistake, you can safely ignore this email.
               </p>
             </td>

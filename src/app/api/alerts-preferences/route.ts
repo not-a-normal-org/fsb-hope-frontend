@@ -59,7 +59,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const resend = new Resend(apiKey);
-  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@theflightsclub.com.au';
+  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@pointiq.club';
   const firstName = fullName.split(' ')[0];
 
   const adminHtml = `
@@ -76,18 +76,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     <p>Thanks — your Seat Alert preferences are set. We'll start monitoring your routes and let you
     know the moment a Business Class award seat appears.</p>
     <p>You can update your routes any time by replying to this email.</p>
-    <p>— The Flights Club by iFLYflat</p>
+    <p>— PointIQ</p>
   `;
 
   const [adminResult, customerResult] = await Promise.allSettled([
     resend.emails.send({
-      from: 'The Flights Club <hello@theflightsclub.com.au>',
+      from: 'PointIQ <hello@pointiq.club>',
       to: adminEmailAddress,
       subject: `Alert preferences — ${fullName}`,
       html: adminHtml,
     }),
     resend.emails.send({
-      from: 'The Flights Club <hello@theflightsclub.com.au>',
+      from: 'PointIQ <hello@pointiq.club>',
       to: email,
       subject: 'Your seat alerts are set up',
       html: customerHtml,

@@ -1,9 +1,8 @@
 {
   "project": {
-    "name": "iFlyFlat Clone — The Flights Club",
-    "description": "A premium clone and improvement of iflyflat.com.au targeting Australian business owners. Design elevated with Flexfume-inspired animations. Goal is higher conversion, premium feel, and stronger mobile experience.",
+    "name": "PointIQ",
+    "description": "A premium points-and-Business-Class travel service for Australian business owners. Elevated design with polished animations. Goal is higher conversion, premium feel, and a strong mobile experience.",
     "reference_sites": {
-      "original": "https://iflyflat.com.au/",
       "animation_inspiration": "https://www.flexfume.com/"
     },
     "status": "phases 1-3 complete; backend + admin console in progress on branch fix/stripe-supabase-flow"
@@ -213,7 +212,7 @@
         ]
       },
       "content": {
-        "logo": "The Flights Club by iFLYflat SVG",
+        "logo": "PointIQ SVG",
         "tagline": "Never Fly Economy Again."
       },
       "notes": "Use sessionStorage to only show once per browser session. Skip button optional."
@@ -226,10 +225,9 @@
       "description": "Sticky navbar. Starts transparent over hero. Becomes solid dark background on scroll past 80px. Mobile hamburger menu with slide-in panel.",
       "links": [
         { "label": "About", "href": "/about" },
-        { "label": "The Flights Club", "href": "/membership", "has_dropdown": true },
+        { "label": "PointIQ", "href": "/membership", "has_dropdown": true },
         { "label": "Points Concierge", "href": "/points-concierge" },
         { "label": "Podcast", "href": "/podcast" },
-        { "label": "Events", "href": "https://events.humanitix.com/host/the-iflyflat-flights-club", "external": true },
         { "label": "Contact", "href": "/contact" }
       ],
       "cta_buttons": [
@@ -248,7 +246,7 @@
         "headline_line1": "The Ultimate Travel Advantage",
         "headline_line2": "for Business Owners",
         "subheadline": "Turn every dollar you spend into Business Class freedom, exclusive experiences, and a private community of leaders who never fly economy again.",
-        "cta_primary": { "label": "Join The Flights Club", "href": "/membership" },
+        "cta_primary": { "label": "Join PointIQ", "href": "/membership" },
         "cta_secondary": { "label": "Book One Seat With Points", "href": "/points-concierge" },
         "trust_badge": "6,000+ members · $1B+ points redeemed · 12 years"
       },
@@ -321,7 +319,7 @@
         {
           "id": "membership",
           "label": "ONGOING",
-          "title": "Flights Club Membership",
+          "title": "PointIQ Membership",
           "description": "For business owners who want this every year. Ongoing strategy, bookings, and guaranteed Business Class returns.",
           "price": "From $X,XXX/year — Members save $5K–$10K per seat",
           "cta_label": "Explore Memberships",
@@ -437,7 +435,7 @@
     },
     {
       "id": "why_different",
-      "name": "Why The Flights Club is Different",
+      "name": "Why PointIQ is Different",
       "status": "improved",
       "component": "WhyDifferentSection.tsx",
       "description": "Six feature blocks arranged in a 3x2 grid. Each has an icon, title, and 1-2 sentence description. They animate in with stagger. Icons are better quality than original.",
@@ -525,7 +523,7 @@
       "description": "Accordion FAQ. Reduces sales friction by answering objections before they stop a conversion. Structured data markup added for Google FAQ rich results.",
       "questions": [
         { "q": "What points programs do you work with?", "a": "We work with Qantas Frequent Flyer, Velocity, American Express Membership Rewards, and several bank transfer partners. Our team finds the best program for your situation." },
-        { "q": "Do I need a lot of existing points to get started?", "a": "Not necessarily. The Concierge service requires you already have points. The Flights Club Membership is about building and strategically using your points over time — we help you accumulate them through your existing business spend." },
+        { "q": "Do I need a lot of existing points to get started?", "a": "Not necessarily. The Concierge service requires you already have points. PointIQ Membership is about building and strategically using your points over time — we help you accumulate them through your existing business spend." },
         { "q": "What businesses qualify for membership?", "a": "Any Australian business spending $300K+ annually on cards or eligible expenses. Sole traders, companies, and trusts all qualify." },
         { "q": "What is the difference between Concierge and Membership?", "a": "Concierge is a one-off service — you have points, we book your seat. Membership is an ongoing relationship where we build your strategy, manage your points, and guarantee Business Class seats every year." },
         { "q": "How does the guaranteed value promise work?", "a": "If your membership doesn't deliver at least $5,000–$10,000 in value per Business Class seat, we keep working until it does. We stand behind the numbers." },
@@ -568,10 +566,9 @@
         {
           "heading": "Product",
           "links": [
-            { "label": "Join The Flights Club", "href": "/membership" },
+            { "label": "Join PointIQ", "href": "/membership" },
             { "label": "Membership Tiers", "href": "/membership#tiers" },
-            { "label": "Points Concierge", "href": "/points-concierge" },
-            { "label": "Events", "href": "https://events.humanitix.com/host/the-iflyflat-flights-club" }
+            { "label": "Points Concierge", "href": "/points-concierge" }
           ]
         },
         {
@@ -595,7 +592,7 @@
       ],
       "social_links": ["Instagram", "Facebook", "LinkedIn", "YouTube"],
       "legal": {
-        "copyright": "© 2025 The Flights Club by iFLYflat. All rights reserved.",
+        "copyright": "© 2026 PointIQ. All rights reserved.",
         "abn": "ABN: [INSERT]"
       },
       "as_seen_in_strip": "Thin text row: AS SEEN IN: 9 News · The Australian · Sky News · SBS · 7 News · 10 News"
@@ -605,13 +602,13 @@
   "pages": [
     {
       "path": "/",
-      "title": "The Flights Club by iFLYflat — Never Fly Economy Again",
+      "title": "PointIQ — Never Fly Economy Again",
       "description": "Australia's premier Business Class travel membership for business owners. Turn everyday expenses into guaranteed flat-bed flights and VIP experiences.",
       "sections_order": ["loading_intro", "navbar", "hero", "media_logos", "statement_text", "two_paths", "flight_savings", "stats", "case_studies", "why_different", "membership_tiers", "podcast", "faq", "final_cta", "footer"]
     },
     {
       "path": "/membership",
-      "title": "Membership Tiers — Explore, Platinum, Black | The Flights Club",
+      "title": "Membership Tiers — Explore, Platinum, Black | PointIQ",
       "description": "Choose the membership that fits your business spend. From $300K to $5M+, we have a tier that turns your expenses into Business Class freedom.",
       "sections_order": ["navbar", "membership_hero", "tier_detail_explore", "tier_detail_platinum", "tier_detail_black", "how_it_works_steps", "member_stories", "faq", "final_cta", "footer"]
     },
@@ -624,7 +621,7 @@
   ],
 
   "seo": {
-    "default_title_template": "%s | The Flights Club by iFLYflat",
+    "default_title_template": "%s | PointIQ",
     "og_image": "/images/og-default.jpg",
     "twitter_card": "summary_large_image",
     "schema_types": ["Organization", "FAQPage", "BreadcrumbList"],

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import IntakeForm from './IntakeForm';
 
 export const metadata: Metadata = {
-  title: 'Research Report Intake — The Flights Club by iFLYflat',
+  title: 'Research Report Intake — PointIQ',
   description:
     'Tell us your points balances and destinations so we can build your Redemption Research Report.',
 };

@@ -18,9 +18,9 @@ import type {
 } from "./types";
 
 /* ========== SITE METADATA ========== */
-export const SITE_NAME = "The Flights Club by iFLYflat";
+export const SITE_NAME = "PointIQ";
 export const SITE_TAGLINE = "Never Fly Economy Again.";
-export const SITE_URL = "https://theflightsclub.com.au";
+export const SITE_URL = "https://pointiq.club";
 
 /* ========== COLORS ========== */
 export const COLORS = {
@@ -256,7 +256,7 @@ export const HERO = {
   headline_line2: "for Business Owners",
   subheadline:
     "Turn every dollar you spend into Business Class freedom, exclusive experiences, and a private community of leaders who never fly economy again.",
-  cta_primary: { label: "Join The Flights Club", href: "/membership" },
+  cta_primary: { label: "Join PointIQ", href: "/membership" },
   cta_secondary: { label: "Book One Seat With Points", href: "/points-concierge" },
   trust_badge: "6,000+ members · $1B+ points redeemed · 12 years",
 };
@@ -298,7 +298,7 @@ export const TWO_PATHS: TwoPathCard[] = [
   {
     id: "membership",
     label: "ONGOING",
-    title: "Flights Club Membership",
+    title: "PointIQ Membership",
     description:
       "For business owners who want this every year. Ongoing strategy, bookings, and guaranteed Business Class returns.",
     price: "From $X,XXX/year — Members save $5K–$10K per seat",
@@ -501,7 +501,7 @@ export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
     key_benefit: "Start turning everyday expenses into Business Class seats",
     included: [
       "Points Blueprint system",
-      "Monthly group strategy calls with Steve Hui",
+      "Monthly group strategy calls with our points experts",
       "Partner benefit stack (Pay.com.au fee waiver $1,980, Velocity Gold, Accor Gold)",
       "10% discount on additional Concierge bookings",
       "Access to the member community",
@@ -597,7 +597,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "Do I need a lot of existing points to get started?",
-    a: "Not necessarily. The Concierge service requires you already have points. The Flights Club Membership is about building and strategically using your points over time — we help you accumulate them through your existing business spend.",
+    a: "Not necessarily. The Concierge service requires you already have points. PointIQ Membership is about building and strategically using your points over time — we help you accumulate them through your existing business spend.",
   },
   {
     q: "What businesses qualify for membership?",
@@ -845,13 +845,9 @@ export const FOOTER_COLUMNS = [
   {
     heading: "Product",
     links: [
-      { label: "Join The Flights Club", href: "/membership" },
+      { label: "Join PointIQ", href: "/membership" },
       { label: "Membership Tiers", href: "/membership#tiers" },
       { label: "Points Concierge", href: "/points-concierge" },
-      {
-        label: "Events",
-        href: "https://events.humanitix.com/host/the-iflyflat-flights-club",
-      },
     ],
   },
   {
@@ -876,7 +872,7 @@ export const FOOTER_COLUMNS = [
 
 export const FOOTER = {
   social_links: ["Instagram", "Facebook", "LinkedIn", "YouTube"],
-  copyright: "© 2025 The Flights Club by iFLYflat. All rights reserved.",
+  copyright: "© 2026 PointIQ. All rights reserved.",
   abn: "ABN: [INSERT]",
   as_seen_in: "AS SEEN IN: 9 News · The Australian · Sky News · SBS · 7 News · 10 News",
 };
@@ -885,7 +881,7 @@ export const FOOTER = {
 export const PAGES: PageMeta[] = [
   {
     path: "/",
-    title: "The Flights Club by iFLYflat — Never Fly Economy Again",
+    title: "PointIQ — Never Fly Economy Again",
     description:
       "Australia's premier Business Class travel membership for business owners. Turn everyday expenses into guaranteed flat-bed flights and VIP experiences.",
     sections_order: [
@@ -908,7 +904,7 @@ export const PAGES: PageMeta[] = [
   },
   {
     path: "/membership",
-    title: "Membership Tiers — Explore, Platinum, Black | The Flights Club",
+    title: "Membership Tiers — Explore, Platinum, Black | PointIQ",
     description:
       "Choose the membership that fits your business spend. From $300K to $5M+, we have a tier that turns your expenses into Business Class freedom.",
     sections_order: [
