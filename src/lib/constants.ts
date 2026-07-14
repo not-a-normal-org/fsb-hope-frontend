@@ -20,7 +20,7 @@ import type {
 /* ========== SITE METADATA ========== */
 export const SITE_NAME = "PointIQ";
 export const SITE_TAGLINE = "Never Fly Economy Again.";
-export const SITE_URL = "https://pointiq.club";
+export const SITE_URL = "https://www.pointiq.club";
 
 /* ========== COLORS ========== */
 export const COLORS = {
