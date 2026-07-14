@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Playfair_Display, DM_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
@@ -51,9 +52,9 @@ export const metadata: Metadata = {
     "travel rewards",
     "Australia",
   ],
-  authors: [{ name: "The Flights Club by iFLYflat" }],
-  creator: "The Flights Club by iFLYflat",
-  publisher: "The Flights Club by iFLYflat",
+  authors: [{ name: "PointIQ" }],
+  creator: "PointIQ",
+  publisher: "PointIQ",
   robots: "index, follow",
   alternates: {
     canonical: SITE_URL,
@@ -78,8 +79,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@theflightsclub",
-    creator: "@theflightsclub",
+    site: "@pointiq",
+    creator: "@pointiq",
     title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description: "Never fly economy again.",
     images: ["/twitter-image.jpg"],
@@ -131,9 +132,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
 
-        {/* DNS Prefetch for external services */}
-        <link rel="dns-prefetch" href="https://events.humanitix.com" />
-
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
@@ -148,10 +146,10 @@ export default function RootLayout({
               description:
                 "Australia's premier Business Class travel membership for business owners.",
               sameAs: [
-                "https://instagram.com/theflightsclub",
-                "https://facebook.com/theflightsclub",
-                "https://linkedin.com/company/the-flights-club",
-                "https://youtube.com/@theflightsclub",
+                "https://instagram.com/pointiq",
+                "https://facebook.com/pointiq",
+                "https://linkedin.com/company/pointiq",
+                "https://youtube.com/@pointiq",
               ],
               contactPoint: {
                 "@type": "ContactPoint",
@@ -185,6 +183,20 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+
+        {/* Google Analytics (GA4) — gtag.js */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-M0M0RF92XK"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-M0M0RF92XK');
+          `}
+        </Script>
       </body>
     </html>
   );

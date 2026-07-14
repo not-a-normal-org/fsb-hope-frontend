@@ -47,7 +47,7 @@ export default function FAQSection({ items = FAQ_ITEMS }: FAQSectionProps) {
               Everything You Need to Know
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-              Get answers to the most frequently asked questions about The Flights Club membership and our Concierge service.
+              Get answers to the most frequently asked questions about PointIQ membership and our Concierge service.
             </p>
           </div>
 

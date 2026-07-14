@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — The Flights Club by iFLYflat',
+  title: 'Terms of Service — PointIQ',
   description:
-    'The terms and conditions governing your use of The Flights Club by iFLYflat website, membership, and concierge services.',
+    'The terms and conditions governing your use of PointIQ website, membership, and concierge services.',
 };
 
 const LAST_UPDATED = '8 June 2026';
@@ -12,7 +12,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: '1. Agreement to Terms',
     body: [
-      'These Terms of Service ("Terms") govern your access to and use of the website, membership, and concierge services provided by The Flights Club by iFLYflat ("we", "us", "our"). By accessing our website or purchasing a membership or service, you agree to be bound by these Terms.',
+      'These Terms of Service ("Terms") govern your access to and use of the website, membership, and concierge services provided by PointIQ ("we", "us", "our"). By accessing our website or purchasing a membership or service, you agree to be bound by these Terms.',
       'This is a placeholder document and should be reviewed by legal counsel before launch.',
     ],
   },

@@ -8,7 +8,7 @@ import FAQSection from '@/components/sections/FAQSection';
 import CheckoutButton from '@/components/ui/CheckoutButton';
 
 export const metadata: Metadata = {
-  title: 'One-off Research Report — The Flights Club by iFLYflat',
+  title: 'One-off Research Report — PointIQ',
   description:
     'A personalised expert report on your best Business Class redemption options. Your programs, your destinations, your points. Delivered in 5 business days. A$497, no membership required.',
 };

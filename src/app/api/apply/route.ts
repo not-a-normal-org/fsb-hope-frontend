@@ -28,7 +28,7 @@ function applicantEmail(firstName: string, tier: string): string {
           <tr>
             <td style="padding-bottom:32px;text-align:center;">
               <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">
-                THE FLIGHTS CLUB
+                POINTIQ
               </p>
             </td>
           </tr>
@@ -86,7 +86,7 @@ function applicantEmail(firstName: string, tier: string): string {
                 If you have any questions in the meantime, reply to this email and we'll get back to you.
                 <br /><br />
                 Looking forward to welcoming you,<br />
-                <strong style="color:#F5F5F0;">The Flights Club Team</strong>
+                <strong style="color:#F5F5F0;">PointIQ Team</strong>
               </p>
 
             </td>
@@ -96,7 +96,7 @@ function applicantEmail(firstName: string, tier: string): string {
           <tr>
             <td style="padding-top:24px;text-align:center;">
               <p style="margin:0;font-size:11px;color:#5C6378;">
-                © 2025 The Flights Club by iFLYflat · Australia
+                © 2026 PointIQ · Australia
               </p>
             </td>
           </tr>
@@ -156,7 +156,7 @@ function adminEmail(data: {
           <tr>
             <td style="padding-bottom:24px;">
               <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">
-                THE FLIGHTS CLUB · ADMIN
+                POINTIQ · ADMIN
               </p>
             </td>
           </tr>
@@ -272,17 +272,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Send emails via Resend
   const firstName = fullName.split(' ')[0];
-  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@theflightsclub.com.au';
+  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@pointiq.club';
 
   const [applicantResult, adminResult] = await Promise.allSettled([
     resend.emails.send({
-      from:    'The Flights Club <hello@theflightsclub.com.au>',
+      from:    'PointIQ <hello@pointiq.club>',
       to:      email,
-      subject: 'Your application to The Flights Club has been received',
+      subject: 'Your application to PointIQ has been received',
       html:    applicantEmail(firstName, selectedTier),
     }),
     resend.emails.send({
-      from:    'The Flights Club <hello@theflightsclub.com.au>',
+      from:    'PointIQ <hello@pointiq.club>',
       to:      adminEmailAddress,
       subject: `New membership application — ${fullName} (${selectedTier})`,
       html:    adminEmail({ fullName, email, phone, companyName, businessType, annualSpend, abn: abn ?? '', goals: goals ?? '', selectedTier, referralSource: referralSource ?? '' }),

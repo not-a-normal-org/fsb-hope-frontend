@@ -7,9 +7,9 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import HubCardCheckout from './HubCardCheckout';
 
 export const metadata: Metadata = {
-  title: 'Pricing — The Flights Club by iFLYflat',
+  title: 'Pricing — PointIQ',
   description:
-    'Four ways to fly Business Class on points: the Flights Club membership, Points Concierge, a one-off research report, or reward-seat alerts. Compare, then buy or dig into the details.',
+    'Four ways to fly Business Class on points: the PointIQ membership, Points Concierge, a one-off research report, or reward-seat alerts. Compare, then buy or dig into the details.',
 };
 
 const ICONS = { Users, Plane, FileSearch, BellRing } as const;

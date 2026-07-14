@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — The Flights Club by iFLYflat',
+  title: 'Privacy Policy — PointIQ',
   description:
-    'How The Flights Club by iFLYflat collects, uses, and protects your personal information.',
+    'How PointIQ collects, uses, and protects your personal information.',
 };
 
 const LAST_UPDATED = '8 June 2026';
@@ -12,7 +12,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: '1. Introduction',
     body: [
-      'This Privacy Policy explains how The Flights Club by iFLYflat ("we", "us", "our") collects, uses, discloses, and protects your personal information when you visit our website, apply for membership, or use our concierge services.',
+      'This Privacy Policy explains how PointIQ ("we", "us", "our") collects, uses, discloses, and protects your personal information when you visit our website, apply for membership, or use our concierge services.',
       'By using our website or services you consent to the practices described in this policy. This is a placeholder document and should be reviewed by legal counsel before launch.',
     ],
   },

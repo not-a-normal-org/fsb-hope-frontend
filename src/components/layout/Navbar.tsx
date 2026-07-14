@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { NAV_LINKS, NAV_CTA_BUTTONS } from '@/lib/constants';
@@ -32,10 +33,18 @@ export default function Navbar() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 group flex-shrink-0">
-              <div className="text-lg sm:text-xl font-bold text-text-primary group-hover:text-accent-orange transition-colors duration-300">
-                ✈️ The Flights Club
-              </div>
+            <Link href="/" className="flex items-center space-x-2.5 group flex-shrink-0" aria-label="PointIQ home">
+              <Image
+                src="/img/pointiq-avatar.png"
+                alt="PointIQ"
+                width={36}
+                height={36}
+                priority
+                className="h-9 w-9"
+              />
+              <span className="text-lg sm:text-xl font-bold text-text-primary group-hover:text-accent-orange transition-colors duration-300">
+                PointIQ
+              </span>
             </Link>
 
             {/* Desktop Navigation */}

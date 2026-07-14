@@ -8,7 +8,7 @@ import FAQSection from '@/components/sections/FAQSection';
 import AlertsPricing from './AlertsPricing';
 
 export const metadata: Metadata = {
-  title: 'Business Class Seat Alert Service — The Flights Club by iFLYflat',
+  title: 'Business Class Seat Alert Service — PointIQ',
   description:
     'Human-curated Business Class reward-seat alerts for Australian routes. We monitor Qantas, Velocity and partners and text you the moment a seat opens. From A$47/mo.',
 };
@@ -91,7 +91,7 @@ export default function AlertsPage() {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-text-primary">Business Class seat found</p>
-                  <p className="text-xs text-text-muted">The Flights Club · just now</p>
+                  <p className="text-xs text-text-muted">PointIQ · just now</p>
                 </div>
               </div>
               <dl className="space-y-2 text-sm">

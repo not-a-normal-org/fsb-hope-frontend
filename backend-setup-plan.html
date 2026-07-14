@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Flights Club — Backend Setup Plan</title>
+<title>PointIQ — Backend Setup Plan</title>
 <style>
   :root {
     --bg-primary: #07090F;
@@ -411,7 +411,7 @@
 <div class="page-wrapper">
 
   <div class="doc-header">
-    <h1>The Flights Club — Backend Setup Plan</h1>
+    <h1>PointIQ — Backend Setup Plan</h1>
     <p class="subtitle">Full system setup: Supabase + Stripe + Admin Panel + Checkout + Newsletter</p>
     <div class="tag-row">
       <span class="tag orange">Phase 4</span>
@@ -999,7 +999,7 @@ It should:
 3. If RESEND_API_KEY exists, send a welcome email:
    - From: 'hello@theflightsclub.com.au'
    - To: subscriber's email
-   - Subject: 'Welcome to The Flights Club'
+   - Subject: 'Welcome to PointIQ'
    - Simple HTML: thank them, mention they'll get exclusive tips on Business Class travel
 4. Return { success: true } on success
 5. Return { error: 'Already subscribed' } with status 409 if email already active
@@ -1057,7 +1057,7 @@ ADMIN LAYOUT (src/app/admin/layout.tsx):
 
 LOGIN PAGE (src/app/admin/login/page.tsx):
 - Dark centered card, project colors
-- Title: "The Flights Club Admin"
+- Title: "PointIQ Admin"
 - Single password input field
 - Submit button using project's primary button style (bg #E8963A)
 - On submit: POST to /api/admin/login, redirect to /admin on success, show error on failure

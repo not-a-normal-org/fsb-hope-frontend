@@ -8,20 +8,21 @@ import { SectionLabel } from '@/components/ui/SectionLabel';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 
 /* ─── Founder data ─── */
+// TODO: founder titles + full bios to be supplied by the team.
 const FOUNDERS = [
   {
-    initials: 'SH',
-    name: 'Steve Hui',
-    title: "Australia's Points Whisperer",
-    role: 'Co-Founder & Points Strategy Director',
-    bio: "Steve has spent 12+ years helping Australians unlock the hidden value in their points programs. He's personally overseen more than $1 billion in points redemptions and has been featured in The Australian, Sky News, 9 News, and SBS.",
+    initials: 'T',
+    name: 'Tanzil',
+    title: 'Co-Founder',
+    role: 'PointIQ',
+    bio: 'Full bio coming soon.',
   },
   {
-    initials: 'SP',
-    name: 'Steve Pirie-Nally',
-    title: 'Global Experience Architect',
-    role: 'Co-Founder & Experience Director',
-    bio: 'Steve brings 15+ years of luxury travel and high-end experience curation. He designed the curated retreat and event program that makes Black tier membership unlike anything else in Australia.',
+    initials: 'M',
+    name: 'Moon',
+    title: 'Co-Founder',
+    role: 'PointIQ',
+    bio: 'Full bio coming soon.',
   },
 ];
 
@@ -44,12 +45,12 @@ const VALUES = [
 /* ─── Pull quotes ─── */
 const QUOTES = [
   {
-    text: 'The go-to points expert for Australian business owners.',
+    text: 'The go-to points experts for Australian business owners.',
     source: 'The Australian',
   },
   {
-    text: 'Steve Hui has saved Australians millions in travel costs.',
-    source: 'Sky News',
+    text: 'Turning everyday business spend into millions in travel value.',
+    source: 'PointIQ',
   },
 ];
 
@@ -78,7 +79,7 @@ export default function AboutPage() {
             <p className="text-lg sm:text-xl text-text-secondary leading-relaxed max-w-2xl">
               Most Australians with points never use them properly. They expire.
               They get wasted on economy upgrades. Or they sit in an app nobody
-              opens. We built The Flights Club to fix that — one business owner
+              opens. We built PointIQ to fix that — one business owner
               at a time.
             </p>
           </motion.div>

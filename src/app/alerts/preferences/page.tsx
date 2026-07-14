@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PreferencesForm from './PreferencesForm';
 
 export const metadata: Metadata = {
-  title: 'Set Up Your Seat Alerts — The Flights Club by iFLYflat',
+  title: 'Set Up Your Seat Alerts — PointIQ',
   description: 'Tell us which routes and dates to monitor for Business Class award seats.',
 };
 
