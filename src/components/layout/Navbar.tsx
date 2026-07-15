@@ -35,12 +35,12 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2.5 group flex-shrink-0" aria-label="PointIQ home">
               <Image
-                src="/img/pointiq-avatar.png"
+                src="/img/nav_icon.png"
                 alt="PointIQ"
-                width={36}
+                width={46}
                 height={36}
                 priority
-                className="h-9 w-9"
+                className="h-9 w-auto"
               />
               <span className="text-lg sm:text-xl font-bold text-text-primary group-hover:text-accent-orange transition-colors duration-300">
                 PointIQ

@@ -61,15 +61,15 @@ export default function LoadingIntro() {
         >
           <div className="flex items-center justify-center gap-4">
             <Image
-              src="/img/pointiq-avatar.png"
+              src="/img/nav_icon.png"
               alt="PointIQ"
-              width={80}
+              width={102}
               height={80}
               priority
-              className="h-16 w-16 md:h-20 md:w-20"
+              className="h-16 w-auto md:h-20"
             />
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight">
-              PointIQ
+              Point<span className="text-accent-gold">IQ</span>
             </h1>
           </div>
         </motion.div>
