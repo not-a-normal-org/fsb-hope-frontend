@@ -41,7 +41,7 @@ export interface PricingHubCard {
   /** italic, quote-style positioning line */
   tagline: string;
   description: string;
-  /** e.g. "From A$2,997 + GST /year" */
+  /** e.g. "From $2,997 + GST /year" */
   price_line: string;
   /** dedicated detail page */
   href: string;
@@ -71,7 +71,7 @@ export interface AlertTier {
   badge?: string | null;
   price_monthly: string;
   price_annual: string;
-  /** e.g. "save A$167" */
+  /** e.g. "save $167" */
   annual_saving: string;
   routes: string;
   alerts: string;

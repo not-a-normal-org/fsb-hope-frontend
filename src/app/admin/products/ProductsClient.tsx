@@ -136,7 +136,7 @@ function AddProductForm({ onClose }: { onClose: () => void }) {
               type="number"
               required
               min={0}
-              placeholder="e.g. 450000 = AU$4,500"
+              placeholder="e.g. 450000 = $4,500"
               className={INPUT}
             />
           </div>

@@ -133,13 +133,13 @@ export const PRICING_HUB: {
       tagline: "I want Business Class every year, handled.",
       description:
         "Ongoing membership with strategy, concierge bookings, and guaranteed Business Class seats. For business owners ready to make this a habit.",
-      price_line: "From A$2,997 + GST /year",
+      price_line: "From $2,997 + GST /year",
       href: "/membership",
       icon: "Users",
       accent_color: "#E8963A",
       checkoutOptions: [
-        { label: "Explore — A$2,997/yr",  priceId: STRIPE_PRICE_IDS.explore,  mode: "subscription" },
-        { label: "Platinum — A$7,997/yr", priceId: STRIPE_PRICE_IDS.platinum, mode: "subscription" },
+        { label: "Explore — $2,997/yr",  priceId: STRIPE_PRICE_IDS.explore,  mode: "subscription" },
+        { label: "Platinum — $7,997/yr", priceId: STRIPE_PRICE_IDS.platinum, mode: "subscription" },
         { label: "Black — by application", priceId: STRIPE_PRICE_IDS.black,   mode: "subscription" },
       ],
     },
@@ -149,7 +149,7 @@ export const PRICING_HUB: {
       tagline: "I have points. I just need someone to book the seat.",
       description:
         "Done-for-you award booking. You have the points; we find and book the Business Class seat. One trip. No membership needed.",
-      price_line: "From A$1,300 per return seat",
+      price_line: "From $1,300 per return seat",
       href: "/points-concierge",
       icon: "Plane",
       accent_color: "#3A6FE8",
@@ -166,12 +166,12 @@ export const PRICING_HUB: {
       tagline: "I want to understand my options before I commit.",
       description:
         "A single expert report showing your best redemption options, exactly how many points you need, and a step-by-step plan — with no ongoing commitment.",
-      price_line: "A$497 one-off",
+      price_line: "$497 one-off",
       href: "/research",
       icon: "FileSearch",
       accent_color: "#C9A84C",
       checkout: {
-        label: "Order Report — A$497",
+        label: "Order Report — $497",
         priceId: STRIPE_PRICE_IDS.research,
         mode: "payment",
         metadata: { product_key: "research" },
@@ -183,15 +183,15 @@ export const PRICING_HUB: {
       tagline: "I know what I want. Just tell me when seats open.",
       description:
         "Human-curated Business Class reward seat alerts for your routes and dates. We monitor and notify you the moment a seat appears. You book it yourself.",
-      price_line: "From A$47/mo or A$397/year",
+      price_line: "From $47/mo or $397/year",
       href: "/alerts",
       icon: "BellRing",
       accent_color: "#F2AA5E",
       checkoutOptions: [
-        { label: "Essential — A$47/mo",  priceId: STRIPE_PRICE_IDS.alerts_essential_monthly, mode: "subscription", metadata: { product_key: "alerts_essential" } },
-        { label: "Essential — A$397/yr", priceId: STRIPE_PRICE_IDS.alerts_essential_annual,  mode: "subscription", metadata: { product_key: "alerts_essential" } },
-        { label: "Pro — A$97/mo",        priceId: STRIPE_PRICE_IDS.alerts_pro_monthly,        mode: "subscription", metadata: { product_key: "alerts_pro" } },
-        { label: "Pro — A$797/yr",       priceId: STRIPE_PRICE_IDS.alerts_pro_annual,         mode: "subscription", metadata: { product_key: "alerts_pro" } },
+        { label: "Essential — $47/mo",  priceId: STRIPE_PRICE_IDS.alerts_essential_monthly, mode: "subscription", metadata: { product_key: "alerts_essential" } },
+        { label: "Essential — $397/yr", priceId: STRIPE_PRICE_IDS.alerts_essential_annual,  mode: "subscription", metadata: { product_key: "alerts_essential" } },
+        { label: "Pro — $97/mo",        priceId: STRIPE_PRICE_IDS.alerts_pro_monthly,        mode: "subscription", metadata: { product_key: "alerts_pro" } },
+        { label: "Pro — $797/yr",       priceId: STRIPE_PRICE_IDS.alerts_pro_annual,         mode: "subscription", metadata: { product_key: "alerts_pro" } },
       ],
     },
   ],
@@ -203,7 +203,7 @@ export const PRICING_HUB: {
     { feature: "Need existing points?",    flightClub: "No — we build", concierge: "Yes",          research: "No",            alerts: "Yes" },
     { feature: "Best for",                 flightClub: "Business owners, recurring", concierge: "One trip, points ready", research: "Research, first step", alerts: "DIY bookers, specific routes" },
     { feature: "Commitment",               flightClub: "Annual membership", concierge: "Per booking", research: "Once-off",   alerts: "Monthly or annual sub" },
-    { feature: "Price",                    flightClub: "From A$2,997+GST/yr", concierge: "From A$1,300", research: "A$497",   alerts: "A$47/mo or A$397/yr" },
+    { feature: "Price",                    flightClub: "From $2,997+GST/yr", concierge: "From $1,300", research: "$497",   alerts: "$47/mo or $397/yr" },
   ],
   bottom_cta: {
     headline: "Not sure where to start?",
@@ -509,7 +509,7 @@ export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
     cta_label: "Apply for Explore",
     cta_href: "/apply?tier=explore",
     visual_style: "Standard dark card with blue accent border",
-    price: "From A$2,997 + GST /yr",
+    price: "From $2,997 + GST /yr",
   },
   {
     id: "platinum",
@@ -528,7 +528,7 @@ export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
     cta_label: "Apply for Platinum",
     cta_href: "/apply?tier=platinum",
     visual_style: "Slightly elevated card, orange accent border, badge: MOST POPULAR",
-    price: "From A$7,997 + GST /yr",
+    price: "From $7,997 + GST /yr",
   },
   {
     id: "black",
@@ -539,7 +539,7 @@ export const MEMBERSHIP_TIERS_DETAIL: MembershipTier[] = [
     included: [
       "Everything in Platinum",
       "Dedicated account manager",
-      "A$100K+ in premium travel value annually",
+      "$100K+ in premium travel value annually",
       "Private member events and retreats",
       "First Class upgrade access",
       "Custom travel strategy for complex itineraries",
@@ -657,7 +657,7 @@ export const FAQ_ITEMS_RESEARCH: FAQItem[] = [
   },
   {
     q: "Can you research any destination?",
-    a: "We cover any route from Australia in Business Class. We research across Qantas, Velocity, Amex MR, and their transfer partners. The report covers your top 2 destinations — additional destinations can be added for A$97 each.",
+    a: "We cover any route from Australia in Business Class. We research across Qantas, Velocity, Amex MR, and their transfer partners. The report covers your top 2 destinations — additional destinations can be added for $97 each.",
   },
   {
     q: "What if my points balance changes before I'm ready to book?",
@@ -700,7 +700,7 @@ export const RESEARCH = {
     title: "Find out exactly what your points are worth — and how to use them.",
     subtitle:
       "A personalised expert report on your best Business Class redemption options. Your programs, your destinations, your points. Delivered in 5 business days. No membership required.",
-    price_line: "A$497 one-off · Delivered in 5 business days",
+    price_line: "$497 one-off · Delivered in 5 business days",
   },
   includes: [
     "Full audit of your current points balances across all programs you provide",
@@ -736,16 +736,16 @@ export const RESEARCH = {
   pricing: [
     {
       name: "Redemption Research Report",
-      price: "A$497 one-off",
+      price: "$497 one-off",
       includes:
         "Written PDF report covering 2 destinations · Transfer partner analysis · Step-by-step booking instructions · 15-min Loom video walkthrough · 1 round of follow-up questions via email",
       delivery: "5 business days",
     },
     {
       name: "Report + Booking Upgrade",
-      price: "A$497 + Concierge fee",
+      price: "$497 + Concierge fee",
       includes:
-        "Everything above, plus we book the seat for you if you want us to. Concierge fee applies at standard rate (A$1,300–A$1,900 return).",
+        "Everything above, plus we book the seat for you if you want us to. Concierge fee applies at standard rate ($1,300–$1,900 return).",
       delivery: "Report: 5 days · Booking: 2–5 days after",
     },
   ],
@@ -784,7 +784,7 @@ export const ALERTS_CONTENT = {
     date: "14 Mar 2026",
     program: "Qantas FF",
     points: "90,000 pts",
-    taxes: "A$350",
+    taxes: "$350",
     seats: "2 seats",
   },
 };
@@ -794,9 +794,9 @@ export const ALERT_TIERS: AlertTier[] = [
     id: "essential",
     name: "Essential",
     badge: null,
-    price_monthly: "A$47",
-    price_annual: "A$397",
-    annual_saving: "save A$167",
+    price_monthly: "$47",
+    price_annual: "$397",
+    annual_saving: "save $167",
     routes: "Up to 3 routes",
     alerts: "Email alerts",
     included: [
@@ -812,9 +812,9 @@ export const ALERT_TIERS: AlertTier[] = [
     id: "pro",
     name: "Pro",
     badge: "MOST POPULAR",
-    price_monthly: "A$97",
-    price_annual: "A$797",
-    annual_saving: "save A$367",
+    price_monthly: "$97",
+    price_annual: "$797",
+    annual_saving: "save $367",
     routes: "Up to 10 routes",
     alerts: "SMS + Email",
     included: [

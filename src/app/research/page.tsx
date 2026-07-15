@@ -10,7 +10,7 @@ import CheckoutButton from '@/components/ui/CheckoutButton';
 export const metadata: Metadata = {
   title: 'One-off Research Report — PointIQ',
   description:
-    'A personalised expert report on your best Business Class redemption options. Your programs, your destinations, your points. Delivered in 5 business days. A$497, no membership required.',
+    'A personalised expert report on your best Business Class redemption options. Your programs, your destinations, your points. Delivered in 5 business days. $497, no membership required.',
 };
 
 export default function ResearchPage() {
@@ -32,7 +32,7 @@ export default function ResearchPage() {
               priceId={STRIPE_PRICE_IDS.research}
               mode="payment"
               metadata={{ product_key: 'research' }}
-              label="Order My Report — A$497"
+              label="Order My Report — $497"
               variant="primary"
             />
           </div>
@@ -142,7 +142,7 @@ export default function ResearchPage() {
               priceId={STRIPE_PRICE_IDS.research}
               mode="payment"
               metadata={{ product_key: 'research' }}
-              label="Order My Report — A$497"
+              label="Order My Report — $497"
               variant="primary"
             />
           </div>

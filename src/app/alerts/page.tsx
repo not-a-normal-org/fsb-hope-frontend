@@ -10,7 +10,7 @@ import AlertsPricing from './AlertsPricing';
 export const metadata: Metadata = {
   title: 'Business Class Seat Alert Service — PointIQ',
   description:
-    'Human-curated Business Class reward-seat alerts for Australian routes. We monitor Qantas, Velocity and partners and text you the moment a seat opens. From A$47/mo.',
+    'Human-curated Business Class reward-seat alerts for Australian routes. We monitor Qantas, Velocity and partners and text you the moment a seat opens. From $47/mo.',
 };
 
 export default function AlertsPage() {

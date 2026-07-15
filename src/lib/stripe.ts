@@ -109,7 +109,7 @@ export async function getActiveProducts(): Promise<StripeProduct[]> {
  * Converts a Stripe amount in cents to a human-readable currency string.
  *
  * @example
- * formatCurrency(190000, 'aud') // → "AU$1,900"
+ * formatCurrency(190000, 'aud') // → "$1,900"
  * formatCurrency(9900,   'usd') // → "$99"
  */
 export function formatCurrency(amount: number, currency: string): string {
