@@ -11,8 +11,8 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 // TODO: founder titles + full bios to be supplied by the team.
 const FOUNDERS = [
   {
-    initials: 'A',
-    name: 'A',
+    initials: 'JD',
+    name: 'John Doe',
     title: 'Co-Founder',
     role: 'PointIQ',
     bio: 'Full bio coming soon.',
