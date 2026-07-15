@@ -27,7 +27,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
     heading: '3. Fees & Payment',
     body: [
       'Membership fees and concierge service fees are billed as described at the point of purchase. Recurring memberships renew automatically unless cancelled in accordance with these Terms.',
-      'All fees are stated in Australian Dollars (AUD) unless otherwise noted and are processed securely through our payment provider.',
+      'All fees are stated in US Dollars (USD) unless otherwise noted and are processed securely through our payment provider.',
     ],
   },
   {

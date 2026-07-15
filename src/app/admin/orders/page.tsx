@@ -37,9 +37,9 @@ function fmtDate(iso: string): string {
   }).format(new Date(iso));
 }
 
-function fmtAUD(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
-    style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0,
+function fmtUSD(cents: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0,
   }).format(cents / 100);
 }
 
@@ -130,7 +130,7 @@ export default async function OrdersPage({
       {/* Revenue stat */}
       <div className="inline-block bg-[#13182A] border border-[#1E2538] rounded-xl px-6 py-4">
         <p className="text-[10px] uppercase tracking-widest text-[#5C6378] mb-1.5">Total Revenue (Paid)</p>
-        <p className="text-3xl font-bold text-[#F5F5F0] tabular-nums">{fmtAUD(totalRevenueCents)}</p>
+        <p className="text-3xl font-bold text-[#F5F5F0] tabular-nums">{fmtUSD(totalRevenueCents)}</p>
       </div>
 
       {/* Filter tabs */}
@@ -187,7 +187,7 @@ export default async function OrdersPage({
                     <td className="px-5 py-3.5 text-[#9DA3B4]">{tierName(order.stripe_price_id)}</td>
                     {/* Amount */}
                     <td className="px-5 py-3.5 font-medium text-[#F5F5F0] tabular-nums whitespace-nowrap">
-                      {fmtAUD(order.amount_cents)}
+                      {fmtUSD(order.amount_cents)}
                     </td>
                     {/* Status */}
                     <td className="px-5 py-3.5"><StatusBadge status={order.status} /></td>

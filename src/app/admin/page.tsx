@@ -88,9 +88,9 @@ async function fetchStats() {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatRevenue(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat('en-US', {
     style:                 'currency',
-    currency:              'AUD',
+    currency:              'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(cents / 100);

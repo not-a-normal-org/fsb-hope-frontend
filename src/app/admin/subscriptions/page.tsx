@@ -38,8 +38,8 @@ function fmtDate(iso: string): string {
   return new Intl.DateTimeFormat('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso));
 }
 
-function fmtAUD(cents: number): string {
-  return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(cents / 100);
+function fmtUSD(cents: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(cents / 100);
 }
 
 const STATUS_STYLES: Record<SubStatus, string> = {
@@ -131,7 +131,7 @@ export default async function SubscriptionsPage() {
         {[
           { label: 'Active',           value: activeCount.toLocaleString('en-AU') },
           { label: 'Past Due',         value: pastDueCount.toLocaleString('en-AU') },
-          { label: 'Est. Annual ARR',  value: fmtAUD(arrCents) },
+          { label: 'Est. Annual ARR',  value: fmtUSD(arrCents) },
         ].map(({ label, value }) => (
           <div key={label} className="bg-[#13182A] border border-[#1E2538] rounded-xl px-5 py-4">
             <p className="text-[10px] uppercase tracking-widest text-[#5C6378] mb-1.5">{label}</p>
@@ -160,7 +160,7 @@ export default async function SubscriptionsPage() {
                 {subscriptions.map((sub, i) => {
                   const price = priceMap.get(sub.stripe_price_id);
                   const priceLabel = price?.unit_amount
-                    ? `${fmtAUD(price.unit_amount)}/${price.recurring?.interval ?? 'mo'}`
+                    ? `${fmtUSD(price.unit_amount)}/${price.recurring?.interval ?? 'mo'}`
                     : '—';
 
                   const cancelAction = cancelSubscription.bind(

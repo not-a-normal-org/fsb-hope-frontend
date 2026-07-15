@@ -36,8 +36,8 @@ function fmtDate(iso: string): string {
   return new Intl.DateTimeFormat('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso));
 }
 
-function fmtAUD(cents: number): string {
-  return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0 }).format(cents / 100);
+function fmtUSD(cents: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(cents / 100);
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -98,7 +98,7 @@ function ApprovePanel({
         >
           {products.map(p => (
             <option key={p.id} value={p.stripe_price_id ?? ''} className="bg-[#13182A]">
-              {p.name} — {fmtAUD(p.price_cents)}{p.billing_interval ? `/${p.billing_interval}` : ''}
+              {p.name} — {fmtUSD(p.price_cents)}{p.billing_interval ? `/${p.billing_interval}` : ''}
             </option>
           ))}
         </select>

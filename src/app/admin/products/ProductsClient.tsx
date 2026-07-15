@@ -21,10 +21,10 @@ export interface Product {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function fmtAUD(cents: number): string {
-  return new Intl.NumberFormat('en-AU', {
+function fmtUSD(cents: number): string {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'AUD',
+    currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(cents / 100);
@@ -335,7 +335,7 @@ function ProductCard({
           {/* Price + meta row */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xl font-bold text-[#F5F5F0] tabular-nums">{fmtAUD(product.price_cents)}</span>
+              <span className="text-xl font-bold text-[#F5F5F0] tabular-nums">{fmtUSD(product.price_cents)}</span>
               {product.billing_interval && (
                 <span className="ml-1 text-sm text-[#9DA3B4]">/ {product.billing_interval}</span>
               )}
