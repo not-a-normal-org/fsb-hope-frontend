@@ -12,14 +12,14 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 const FOUNDERS = [
   {
     initials: 'T',
-    name: 'T',
+    name: 'Tanzil',
     title: 'Co-Founder',
     role: 'PointIQ',
     bio: 'Full bio coming soon.',
   },
   {
     initials: 'M',
-    name: 'M',
+    name: 'Moon',
     title: 'Co-Founder',
     role: 'PointIQ',
     bio: 'Full bio coming soon.',
