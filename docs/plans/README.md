@@ -12,11 +12,15 @@ Read in this order:
 8. [`07-build-plan-phases.md`](./07-build-plan-phases.md) — the actual ordered execution checklist. This is what a coding agent should work through.
 9. [`08-logo-brand-mark.md`](./08-logo-brand-mark.md) — finalized logo/wordmark, export requirements.
 
+**Living status:**
+- [`TODO.md`](./TODO.md) — the active build todo, kept current. Check here first for what's done / next.
+- [`spike-payload-next16.md`](./spike-payload-next16.md) — Payload-on-Next-16 spike: green light, needs a Next patch bump.
+
 ## Status
 
 Design direction: **locked** (Blue Material Glass, dark-mode default, plus a third Mono monochrome mode — see `01-brand-design-system.md` §1–2).
 Logo: **locked** (wordmark + green smile-arc underline — see `08-logo-brand-mark.md`). Full pictorial icon mark beyond the arc remains a future fast-follow, not a launch blocker.
 Products: **locked**, all four products confirmed including cadence. Remaining open items: calculator valuation numbers (placeholder, needs real data), fourth stat-strip value, email provider.
-Build: **not started.** This doc set is the spec, next step is Phase 0 in the build plan.
+Build: **in progress.** All frontend pages exist behind the construction wall; the backend track (Payload, Supabase, Stripe, Cal.com) is next. See [`TODO.md`](./TODO.md) for live status.
 
 This plan is expected to evolve. Update files in place as decisions firm up rather than creating parallel versions.
