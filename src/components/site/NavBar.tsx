@@ -19,7 +19,7 @@ import ModeToggle from '@/components/system/ModeToggle';
 const NAV = [
   { label: 'Individual', href: '/individual' },
   { label: 'Business', href: '/business' },
-  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'Alerts', href: '/alerts' },
   { label: 'Pricing', href: '/pricing' },
 ];
 
