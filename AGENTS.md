@@ -78,18 +78,23 @@ Never commit `.env` / `.env.local` or any key — they are gitignored, keep them
 `NEXT_PUBLIC_*` values are compiled into the browser bundle; never move a secret
 behind that prefix.
 
-## Commit rules
+## Git & PR workflow
 
-- **Only commit when asked.** Never commit secrets, `.next/`, or `node_modules/`.
-- **Small, logical commits.** One concern per commit; don't bundle an unrelated
-  refactor into a feature. Split code vs docs where it's clean.
+- **One ticket / feature / product per branch, per PR, per issue.** Never bundle
+  unrelated work into a single PR — a page, a fix, and a doc change are three PRs.
+- **When a task is done and verified, commit it and open a PR** — don't leave
+  finished work sitting on a local branch. Branch off `main`:
+  `feat/…`, `fix/…`, `docs/…`, `chore/…`; push; `gh pr create`.
+- **Before starting a new module, check open PRs** (`gh pr list`) and know their
+  status. Don't pile new work on top of unreviewed branches without a reason.
+- **Don't merge your own PR unless asked** — leave it for the user to review.
+- **Small, logical commits within a PR.** The body explains *why*, not what the
+  diff already shows — the reasoning, the constraint, the gotcha avoided.
 - **Conventional-commit subjects**, imperative mood, ≤ ~72 chars:
   `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `style:`, `perf:`.
-- **The body explains *why*,** not what the diff already shows — the reasoning, the
-  constraint, the gotcha avoided.
+- **Never commit secrets**, `.next/`, or `node_modules/`.
 - End AI-authored commits with:
   `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`
-- Don't `git push` unless explicitly asked.
 
 ## Testing / verification rules
 
