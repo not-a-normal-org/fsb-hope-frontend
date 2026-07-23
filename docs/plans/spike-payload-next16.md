@@ -53,22 +53,38 @@ Payload **3.86** is installed and integrated. Confirmed by `next build` + `next 
   tables live in a dedicated `payload` schema, separate from the app's `public`
   tables.
 
-### The one remaining step: `DATABASE_URI`
+### CONFIRMED WORKING against Supabase (new SaverMiles project)
 
-Payload boots but can't connect yet — `/cms` returns 500 with
-`database "…" does not exist`, because **`DATABASE_URI` is empty**. This is a
-**direct Postgres connection string**, a *different* credential from the Supabase
-API keys (which are all that's in `.env`). Get it from **Supabase → Settings →
-Database → Connection string → Session pooler**, and add it to `.env.local`:
+Booted `/cms` against the new Supabase project — it connected, pushed its schema,
+and served the "create first user" page (200). Verified in the DB: the `payload`
+schema holds all 13 Payload tables (`posts`, `categories`, `deals_of_week`,
+`testimonials`, `media`, `users`, + Payload internals); **`public` is untouched
+(0 tables)** — the `schemaName: 'payload'` isolation works.
+
+**Use the Session pooler, NOT the direct connection.** The dashboard's default
+"Direct connection" (`db.<ref>.supabase.co:5432`) is **IPv6-only** — node/pg
+returns `ENOTFOUND`, and Vercel is IPv4, so it fails in both. The Session pooler
+(IPv4, port **5432** — needed for Payload's schema DDL; do NOT use the 6543
+transaction pooler) works. Format:
 
 ```
-DATABASE_URI=postgresql://postgres.<ref>:<db-password>@aws-0-<region>.pooler.supabase.com:6543/postgres
-PAYLOAD_SECRET=<random 32-byte hex>   # already set locally
+DATABASE_URI=postgresql://postgres.<ref>:<db-password>@aws-0-<region>.pooler.supabase.com:5432/postgres
+PAYLOAD_SECRET=<random 32-byte hex>
 ```
 
-Once set: load `/cms`, create the first admin user, and Payload pushes the schema
-into the `payload` schema. Then wire Deal of the Week, `/blog`, and the
-testimonials source (a follow-up).
+Both live in `.env.local` (gitignored). The project region is discoverable by
+probing the regional poolers with `postgres.<ref>` if the dashboard string isn't
+handy.
+
+### Follow-ups after this PR
+- **Create the first admin user** at `/cms` (owner's account — not scripted).
+- **Email adapter:** Payload warns "no email adapter" (emails go to console). Wire
+  the Resend adapter (Resend is already configured) so password resets etc. work.
+- **App vs Payload projects:** the app's own Supabase keys in `.env` still point at
+  a *different, older* project. If everything should live on the new SaverMiles
+  project, migrate the app's `NEXT_PUBLIC_SUPABASE_URL` / keys too (its tables must
+  be recreated there). Separate task.
+- Wire Deal of the Week, `/blog`, testimonials to the frontend.
 
 ### Follow-ups noted
 
