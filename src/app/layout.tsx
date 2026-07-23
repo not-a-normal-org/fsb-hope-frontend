@@ -1,112 +1,61 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-import { Inter, Playfair_Display, DM_Mono } from "next/font/google";
+import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import PageTransition from "@/components/layout/PageTransition";
-import GSAPProvider from "@/components/layout/GSAPProvider";
-import CustomCursor from "@/components/ui/CustomCursor";
-import ParticleCanvas from "@/components/ui/ParticleCanvas";
+import MotionProvider from "@/components/site/MotionProvider";
+import ThemeScript from "@/components/system/ThemeScript";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
-/* ========== FONT CONFIGURATION ========== */
-const inter = Inter({
-  variable: "--font-inter",
+/* ========== FONTS (docs/plans/01-brand-design-system.md §3) ========== */
+
+// Display — headlines, section titles. Carries the shine-sweep on hero text.
+const zilla = Zilla_Slab({
+  variable: "--font-zilla",
+  weight: ["500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
-  fallback: ["Outfit", "system-ui", "sans-serif"],
+  fallback: ["Zilla Slab", "Georgia", "serif"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+// Body / UI — copy, buttons, nav, labels.
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
-  fallback: ["Canela", "serif"],
+  fallback: ["system-ui", "sans-serif"],
 });
 
-const dmMono = DM_Mono({
-  variable: "--font-dm-mono",
-  weight: ["400", "500"],
+// Utility / data — eyebrows, stat numbers, point counts, dates. Monospace is
+// intentional: it signals "a precise number," reinforcing the brand's positioning.
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
-  fallback: ["Courier New", "monospace"],
+  fallback: ["ui-monospace", "monospace"],
 });
 
 /* ========== SEO METADATA ========== */
+// Minimal on purpose: the site is behind the construction wall and set to
+// noindex. Richer metadata belongs with the pages it describes.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE_NAME} — ${SITE_TAGLINE}`,
     template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Australia's premier Business Class travel membership for business owners. Turn everyday expenses into guaranteed flat-bed flights and VIP experiences.",
-  keywords: [
-    "business class flights",
-    "frequent flyer points",
-    "flight membership",
-    "Qantas points",
-    "Velocity points",
-    "business travel",
-    "travel rewards",
-    "Australia",
-  ],
-  authors: [{ name: "PointIQ" }],
-  creator: "PointIQ",
-  publisher: "PointIQ",
-  robots: "index, follow",
-  alternates: {
-    canonical: SITE_URL,
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_AU",
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    description:
-      "Australia's premier Business Class travel membership for business owners. Turn everyday expenses into guaranteed flat-bed flights and VIP experiences.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: SITE_NAME,
-        type: "image/jpeg",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@pointiq",
-    creator: "@pointiq",
-    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
-    description: "Never fly economy again.",
-    images: ["/twitter-image.jpg"],
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: SITE_NAME,
-  },
+  description: SITE_TAGLINE,
+  robots: "noindex, nofollow",
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  formatDetection: {
-    email: false,
-    telephone: false,
-    address: false,
-  },
 };
 
-/* ========== ROOT LAYOUT COMPONENT ========== */
+/* ========== ROOT LAYOUT ========== */
+// data-theme="dark" is the SSR default; ThemeScript corrects it pre-paint for
+// visitors who chose light/mono. suppressHydrationWarning covers that one
+// attribute React would otherwise flag as a server/client mismatch.
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -115,88 +64,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} ${dmMono.variable} h-full antialiased scroll-smooth`}
+      data-theme="dark"
+      suppressHydrationWarning
+      className={`${zilla.variable} ${plexSans.variable} ${plexMono.variable} h-full`}
     >
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#07090F" />
-        <meta name="color-scheme" content="dark" />
-
-        {/* Preconnect to external resources for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Favicon and app icons */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <ThemeScript />
+        <meta name="theme-color" content="#060B14" />
         <link rel="manifest" href="/site.webmanifest" />
-
-        {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": SITE_URL,
-              name: SITE_NAME,
-              url: SITE_URL,
-              logo: `${SITE_URL}/logo.png`,
-              description:
-                "Australia's premier Business Class travel membership for business owners.",
-              sameAs: [
-                "https://instagram.com/pointiq",
-                "https://facebook.com/pointiq",
-                "https://linkedin.com/company/pointiq",
-                "https://youtube.com/@pointiq",
-              ],
-              contactPoint: {
-                "@type": "ContactPoint",
-                contactType: "Customer Support",
-                areaServed: "AU",
-              },
-              areaServed: "AU",
-              foundingDate: "2013",
-            }),
-          }}
-        />
       </head>
 
-      <body className="flex flex-col min-h-screen bg-bg-primary text-text-primary" suppressHydrationWarning>
-        <ParticleCanvas />
-        <CustomCursor />
-        {/* Layout wrapper */}
-        <Navbar />
-        <GSAPProvider />
-        <main className="flex-1">
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </main>
-        <Footer />
-
-        {/* Skip to content link for accessibility */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 px-3 py-2 bg-accent-orange text-black rounded-md text-sm font-medium"
-        >
-          Skip to main content
-        </a>
-
-        {/* Google Analytics (GA4) — gtag.js */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-M0M0RF92XK"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-M0M0RF92XK');
-          `}
-        </Script>
+      <body className="flex min-h-screen flex-col bg-bg-base font-body text-ink">
+        <MotionProvider>
+          <div className="flex-1">{children}</div>
+        </MotionProvider>
       </body>
     </html>
   );

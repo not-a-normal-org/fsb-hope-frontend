@@ -64,7 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const resend = new Resend(apiKey);
-  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@pointiq.club';
+  const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@savermiles.com';
   const firstName = name.split(' ')[0];
 
   const adminHtml = `
@@ -77,20 +77,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const customerHtml = `
     <p>Hi ${esc(firstName)},</p>
-    <p>Thanks for reaching out to PointIQ — we've received your message and
+    <p>Thanks for reaching out to SaverMiles — we've received your message and
     will be in touch within one business day.</p>
-    <p>— PointIQ</p>
+    <p>— SaverMiles</p>
   `;
 
   const [adminResult, customerResult] = await Promise.allSettled([
     resend.emails.send({
-      from: 'PointIQ <hello@pointiq.club>',
+      from: 'SaverMiles <hello@savermiles.com>',
       to: adminEmailAddress,
       subject: `New enquiry — ${name}`,
       html: adminHtml,
     }),
     resend.emails.send({
-      from: 'PointIQ <hello@pointiq.club>',
+      from: 'SaverMiles <hello@savermiles.com>',
       to: email,
       subject: 'We’ve received your message',
       html: customerHtml,

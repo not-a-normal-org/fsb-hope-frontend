@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Brand */}
         <div className="px-6 py-6 border-b border-[#1E2538]">
           <p className="text-[10px] tracking-[0.18em] uppercase text-[#E8963A] font-semibold mb-0.5">
-            PointIQ
+            SaverMiles
           </p>
           <p className="text-xs text-[#5C6378]">Admin Console</p>
         </div>

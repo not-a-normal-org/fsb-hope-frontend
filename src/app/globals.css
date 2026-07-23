@@ -1,31 +1,121 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
-:root {
-  /* Background Colors */
-  --bg-primary: #07090F;
-  --bg-secondary: #0E1220;
-  --bg-card: #13182A;
+/* ============================================================================
+   Saver Miles — Blue Material Glass tokens.
+   docs/plans/01-brand-design-system.md, refined by docs/plans/sample.html.
 
-  /* Accent Colors */
-  --accent-orange: #E8963A;
-  --accent-orange-light: #F2AA5E;
-  --accent-blue: #3A6FE8;
-  --accent-gold: #C9A84C;
+   THREE modes on a single canonical --sm-* name set. Each mode reassigns the
+   SAME names, so components never reference a mode-specific token — that is the
+   anti-fallback rule from the spec (a --sm-mono-cta name would let Mono CTAs
+   silently fall back to blue). Dark is the default: it lives on :root as well
+   as [data-theme="dark"], so SSR with no theme attribute still renders dark.
+   ============================================================================ */
 
-  /* Text Colors */
-  --text-primary: #F5F5F0;
-  --text-secondary: #9DA3B4;
-  --text-muted: #5C6378;
+:root,
+[data-theme="dark"] {
+  --sm-bg-base: #060B14;
+  --sm-bg-elevated: #0F2038;
+  --sm-bg-gradient: radial-gradient(circle at 20% 15%, #0F2038, #060B14 72%);
 
-  /* Border Colors */
-  --border-subtle: #1E2538;
-  --border-glow: rgba(232, 150, 58, 0.3);
+  --sm-ink: #EAF1FB;
+  --sm-ink-sub: #A9BBD1;
+  --sm-ink-muted: #7C8FA6;
+
+  --sm-accent: #6FA8DC;
+  --sm-cta: #1877F2;
+  --sm-cta-hover: #3D8CF5;
+  --sm-cta-text: #FFFFFF;
+
+  --sm-glass-bg: rgba(120, 165, 220, 0.08);
+  --sm-glass-border: rgba(160, 195, 235, 0.18);
+  --sm-glass-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+
+  --sm-blob-1: rgba(60, 120, 200, 0.28);
+  --sm-blob-2: rgba(24, 119, 242, 0.20);
+  --sm-blob-3: rgba(111, 168, 220, 0.20);
+
+  --sm-shine: linear-gradient(100deg, #DCE8FB 0%, #FFFFFF 25%, #6FA8DC 45%, #EAF1FB 65%, #3E7CB1 100%);
 }
 
+[data-theme="light"] {
+  --sm-bg-base: #DCE8F5;
+  --sm-bg-elevated: #F2F7FC;
+  --sm-bg-gradient: radial-gradient(circle at 20% 15%, #F2F7FC, #DCE8F5 72%);
+
+  --sm-ink: #0A2540;
+  --sm-ink-sub: #4B5A6B;
+  --sm-ink-muted: #7C8FA6;
+
+  --sm-accent: #3E7CB1;
+  --sm-cta: #1877F2;
+  --sm-cta-hover: #0A5FD1;
+  --sm-cta-text: #FFFFFF;
+
+  --sm-glass-bg: rgba(255, 255, 255, 0.55);
+  --sm-glass-border: rgba(255, 255, 255, 0.75);
+  --sm-glass-shadow: 0 20px 50px -20px rgba(10, 37, 64, 0.18);
+
+  --sm-blob-1: rgba(62, 124, 177, 0.20);
+  --sm-blob-2: rgba(24, 119, 242, 0.14);
+  --sm-blob-3: rgba(160, 195, 235, 0.30);
+
+  --sm-shine: linear-gradient(100deg, #0A2540 0%, #3E7CB1 25%, #0A2540 50%, #1877F2 75%, #0A2540 100%);
+}
+
+/* Mono — dark-only, no hue. Every color signal comes from the metallic shine
+   sweep, not from accent color. CTA is a solid off-white with dark text. */
+[data-theme="mono"] {
+  --sm-bg-base: #0C0C0E;
+  --sm-bg-elevated: #1C1D21;
+  --sm-bg-gradient: radial-gradient(circle at 20% 20%, #1C1D21, #0C0C0E 70%);
+
+  --sm-ink: #F2F2F0;
+  --sm-ink-sub: #A8ACB3;
+  --sm-ink-muted: #7C8089;
+
+  --sm-accent: #C9CDD3;
+  --sm-cta: rgba(255, 255, 255, 0.92);
+  --sm-cta-hover: #FFFFFF;
+  --sm-cta-text: #111214;
+
+  --sm-glass-bg: rgba(255, 255, 255, 0.05);
+  --sm-glass-border: rgba(255, 255, 255, 0.12);
+  --sm-glass-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+
+  --sm-blob-1: rgba(255, 255, 255, 0.08);
+  --sm-blob-2: rgba(180, 185, 196, 0.10);
+  --sm-blob-3: rgba(120, 126, 140, 0.12);
+
+  --sm-shine: linear-gradient(100deg, #E7E8EA 0%, #FFFFFF 25%, #9BA0AA 45%, #F2F2F0 65%, #C9CDD3 100%);
+}
+
+/* Semantic status colors — identical across all three modes, per spec. Green is
+   reserved exclusively for success and never used as a brand/decorative color. */
+:root {
+  --sm-success: #1F9D63;
+  --sm-warning: #C9922E;
+  --sm-error: #D9534F;
+}
+
+/* Expose the flat color tokens as Tailwind utilities. `inline` emits the
+   var(...) reference directly into each utility, so a runtime [data-theme] swap
+   restyles every bg, text, and border utility at once. Glass, blob, and gradient
+   tokens are NOT here — they are consumed as raw variables inside
+   GlassPanel and AmbientBackground. */
 @theme inline {
-  --color-background: var(--bg-primary);
-  --color-foreground: var(--text-primary);
+  --color-bg-base: var(--sm-bg-base);
+  --color-bg-elevated: var(--sm-bg-elevated);
+  --color-ink: var(--sm-ink);
+  --color-ink-sub: var(--sm-ink-sub);
+  --color-ink-muted: var(--sm-ink-muted);
+  --color-accent: var(--sm-accent);
+  --color-cta: var(--sm-cta);
+  --color-cta-hover: var(--sm-cta-hover);
+  --color-cta-text: var(--sm-cta-text);
+  --color-success: var(--sm-success);
+  --color-warning: var(--sm-warning);
+  --color-error: var(--sm-error);
 }
 
 @layer base {
@@ -35,112 +125,74 @@
     box-sizing: border-box;
   }
 
-  /* Hide default cursor on pointer devices; restore on touch/coarse */
-  * {
-    cursor: none !important;
-  }
-
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: inherit;
+    background: var(--sm-bg-base);
+    color: var(--sm-ink);
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 12px;
+  ::selection {
+    background: var(--sm-accent);
+    color: var(--sm-bg-base);
   }
 
-  ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
+  :focus-visible {
+    outline: 2px solid var(--sm-accent);
+    outline-offset: 2px;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: var(--accent-orange);
-    border-radius: 6px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-orange-light);
-  }
-}
-
-/* Restore cursor on touch / coarse-pointer devices (phones, tablets) */
-@media (pointer: coarse) {
-  * {
-    cursor: auto !important;
-  }
-}
-
-/* Infinite scroll animation for media logos marquee */
-@keyframes infinite-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
+  /* Respect prefers-reduced-motion everywhere — not optional (spec §5).
+     Framer Motion handles its own via MotionConfig reducedMotion="user"; this
+     covers CSS-driven motion (shine sweep, theme crossfade, entrances). */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-.animate-infinite-scroll {
-  animation: infinite-scroll 30s linear infinite;
+/* ---- Theme crossfade -------------------------------------------------------
+   ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
+   the ~300ms color transition is paid only during a switch — not on every hover
+   forever. Covers the CTA blue→off-white jump between Blue and Mono. */
+[data-theme-anim] *,
+[data-theme-anim] *::before,
+[data-theme-anim] *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+    box-shadow 0.3s ease, background-image 0.3s ease !important;
 }
 
-.animate-infinite-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Shimmer animation for Black tier card hover */
-@keyframes shimmer-sweep {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(200%);
-  }
-}
-
-.shimmer-on-hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(201, 168, 76, 0.15),
-    transparent
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.shimmer-on-hover:hover::after {
-  opacity: 1;
-  animation: shimmer-sweep 0.8s ease-in-out;
-}
-
-/* CTA button pulse glow animation */
-@keyframes ctaPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(232, 150, 58, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(232, 150, 58, 0.2);
-  }
-  100% {
-    box-shadow: 0 0 0 20px rgba(232, 150, 58, 0);
+@media (prefers-reduced-motion: reduce) {
+  [data-theme-anim] *,
+  [data-theme-anim] *::before,
+  [data-theme-anim] *::after {
+    transition: none !important;
   }
 }
 
-.animate-cta-pulse {
-  animation: ctaPulse 1.5s ease-out infinite;
+/* ---- Shine sweep -----------------------------------------------------------
+   Metallic gradient swept across headline text (ShineText). The gradient itself
+   is --sm-shine (mode-aware); this only animates its position. 6s linear loop
+   matches the approved mockup. */
+@keyframes sm-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.animate-shine {
+  background-size: 200% auto;
+  animation: sm-shine 6s linear infinite;
 }

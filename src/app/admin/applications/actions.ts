@@ -21,7 +21,7 @@ function approvalEmail(firstName: string, tier: string, paymentLink: string): st
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
 
         <tr><td style="padding-bottom:32px;text-align:center;">
-          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">POINTIQ</p>
+          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVERMILES</p>
         </td></tr>
 
         <tr><td style="background-color:#0E1220;border:1px solid #1E2538;border-radius:16px;padding:40px 36px;">
@@ -29,7 +29,7 @@ function approvalEmail(firstName: string, tier: string, paymentLink: string): st
           <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#F5F5F0;">Congratulations, ${firstName}!</p>
           <p style="margin:0 0 28px;font-size:15px;color:#9DA3B4;line-height:1.6;">
             Your application for the <strong style="color:#E8963A;text-transform:capitalize;">${tier}</strong> membership
-            has been approved. You're one step away from joining PointIQ.
+            has been approved. You're one step away from joining SaverMiles.
           </p>
 
           <hr style="border:none;border-top:1px solid #1E2538;margin:0 0 28px;" />
@@ -55,14 +55,14 @@ function approvalEmail(firstName: string, tier: string, paymentLink: string): st
 
           <p style="margin:0;font-size:13px;color:#9DA3B4;line-height:1.6;">
             Questions? Reply to this email or call us directly — we're here to help.<br /><br />
-            <strong style="color:#F5F5F0;">PointIQ Team</strong><br />
-            <a href="mailto:hello@pointiq.club" style="color:#E8963A;text-decoration:none;">hello@pointiq.club</a>
+            <strong style="color:#F5F5F0;">SaverMiles Team</strong><br />
+            <a href="mailto:hello@savermiles.com" style="color:#E8963A;text-decoration:none;">hello@savermiles.com</a>
           </p>
 
         </td></tr>
 
         <tr><td style="padding-top:24px;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 PointIQ · Australia</p>
+          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 SaverMiles · Australia</p>
         </td></tr>
 
       </table>
@@ -84,14 +84,14 @@ function rejectionEmail(firstName: string): string {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
 
         <tr><td style="padding-bottom:32px;text-align:center;">
-          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">POINTIQ</p>
+          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVERMILES</p>
         </td></tr>
 
         <tr><td style="background-color:#0E1220;border:1px solid #1E2538;border-radius:16px;padding:40px 36px;">
 
           <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#F5F5F0;">Hi ${firstName},</p>
           <p style="margin:0 0 24px;font-size:15px;color:#9DA3B4;line-height:1.6;">
-            Thank you for your interest in PointIQ. After reviewing your application,
+            Thank you for your interest in SaverMiles. After reviewing your application,
             we don't think it's quite the right fit at this time.
           </p>
           <p style="margin:0 0 24px;font-size:14px;color:#9DA3B4;line-height:1.6;">
@@ -104,14 +104,14 @@ function rejectionEmail(firstName: string): string {
 
           <p style="margin:0;font-size:13px;color:#9DA3B4;line-height:1.6;">
             If you have any questions, please don't hesitate to reach out.<br /><br />
-            <strong style="color:#F5F5F0;">PointIQ Team</strong><br />
-            <a href="mailto:hello@pointiq.club" style="color:#E8963A;text-decoration:none;">hello@pointiq.club</a>
+            <strong style="color:#F5F5F0;">SaverMiles Team</strong><br />
+            <a href="mailto:hello@savermiles.com" style="color:#E8963A;text-decoration:none;">hello@savermiles.com</a>
           </p>
 
         </td></tr>
 
         <tr><td style="padding-top:24px;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 PointIQ · Australia</p>
+          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 SaverMiles · Australia</p>
         </td></tr>
 
       </table>
@@ -172,9 +172,9 @@ export async function approveApplication(
   // 3. Send approval email
   const firstName = customerName.split(' ')[0];
   const { error: emailError } = await resend.emails.send({
-    from:    'PointIQ <hello@pointiq.club>',
+    from:    'SaverMiles <hello@savermiles.com>',
     to:      customerEmail,
-    subject: 'Your PointIQ membership is ready — complete your enrolment',
+    subject: 'Your SaverMiles membership is ready — complete your enrolment',
     html:    approvalEmail(firstName, tier, paymentLink.url),
   });
 
@@ -206,9 +206,9 @@ export async function rejectApplication(
   // 2. Send rejection email
   const firstName = customerName.split(' ')[0];
   const { error: emailError } = await resend.emails.send({
-    from:    'PointIQ <hello@pointiq.club>',
+    from:    'SaverMiles <hello@savermiles.com>',
     to:      customerEmail,
-    subject: 'Your PointIQ application — an update',
+    subject: 'Your SaverMiles application — an update',
     html:    rejectionEmail(firstName),
   });
 

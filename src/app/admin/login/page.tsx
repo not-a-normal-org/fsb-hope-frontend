@@ -44,7 +44,7 @@ function LoginForm() {
         {/* Logo / brand */}
         <div className="mb-8 text-center">
           <p className="text-xs tracking-[0.18em] uppercase text-[#E8963A] font-semibold mb-3">
-            PointIQ
+            SaverMiles
           </p>
           <h1 className="text-2xl font-bold text-[#F5F5F0]">Admin Portal</h1>
           <p className="mt-1 text-sm text-[#9DA3B4]">Sign in to manage your workspace</p>
