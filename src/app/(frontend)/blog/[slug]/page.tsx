@@ -8,11 +8,13 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
+import { absoluteUrl, ogImageUrl, articleJsonLd, type PostSeo } from '@/lib/seo';
 
 /**
- * /blog/[slug] — a single post from Payload. Dynamic (queries at request time).
- * Byline is always "Saver Miles Team" (the collection default; never a real
- * name — docs/plans/00).
+ * /blog/[slug] — a single PUBLISHED post from Payload (drafts stay private).
+ * Byline is always "Saver Miles Team" (collection default; never a real name —
+ * docs/plans/00). Full SEO: canonical, Open Graph (article), Twitter card, and
+ * a BlogPosting JSON-LD block.
  */
 export const dynamic = 'force-dynamic';
 
@@ -22,9 +24,9 @@ async function getPost(slug: string) {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
     collection: 'posts',
-    where: { slug: { equals: slug } },
+    where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
     limit: 1,
-    depth: 1, // populate coverImage
+    depth: 1, // populate coverImage + category + meta.image
   });
   return docs[0] ?? null;
 }
@@ -32,8 +34,29 @@ async function getPost(slug: string) {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  if (!post) return { title: 'Not found' };
-  return { title: post.title, description: post.excerpt ?? undefined };
+  if (!post) return { title: 'Not found', robots: 'noindex' };
+
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const title = post.meta?.title || post.title;
+  const description = post.meta?.description || post.excerpt || undefined;
+  const image = ogImageUrl(post as unknown as PostSeo);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description,
+      publishedTime: post.publishedAt ?? undefined,
+      modifiedTime: post.updatedAt ?? post.publishedAt ?? undefined,
+      authors: ['Saver Miles Team'],
+      images: [{ url: image, width: 1200, height: 630 }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
 }
 
 export default async function BlogPostPage({ params }: Params) {
@@ -50,9 +73,14 @@ export default async function BlogPostPage({ params }: Params) {
     : null;
 
   const cover = typeof post.coverImage === 'object' && post.coverImage ? post.coverImage : null;
+  const category = typeof post.category === 'object' && post.category ? post.category : null;
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post as unknown as PostSeo)) }}
+      />
       <NavBar />
 
       <article className="relative">
@@ -63,6 +91,7 @@ export default async function BlogPostPage({ params }: Params) {
 
           <header className="mt-8">
             <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
+              {category?.name ? `${category.name} · ` : ''}
               {post.author || 'Saver Miles Team'}
               {date ? ` · ${date}` : ''}
             </p>

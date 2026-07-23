@@ -34,6 +34,7 @@ export default async function BlogIndex() {
   const payload = await getPayloadClient();
   const { docs: posts } = await payload.find({
     collection: 'posts',
+    where: { _status: { equals: 'published' } },
     sort: '-publishedAt',
     limit: 50,
     depth: 0,
