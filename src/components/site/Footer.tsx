@@ -20,6 +20,7 @@ const COLUMNS = [
       { label: 'Business', href: '/business' },
       { label: 'Alerts', href: '/alerts' },
       { label: 'Pricing', href: '/pricing' },
+      { label: 'Calculator', href: '/calculator' },
     ],
   },
   {
@@ -27,6 +28,7 @@ const COLUMNS = [
     links: [
       { label: 'How It Works', href: '/how-it-works' },
       { label: 'About', href: '/about' },
+      { label: 'Results', href: '/results' },
       { label: 'Contact', href: '/contact' },
     ],
   },

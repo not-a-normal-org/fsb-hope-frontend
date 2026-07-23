@@ -1,13 +1,32 @@
-import AudienceHeroSkeleton, { audienceMetadata } from '@/components/site/AudienceHeroSkeleton';
+import type { Metadata } from 'next';
 
-export const metadata = audienceMetadata('For Business');
+import NavBar from '@/components/site/NavBar';
+import Footer from '@/components/site/Footer';
+import PageHero from '@/components/site/PageHero';
+import BusinessBody from './BusinessBody';
+
+/**
+ * /business (docs/plans/02) — the company track. ROI / account-level framing,
+ * the $25-per-search model, and the Human Search Alert cross-sell.
+ *
+ * The multi-step lead form and Cal.com callback booking are deferred to the
+ * backend phase; the primary CTA is an interim mailto until they ship.
+ */
+export const metadata: Metadata = {
+  title: 'For Business',
+};
 
 export default function BusinessPage() {
   return (
-    <AudienceHeroSkeleton
-      eyebrow="For business"
-      headline="Turn company travel spend into premium seats."
-      body="For teams that fly often. We run account-level award searches by hand across 30+ programs and deliver proof — so your travel budget reaches further, reliably."
-    />
+    <>
+      <NavBar />
+      <PageHero
+        eyebrow="For business"
+        title="Turn company travel spend into premium seats."
+        intro="For teams that fly often. We run account-level award searches by hand across 30+ programs and deliver proof — so your travel budget reaches further, reliably."
+      />
+      <BusinessBody />
+      <Footer />
+    </>
   );
 }
