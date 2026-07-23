@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
   // reactCompiler disabled — conflicts with Framer Motion animation lifecycle hooks
@@ -6,4 +7,5 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['192.168.0.102'],
 };
 
-export default nextConfig;
+// withPayload wires Payload's admin (/cms) and API (/cms-api) into the Next build.
+export default withPayload(nextConfig);

@@ -34,14 +34,47 @@ same minor — low risk — but it must be verified against the existing app
 already carries Dependabot alerts; Payload adds ~444 packages, so re-check
 `npm audit` after install.
 
-## Recommended next steps (the Payload implementation, a separate feature)
+## Implementation result (done — Payload scaffolded)
 
-1. `chore:` bump Next to 16.2.11, verify the existing site is unaffected.
-2. Install Payload + `@payloadcms/db-postgres`, point its adapter at the **same**
-   Supabase Postgres (confirm table-namespace separation from the app's own
-   tables — see `docs/plans/06`).
-3. Scaffold `payload.config` with the collections from `docs/plans/06`
-   (`posts`, `categories`, `deals-of-week`, `testimonials`) — restrict admin to
-   Moon/Tanzil.
-4. Boot the admin, confirm it renders and migrates, then wire Deal of the Week,
-   `/blog`, and the case-study/testimonials source.
+Payload **3.86** is installed and integrated. Confirmed by `next build` + `next dev`:
+
+- **Install:** clean against Next **16.2.11** + React 19.2.4, no peer conflicts.
+- **Build passes** with `withPayload`. Routes registered: `/cms/[[...segments]]`
+  (admin), `/cms-api/[...slug]` + `/cms-api/graphql` + `/cms-api/graphql-playground`.
+- **Custom mount paths avoid collisions.** Payload's defaults (`/admin`, `/api`)
+  clash with this app's existing admin portal and API routes, so Payload is mounted
+  at **`/cms`** and **`/cms-api`** (`config.routes`). Verified in dev: the existing
+  `/admin` portal still returns 200, unaffected.
+- **App restructured** into two root layouts via route groups — `(frontend)` (the
+  marketing site, moved wholesale) and `(payload)` (Payload's own `<html>`). All
+  marketing routes verified 200 in dev after the move; the construction wall still
+  503s anonymous traffic.
+- **DB isolation:** the Postgres adapter uses `schemaName: 'payload'`, so Payload's
+  tables live in a dedicated `payload` schema, separate from the app's `public`
+  tables.
+
+### The one remaining step: `DATABASE_URI`
+
+Payload boots but can't connect yet — `/cms` returns 500 with
+`database "…" does not exist`, because **`DATABASE_URI` is empty**. This is a
+**direct Postgres connection string**, a *different* credential from the Supabase
+API keys (which are all that's in `.env`). Get it from **Supabase → Settings →
+Database → Connection string → Session pooler**, and add it to `.env.local`:
+
+```
+DATABASE_URI=postgresql://postgres.<ref>:<db-password>@aws-0-<region>.pooler.supabase.com:6543/postgres
+PAYLOAD_SECRET=<random 32-byte hex>   # already set locally
+```
+
+Once set: load `/cms`, create the first admin user, and Payload pushes the schema
+into the `payload` schema. Then wire Deal of the Week, `/blog`, and the
+testimonials source (a follow-up).
+
+### Follow-ups noted
+
+- The maintenance wall (`src/proxy.ts`) currently gates `/cms` too, so a CMS admin
+  must hold the maintenance `admin_token` cookie first. Decide at launch whether to
+  exempt `/cms`/`/cms-api` and let Payload's own auth be the sole gate.
+- Media uploads use local disk (fine for dev); swap to a storage adapter
+  (S3 / Supabase Storage) before production — serverless has no persistent disk.
+- Payload adds ~444 packages; re-check `npm audit` (repo already had Dependabot alerts).
