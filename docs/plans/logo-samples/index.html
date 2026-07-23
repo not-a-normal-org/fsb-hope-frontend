@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SaverMiles — logo arc options</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root { --green:#0E7C50; --ink:#EAF1FB; --sub:#A9BBD1; --muted:#7C8FA6; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'IBM Plex Mono', monospace;
+    background:radial-gradient(circle at 20% 15%, #0F2038, #060B14 72%);
+    color:var(--ink); min-height:100vh; padding:48px 24px 90px;
+  }
+  h1 { font-family:'Zilla Slab',serif; font-size:24px; text-align:center; margin-bottom:8px; }
+  .lead { text-align:center; color:var(--sub); font-size:13px; max-width:640px; margin:0 auto 12px; line-height:1.6; }
+  .how { text-align:center; color:var(--muted); font-size:12px; max-width:640px; margin:0 auto 40px; line-height:1.6; }
+  .how b { color:var(--ink); }
+
+  .grid { max-width:1080px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:18px; }
+
+  .card {
+    border:1px solid rgba(160,195,235,0.18); border-radius:14px;
+    background:rgba(120,165,220,0.06);
+    padding:38px 26px 20px; display:flex; flex-direction:column; align-items:center;
+  }
+  .card.current { border-color:rgba(217,150,80,0.5); background:rgba(217,150,80,0.06); }
+
+  /* the real logo lockup: inline-flex column, arc centered under the wordmark */
+  .logo { display:inline-flex; flex-direction:column; align-items:center; line-height:1; }
+  .word { font-family:'Zilla Slab',serif; font-weight:700; letter-spacing:-0.01em; font-size:40px; color:var(--ink); }
+  .logo svg { width:64%; }
+
+  .cap { margin-top:30px; text-align:center; }
+  .id { font-size:15px; font-weight:500; color:var(--ink); letter-spacing:0.04em; }
+  .badge { display:inline-block; margin-left:6px; font-size:10px; color:#F0B36B; border:1px solid rgba(240,179,107,0.4); border-radius:20px; padding:1px 7px; vertical-align:middle; }
+  .params { margin-top:8px; font-size:11px; color:var(--muted); line-height:1.7; }
+  .params code { color:var(--sub); }
+</style>
+</head>
+<body>
+
+<h1>SaverMiles — pick a smile</h1>
+<p class="lead">Every option below is narrower than the wordmark (the width you approved) and less curvy than the current arc. They vary in <b>depth</b> (how curved) and <b>gap</b> (how close to the text).</p>
+<p class="how">Tell me the <b>ID</b> of the one you like (e.g. &ldquo;Medium&nbsp;·&nbsp;Close&rdquo;). The exact numbers under each are what I'll drop into the logo.</p>
+
+<div id="grid" class="grid"></div>
+
+<script>
+  const GREEN = '#0E7C50';
+
+  // Depth = curve as a % of the chord width. Current arc is 22% (too curvy).
+  // With y0 = 3 and chord x 4..96 (92 wide): control C = 184*depth + 3.
+  const depths = [
+    { key:'Soft',   pct:12, C:25 },
+    { key:'Medium', pct:15, C:31 },
+    { key:'Firm',   pct:18, C:36 },
+  ];
+  // Gap = vertical space between wordmark and arc (margin-top on the svg, px).
+  // Current is 4px (mt-1); both options pull it up closer to the text.
+  const gaps = [
+    { key:'Close', mt:0 },
+    { key:'Tight', mt:-4 },
+  ];
+
+  function arcSvg(C, mt) {
+    const y0 = 3;
+    const dip = 0.25*y0 + 0.5*C + 0.25*y0;      // quadratic midpoint
+    const H = Math.ceil(dip + 4);                // hug the curve + stroke room
+    return `<svg viewBox="0 0 100 ${H}" style="margin-top:${mt}px" aria-hidden="true">
+      <path d="M4 ${y0} Q50 ${C} 96 ${y0}" stroke="${GREEN}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </svg>`;
+  }
+
+  function card({ id, C, mt, pct, gapKey, current }) {
+    const y0 = 3;
+    const dip = (0.25*y0 + 0.5*C + 0.25*y0).toFixed(1);
+    const H = Math.ceil(0.25*y0 + 0.5*C + 0.25*y0 + 4);
+    return `<div class="card${current ? ' current' : ''}">
+      <div class="logo"><span class="word">SaverMiles</span>${arcSvg(C, mt)}</div>
+      <div class="cap">
+        <div class="id">${id}${current ? '<span class="badge">CURRENT</span>' : ''}</div>
+        <div class="params">
+          depth <code>${pct}%</code> &nbsp;·&nbsp; gap <code>${mt}px</code><br>
+          <code>viewBox="0 0 100 ${H}"</code><br>
+          <code>M4 ${y0} Q50 ${C} 96 ${y0}</code> &nbsp; <code>w-[64%]</code>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const cards = [];
+  for (const d of depths) {
+    for (const g of gaps) {
+      cards.push(card({ id:`${d.key} · ${g.key}`, C:d.C, mt:g.mt, pct:d.pct, gapKey:g.key }));
+    }
+  }
+  // reference: what's live now (22% depth, 4px gap)
+  cards.push(card({ id:'Current', C:45, mt:4, pct:22, gapKey:'—', current:true }));
+
+  document.getElementById('grid').innerHTML = cards.join('');
+</script>
+
+</body>
+</html>

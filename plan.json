@@ -1,718 +1,191 @@
 {
   "project": {
-    "name": "PointIQ",
-    "description": "A premium points-and-Business-Class travel service for Australian business owners. Elevated design with polished animations. Goal is higher conversion, premium feel, and a strong mobile experience.",
-    "reference_sites": {
-      "animation_inspiration": "https://www.flexfume.com/"
-    },
-    "status": "phases 1-3 complete; backend + admin console in progress on branch fix/stripe-supabase-flow"
-  },
-
-  "progress": {
-    "last_updated": "2026-07-10",
-    "branch": "fix/stripe-supabase-flow",
-    "summary": "Homepage build (Phases 1-3) is complete and type-clean. Backend (Stripe + Supabase + Resend) and the admin console are built and functional. Two admin gaps remain and the site is not yet deployed.",
-    "stack_as_built": {
-      "note": "Shipped stack has advanced well beyond this plan's original targets.",
-      "framework": "Next.js 16.2 (App Router) — plan targeted 14; note 'middleware.ts' is now 'proxy.ts'",
-      "react": "19.2",
-      "styling": "Tailwind CSS v4 — plan targeted v3",
-      "payments": "Stripe SDK v22 + @stripe/stripe-js",
-      "data_and_auth": "Supabase (@supabase/ssr; service-role admin client)",
-      "email": "Resend",
-      "scheduling": "Cal.com embed (CalEmbed.tsx)"
-    },
-    "phases": {
-      "phase_1_clone_and_fix": "complete — all homepage sections built",
-      "phase_2_add_the_power": "complete — LoadingIntro, GSAP pin/counters, hover states, parallax, page transitions",
-      "phase_3_polish_and_launch": "partial — /membership, /points-concierge, /about, /contact, /privacy, /terms, /case-studies built; JSON-LD (Organization + FAQPage) present; sitemap.xml, robots.txt and Vercel deploy still TODO"
-    },
-    "backend": {
-      "checkout_flow": "done — checkout -> Stripe webhook -> Supabase -> dashboard",
-      "membership_application": "done — multi-step apply form -> customers table -> Resend emails",
-      "customer_portal": "done — Stripe billing portal (/api/portal)",
-      "post_payment_profile_setup": "done — profile step on /dashboard"
-    },
-    "admin_console": {
-      "status": "mostly done",
-      "working": [
-        "Dashboard with live Supabase stats (customers, subscriptions, orders, revenue, newsletter)",
-        "Applications — approve/reject with Stripe payment links, Resend emails, audit log",
-        "Orders, Subscriptions (with cancel), Products, Newsletter (+CSV export, unsubscribe)",
-        "Cookie login/logout gated by proxy.ts"
-      ],
-      "gaps": [
-        "OPEN DECISION: sidebar links /admin/customers and /admin/appointments have no page (currently 404) — build the pages or remove the links",
-        "FIXED 2026-07-10: /api/admin/* now behind proxy auth; previously applications-data and products-data leaked customer PII to unauthenticated requests"
-      ]
-    },
-    "disabled": [
-      "Podcast section + /podcast nav — re-enable when a podcast launches (PodcastSection stubbed to null; PODCAST_* data commented out in constants.ts)"
-    ],
-    "remaining": [
-      "Decide on admin Customers + Appointments pages (build or remove links)",
-      "Add sitemap.xml and robots.txt",
-      "Deploy to Vercel",
-      "Final mobile responsiveness + Lighthouse pass"
+    "name": "New Brand — AI + Human Points Concierge",
+    "status": "brand name not yet finalised — placeholder mark used throughout",
+    "description": "A worldwide points-to-Business-Class concierge built on a hybrid: fully manual human award search as the core product, an AI tool-search-plus-evaluation option for clients who want a wider net first (returns within a day), and a human alert service where a real person checks the client's programs daily and sends a report. The positioning is that both halves of the market are broken — automated tools return phantom seats, human desks are too slow — so we sell both and let the client pick the trade. No club model, no membership tiers copied from any competitor, no country-specific targeting, no founder-story section. Built from scratch as a distinct product with a distinct visual identity.",
+    "hard_constraints": [
+      "No tier names resembling Explore / Platinum / Black or any other three-tier membership naming",
+      "No service named 'Points Flight Concierge' or close variants",
+      "No dark background + orange/gold palette",
+      "No country-specific stats, currency defaults, or ABN/legal-entity footer language — site must read as global",
+      "No fabricated social proof (customer counts, dollar totals, review counts) — this is a new brand with no track record yet, trust has to come from the mechanism (human verification), not borrowed authority",
+      "No 'club', 'membership', or founder-narrative section anywhere in copy or navigation"
     ]
   },
 
-  "stack": {
-    "framework": "Next.js 14 (App Router)",
-    "language": "TypeScript",
-    "styling": "Tailwind CSS v3",
-    "animation": ["Framer Motion v11", "GSAP v3 + ScrollTrigger plugin"],
-    "fonts": {
-      "display": "Canela or Playfair Display — for large premium headlines",
-      "body": "Inter or Outfit — clean, readable, modern",
-      "accent": "DM Mono — for stats, numbers, labels"
+  "brand": {
+    "palette_verdict": "Adopted the NUDE board (Davis Humphries). Supersedes the earlier cream tokens. Rich Romance was rejected before for its wine and dusty-rose tones; NUDE carries one comparable tone at #A48374, which is held OUT of the UI for that reason — see palette_notes.rose_withheld. The remaining five swatches map cleanly and are used exactly as given for surfaces.",
+    "palette_notes": {
+      "surfaces_are_exact": "#F1EDE6, #EBE3DB, #D1C7BD, #CBAD8D and #3A2D28 ship unmodified.",
+      "text_tones_are_derived": "Measured against #F1EDE6, only #3A2D28 clears WCAG for text (11.35:1). #A48374 is 2.96:1, #CBAD8D 1.82:1, #D1C7BD 1.43:1 — all unusable for copy. So ink_soft, ink_faint and accent_deep are derived in the same warm-brown family to stay legible: 5.62:1, 3.57:1 and 5.08:1 respectively. The board is a surface palette; it does not carry a readable mid-tone.",
+      "tan_is_decorative_only": "#CBAD8D is 1.82:1 on canvas. It is the accent for underlines, the mark, rules and borders — never for text. Accent-coloured text uses accent_deep.",
+      "rose_withheld": "#A48374 is defined but unused. It is the dusty-rose tone this project already rejected once as reading bridal/beauty. Say the word and it goes in; it fails text contrast either way, so it could only ever be a surface or decorative tone."
     },
-    "icons": "Lucide React",
-    "deployment": "Vercel",
-    "optional_cms": "Sanity v3 — for case studies and flight examples (add in Phase 3)"
+    "colors": {
+      "bg": "#F1EDE6",
+      "bg_card": "#EBE3DB",
+      "bg_card_hover": "#E4DACE",
+      "ink": "#3A2D28",
+      "ink_soft": "#6B5A50",
+      "ink_faint": "#877A70",
+      "accent": "#CBAD8D",
+      "accent_deep": "#7C5E45",
+      "border": "#DFD5C9",
+      "border_strong": "#D1C7BD",
+      "rose_unused": "#A48374"
+    },
+    "typography": {
+      "display": "Fraunces — used with restraint, headlines and section titles only",
+      "body": "Inter",
+      "utility_mono": "IBM Plex Mono — labels, route codes, prices, data points"
+    },
+    "logo": "Placeholder geometric mark only until naming is finalised. Do not let a temporary wordmark ship to production."
   },
 
-  "color_system": {
-    "background_primary": "#07090F",
-    "background_secondary": "#0E1220",
-    "background_card": "#13182A",
-    "accent_orange": "#E8963A",
-    "accent_orange_light": "#F2AA5E",
-    "accent_blue": "#3A6FE8",
-    "accent_gold": "#C9A84C",
-    "text_primary": "#F5F5F0",
-    "text_secondary": "#9DA3B4",
-    "text_muted": "#5C6378",
-    "border_subtle": "#1E2538",
-    "border_glow": "rgba(232, 150, 58, 0.3)"
+  "animation_philosophy": {
+    "summary": "Alive and light, not dramatic and heavy. The old plan used pinned dark GSAP text reveals built for a moody premium brand — that toolset is wrong for a cream, quiet-luxury identity. Motion here should feel like breathing, not staging. Nothing pins the screen. Nothing is designed to feel weighty or urgent.",
+    "rules": [
+      "Every animation must have a reason tied to content (a route drawing in, a number resolving, a card responding to hover) — no decorative motion with no informational job",
+      "All entrances under 0.6s, eased out, never bouncy or elastic — bounce reads playful-cheap, not alive-premium",
+      "Respect prefers-reduced-motion everywhere, no exceptions",
+      "Nothing loops indefinitely at a distracting speed — ambient motion should be slow enough to register as atmosphere, not animation"
+    ]
   },
 
   "animation_system": {
-    "philosophy": "Animate to add weight and drama at key moments only. Not everything moves. Motion should feel earned.",
     "entrance_default": {
-      "type": "fade-up",
-      "initial": { "opacity": 0, "y": 40 },
+      "type": "soft fade-rise",
+      "initial": { "opacity": 0, "y": 16 },
       "animate": { "opacity": 1, "y": 0 },
-      "transition": { "duration": 0.7, "ease": "easeOut" },
+      "transition": { "duration": 0.5, "ease": "easeOut" },
       "trigger": "whileInView",
       "once": true
     },
     "stagger_children": {
-      "delay_between": 0.1,
-      "usage": "Feature grids, case study cards, stat items"
+      "delay_between": 0.08,
+      "usage": "Product pillar cards, FAQ items, process steps"
     },
-    "loading_intro": {
-      "duration": 2000,
-      "sequence": ["logo_fade_in", "tagline_slide_up", "fade_out_all", "reveal_page"],
-      "library": "Framer Motion"
+    "route_line_draw": {
+      "library": "SVG stroke-dashoffset + GSAP ScrollTrigger or Framer Motion pathLength",
+      "usage": "A thin line traces a route between two points on a minimal world outline as the 'how it works' section scrolls into view — ties directly to the worldwide positioning without using a literal airplane icon",
+      "scrub": true
     },
-    "scroll_pinned_text": {
-      "library": "GSAP ScrollTrigger",
-      "usage": "Large statement text section — each line pins and reveals as user scrolls",
-      "pin": true,
-      "scrub": 1
+    "ambient_float": {
+      "usage": "One or two very low-opacity background shapes (a boarding-pass outline, a thin great-circle arc) drift a few pixels over 8-10s loops — background atmosphere only, never competes with foreground content",
+      "opacity_range": "0.03 - 0.08",
+      "movement": "translate 4-8px, slow ease-in-out loop"
     },
-    "counter_animation": {
-      "library": "GSAP",
-      "trigger": "ScrollTrigger — when stat enters viewport",
-      "duration": 2.5,
+    "route_strip_marquee": {
+      "usage": "Horizontal scrolling strip of world city codes (carried over from the mockup) — keep, it already does the 'worldwide' job well",
+      "speed": "slow, pause on hover"
+    },
+    "counter_reveal": {
+      "usage": "Only for real, concrete process facts (e.g. turnaround time, number of programs searched) — never for vanity metrics that don't exist yet",
+      "duration": 1.2,
       "ease": "power2.out"
     },
     "hover_card": {
-      "scale": 1.02,
-      "y": -4,
-      "shadow": "0 20px 60px rgba(232, 150, 58, 0.12)",
-      "transition": { "duration": 0.3 }
+      "y": -3,
+      "border_color": "accent",
+      "underline_reveal": "an accent-colored underline draws in under the card title on hover, left to right",
+      "transition": { "duration": 0.2 }
+    },
+    "eval_demo_interaction": {
+      "usage": "A small interactive teaser near the hero or 'how it works' section — user types or selects an example points balance, a result card animates in showing an example seat + savings. Makes 'AI-assisted' tangible instead of a claim in a sentence.",
+      "animation": "input to result: fade-rise result card in 0.4s after a short 'searching' micro-state (skeleton pulse, not a spinner)"
     },
     "page_transition": {
-      "library": "Framer Motion",
-      "type": "opacity fade",
-      "duration": 0.4
+      "type": "opacity cross-fade",
+      "duration": 0.3
     }
   },
-
-  "project_structure": {
-    "app": {
-      "layout.tsx": "Root layout — fonts, metadata, global providers",
-      "page.tsx": "Homepage — all sections composed here",
-      "globals.css": "Tailwind base, custom scrollbar, root CSS variables",
-      "membership": {
-        "page.tsx": "Full membership tiers detail page"
-      },
-      "points-concierge": {
-        "page.tsx": "Concierge booking detail page"
-      },
-      "about": {
-        "page.tsx": "About the founders and company"
-      },
-      "podcast": {
-        "page.tsx": "Podcast episodes listing"
-      },
-      "contact": {
-        "page.tsx": "Contact and application form"
-      }
-    },
-    "components": {
-      "layout": {
-        "Navbar.tsx": "Sticky navigation with transparent-to-solid scroll behavior",
-        "Footer.tsx": "Full premium footer with columns, legal, social links",
-        "LoadingIntro.tsx": "Full-screen loading animation — Flexfume-style"
-      },
-      "sections": {
-        "HeroSection.tsx": "Main hero with parallax background and animated headline",
-        "MediaLogosSection.tsx": "Infinite scrolling media logo strip",
-        "StatementTextSection.tsx": "GSAP scroll-pinned large statement text",
-        "TwoPathsSection.tsx": "Concierge vs Membership split card section",
-        "FlightSavingsSection.tsx": "Interactive flight route savings comparison",
-        "StatsSection.tsx": "Animated counters — points, members, years",
-        "CaseStudiesSection.tsx": "Member stories with savings cards",
-        "WhyDifferentSection.tsx": "Six feature blocks with staggered animation",
-        "MembershipTiersSection.tsx": "Three-tier overview — Explore, Platinum, Black",
-        "PodcastSection.tsx": "Three latest podcast episodes",
-        "FAQSection.tsx": "Accordion FAQ with common objections",
-        "FinalCTASection.tsx": "Dark closing CTA with urgency line"
-      },
-      "ui": {
-        "AnimatedCounter.tsx": "Reusable GSAP counter component",
-        "ScrollReveal.tsx": "Reusable Framer Motion entrance wrapper",
-        "CTAButton.tsx": "Primary and secondary button variants with hover states",
-        "SectionLabel.tsx": "Small uppercase label above section titles",
-        "TierCard.tsx": "Membership tier card component",
-        "CaseStudyCard.tsx": "Member case study card",
-        "FAQItem.tsx": "Single accordion FAQ item",
-        "PodcastCard.tsx": "Single podcast episode card",
-        "FlightRouteCard.tsx": "Flight savings comparison card"
-      }
-    },
-    "lib": {
-      "animations.ts": "Shared Framer Motion variants and GSAP helper functions",
-      "constants.ts": "All site copy, data arrays, config values",
-      "types.ts": "TypeScript interfaces for all data shapes"
-    },
-    "public": {
-      "images": "All static images — hero, flights, member photos",
-      "fonts": "Self-hosted font files if not using Google Fonts",
-      "logo": "SVG logo files"
-    }
-  },
-
-  "sections": [
-    {
-      "id": "loading_intro",
-      "name": "Loading Intro",
-      "status": "new",
-      "component": "LoadingIntro.tsx",
-      "description": "Full-screen dark overlay with logo animating in, tagline fading up, then fades out to reveal the page. Runs once per session.",
-      "animation": {
-        "library": "Framer Motion",
-        "sequence": [
-          { "step": 1, "element": "logo", "animation": "fade in + scale from 0.8 to 1", "delay": 0.2, "duration": 0.8 },
-          { "step": 2, "element": "tagline", "animation": "slide up + fade in", "delay": 0.8, "duration": 0.6 },
-          { "step": 3, "element": "overlay", "animation": "fade out entire screen", "delay": 1.8, "duration": 0.5 }
-        ]
-      },
-      "content": {
-        "logo": "PointIQ SVG",
-        "tagline": "Never Fly Economy Again."
-      },
-      "notes": "Use sessionStorage to only show once per browser session. Skip button optional."
-    },
-    {
-      "id": "navbar",
-      "name": "Navigation",
-      "status": "improved",
-      "component": "Navbar.tsx",
-      "description": "Sticky navbar. Starts transparent over hero. Becomes solid dark background on scroll past 80px. Mobile hamburger menu with slide-in panel.",
-      "links": [
-        { "label": "About", "href": "/about" },
-        { "label": "PointIQ", "href": "/membership", "has_dropdown": true },
-        { "label": "Points Concierge", "href": "/points-concierge" },
-        { "label": "Podcast", "href": "/podcast" },
-        { "label": "Contact", "href": "/contact" }
-      ],
-      "cta_buttons": [
-        { "label": "Book A Seat", "href": "/points-concierge", "variant": "ghost" },
-        { "label": "Join The Club", "href": "/membership", "variant": "primary" }
-      ],
-      "animation": "Framer Motion — navbar background opacity transitions on scroll using useScroll hook"
-    },
-    {
-      "id": "hero",
-      "name": "Hero Section",
-      "status": "improved",
-      "component": "HeroSection.tsx",
-      "description": "Full viewport height. Dark background with slow parallax image of Business Class cabin. Headline animates in word by word. Two CTAs below. Floating trust badge.",
-      "content": {
-        "headline_line1": "The Ultimate Travel Advantage",
-        "headline_line2": "for Business Owners",
-        "subheadline": "Turn every dollar you spend into Business Class freedom, exclusive experiences, and a private community of leaders who never fly economy again.",
-        "cta_primary": { "label": "Join PointIQ", "href": "/membership" },
-        "cta_secondary": { "label": "Book One Seat With Points", "href": "/points-concierge" },
-        "trust_badge": "6,000+ members · $1B+ points redeemed · 12 years"
-      },
-      "animation": {
-        "background": "GSAP parallax — background image moves at 0.4x scroll speed",
-        "headline": "Framer Motion — each word fades up with 0.05s stagger delay",
-        "subheadline": "Framer Motion — fade in after headline completes, delay 0.8s",
-        "ctas": "Framer Motion — fade in from below, delay 1.2s",
-        "trust_badge": "Framer Motion — fade in last, delay 1.5s"
-      }
-    },
-    {
-      "id": "media_logos",
-      "name": "Media Social Proof Strip",
-      "status": "improved",
-      "component": "MediaLogosSection.tsx",
-      "description": "Thin horizontal strip. Label: TRUSTED AND FEATURED IN. Logos scroll infinitely left in a seamless loop. No duplicate images — use SVG or text-based logos.",
-      "logos": ["9 News", "The Australian", "2GB", "news.com.au", "SBS News", "Sky News", "7 News", "10 News", "Sunrise", "Velocity Frequent Flyer"],
-      "animation": {
-        "type": "infinite horizontal scroll",
-        "library": "CSS animation — translate keyframes, duplicated list for seamless loop",
-        "speed": "30s linear infinite",
-        "pause_on_hover": true
-      }
-    },
-    {
-      "id": "statement_text",
-      "name": "Scroll-Pinned Statement Text",
-      "status": "new",
-      "component": "StatementTextSection.tsx",
-      "description": "Flexfume-style section. Three massive lines of text. Section pins to the screen as user scrolls. Each line reveals sequentially triggered by scroll progress. Dark background with subtle grain texture.",
-      "content": {
-        "line1": "YOU'RE SPENDING MILLIONS",
-        "line2": "FLYING ECONOMY.",
-        "line3": "THAT ENDS HERE."
-      },
-      "typography": {
-        "font_size": "clamp(48px, 8vw, 120px)",
-        "font_weight": "700",
-        "letter_spacing": "-0.02em",
-        "color_default": "rgba(255,255,255,0.15)",
-        "color_active": "#F5F5F0",
-        "line3_color": "#E8963A"
-      },
-      "animation": {
-        "library": "GSAP ScrollTrigger",
-        "pin": true,
-        "scrub": 1.5,
-        "trigger": "section itself",
-        "each_line": "opacity 0.15 to 1 at different scroll progress points (0-33%, 33-66%, 66-100%)"
-      }
-    },
-    {
-      "id": "two_paths",
-      "name": "Two Ways to Fly Smarter",
-      "status": "improved",
-      "component": "TwoPathsSection.tsx",
-      "description": "Side by side cards. Left: Concierge (one-time). Right: Membership (ongoing). Each card has an image, price/detail, and CTA. Clear visual language for the difference.",
-      "cards": [
-        {
-          "id": "concierge",
-          "label": "AD-HOC",
-          "title": "Points Flight Concierge",
-          "description": "You already have points. We find and book the Business Class seat for you. One trip, handled completely.",
-          "price": "$1,900 per return Business Class seat",
-          "cta_label": "Book With Points",
-          "cta_href": "/points-concierge",
-          "accent_color": "#3A6FE8"
-        },
-        {
-          "id": "membership",
-          "label": "ONGOING",
-          "title": "PointIQ Membership",
-          "description": "For business owners who want this every year. Ongoing strategy, bookings, and guaranteed Business Class returns.",
-          "price": "From $X,XXX/year — Members save $5K–$10K per seat",
-          "cta_label": "Explore Memberships",
-          "cta_href": "/membership",
-          "accent_color": "#E8963A"
-        }
-      ],
-      "animation": {
-        "entrance": "Both cards slide in from opposite sides — left card from left, right card from right",
-        "hover": "Card lifts 4px, border glow with card's accent color",
-        "library": "Framer Motion whileInView + whileHover"
-      }
-    },
-    {
-      "id": "flight_savings",
-      "name": "Flight Savings Comparison",
-      "status": "improved",
-      "component": "FlightSavingsSection.tsx",
-      "description": "Shows what Business Class seats cost in points vs. retail cash. Three routes displayed as cards. Highlight the gap visually. Add 'what that saving gets you' line.",
-      "routes": [
-        {
-          "from": "Sydney",
-          "to": "Los Angeles",
-          "cabin": "Business Class",
-          "points_cost": "204,000 pts",
-          "retail_cost": "$10,000+",
-          "saving_equivalent": "A business laptop, two months of software, or a family weekend away",
-          "image": "/images/los-angeles.jpg"
-        },
-        {
-          "from": "Sydney",
-          "to": "London",
-          "cabin": "Business Class",
-          "points_cost": "332,600 pts",
-          "retail_cost": "$12,000+",
-          "saving_equivalent": "Two months of office rent or a team offsite trip",
-          "image": "/images/london.jpg"
-        },
-        {
-          "from": "Sydney",
-          "to": "Paris",
-          "cabin": "Business Class",
-          "points_cost": "360,000 pts",
-          "retail_cost": "$12,000+",
-          "saving_equivalent": "A full marketing campaign or new hire onboarding budget",
-          "image": "/images/paris.jpg"
-        }
-      ],
-      "animation": {
-        "cards": "Framer Motion stagger entrance — each card fades up 0.15s after the previous",
-        "savings_bar": "GSAP — animated bar showing the ratio of points value vs retail cost"
-      }
-    },
-    {
-      "id": "stats",
-      "name": "Animated Stats Bar",
-      "status": "new",
-      "component": "StatsSection.tsx",
-      "description": "Full-width dark section. Three stats with labels. Numbers count up from 0 when section enters the viewport. Pure authority signal.",
-      "stats": [
-        { "value": 1000000000, "prefix": "$", "suffix": "+", "label": "Points Redeemed for Australians", "display": "$1,000,000,000+" },
-        { "value": 6000, "prefix": "", "suffix": "+", "label": "Business Owners Trust Us", "display": "6,000+" },
-        { "value": 12, "prefix": "", "suffix": " Years", "label": "Of Points Expertise", "display": "12 Years" }
-      ],
-      "animation": {
-        "library": "GSAP",
-        "trigger": "ScrollTrigger — when section enters viewport",
-        "count_duration": 2.5,
-        "ease": "power2.out",
-        "section_entrance": "Framer Motion fade up"
-      }
-    },
-    {
-      "id": "case_studies",
-      "name": "Member Case Studies",
-      "status": "improved",
-      "component": "CaseStudiesSection.tsx",
-      "description": "Real member stories with spending level, savings, and business type. Scrollable cards on mobile. Each card shows a short member quote.",
-      "members": [
-        {
-          "name": "Clara",
-          "business_type": "eCommerce",
-          "turnover": "$1M",
-          "result": "3 Business Class return flights",
-          "saving": "$20,000+",
-          "quote": "I had no idea my supplier payments were worth this much.",
-          "tier": "Explore"
-        },
-        {
-          "name": "Sarah & Mitch",
-          "business_type": "Fashion Label",
-          "turnover": "$3M",
-          "result": "6 Business Class flights",
-          "saving": "$50,000+",
-          "quote": "We fly as a couple now. Business Class, every time.",
-          "tier": "Platinum"
-        },
-        {
-          "name": "Antony",
-          "business_type": "Local Builder",
-          "turnover": "$5M+",
-          "result": "10+ Business Class flights",
-          "saving": "$100,000+",
-          "quote": "My accountant couldn't believe how much we were leaving on the table.",
-          "tier": "Black"
-        }
-      ],
-      "animation": {
-        "entrance": "Framer Motion stagger — cards animate in left to right with 0.15s delay each",
-        "hover": "Card tilts 1-2deg on hover (Framer Motion rotateY), slight lift and shadow",
-        "library": "Framer Motion"
-      }
-    },
-    {
-      "id": "why_different",
-      "name": "Why PointIQ is Different",
-      "status": "improved",
-      "component": "WhyDifferentSection.tsx",
-      "description": "Six feature blocks arranged in a 3x2 grid. Each has an icon, title, and 1-2 sentence description. They animate in with stagger. Icons are better quality than original.",
-      "features": [
-        { "icon": "Brain", "title": "Proven Strategy", "description": "12+ years of expertise. Billions of points redeemed. A system that delivers results, not promises." },
-        { "icon": "Plane", "title": "Concierge Booking", "description": "Our team handles everything — from complex redemptions to securing flatbed seats." },
-        { "icon": "Star", "title": "Exclusive Access", "description": "Closed-group deals, private events, and VIP privileges that aren't available to the public." },
-        { "icon": "Shield", "title": "Guaranteed Value", "description": "Members save $5K–$10K per seat every trip, or we keep working until you do." },
-        { "icon": "Map", "title": "Curated Experiences", "description": "Retreats, events, and journeys across seven continents that go well beyond just getting a flight." },
-        { "icon": "Users", "title": "Premium Community", "description": "A curated circle of ambitious business owners who treat travel as a competitive advantage." }
-      ],
-      "animation": {
-        "library": "Framer Motion",
-        "grid_entrance": "staggerChildren 0.1s, each item fades up",
-        "icon_animation": "Each icon does a subtle scale pulse on section entrance"
-      }
-    },
-    {
-      "id": "membership_tiers",
-      "name": "Membership Tiers Preview",
-      "status": "new",
-      "component": "MembershipTiersSection.tsx",
-      "description": "Three tier cards on the homepage. Enough detail to differentiate them clearly. Each has a 'Learn More' CTA to the full membership page. Black tier gets premium visual treatment.",
-      "tiers": [
-        {
-          "id": "explore",
-          "name": "Explore",
-          "target": "Business owners spending $300K–$1M annually",
-          "key_benefit": "Start turning everyday expenses into Business Class seats",
-          "included": ["Points strategy sessions", "Concierge bookings", "Member community access"],
-          "cta_label": "Learn About Explore",
-          "cta_href": "/membership#explore",
-          "visual_style": "Standard dark card with blue accent border"
-        },
-        {
-          "id": "platinum",
-          "name": "Platinum",
-          "target": "Founders spending $1M+ annually",
-          "key_benefit": "Guaranteed Business Class flights every year",
-          "included": ["Everything in Explore", "Guaranteed seat allocation", "Priority concierge", "Exclusive member events"],
-          "cta_label": "Learn About Platinum",
-          "cta_href": "/membership#platinum",
-          "visual_style": "Slightly elevated card, orange accent border, badge: MOST POPULAR"
-        },
-        {
-          "id": "black",
-          "name": "Black",
-          "target": "High-spenders wanting $100K+ in premium travel value",
-          "key_benefit": "VIP experiences, private events, and elite-level access",
-          "included": ["Everything in Platinum", "$100K+ travel value annually", "Private events", "Dedicated account manager", "First Class upgrades"],
-          "cta_label": "Learn About Black",
-          "cta_href": "/membership#black",
-          "visual_style": "Dark charcoal card with gold border, shimmer animation, badge: ELITE"
-        }
-      ],
-      "animation": {
-        "entrance": "Framer Motion — three cards stagger in from bottom",
-        "black_card_shimmer": "CSS animation — diagonal gold shimmer sweep on hover",
-        "hover": "Cards lift 4px, border brightens"
-      }
-    },
-    {
-      "id": "podcast",
-      "name": "Podcast Section",
-      "status": "new",
-      "component": "PodcastSection.tsx",
-      "description": "Showcase the Always Business Class podcast. Three most recent episodes. Drives authority and gives search engines real content.",
-      "content": {
-        "section_label": "ALWAYS BUSINESS CLASS PODCAST",
-        "section_title": "Real Conversations About Flying Smarter",
-        "cta_label": "See All Episodes",
-        "cta_href": "/podcast"
-      },
-      "episode_card_fields": ["episode_number", "title", "guest_name", "duration", "cover_image", "listen_url"],
-      "animation": {
-        "entrance": "Framer Motion stagger fade up",
-        "hover": "Card lifts slightly, play button scales up"
-      }
-    },
-    {
-      "id": "faq",
-      "name": "FAQ Section",
-      "status": "new",
-      "component": "FAQSection.tsx",
-      "description": "Accordion FAQ. Reduces sales friction by answering objections before they stop a conversion. Structured data markup added for Google FAQ rich results.",
-      "questions": [
-        { "q": "What points programs do you work with?", "a": "We work with Qantas Frequent Flyer, Velocity, American Express Membership Rewards, and several bank transfer partners. Our team finds the best program for your situation." },
-        { "q": "Do I need a lot of existing points to get started?", "a": "Not necessarily. The Concierge service requires you already have points. PointIQ Membership is about building and strategically using your points over time — we help you accumulate them through your existing business spend." },
-        { "q": "What businesses qualify for membership?", "a": "Any Australian business spending $300K+ annually on cards or eligible expenses. Sole traders, companies, and trusts all qualify." },
-        { "q": "What is the difference between Concierge and Membership?", "a": "Concierge is a one-off service — you have points, we book your seat. Membership is an ongoing relationship where we build your strategy, manage your points, and guarantee Business Class seats every year." },
-        { "q": "How does the guaranteed value promise work?", "a": "If your membership doesn't deliver at least $5,000–$10,000 in value per Business Class seat, we keep working until it does. We stand behind the numbers." },
-        { "q": "Can my partner or family use the membership?", "a": "Yes. Depending on your tier, membership benefits can extend to travel companions. Our team will walk you through what applies to your situation." }
-      ],
-      "animation": {
-        "accordion_open": "Framer Motion height animation — smooth expand/collapse",
-        "entrance": "Framer Motion — questions fade up on scroll"
-      },
-      "seo": {
-        "schema_type": "FAQPage",
-        "add_json_ld": true
-      }
-    },
-    {
-      "id": "final_cta",
-      "name": "Final CTA Section",
-      "status": "improved",
-      "component": "FinalCTASection.tsx",
-      "description": "Clean, dark closing section. One headline, one CTA button, one urgency line. No clutter. Makes the last scroll stop count.",
-      "content": {
-        "headline": "Stop Leaving Business Class on the Table",
-        "subheadline": "Your business is already spending the money. The only question is whether you're getting anything back from it.",
-        "cta_label": "Apply for Membership",
-        "cta_href": "/membership",
-        "urgency_line": "Membership applications are reviewed monthly. Spots are limited per intake."
-      },
-      "animation": {
-        "headline": "Framer Motion — word by word fade up",
-        "cta_button": "Pulse glow animation on button after 3 seconds on screen"
-      }
-    },
-    {
-      "id": "footer",
-      "name": "Footer",
-      "status": "improved",
-      "component": "Footer.tsx",
-      "description": "Premium footer with logo, three link columns, social links, media strip, and legal. Replaces the current minimal footer.",
-      "columns": [
-        {
-          "heading": "Product",
-          "links": [
-            { "label": "Join PointIQ", "href": "/membership" },
-            { "label": "Membership Tiers", "href": "/membership#tiers" },
-            { "label": "Points Concierge", "href": "/points-concierge" }
-          ]
-        },
-        {
-          "heading": "Company",
-          "links": [
-            { "label": "About Us", "href": "/about" },
-            { "label": "Podcast", "href": "/podcast" },
-            { "label": "Contact", "href": "/contact" },
-            { "label": "Media & Press", "href": "/about#media" }
-          ]
-        },
-        {
-          "heading": "Resources",
-          "links": [
-            { "label": "How It Works", "href": "/membership#how-it-works" },
-            { "label": "FAQ", "href": "/#faq" },
-            { "label": "Member Stories", "href": "/membership#case-studies" },
-            { "label": "Privacy Policy", "href": "/privacy" }
-          ]
-        }
-      ],
-      "social_links": ["Instagram", "Facebook", "LinkedIn", "YouTube"],
-      "legal": {
-        "copyright": "© 2026 PointIQ. All rights reserved.",
-        "abn": "ABN: [INSERT]"
-      },
-      "as_seen_in_strip": "Thin text row: AS SEEN IN: 9 News · The Australian · Sky News · SBS · 7 News · 10 News"
-    }
-  ],
 
   "pages": [
     {
       "path": "/",
-      "title": "PointIQ — Never Fly Economy Again",
-      "description": "Australia's premier Business Class travel membership for business owners. Turn everyday expenses into guaranteed flat-bed flights and VIP experiences.",
-      "sections_order": ["loading_intro", "navbar", "hero", "media_logos", "statement_text", "two_paths", "flight_savings", "stats", "case_studies", "why_different", "membership_tiers", "podcast", "faq", "final_cta", "footer"]
+      "sections_order": ["navbar", "hero", "route_strip", "how_it_works", "product_pillars", "eval_demo", "faq", "final_cta", "footer"]
     },
     {
-      "path": "/membership",
-      "title": "Membership Tiers — Explore, Platinum, Black | PointIQ",
-      "description": "Choose the membership that fits your business spend. From $300K to $5M+, we have a tier that turns your expenses into Business Class freedom.",
-      "sections_order": ["navbar", "membership_hero", "tier_detail_explore", "tier_detail_platinum", "tier_detail_black", "how_it_works_steps", "member_stories", "faq", "final_cta", "footer"]
+      "path": "/how-it-works",
+      "sections_order": ["navbar", "process_detail_hero", "step_ai_evaluation", "step_human_verification", "step_booking_or_alert", "faq", "final_cta", "footer"]
     },
     {
-      "path": "/points-concierge",
-      "title": "Points Flight Concierge — Book Business Class With Your Points",
-      "description": "Already have Qantas or Velocity points? Our expert team finds and books your Business Class seat. One trip, handled completely. $1,900 per return seat.",
-      "sections_order": ["navbar", "concierge_hero", "how_concierge_works", "example_routes", "pricing_clear", "trust_signals", "faq_concierge", "cta", "footer"]
+      "path": "/pricing",
+      "sections_order": ["navbar", "pricing_hero", "tier_free_evaluation", "tier_full_plan_299", "tier_subscription", "comparison_table", "faq", "final_cta", "footer"]
+    },
+    {
+      "path": "/about",
+      "sections_order": ["navbar", "about_hero", "why_human_verification", "how_we_make_money", "footer"],
+      "note": "No founder-story section per brief. Use this page to explain the verification mechanism and business model transparently instead — that's the trust asset for a brand with no track record yet."
+    },
+    {
+      "path": "/contact",
+      "sections_order": ["navbar", "contact_form", "footer"]
     }
   ],
 
-  "seo": {
-    "default_title_template": "%s | PointIQ",
-    "og_image": "/images/og-default.jpg",
-    "twitter_card": "summary_large_image",
-    "schema_types": ["Organization", "FAQPage", "BreadcrumbList"],
-    "sitemap": true,
-    "robots_txt": true,
-    "performance_targets": {
-      "lighthouse_score": 90,
-      "lcp": "under 2.5s",
-      "cls": "under 0.1",
-      "image_format": "WebP with JPEG fallback",
-      "font_loading": "font-display: swap"
-    }
-  },
-
-  "phases": [
+  "sections": [
     {
-      "phase": 1,
-      "name": "Clone and Fix",
-      "goal": "Get all 14 homepage sections built with static content and basic Framer Motion entrance animations",
-      "tasks": [
-        "Initialise Next.js 14 project with TypeScript and Tailwind",
-        "Install Framer Motion, GSAP, GSAP ScrollTrigger, Lucide React",
-        "Set up color system and font variables in globals.css and tailwind.config",
-        "Build Navbar with scroll behavior",
-        "Build Hero section with word-by-word animation",
-        "Build Media logos infinite scroll strip",
-        "Build Two Paths section",
-        "Build Flight Savings section",
-        "Build Case Studies section",
-        "Build Why Different section",
-        "Build Membership Tiers preview section",
-        "Build FAQ accordion section",
-        "Build Final CTA section",
-        "Build Footer"
-      ],
-      "deliverable": "Fully structured homepage — all sections present, entrance animations working"
+      "id": "hero",
+      "content_direction": "The broken-system framing. Automated award search is fast and full of phantom seats; human award desks are accurate and slow. Both halves are broken, so we sell both and let the visitor choose the trade. Lead with the problem, not a vanity stat. Worldwide language, no region references. CTA drives to the free evaluation.",
+      "cta_primary": "Get my free evaluation",
+      "cta_secondary": "See how it works"
     },
     {
-      "phase": 2,
-      "name": "Add the Power",
-      "goal": "Add the premium animation layer that makes this feel like a high-end product",
-      "tasks": [
-        "Build LoadingIntro component with Framer Motion sequence",
-        "Build GSAP scroll-pinned Statement Text section",
-        "Implement GSAP counter animations on Stats section",
-        "Add hover states to all cards (lift, glow, tilt)",
-        "Implement Black tier shimmer animation on Membership Tiers",
-        "Add parallax effect to Hero background",
-        "Add smooth page transitions",
-        "Build Podcast section with episode cards",
-        "Add urgency pulse animation to Final CTA button"
-      ],
-      "deliverable": "Full premium animation experience — Flexfume-level visual quality"
+      "id": "how_it_works",
+      "content_direction": "Three concrete steps: tell us what you hold -> choose your search (by hand: a person works it program by program and opens every booking; or AI-first: wider net, evaluation back within a day, machine-read and NOT human-confirmed) -> book the plan, or put the alert service on it. This section carries the trust weight that vanity stats would normally carry, so it must be specific and mechanical. State each mode's real trade-off; do not sell them as equally good."
     },
     {
-      "phase": 3,
-      "name": "Polish and Launch",
-      "goal": "Production-ready — performance, SEO, mobile, and full page set",
-      "tasks": [
-        "Full mobile responsiveness audit and fixes",
-        "Performance pass — WebP images, lazy loading, font optimisation",
-        "Lighthouse audit — target 90+ score",
-        "Add JSON-LD structured data (Organization, FAQPage)",
-        "Build /membership full page",
-        "Build /points-concierge full page",
-        "Build /about page",
-        "Add sitemap.xml and robots.txt",
-        "Deploy to Vercel",
-        "Optional: Integrate Sanity CMS for case studies and podcast episodes"
-      ],
-      "deliverable": "Live, production-quality website"
+      "id": "product_pillars",
+      "cards": [
+        { "id": "free_evaluation", "name": "AI evaluation", "price": "$0, limit 2", "description": "Tool searches wide across programs, an AI reads the results against the balance, back within a day. A machine read — explicitly NOT a confirmed seat. That distinction is the product line; never blur it." },
+        { "id": "full_plan_booking", "name": "Manual search", "price": "$299 one-time", "description": "Fully manual. A person works the case by hand, program by program, opens each booking, confirms the seat is really there, and hands over a plan to act on." },
+        { "id": "subscription", "name": "Human alert service", "price": "recurring", "description": "A real person checks the client's specific programs every day and sends a report. Not an automated feed — someone actually looking, then writing." }
+      ]
+    },
+    {
+      "id": "eval_demo",
+      "content_direction": "Interactive, lightweight, makes the AI evaluation tangible. Not a full product demo, a teaser. Two things the copy must keep honest: the real evaluation takes a day (the preview is instant only because the data is pre-written), and nothing in it is human-confirmed — that is what the manual search adds."
+    },
+    {
+      "id": "faq",
+      "content_direction": "Answer what a skeptical worldwide visitor actually asks: what a phantom seat is and why tools keep showing them, how this beats searching yourself, the difference between the free AI evaluation and the paid manual search, and whether the AI can be wrong. Answer that last one YES — the product is a choice between a fast machine read and a slow human one, and defending the AI would erase the distinction the manual search is sold on. Mechanism, never a promise with a number attached."
     }
   ],
 
-  "install_commands": {
-    "init": "npx create-next-app@latest flights-club --typescript --tailwind --app --src-dir --import-alias '@/*'",
-    "dependencies": "npm install framer-motion gsap @gsap/react lucide-react clsx tailwind-merge",
-    "dev_dependencies": "npm install -D @types/node prettier prettier-plugin-tailwindcss",
-    "optional_cms": "npm install next-sanity @sanity/image-url"
-  },
+  "copy_rules": [
+    "Active voice, plain verbs — 'we verify the seat,' not 'seat verification is performed'",
+    "No absolute guarantees with numbers attached (no '0% ghost flights', no '100% success rate') — describe the mechanism instead of promising an outcome",
+    "No borrowed vanity metrics — this is a new brand, say what's true today, not what a competitor says about itself",
+    "No region-specific currency, spend brackets, or legal-entity references — write for a reader who could be anywhere",
+    "Every button label states exactly what happens next, not a vague verb — 'Get my free evaluation,' not 'Get started'"
+  ],
 
-  "notes_for_copilot": [
-    "Always use 'use client' directive on components that use Framer Motion or GSAP hooks",
-    "Wrap GSAP ScrollTrigger setup inside useLayoutEffect with a gsap.context() for proper cleanup",
-    "Use Framer Motion's whileInView with once: true for all section entrance animations — don't replay on scroll back",
-    "All images should use Next.js <Image> component with WebP format and explicit width/height",
-    "Tailwind classes only — no inline style objects unless absolutely necessary for GSAP targets",
-    "Keep all copy and data in /lib/constants.ts — never hardcode content inside components",
-    "All components should be typed with TypeScript interfaces from /lib/types.ts",
-    "The Loading Intro should check sessionStorage before rendering — skip on repeat visits",
-    "The Navbar background transition uses Framer Motion useScroll + useTransform for smooth opacity",
-    "Mobile breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px) — always design mobile first"
-  ]
+  "notes_for_builder": [
+    "Build homepage first with static copy and the entrance + hover animation layer only — get the palette and type system approved in context before adding the route-line-draw and ambient-float layers",
+    "The eval_demo interaction can be faked with static example data for now — no real seat.aero or AI call needed until the visual and motion are approved",
+    "Keep all animation timings and easing centralized in one file (animations.ts equivalent) so the 'alive but light' feel stays consistent across pages instead of drifting page to page",
+    "Do not reuse any component names, copy fragments, or asset files from the old iFlyFlat-clone project — start these files clean"
+  ],
+
+  "build_state": {
+    "note": "What has actually shipped against this plan. Update as work lands.",
+    "done": [
+      "Design tokens — NUDE palette + typography in src/app/globals.css and tailwind.config.ts",
+      "Centralized motion tokens in src/lib/animations.ts",
+      "Homepage (/) — all 9 sections, entrance + hover animation layer only, static copy",
+      "ActionButton — the single CTA treatment (ink fill, arrow travels on hover, 2px lift, warm shadow). Every CTA routes through it so the treatment cannot drift.",
+      "PointerCursor — ink dot with a trailing accent-deep ring. Rewritten, not ported: CSS now hides the native cursor only once the component mounts and adds .has-custom-cursor, so it fails safe. Skipped on touch and under prefers-reduced-motion; text inputs keep their caret."
+    ],
+    "deferred_pending_palette_approval": [
+      "route_line_draw layer inside how_it_works",
+      "ambient_float background shapes",
+      "/how-it-works, /pricing, /about, /contact"
+    ],
+    "carried_over_context": [
+      "The site sits behind an under-construction wall (src/proxy.ts). Only signed-in admins see the homepage; the public gets a 503 notice. See docs/maintenance-mode.md.",
+      "Domain savermiles.com is settled, but project.status says the brand name is not finalised. SITE_NAME is kept for <title> only; the UI ships a geometric placeholder mark and no text wordmark, per brand.logo.",
+      "Stripe/Supabase/Resend integration layer and the admin portal survive from the previous build and are untouched by this plan. Server code still redirects to pages that no longer exist — see docs/README.md 'Dangling references' before launch."
+    ]
+  }
 }

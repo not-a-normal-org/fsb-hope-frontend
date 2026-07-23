@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saver Miles — 3-Way Mode Switch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'IBM Plex Sans', sans-serif;
+    background:#15181D;
+    padding:40px 20px 90px;
+  }
+  h1{font-family:'Zilla Slab', serif; font-size:26px; text-align:center; color:#F2F2F0; margin-bottom:6px;}
+  .lead{text-align:center; color:#9A9DA3; font-size:14px; margin-bottom:36px; max-width:600px; margin-left:auto; margin-right:auto;}
+
+  .stage{
+    max-width:920px; margin:0 auto; border-radius:16px; overflow:hidden;
+    position:relative; min-height:620px; transition:background .4s ease;
+  }
+  .toolbar{
+    position:absolute; top:18px; right:18px; z-index:10;
+    display:flex; border:1px solid rgba(255,255,255,0.25); border-radius:20px; overflow:hidden;
+    backdrop-filter:blur(12px); background:rgba(255,255,255,0.08);
+  }
+  .mode-btn{
+    background:transparent; border:none; color:#F2F2F0; font-family:'IBM Plex Mono';
+    font-size:10px; padding:8px 14px; cursor:pointer; letter-spacing:0.06em; opacity:0.55;
+  }
+  .mode-btn.active{opacity:1; background:rgba(255,255,255,0.15);}
+
+  .blob{position:absolute; border-radius:50%; filter:blur(75px); transition:background .4s ease;}
+  .b1{width:360px; height:360px; top:-90px; left:-70px;}
+  .b2{width:300px; height:300px; bottom:-70px; right:-50px;}
+  .b3{width:230px; height:230px; top:200px; right:100px;}
+
+  .content{position:relative; z-index:5; padding:92px 64px 70px;}
+
+  .glass-panel{
+    backdrop-filter:blur(22px) saturate(150%);
+    -webkit-backdrop-filter:blur(22px) saturate(150%);
+    border-radius:14px; padding:44px 40px; max-width:560px; transition:all .4s ease;
+  }
+
+  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:16px; font-weight:500; transition:color .4s ease;}
+
+  .glass-text{
+    font-family:'Zilla Slab', serif; font-weight:700; font-size:36px; line-height:1.12; margin-bottom:16px;
+    background-size:200% auto;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+    animation:shine 6s linear infinite;
+  }
+  @keyframes shine{ to{ background-position:200% center; } }
+
+  .sub{font-size:15px; line-height:1.6; max-width:42ch; margin-bottom:30px; transition:color .4s ease;}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .cta{
+    padding:14px 26px; font-size:14.5px; font-weight:500; border-radius:30px; cursor:pointer;
+    font-family:'IBM Plex Sans'; border:1px solid transparent; transition:all .2s ease;
+    backdrop-filter:blur(10px);
+  }
+
+  .stat-strip{display:flex; gap:28px; margin-top:44px; flex-wrap:wrap;}
+  .stat{font-family:'IBM Plex Mono', monospace; font-size:11px; transition:color .4s ease;}
+  .stat b{display:block; font-family:'Zilla Slab', serif; font-size:20px; font-weight:700; margin-bottom:2px; transition:color .4s ease;}
+
+  .hint-bar{padding:18px 64px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; border-top:1px solid; position:relative; z-index:5;}
+</style>
+</head>
+<body>
+
+<h1>Saver Miles — Light / Dark / Mono</h1>
+<p class="lead">One switch, three states. Click each to feel the crossfade. Mono is dark-only by design, per the doc update.</p>
+
+<div class="stage" id="stage">
+  <div class="toolbar">
+    <button class="mode-btn" data-mode="light" onclick="setMode('light')">LIGHT</button>
+    <button class="mode-btn active" data-mode="dark" onclick="setMode('dark')">DARK</button>
+    <button class="mode-btn" data-mode="mono" onclick="setMode('mono')">MONO</button>
+  </div>
+  <div class="blob b1" id="blob1"></div>
+  <div class="blob b2" id="blob2"></div>
+  <div class="blob b3" id="blob3"></div>
+  <div class="content">
+    <div class="glass-panel" id="panel">
+      <div class="eyebrow" id="eyebrow">30+ Programs Checked By Hand</div>
+      <div class="glass-text" id="headline">Your points are sitting idle.<br>We find out what they're actually worth.</div>
+      <p class="sub" id="subcopy">Manual search across every major loyalty program. Real seats, not stale inventory.</p>
+      <div class="cta-row">
+        <button class="cta" id="ctaP">Check My Route — Free</button>
+        <button class="cta" id="ctaS">See How It Works</button>
+      </div>
+    </div>
+    <div class="stat-strip" id="statStrip">
+      <div class="stat"><b>14+ yrs</b>Experience</div>
+      <div class="stat"><b>23,000+</b>Searches</div>
+      <div class="stat"><b>30+</b>Programs</div>
+      <div class="stat"><b>#1</b>Verified</div>
+    </div>
+  </div>
+  <div class="hint-bar" id="hint"></div>
+</div>
+
+<script>
+const modes = {
+  dark:{
+    stageBg:'radial-gradient(circle at 20% 15%, #0F2038, #060B14 72%)',
+    blob1:'rgba(60,120,200,0.28)', blob2:'rgba(24,119,242,0.20)', blob3:'rgba(111,168,220,0.20)',
+    panelBg:'rgba(120,165,220,0.08)', panelBorder:'1px solid rgba(160,195,235,0.18)',
+    panelShadow:'0 20px 60px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)',
+    eyebrow:'#6FA8DC',
+    shine:'linear-gradient(100deg, #DCE8FB 0%, #FFFFFF 25%, #6FA8DC 45%, #EAF1FB 65%, #3E7CB1 100%)',
+    sub:'#A9BBD1', statLabel:'#7C8FA6', statNum:'#EAF1FB',
+    ctaBg:'#1877F2', ctaText:'#FFFFFF', ctaHover:'#3D8CF5',
+    secBorder:'rgba(111,168,220,0.4)', secText:'#EAF1FB', secHoverBg:'rgba(111,168,220,0.22)', secHoverText:'#EAF1FB',
+    hintBg:'#060B14', hintColor:'#5C7089', hintBorder:'rgba(111,168,220,0.15)',
+    note:'Blue Dark — the default mode new visitors see.'
+  },
+  light:{
+    stageBg:'radial-gradient(circle at 20% 15%, #F2F7FC, #DCE8F5 72%)',
+    blob1:'rgba(62,124,177,0.20)', blob2:'rgba(24,119,242,0.14)', blob3:'rgba(160,195,235,0.30)',
+    panelBg:'rgba(255,255,255,0.55)', panelBorder:'1px solid rgba(255,255,255,0.75)',
+    panelShadow:'0 20px 50px -20px rgba(10,37,64,0.18), inset 0 1px 0 rgba(255,255,255,0.6)',
+    eyebrow:'#3E7CB1',
+    shine:'linear-gradient(100deg, #0A2540 0%, #3E7CB1 25%, #0A2540 50%, #1877F2 75%, #0A2540 100%)',
+    sub:'#4B5A6B', statLabel:'#7C8FA6', statNum:'#0A2540',
+    ctaBg:'#1877F2', ctaText:'#FFFFFF', ctaHover:'#0A5FD1',
+    secBorder:'rgba(10,37,64,0.25)', secText:'#0A2540', secHoverBg:'rgba(255,255,255,0.8)', secHoverText:'#0A2540',
+    hintBg:'#EAF1FB', hintColor:'#5C7089', hintBorder:'rgba(10,37,64,0.1)',
+    note:'Blue Light — same brand, daylight-readable.'
+  },
+  mono:{
+    stageBg:'radial-gradient(circle at 20% 20%, #1C1D21, #0C0C0E 70%)',
+    blob1:'rgba(255,255,255,0.08)', blob2:'rgba(180,185,196,0.10)', blob3:'rgba(120,126,140,0.12)',
+    panelBg:'rgba(255,255,255,0.05)', panelBorder:'1px solid rgba(255,255,255,0.12)',
+    panelShadow:'0 20px 60px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)',
+    eyebrow:'#C9CDD3',
+    shine:'linear-gradient(100deg, #E7E8EA 0%, #FFFFFF 25%, #9BA0AA 45%, #F2F2F0 65%, #C9CDD3 100%)',
+    sub:'#A8ACB3', statLabel:'#7C8089', statNum:'#EDEDEB',
+    ctaBg:'rgba(255,255,255,0.92)', ctaText:'#111214', ctaHover:'#FFFFFF',
+    secBorder:'rgba(255,255,255,0.25)', secText:'#F2F2F0', secHoverBg:'rgba(255,255,255,0.14)', secHoverText:'#F2F2F0',
+    hintBg:'#0C0C0E', hintColor:'#6E7278', hintBorder:'rgba(255,255,255,0.08)',
+    note:'Mono — dark-only, no hue anywhere except the shine sweep and the semantic green (not shown here). Third option, not the default.'
+  }
+};
+
+function render(m){
+  const c = modes[m];
+  const stage = document.getElementById('stage');
+  stage.style.background = c.stageBg;
+  document.getElementById('blob1').style.background = c.blob1;
+  document.getElementById('blob2').style.background = c.blob2;
+  document.getElementById('blob3').style.background = c.blob3;
+
+  const panel = document.getElementById('panel');
+  panel.style.background = c.panelBg;
+  panel.style.border = c.panelBorder;
+  panel.style.boxShadow = c.panelShadow;
+
+  document.getElementById('eyebrow').style.color = c.eyebrow;
+  document.getElementById('headline').style.backgroundImage = c.shine;
+  document.getElementById('subcopy').style.color = c.sub;
+
+  document.querySelectorAll('.stat').forEach(s=> s.style.color = c.statLabel);
+  document.querySelectorAll('.stat b').forEach(s=> s.style.color = c.statNum);
+
+  const ctaP = document.getElementById('ctaP');
+  ctaP.style.background = c.ctaBg; ctaP.style.color = c.ctaText; ctaP.style.borderColor = c.ctaBg;
+  ctaP.onmouseenter = ()=>{ ctaP.style.background = c.ctaHover; };
+  ctaP.onmouseleave = ()=>{ ctaP.style.background = c.ctaBg; };
+
+  const ctaS = document.getElementById('ctaS');
+  ctaS.style.background = 'transparent'; ctaS.style.color = c.secText; ctaS.style.borderColor = c.secBorder;
+  ctaS.onmouseenter = ()=>{ ctaS.style.background = c.secHoverBg; ctaS.style.color = c.secHoverText; };
+  ctaS.onmouseleave = ()=>{ ctaS.style.background = 'transparent'; ctaS.style.color = c.secText; };
+
+  const hint = document.getElementById('hint');
+  hint.style.background = c.hintBg; hint.style.color = c.hintColor; hint.style.borderColor = c.hintBorder;
+  hint.textContent = c.note;
+}
+
+function setMode(m){
+  render(m);
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-mode="${m}"]`).classList.add('active');
+}
+
+render('dark');
+</script>
+
+</body>
+</html>
