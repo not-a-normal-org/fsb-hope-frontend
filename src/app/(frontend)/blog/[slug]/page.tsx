@@ -8,6 +8,7 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
+import { mediaPublicUrl } from '@/lib/blog';
 import { absoluteUrl, ogImageUrl, articleJsonLd, type PostSeo } from '@/lib/seo';
 
 /**
@@ -101,13 +102,13 @@ export default async function BlogPostPage({ params }: Params) {
             )}
           </header>
 
-          {cover?.url && (
+          {(mediaPublicUrl(cover?.filename) ?? cover?.url) && (
             <div className="mt-10 overflow-hidden rounded-2xl" style={{ border: '1px solid var(--sm-glass-border)' }}>
               <Image
-                src={cover.url}
-                alt={cover.alt || post.title}
-                width={cover.width || 1200}
-                height={cover.height || 675}
+                src={(mediaPublicUrl(cover?.filename) ?? cover?.url) as string}
+                alt={cover?.alt || post.title}
+                width={cover?.width || 1200}
+                height={cover?.height || 675}
                 className="h-auto w-full"
               />
             </div>
