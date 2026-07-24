@@ -16,7 +16,14 @@ import { formatDate, type BlogCard } from '@/lib/blog';
  * already loaded (fast, no round-trips). When nothing is filtered and there are
  * enough posts, the newest is promoted to a wide featured card.
  */
-export default function BlogIndex({ posts }: { posts: BlogCard[] }) {
+export default function BlogIndex({
+  posts,
+  hideFilters = false,
+}: {
+  posts: BlogCard[];
+  /** Hide the category pills — used on category pages, where the set is fixed. */
+  hideFilters?: boolean;
+}) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
 
@@ -58,7 +65,7 @@ export default function BlogIndex({ posts }: { posts: BlogCard[] }) {
             style={{ borderColor: 'var(--sm-glass-border)' }}
           >
             <SearchBar value={query} onChange={setQuery} />
-            {categories.length > 0 && (
+            {!hideFilters && categories.length > 0 && (
               <CategoryPills categories={categories} active={category} onSelect={setCategory} />
             )}
           </div>

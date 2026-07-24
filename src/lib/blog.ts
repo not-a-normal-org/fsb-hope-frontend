@@ -55,3 +55,38 @@ export type BlogCard = {
   cover: { url: string; alt: string } | null;
   category: { name: string; slug: string } | null;
 };
+
+type MediaDoc = { alt?: string; filename?: string; sizes?: { card?: { filename?: string } } };
+type CategoryDoc = { name?: string; slug?: string };
+type PostDoc = {
+  id: string | number;
+  title?: unknown;
+  slug?: unknown;
+  excerpt?: unknown;
+  publishedAt?: unknown;
+  content?: unknown;
+  coverImage?: unknown;
+  category?: unknown;
+};
+
+/**
+ * Map a Payload `posts` doc (loaded with `depth: 1`) to the small card shape
+ * the client grid consumes. Shared by the blog index and category pages so the
+ * two stay in lockstep. Cover images resolve to the public Supabase URL (the
+ * 768w "card" render when available) rather than the wall-gated /cms-api route.
+ */
+export function toBlogCard(doc: PostDoc): BlogCard {
+  const media = typeof doc.coverImage === 'object' && doc.coverImage ? (doc.coverImage as MediaDoc) : null;
+  const cat = typeof doc.category === 'object' && doc.category ? (doc.category as CategoryDoc) : null;
+  const coverUrl = mediaPublicUrl(media?.sizes?.card?.filename ?? media?.filename ?? null);
+  return {
+    id: String(doc.id),
+    title: String(doc.title ?? ''),
+    slug: String(doc.slug ?? ''),
+    excerpt: (doc.excerpt as string | undefined) ?? null,
+    publishedAt: (doc.publishedAt as string | undefined) ?? null,
+    readingMinutes: readingMinutes(doc.content),
+    cover: coverUrl ? { url: coverUrl, alt: media?.alt || String(doc.title ?? '') } : null,
+    category: cat?.name && cat?.slug ? { name: cat.name, slug: cat.slug } : null,
+  };
+}

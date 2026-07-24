@@ -51,6 +51,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       });
     }
+
+    const { docs: categories } = await payload.find({
+      collection: 'categories',
+      limit: 1000,
+      depth: 0,
+    });
+    for (const category of categories) {
+      entries.push({
+        url: `${SITE_URL}/blog/category/${category.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      });
+    }
   } catch {
     /* DB unavailable (e.g. a build without DATABASE_URI) — static routes only */
   }

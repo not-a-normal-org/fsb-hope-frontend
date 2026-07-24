@@ -19,6 +19,8 @@ import ModeToggle from '@/components/system/ModeToggle';
 const NAV = [
   { label: 'Individual', href: '/individual' },
   { label: 'Business', href: '/business' },
+  { label: 'Guides', href: '/blog/category/guides' },
+  { label: 'Deals', href: '/blog/category/deals' },
   { label: 'Alerts', href: '/alerts' },
   { label: 'Pricing', href: '/pricing' },
 ];
@@ -52,7 +54,7 @@ export default function NavBar() {
           <Logo className="text-lg" label="" />
         </Link>
 
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-5 lg:gap-6 md:flex">
           {NAV.map((item) => (
             <li key={item.href}>
               <Link

@@ -4,7 +4,7 @@ import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
-import { readingMinutes, mediaPublicUrl, type BlogCard } from '@/lib/blog';
+import { toBlogCard, type BlogCard } from '@/lib/blog';
 import BlogIndex from './BlogIndex';
 
 /**
@@ -22,9 +22,6 @@ export const metadata: Metadata = {
   title: 'Blog',
 };
 
-type MediaDoc = { alt?: string; filename?: string; sizes?: { card?: { filename?: string } } };
-type CategoryDoc = { name?: string; slug?: string };
-
 export default async function BlogIndexPage() {
   const payload = await getPayloadClient();
   const { docs } = await payload.find({
@@ -35,22 +32,7 @@ export default async function BlogIndexPage() {
     depth: 1, // populate coverImage + category
   });
 
-  const posts: BlogCard[] = docs.map((doc) => {
-    const media = typeof doc.coverImage === 'object' ? (doc.coverImage as MediaDoc) : null;
-    const cat = typeof doc.category === 'object' ? (doc.category as CategoryDoc) : null;
-    // Prefer the 768w "card" render; fall back to the original file.
-    const coverUrl = mediaPublicUrl(media?.sizes?.card?.filename ?? media?.filename ?? null);
-    return {
-      id: String(doc.id),
-      title: String(doc.title),
-      slug: String(doc.slug),
-      excerpt: (doc.excerpt as string | undefined) ?? null,
-      publishedAt: (doc.publishedAt as string | undefined) ?? null,
-      readingMinutes: readingMinutes(doc.content),
-      cover: coverUrl ? { url: coverUrl, alt: media?.alt || String(doc.title) } : null,
-      category: cat?.name && cat?.slug ? { name: cat.name, slug: cat.slug } : null,
-    };
-  });
+  const posts: BlogCard[] = docs.map(toBlogCard);
 
   return (
     <>
