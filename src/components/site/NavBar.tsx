@@ -71,8 +71,7 @@ export default function NavBar() {
           <ModeToggle className="hidden sm:inline-flex" />
           <Link
             href="/individual"
-            className="rounded-full px-4 py-2 text-sm font-medium transition-colors"
-            style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+            className="rounded-full px-4 py-2 text-sm font-medium transition-colors sm-cta"
           >
             Check My Route
           </Link>

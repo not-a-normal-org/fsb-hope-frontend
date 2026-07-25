@@ -146,8 +146,7 @@ export default function AboutBody() {
           >
             <Link
               href="/individual"
-              className={ctaBase}
-              style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+              className={`${ctaBase} sm-cta`}
             >
               Check your route
             </Link>

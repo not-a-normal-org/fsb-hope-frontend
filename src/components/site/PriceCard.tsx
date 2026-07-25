@@ -21,8 +21,7 @@ import type { Product } from '@/lib/products';
 export default function PriceCard({ product }: { product: Product }) {
   const isExternal = !product.cta.href.startsWith('/');
   const ctaClass =
-    'inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition-colors';
-  const ctaStyle = { background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' } as const;
+    'inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition-colors sm-cta';
 
   return (
     <motion.div variants={entrance} whileHover={{ y: -3 }} transition={{ duration: DURATION.hover }}>
@@ -90,11 +89,11 @@ export default function PriceCard({ product }: { product: Product }) {
 
         <div className="mt-auto pt-7">
           {isExternal ? (
-            <a href={product.cta.href} className={ctaClass} style={ctaStyle}>
+            <a href={product.cta.href} className={ctaClass}>
               {product.cta.label}
             </a>
           ) : (
-            <Link href={product.cta.href} className={ctaClass} style={ctaStyle}>
+            <Link href={product.cta.href} className={ctaClass}>
               {product.cta.label}
             </Link>
           )}

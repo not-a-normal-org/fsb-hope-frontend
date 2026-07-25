@@ -79,8 +79,7 @@ export default function AdminUnlockForm() {
         <button
           type="submit"
           disabled={loading || !password}
-          className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+          className="shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 sm-cta"
         >
           {loading ? '…' : 'Enter'}
         </button>

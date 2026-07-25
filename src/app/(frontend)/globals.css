@@ -163,6 +163,21 @@
   }
 }
 
+/* ---- Primary CTA -----------------------------------------------------------
+   Filled call-to-action. Background/text read the mode-aware --sm-cta tokens;
+   :hover shifts to --sm-cta-hover (defined in all three themes). Applied via a
+   class rather than an inline style so the hover can take effect — an inline
+   background would always win over a :hover rule. prefers-reduced-motion (above)
+   neutralizes the transition. */
+.sm-cta {
+  background: var(--sm-cta);
+  color: var(--sm-cta-text);
+  transition: background-color 0.18s ease;
+}
+.sm-cta:hover {
+  background: var(--sm-cta-hover);
+}
+
 /* ---- Theme crossfade -------------------------------------------------------
    ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
    the ~300ms color transition is paid only during a switch — not on every hover

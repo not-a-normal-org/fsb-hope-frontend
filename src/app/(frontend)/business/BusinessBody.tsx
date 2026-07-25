@@ -88,8 +88,7 @@ export default function BusinessBody() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
                   href={START}
-                  className={ctaBase}
-                  style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+                  className={`${ctaBase} sm-cta`}
                 >
                   Start a business search
                 </a>
