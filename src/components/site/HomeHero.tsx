@@ -55,8 +55,7 @@ export default function HomeHero() {
               </Link>
               <Link
                 href="/how-it-works"
-                className="rounded-full border px-6 py-3 text-[14.5px] font-medium text-ink transition-colors"
-                style={{ borderColor: 'var(--sm-glass-border)' }}
+                className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"
               >
                 See How It Works
               </Link>
