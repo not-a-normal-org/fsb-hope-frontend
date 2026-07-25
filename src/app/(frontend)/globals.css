@@ -244,6 +244,53 @@
   color: #ffffff;
 }
 
+/* ---- Custom cursor ---------------------------------------------------------
+   Driven by CustomCursor (client). Colour is --sm-accent, so the cursor
+   recolours with the theme in all three modes. The dot snaps to the pointer; the
+   ring is spring-lagged and grows + fills over interactive elements. Only active
+   on fine-pointer devices (the component gates it) — then the native cursor is
+   hidden; touch / reduced-motion keep the native cursor. */
+@media (pointer: fine) {
+  [data-custom-cursor],
+  [data-custom-cursor] * {
+    cursor: none !important;
+  }
+}
+.sm-cursor-pos {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform;
+}
+.sm-cursor-dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 9999px;
+  background: var(--sm-accent);
+  transition: transform 0.12s ease;
+}
+.sm-cursor-dot[data-pressed] {
+  transform: scale(0.6);
+}
+.sm-cursor-ring {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 9999px;
+  border: 1.5px solid color-mix(in srgb, var(--sm-accent) 60%, transparent);
+  transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+.sm-cursor-ring[data-hovered] {
+  transform: scale(1.5);
+  background: color-mix(in srgb, var(--sm-accent) 12%, transparent);
+  border-color: var(--sm-accent);
+}
+
 /* ---- Theme crossfade -------------------------------------------------------
    ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
    the ~300ms color transition is paid only during a switch — not on every hover
