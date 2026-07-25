@@ -60,15 +60,13 @@ export default function Steps() {
         <motion.div variants={entrance} {...inViewOnce} className="mt-12 flex flex-wrap gap-3">
           <Link
             href="/individual"
-            className={ctaPrimary}
-            style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+            className={`${ctaPrimary} sm-cta`}
           >
             Start an individual search
           </Link>
           <Link
             href="/business"
-            className={`${ctaPrimary} border text-ink`}
-            style={{ borderColor: 'var(--sm-glass-border)' }}
+            className={`${ctaPrimary} sm-cta-ghost`}
           >
             For business
           </Link>

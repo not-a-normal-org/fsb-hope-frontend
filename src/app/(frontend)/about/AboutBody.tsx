@@ -121,8 +121,7 @@ export default function AboutBody() {
             </p>
             <Link
               href="/pricing"
-              className={`mt-7 ${ctaBase} border text-ink`}
-              style={{ borderColor: 'var(--sm-glass-border)' }}
+              className={`mt-7 ${ctaBase} sm-cta-ghost`}
             >
               See full pricing
             </Link>
@@ -146,15 +145,13 @@ export default function AboutBody() {
           >
             <Link
               href="/individual"
-              className={ctaBase}
-              style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+              className={`${ctaBase} sm-cta`}
             >
               Check your route
             </Link>
             <Link
               href="/how-it-works"
-              className={`${ctaBase} border text-ink`}
-              style={{ borderColor: 'var(--sm-glass-border)' }}
+              className={`${ctaBase} sm-cta-ghost`}
             >
               See how it works
             </Link>

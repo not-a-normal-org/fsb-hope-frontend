@@ -3,6 +3,7 @@ import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
 import ThemeScript from "@/components/system/ThemeScript";
+import CustomCursor from "@/components/system/CustomCursor";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
 /* ========== FONTS (docs/plans/01-brand-design-system.md §3) ========== */
@@ -77,6 +78,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-bg-base font-body text-ink">
         <MotionProvider>
           <div className="flex-1">{children}</div>
+          <CustomCursor />
         </MotionProvider>
       </body>
     </html>

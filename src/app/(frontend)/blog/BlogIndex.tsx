@@ -220,8 +220,7 @@ function FeaturedCard({ post }: { post: BlogCard }) {
         <div className="flex flex-col justify-center gap-4 p-7 md:p-10">
           <div className="flex items-center gap-3 font-mono text-[0.65rem] uppercase tracking-[0.14em]">
             <span
-              className="rounded-full px-2.5 py-1"
-              style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+              className="rounded-full px-2.5 py-1 sm-cta"
             >
               Latest
             </span>

@@ -49,15 +49,13 @@ export default function HomeHero() {
             <div className="mt-8 flex flex-wrap gap-3.5">
               <Link
                 href="/individual"
-                className="rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors"
-                style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+                className="rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors sm-cta"
               >
                 Check My Route — Free
               </Link>
               <Link
                 href="/how-it-works"
-                className="rounded-full border px-6 py-3 text-[14.5px] font-medium text-ink transition-colors"
-                style={{ borderColor: 'var(--sm-glass-border)' }}
+                className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"
               >
                 See How It Works
               </Link>

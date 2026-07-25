@@ -26,8 +26,7 @@ export default function NoticeSection({
           {cta && (
             <Link
               href={cta.href}
-              className="mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
-              style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+              className="mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta"
             >
               {cta.label}
             </Link>

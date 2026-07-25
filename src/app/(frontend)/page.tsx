@@ -2,6 +2,7 @@ import NavBar from '@/components/site/NavBar';
 import HomeHero from '@/components/site/HomeHero';
 import AudienceFork from '@/components/site/AudienceFork';
 import GhostVsRealCompare from '@/components/site/GhostVsRealCompare';
+import CaseStudyTeaser from '@/components/site/CaseStudyTeaser';
 import AlertsTeaser from '@/components/site/AlertsTeaser';
 import CalculatorTeaser from '@/components/site/CalculatorTeaser';
 import Footer from '@/components/site/Footer';
@@ -9,10 +10,14 @@ import Footer from '@/components/site/Footer';
 /**
  * Home — section order from docs/plans/02-site-structure.md.
  *
- * Deal of the Week (Payload CMS) and the newsletter band (Supabase) are still
- * deferred to the backend track. The public does not see this yet — src/proxy.ts
- * rewrites anonymous requests to /maintenance (503); signed-in admins see it.
+ * The proof teaser (CaseStudyTeaser) reads the Payload `testimonials` collection
+ * and renders nothing until a real, consented story exists. Deal of the Week
+ * (Payload) and the newsletter band (Supabase) are still deferred. Dynamic so
+ * CMS content appears without a rebuild. The public does not see this yet —
+ * src/proxy.ts rewrites anonymous requests to /maintenance (503).
  */
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <>
@@ -20,6 +25,7 @@ export default function Home() {
       <HomeHero />
       <AudienceFork />
       <GhostVsRealCompare />
+      <CaseStudyTeaser />
       <AlertsTeaser />
       <CalculatorTeaser />
       <Footer />

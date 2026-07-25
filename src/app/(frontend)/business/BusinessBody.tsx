@@ -88,15 +88,13 @@ export default function BusinessBody() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
                   href={START}
-                  className={ctaBase}
-                  style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+                  className={`${ctaBase} sm-cta`}
                 >
                   Start a business search
                 </a>
                 <Link
                   href="/pricing"
-                  className={`${ctaBase} border text-ink`}
-                  style={{ borderColor: 'var(--sm-glass-border)' }}
+                  className={`${ctaBase} sm-cta-ghost`}
                 >
                   See full pricing
                 </Link>
@@ -130,8 +128,7 @@ export default function BusinessBody() {
           <motion.div variants={entrance} {...inViewOnce} className="mt-7">
             <Link
               href="/alerts"
-              className={`${ctaBase} border text-ink`}
-              style={{ borderColor: 'var(--sm-glass-border)' }}
+              className={`${ctaBase} sm-cta-ghost`}
             >
               See alert plans
             </Link>

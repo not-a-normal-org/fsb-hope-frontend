@@ -137,8 +137,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
 
       <Link
         href="/individual"
-        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
-        style={{ background: 'var(--sm-cta)', color: 'var(--sm-cta-text)' }}
+        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta"
       >
         Run a free search
       </Link>
