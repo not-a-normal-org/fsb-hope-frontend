@@ -66,8 +66,7 @@ export default function Steps() {
           </Link>
           <Link
             href="/business"
-            className={`${ctaPrimary} border text-ink`}
-            style={{ borderColor: 'var(--sm-glass-border)' }}
+            className={`${ctaPrimary} sm-cta-ghost`}
           >
             For business
           </Link>
