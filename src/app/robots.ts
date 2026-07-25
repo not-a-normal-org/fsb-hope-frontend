@@ -11,7 +11,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin/', '/api/'],
+      // Keep both admin surfaces and both API mounts out of the index.
+      disallow: ['/admin/', '/api/', '/cms/', '/cms-api/'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
