@@ -236,6 +236,13 @@
 .sm-cta-ghost:hover svg {
   transform: translateX(2px);
 }
+/* Dark theme only: a white label reads crisper on hover than the accent blue.
+   Scoped to dark (default + explicit) — white would disappear on the light
+   theme's pale buttons. The icon follows via currentColor. */
+:root:not([data-theme]) .sm-cta-ghost:hover,
+[data-theme='dark'] .sm-cta-ghost:hover {
+  color: #ffffff;
+}
 
 /* ---- Theme crossfade -------------------------------------------------------
    ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
