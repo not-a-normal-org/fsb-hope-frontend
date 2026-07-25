@@ -4,15 +4,16 @@ import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import NoticeSection from '@/components/site/NoticeSection';
-import TestimonialWall from '@/components/site/TestimonialWall';
+import CaseStudyWall from '@/components/site/CaseStudyWall';
 import AmbientBackground from '@/components/system/AmbientBackground';
-import { getPublishedTestimonials } from '@/lib/testimonials';
+import { getPublishedCaseStudies } from '@/lib/case-studies.server';
 
 /**
- * /results (docs/plans/02) — the case-study / testimonial wall, driven by the
- * Payload `testimonials` collection. Only consented stories render (enforced in
- * the query); with none, it shows an honest "coming soon" state. Never fabricate
- * (docs/plans/00). Dynamic so new stories appear without a rebuild.
+ * /results (docs/plans/02) — the case-study wall, driven by the Payload
+ * `testimonials` collection (surfaced as "Case Studies"). Only consented stories
+ * render (enforced in the query); with none, it shows an honest "coming soon"
+ * state. Never fabricate (docs/plans/00). Dynamic so new stories appear without
+ * a rebuild.
  */
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ResultsPage() {
-  const testimonials = await getPublishedTestimonials();
+  const studies = await getPublishedCaseStudies();
 
   return (
     <>
@@ -32,7 +33,7 @@ export default async function ResultsPage() {
         intro="We’d rather show you nothing than show you something made up. Verified bookings and client stories land here once they’re real and we have permission to share them."
       />
 
-      {testimonials.length === 0 ? (
+      {studies.length === 0 ? (
         <NoticeSection
           heading="Results are coming in"
           body="We’re a new brand doing the work by hand. Check back soon — or find out what your own points can book."
@@ -42,7 +43,7 @@ export default async function ResultsPage() {
         <section className="relative overflow-hidden border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
           <AmbientBackground variant="section" />
           <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-            <TestimonialWall items={testimonials} />
+            <CaseStudyWall items={studies} />
           </div>
         </section>
       )}

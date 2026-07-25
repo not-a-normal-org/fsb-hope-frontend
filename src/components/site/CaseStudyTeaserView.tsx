@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
-import TestimonialCard from './TestimonialCard';
+import CaseStudyCard from './CaseStudyCard';
 import { entrance, inViewOnce } from '@/lib/animations';
-import type { Testimonial } from '@/lib/testimonials';
+import type { CaseStudy } from '@/lib/case-studies';
 
-/** Home proof section presentation — one featured story + a link to /results. */
-export default function CaseStudyTeaserView({ testimonial }: { testimonial: Testimonial }) {
+/** Home proof section presentation — one featured redemption + link to /results. */
+export default function CaseStudyTeaserView({ study }: { study: CaseStudy }) {
   return (
     <section
       className="relative overflow-hidden border-t"
@@ -28,8 +28,8 @@ export default function CaseStudyTeaserView({ testimonial }: { testimonial: Test
           </p>
         </motion.div>
 
-        <motion.div variants={entrance} {...inViewOnce} className="mt-10 max-w-3xl">
-          <TestimonialCard testimonial={testimonial} featured />
+        <motion.div variants={entrance} {...inViewOnce} className="mt-10 max-w-md">
+          <CaseStudyCard study={study} featured />
         </motion.div>
 
         <motion.div variants={entrance} {...inViewOnce} className="mt-8">
