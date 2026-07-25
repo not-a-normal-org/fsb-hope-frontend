@@ -78,8 +78,7 @@ export default function CaseStudyCard({
       <div className="mt-auto pt-6">
         <Link
           href={`/results/${study.slug}`}
-          className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-ink transition-colors hover:text-accent"
-          style={{ border: '1px solid var(--sm-glass-border)' }}
+          className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium"
         >
           See details
           <ArrowRight className="h-4 w-4" aria-hidden />

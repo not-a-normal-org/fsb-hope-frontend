@@ -215,6 +215,28 @@
   }
 }
 
+/* ---- Secondary / ghost button ---------------------------------------------
+   Outline button (e.g. "See details"). Border via a class, not an inline style,
+   so the hover can take effect. On hover the border brightens toward the accent,
+   a faint accent wash fills in, the label + icon turn accent, and the icon nudges
+   right — clearly interactive but still subordinate to the filled .sm-cta. */
+.sm-cta-ghost {
+  color: var(--sm-ink);
+  border: 1px solid var(--sm-glass-border);
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+.sm-cta-ghost:hover {
+  color: var(--sm-accent);
+  border-color: color-mix(in srgb, var(--sm-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--sm-accent) 10%, transparent);
+}
+.sm-cta-ghost svg {
+  transition: transform 0.18s ease;
+}
+.sm-cta-ghost:hover svg {
+  transform: translateX(2px);
+}
+
 /* ---- Theme crossfade -------------------------------------------------------
    ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
    the ~300ms color transition is paid only during a switch — not on every hover
