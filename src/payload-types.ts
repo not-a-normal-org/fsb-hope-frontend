@@ -274,9 +274,40 @@ export interface DealsOfWeek {
  */
 export interface Testimonial {
   id: number;
-  quote: string;
+  /**
+   * e.g. “Two business seats to Tokyo”.
+   */
+  title: string;
+  /**
+   * Auto-generated from the title if left blank.
+   */
+  slug?: string | null;
+  fromAirport: string;
+  toAirport: string;
+  cabin?: ('economy' | 'premium' | 'business' | 'first') | null;
+  pointsUsed?: number | null;
+  program?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  quote?: string | null;
   attribution?: string | null;
   route?: string | null;
+  /**
+   * Must be on to appear publicly — only with the client’s permission.
+   */
   publishConsent?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -499,6 +530,14 @@ export interface DealsOfWeekSelect<T extends boolean = true> {
  * via the `definition` "testimonials_select".
  */
 export interface TestimonialsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  fromAirport?: T;
+  toAirport?: T;
+  cabin?: T;
+  pointsUsed?: T;
+  program?: T;
+  body?: T;
   quote?: T;
   attribution?: T;
   route?: T;
