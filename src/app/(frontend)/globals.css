@@ -282,7 +282,9 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  /* Above everything, including modals/overlays — the cursor must never be
+     occluded. pointer-events: none keeps it from intercepting clicks. */
+  z-index: 2147483647;
   pointer-events: none;
   will-change: transform;
 }

@@ -9,7 +9,7 @@ import type { Variants, Transition } from 'framer-motion';
  * (MotionConfig reducedMotion="user") and the CSS media query in globals.css.
  */
 
-const EASE_OUT: Transition['ease'] = [0.22, 1, 0.36, 1];
+export const EASE_OUT: Transition['ease'] = [0.22, 1, 0.36, 1];
 
 export const DURATION = {
   hover: 0.18,
