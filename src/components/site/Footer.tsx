@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 import Logo from './Logo';
+import NewsletterForm from './NewsletterForm';
 import ModeToggle from '@/components/system/ModeToggle';
 
 /**
- * Footer — docs/plans/02-site-structure.md. Sitemap links, legal, and the mode
- * switch repeated. Deliberately thin for this slice; the newsletter band lands
- * in a later slice.
+ * Footer — docs/plans/02-site-structure.md. Sitemap links, legal, a compact
+ * newsletter signup, and the mode switch repeated.
  *
  * No founder names, no prior company, no region/legal-entity line (non-
  * negotiables in docs/plans/00-context.md). Blog byline elsewhere is always
@@ -53,6 +53,14 @@ export default function Footer() {
               Award travel is broken. We assign you a specialist who fixes it,
               working 30+ loyalty programs to get you a seat worth flying.
             </p>
+            <div className="mt-6">
+              <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
+                Points intel, occasionally
+              </p>
+              <div className="mt-3">
+                <NewsletterForm source="footer" buttonLabel="Join" compact />
+              </div>
+            </div>
             <div className="mt-6">
               <ModeToggle />
             </div>
