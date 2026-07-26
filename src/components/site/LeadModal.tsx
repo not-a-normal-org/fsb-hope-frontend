@@ -12,15 +12,22 @@ type Status = 'form' | 'submitting' | 'success';
 type Change = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
 
 const EMPTY = {
+  // individual
   route: '',
   dates: '',
   flexibility: '',
   passengers: '',
   cabin: '',
   points_held: '',
+  whatsapp: '',
+  // business
+  yearly_spend: '',
+  flight_need: '',
+  points_budget: '',
+  phone: '',
+  // shared
   notes: '',
   email: '',
-  whatsapp: '',
 };
 
 const TOTAL_STEPS = 4;
@@ -28,15 +35,17 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * Multi-step lead-capture modal (docs/plans/02) — the individual search flow:
- * trip (route/dates/flexibility) → travelers (count/cabin) → points → contact,
- * with an optional notes/preferences field on each question step. Posts to
- * /api/leads (route + points_held + contact as columns; the rest in
- * leads.details jsonb).
+ * Multi-step lead-capture modal (docs/plans/02). Two flows behind one `type`:
+ *  - individual: trip (route/dates/flexibility) → travelers → points → contact
+ *  - business:   spend → team's routes → points/budget → callback
+ * Each question step has an optional notes/preferences field. Posts to
+ * /api/leads (typed columns + the rest in leads.details jsonb).
+ *
+ * The business callback step leaves a seam for a Cal.com booking embed (a later
+ * slice, once the account exists); for now it captures a phone + emails to book.
  *
  * Accessible dialog: portalled, focus-trapped, Esc/backdrop to close, body
- * scroll locked, focus restored. Glass + reduced-motion-safe. `type` is plumbed
- * for the later business flow; today it renders the individual steps.
+ * scroll locked, focus restored. Glass + reduced-motion-safe.
  */
 export default function LeadModal({
   open,
@@ -56,6 +65,7 @@ export default function LeadModal({
   const dialogRef = useRef<HTMLDivElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
+  const business = type === 'business';
 
   useEffect(() => setMounted(true), []);
 
@@ -110,26 +120,41 @@ export default function LeadModal({
   }, [open, step, status]);
 
   const submit = async () => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+      setError('Please enter a valid email address.');
+      return;
+    }
     setStatus('submitting');
     setError(null);
     try {
+      const payload = business
+        ? {
+            type,
+            yearly_spend: data.yearly_spend,
+            flight_need: data.flight_need,
+            points_budget: data.points_budget,
+            email: data.email,
+            phone: data.phone,
+            details: { notes: data.notes },
+          }
+        : {
+            type,
+            route: data.route,
+            points_held: data.points_held,
+            email: data.email,
+            whatsapp: data.whatsapp,
+            details: {
+              dates: data.dates,
+              flexibility: data.flexibility,
+              passengers: data.passengers,
+              cabin: data.cabin,
+              notes: data.notes,
+            },
+          };
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type,
-          route: data.route,
-          points_held: data.points_held,
-          email: data.email,
-          whatsapp: data.whatsapp,
-          details: {
-            dates: data.dates,
-            flexibility: data.flexibility,
-            passengers: data.passengers,
-            cabin: data.cabin,
-            notes: data.notes,
-          },
-        }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const detail = (await res.json().catch(() => ({}))) as { error?: string };
@@ -144,8 +169,223 @@ export default function LeadModal({
 
   if (!mounted) return null;
 
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
-  const canAdvance = step === 0 ? data.route.trim().length > 0 : true;
+  const canAdvance = !business && step === 0 ? data.route.trim().length > 0 : true;
+
+  const goNext = () => {
+    if (!canAdvance) {
+      setError('Please tell us where you want to go.');
+      return;
+    }
+    setError(null);
+    setStep((s) => s + 1);
+  };
+  const goBack = () => {
+    setError(null);
+    setStep((s) => s - 1);
+  };
+
+  const individualStep = (s: number) => {
+    switch (s) {
+      case 0:
+        return (
+          <Step titleId={titleId} title="Where & when?" hint="Your destination and rough timing, exact dates optional.">
+            <Labeled label="Where to?">
+              <input
+                data-autofocus
+                type="text"
+                value={data.route}
+                onChange={set('route')}
+                placeholder="e.g. New York → Tokyo, or JFK–NRT"
+                className={inputClass}
+                style={inputStyle}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && canAdvance) setStep(1);
+                }}
+              />
+            </Labeled>
+            <Labeled label="When? (optional)">
+              <input
+                type="text"
+                value={data.dates}
+                onChange={set('dates')}
+                placeholder="e.g. mid-March, ~7 nights, or exact dates"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <Labeled label="How flexible are your dates?">
+              <Select value={data.flexibility} onChange={set('flexibility')}>
+                <option value="">Choose one…</option>
+                <option value="flexible">Flexible — find me the best value</option>
+                <option value="fixed">Fixed — these exact dates</option>
+                <option value="unsure">Not sure yet</option>
+              </Select>
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 1:
+        return (
+          <Step titleId={titleId} title="Who’s flying?" hint="Headcount and the cabin you’re after.">
+            <Labeled label="How many travelers?">
+              <Select value={data.passengers} onChange={set('passengers')} autoFocus>
+                <option value="">Choose…</option>
+                <option value="1">1 traveler</option>
+                <option value="2">2 travelers</option>
+                <option value="3">3 travelers</option>
+                <option value="4">4 travelers</option>
+                <option value="5">5 travelers</option>
+                <option value="6+">6+ travelers</option>
+              </Select>
+            </Labeled>
+            <Labeled label="Which cabin?">
+              <Select value={data.cabin} onChange={set('cabin')}>
+                <option value="">Choose…</option>
+                <option value="economy">Economy</option>
+                <option value="premium">Premium economy</option>
+                <option value="business">Business</option>
+                <option value="first">First</option>
+                <option value="any">Any / best value</option>
+              </Select>
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 2:
+        return (
+          <Step titleId={titleId} title="Which points do you have?" hint="Rough is fine. Not sure? Just say so, it helps your specialist find the best value.">
+            <Labeled label="Points & miles (optional)">
+              <input
+                data-autofocus
+                type="text"
+                value={data.points_held}
+                onChange={set('points_held')}
+                placeholder="e.g. ~120k Amex MR, 80k Chase UR — or “not sure”"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      default:
+        return (
+          <Step titleId={titleId} title="Where should we send your results?" hint="We’ll email a screenshot and the exact point cost. WhatsApp is optional.">
+            <Labeled label="Email">
+              <input
+                data-autofocus
+                type="email"
+                value={data.email}
+                onChange={set('email')}
+                placeholder="you@email.com"
+                autoComplete="email"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <Labeled label="WhatsApp (optional)">
+              <input
+                type="tel"
+                value={data.whatsapp}
+                onChange={set('whatsapp')}
+                placeholder="+1 555 000 0000"
+                autoComplete="tel"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+          </Step>
+        );
+    }
+  };
+
+  const businessStep = (s: number) => {
+    switch (s) {
+      case 0:
+        return (
+          <Step titleId={titleId} title="Your team’s travel" hint="Rough numbers are fine — this helps a specialist scope the account.">
+            <Labeled label="Roughly, annual flight spend?">
+              <Select value={data.yearly_spend} onChange={set('yearly_spend')} autoFocus>
+                <option value="">Choose…</option>
+                <option value="Under $50k">Under $50k</option>
+                <option value="$50k–$150k">$50k–$150k</option>
+                <option value="$150k–$500k">$150k–$500k</option>
+                <option value="$500k+">$500k+</option>
+                <option value="Not sure">Not sure</option>
+              </Select>
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 1:
+        return (
+          <Step titleId={titleId} title="What does your team fly?" hint="Routes, cabins, and how often — as much or as little as you know.">
+            <Labeled label="Routes & cabins">
+              <textarea
+                data-autofocus
+                value={data.flight_need}
+                onChange={set('flight_need')}
+                rows={3}
+                placeholder="e.g. SFO/JFK → London & Singapore, business class, ~monthly"
+                className={`${inputClass} resize-none`}
+                style={inputStyle}
+              />
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 2:
+        return (
+          <Step titleId={titleId} title="Points, miles, or budget on hand?" hint="Any points pooled for travel, or a cash budget. Optional.">
+            <Labeled label="Points / budget (optional)">
+              <input
+                data-autofocus
+                type="text"
+                value={data.points_budget}
+                onChange={set('points_budget')}
+                placeholder="e.g. 2M Amex Business MR, or ~$8k budget"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      default:
+        return (
+          <Step titleId={titleId} title="Let’s set up a call" hint="A specialist will reach out to scope your account.">
+            <Labeled label="Work email">
+              <input
+                data-autofocus
+                type="email"
+                value={data.email}
+                onChange={set('email')}
+                placeholder="you@company.com"
+                autoComplete="email"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <Labeled label="Phone (optional)">
+              <input
+                type="tel"
+                value={data.phone}
+                onChange={set('phone')}
+                placeholder="+1 555 000 0000"
+                autoComplete="tel"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            {/* Cal.com booking embed goes here once the account exists. */}
+            <p className="text-xs leading-relaxed text-ink-muted">
+              Prefer to pick a time? Calendar booking is coming soon — for now a specialist will
+              email you to schedule.
+            </p>
+          </Step>
+        );
+    }
+  };
 
   return createPortal(
     <AnimatePresence>
@@ -181,9 +421,9 @@ export default function LeadModal({
               type="button"
               onClick={close}
               aria-label="Close"
-              className="sm-cta-ghost absolute right-4 top-4 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full"
+              className="sm-icon-btn absolute right-4 top-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full"
             >
-              <X className="h-4 w-4" aria-hidden />
+              <X className="h-[18px] w-[18px]" aria-hidden />
             </button>
 
             <div className="overflow-y-auto px-7 py-7 sm:px-8">
@@ -196,136 +436,29 @@ export default function LeadModal({
                     <Check className="h-6 w-6 text-accent" aria-hidden />
                   </div>
                   <h2 id={titleId} className="mt-5 font-display text-card font-bold text-ink">
-                    We’re on it.
+                    {business ? 'Thanks — we’ll be in touch.' : 'We’re on it.'}
                   </h2>
                   <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-ink-sub">
-                    A specialist is being assigned to your route and will email you the results,
-                    usually within a day. No account, and nothing to pay to look.
+                    {business
+                      ? 'A specialist will reach out to scope your account and set up a call, usually within a day.'
+                      : 'A specialist is being assigned to your route and will email you the results, usually within a day. No account, and nothing to pay to look.'}
                   </p>
                   <button
                     type="button"
                     onClick={close}
                     data-autofocus
-                    className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-medium"
+                    className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
                   >
                     Done
                   </button>
                 </div>
               ) : (
                 <>
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-accent">
+                  <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent">
                     Step {step + 1} of {TOTAL_STEPS}
                   </p>
 
-                  {step === 0 && (
-                    <Step titleId={titleId} title="Where & when?" hint="Your destination and rough timing, exact dates optional.">
-                      <Labeled label="Where to?">
-                        <input
-                          data-autofocus
-                          type="text"
-                          value={data.route}
-                          onChange={set('route')}
-                          placeholder="e.g. New York → Tokyo, or JFK–NRT"
-                          className={inputClass}
-                          style={inputStyle}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && canAdvance) setStep(1);
-                          }}
-                        />
-                      </Labeled>
-                      <Labeled label="When? (optional)">
-                        <input
-                          type="text"
-                          value={data.dates}
-                          onChange={set('dates')}
-                          placeholder="e.g. mid-March, ~7 nights, or exact dates"
-                          className={inputClass}
-                          style={inputStyle}
-                        />
-                      </Labeled>
-                      <Labeled label="How flexible are your dates?">
-                        <Select value={data.flexibility} onChange={set('flexibility')}>
-                          <option value="">Choose one…</option>
-                          <option value="flexible">Flexible — find me the best value</option>
-                          <option value="fixed">Fixed — these exact dates</option>
-                          <option value="unsure">Not sure yet</option>
-                        </Select>
-                      </Labeled>
-                      <NotesField value={data.notes} onChange={set('notes')} />
-                    </Step>
-                  )}
-
-                  {step === 1 && (
-                    <Step titleId={titleId} title="Who’s flying?" hint="Headcount and the cabin you’re after.">
-                      <Labeled label="How many travelers?">
-                        <Select value={data.passengers} onChange={set('passengers')} autoFocus>
-                          <option value="">Choose…</option>
-                          <option value="1">1 traveler</option>
-                          <option value="2">2 travelers</option>
-                          <option value="3">3 travelers</option>
-                          <option value="4">4 travelers</option>
-                          <option value="5">5 travelers</option>
-                          <option value="6+">6+ travelers</option>
-                        </Select>
-                      </Labeled>
-                      <Labeled label="Which cabin?">
-                        <Select value={data.cabin} onChange={set('cabin')}>
-                          <option value="">Choose…</option>
-                          <option value="economy">Economy</option>
-                          <option value="premium">Premium economy</option>
-                          <option value="business">Business</option>
-                          <option value="first">First</option>
-                          <option value="any">Any / best value</option>
-                        </Select>
-                      </Labeled>
-                      <NotesField value={data.notes} onChange={set('notes')} />
-                    </Step>
-                  )}
-
-                  {step === 2 && (
-                    <Step titleId={titleId} title="Which points do you have?" hint="Rough is fine. Not sure? Just say so, it helps your specialist find the best value.">
-                      <Labeled label="Points & miles (optional)">
-                        <input
-                          data-autofocus
-                          type="text"
-                          value={data.points_held}
-                          onChange={set('points_held')}
-                          placeholder="e.g. ~120k Amex MR, 80k Chase UR — or “not sure”"
-                          className={inputClass}
-                          style={inputStyle}
-                        />
-                      </Labeled>
-                      <NotesField value={data.notes} onChange={set('notes')} />
-                    </Step>
-                  )}
-
-                  {step === 3 && (
-                    <Step titleId={titleId} title="Where should we send your results?" hint="We’ll email a screenshot and the exact point cost. WhatsApp is optional.">
-                      <Labeled label="Email">
-                        <input
-                          data-autofocus
-                          type="email"
-                          value={data.email}
-                          onChange={set('email')}
-                          placeholder="you@email.com"
-                          autoComplete="email"
-                          className={inputClass}
-                          style={inputStyle}
-                        />
-                      </Labeled>
-                      <Labeled label="WhatsApp (optional)">
-                        <input
-                          type="tel"
-                          value={data.whatsapp}
-                          onChange={set('whatsapp')}
-                          placeholder="+1 555 000 0000"
-                          autoComplete="tel"
-                          className={inputClass}
-                          style={inputStyle}
-                        />
-                      </Labeled>
-                    </Step>
-                  )}
+                  {business ? businessStep(step) : individualStep(step)}
 
                   {error && (
                     <p className="mt-4 text-sm" style={{ color: 'var(--sm-error)' }} role="alert">
@@ -337,8 +470,8 @@ export default function LeadModal({
                     {step > 0 ? (
                       <button
                         type="button"
-                        onClick={() => setStep((s) => s - 1)}
-                        className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium"
+                        onClick={goBack}
+                        className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-sm font-medium transition-colors"
                       >
                         <ArrowLeft className="h-4 w-4" aria-hidden />
                         Back
@@ -350,9 +483,8 @@ export default function LeadModal({
                     {step < TOTAL_STEPS - 1 ? (
                       <button
                         type="button"
-                        onClick={() => setStep((s) => s + 1)}
-                        disabled={!canAdvance}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-45"
+                        onClick={goNext}
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors"
                       >
                         Next
                         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -361,14 +493,16 @@ export default function LeadModal({
                       <button
                         type="button"
                         onClick={submit}
-                        disabled={!emailOk || status === 'submitting'}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-45"
+                        disabled={status === 'submitting'}
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed"
                       >
                         {status === 'submitting' ? (
                           <>
                             <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
                             Sending
                           </>
+                        ) : business ? (
+                          'Request a callback'
                         ) : (
                           'Get my points audit'
                         )}

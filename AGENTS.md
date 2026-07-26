@@ -53,6 +53,23 @@ it first; it is the source of truth.** This file is how to work in the repo.
 - Motion timings/easings come from `src/lib/animations.ts` — reuse them, don't
   hand-write durations.
 
+### Contrast & controls (checked in all three modes)
+
+- **Contrast is non-negotiable in every mode.** `--sm-ink-muted` is the lightest
+  ink and is tuned per theme — don't assume a token that reads fine in Dark also
+  reads in Light/Mono. Body/label/placeholder text must stay legible on the
+  surface it sits on (aim ~4.5:1). If a token looks too light on a light surface,
+  fix the token *for that theme*, not with a one-off hex.
+- **Buttons:** filled primary → `.sm-cta`; secondary/outline → `.sm-cta-ghost`;
+  circular icon buttons (modal close, dismiss) → `.sm-icon-btn` (never a bare
+  ghost on an elevated surface — it disappears). Set background/border via these
+  classes, not inline styles, so `:hover` can take effect.
+- **Disabled** controls use `disabled:opacity-55` (not lower — 45% reads as dead
+  gray), plus `disabled:cursor-not-allowed`.
+- **Overlays/modals** sit on `--sm-bg-elevated`; the close control must be
+  clearly visible (`.sm-icon-btn`). Always eyeball a new overlay/form in **Light
+  and Mono**, not just Dark — most contrast bugs only show in Light.
+
 ## The construction wall
 
 The whole site is gated by `src/proxy.ts`: anonymous visitors get a **503 rewrite

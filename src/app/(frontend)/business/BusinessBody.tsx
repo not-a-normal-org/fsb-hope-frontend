@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
+import LeadModal from '@/components/site/LeadModal';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**
@@ -12,10 +14,9 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  * model explained plainly (full breakdown on /pricing), and the Human Search
  * Alert cross-sell for accounts with recurring, high-stakes travel.
  *
- * The multi-step lead form and the Cal.com callback booking are deferred to the
- * backend phase; the primary CTA is an interim mailto until they ship.
+ * The primary CTA opens the multi-step business lead modal (LeadModal →
+ * /api/leads); the Cal.com callback booking is a later slice.
  */
-const START = 'mailto:hello@savermiles.com?subject=Business%20Search';
 
 const STEPS = [
   {
@@ -36,6 +37,7 @@ const ctaBase =
   'inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors';
 
 export default function BusinessBody() {
+  const [leadOpen, setLeadOpen] = useState(false);
   return (
     <>
       <section className="relative overflow-hidden">
@@ -86,12 +88,13 @@ export default function BusinessBody() {
                 account-level entry point for a team that flies often.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href={START}
+                <button
+                  type="button"
+                  onClick={() => setLeadOpen(true)}
                   className={`${ctaBase} sm-cta`}
                 >
                   Start a business search
-                </a>
+                </button>
                 <Link
                   href="/pricing"
                   className={`${ctaBase} sm-cta-ghost`}
@@ -135,6 +138,8 @@ export default function BusinessBody() {
           </motion.div>
         </div>
       </section>
+
+      <LeadModal open={leadOpen} onClose={() => setLeadOpen(false)} type="business" />
     </>
   );
 }
