@@ -45,9 +45,9 @@
 
   --sm-ink: #0A2540;
   --sm-ink-sub: #4B5A6B;
-  /* Darker than dark-mode's muted: #7C8FA6 is too low-contrast on the near-white
-     light surfaces (labels, placeholders, meta). */
-  --sm-ink-muted: #5B6B80;
+  /* Darker than dark-mode's muted: #7C8FA6 was too low-contrast on the near-white
+     light surfaces. Tuned to clear 4.5:1 on both base and elevated. */
+  --sm-ink-muted: #556478;
 
   --sm-accent: #3E7CB1;
   --sm-cta: #1877F2;
@@ -74,7 +74,8 @@
 
   --sm-ink: #F2F2F0;
   --sm-ink-sub: #A8ACB3;
-  --sm-ink-muted: #7C8089;
+  /* Lightened from #7C8089 to clear 4.5:1 on the elevated (modal) surface. */
+  --sm-ink-muted: #878B94;
 
   --sm-accent: #C9CDD3;
   --sm-cta: rgba(255, 255, 255, 0.92);
