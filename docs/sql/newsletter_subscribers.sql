@@ -10,9 +10,10 @@ create table if not exists public.newsletter_subscribers (
   id          uuid primary key default gen_random_uuid(),
   email       text unique not null,
   full_name   text,
-  source      text,   -- which page/component captured it, for attribution
-  is_active   boolean not null default true,  -- false = unsubscribed
-  created_at  timestamptz not null default now()
+  source        text,   -- which page/component captured it, for attribution
+  home_airport  text,   -- subscriber's home airport, to tailor the newsletter
+  is_active     boolean not null default true,  -- false = unsubscribed
+  created_at    timestamptz not null default now()
 );
 
 alter table public.newsletter_subscribers enable row level security;

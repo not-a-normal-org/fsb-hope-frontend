@@ -9,6 +9,7 @@ interface NewsletterRequestBody {
   email: string;
   name?: string;
   source?: string;
+  home_airport?: string;
 }
 
 // ── Validation ────────────────────────────────────────────────────────────────
@@ -137,7 +138,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { email, name, source } = body;
+  const { email, name, source, home_airport } = body;
 
   // 1. Validate email
   if (!isValidEmail(email)) {
@@ -173,10 +174,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .from('newsletter_subscribers')
     .upsert(
       {
-        email:     normalizedEmail,
-        full_name: name?.trim() || null,
-        source:    source?.trim() || null,
-        is_active: true,
+        email:        normalizedEmail,
+        full_name:    name?.trim() || null,
+        source:       source?.trim() || null,
+        home_airport: home_airport?.trim().slice(0, 120) || null,
+        is_active:    true,
       },
       { onConflict: 'email' },
     );

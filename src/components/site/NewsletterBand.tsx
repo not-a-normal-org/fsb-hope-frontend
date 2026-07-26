@@ -18,7 +18,7 @@ export default function NewsletterBand() {
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-ink-sub">
           Occasional notes from our specialists — sweet spots, transfer bonuses, and award space
-          worth knowing about. No spam, unsubscribe anytime.
+          worth knowing about, tailored to your home airport. No spam, unsubscribe anytime.
         </p>
         <div className="mx-auto mt-8 max-w-md">
           <NewsletterForm source="home_band" buttonLabel="Subscribe" />
