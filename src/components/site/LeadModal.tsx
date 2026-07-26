@@ -438,7 +438,7 @@ export default function LeadModal({
                 </div>
               ) : (
                 <>
-                  <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-accent">
+                  <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent">
                     Step {step + 1} of {TOTAL_STEPS}
                   </p>
 
@@ -469,7 +469,7 @@ export default function LeadModal({
                         type="button"
                         onClick={() => setStep((s) => s + 1)}
                         disabled={!canAdvance}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-55"
+                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
                       >
                         Next
                         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -479,7 +479,7 @@ export default function LeadModal({
                         type="button"
                         onClick={submit}
                         disabled={!emailOk || status === 'submitting'}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-55"
+                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
                       >
                         {status === 'submitting' ? (
                           <>
