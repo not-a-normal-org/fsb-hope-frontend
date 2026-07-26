@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
+  UserCog,
   CreditCard,
   ShoppingBag,
   Package,
@@ -18,6 +19,7 @@ import {
 
 const NAV_ITEMS = [
   { label: 'Dashboard',     href: '/admin',               icon: LayoutDashboard },
+  { label: 'Team',          href: '/admin/team',          icon: UserCog         },
   { label: 'Customers',     href: '/admin/customers',     icon: Users           },
   { label: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard      },
   { label: 'Orders',        href: '/admin/orders',        icon: ShoppingBag     },
