@@ -131,6 +131,27 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  /**
+   * Full name of the account holder.
+   */
+  name: string;
+  /**
+   * Determines access. Only Admin can enter the Payload CMS panel.
+   */
+  role: 'admin' | 'agent' | 'searcher' | 'affiliate';
+  status: 'active' | 'suspended';
+  /**
+   * Affiliate’s firm / practice.
+   */
+  company?: string | null;
+  /**
+   * Code used to attribute referred clients.
+   */
+  referralCode?: string | null;
+  /**
+   * Internal notes — never shown to the account holder.
+   */
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -407,6 +428,12 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  status?: T;
+  company?: T;
+  referralCode?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
