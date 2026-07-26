@@ -5,6 +5,7 @@ import GhostVsRealCompare from '@/components/site/GhostVsRealCompare';
 import CaseStudyTeaser from '@/components/site/CaseStudyTeaser';
 import AlertsTeaser from '@/components/site/AlertsTeaser';
 import CalculatorTeaser from '@/components/site/CalculatorTeaser';
+import NewsletterBand from '@/components/site/NewsletterBand';
 import Footer from '@/components/site/Footer';
 
 /**
@@ -28,6 +29,7 @@ export default function Home() {
       <CaseStudyTeaser />
       <AlertsTeaser />
       <CalculatorTeaser />
+      <NewsletterBand />
       <Footer />
     </>
   );

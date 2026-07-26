@@ -228,7 +228,9 @@
   z-index: 0;
   overflow: hidden;
   color: var(--sm-ink);
-  border: 1px solid var(--sm-glass-border);
+  /* Clearly-outlined resting border — the glass border is near-invisible on the
+     light theme. Ink-based so it reads in every mode. Hover recolors to accent. */
+  border: 1px solid color-mix(in srgb, var(--sm-ink) 30%, transparent);
   transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 .sm-cta-ghost:hover {
@@ -345,6 +347,31 @@
   box-shadow:
     0 0 20px 2px color-mix(in srgb, var(--sm-accent) 50%, transparent),
     inset 0 0 10px 0 color-mix(in srgb, var(--sm-accent) 28%, transparent);
+}
+
+/* ---- Cursor ripple (ambient background) ------------------------------------
+   Soft accent rings that expand + fade with cursor movement, behind the content.
+   Driven by CursorRipple (client); fine-pointer only, off under reduced-motion. */
+.sm-ripple {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 9999px;
+  border: 1.5px solid color-mix(in srgb, var(--sm-accent) 50%, transparent);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: sm-ripple 0.9s ease-out forwards;
+}
+@keyframes sm-ripple {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(7);
+    opacity: 0;
+  }
 }
 
 /* ---- Theme crossfade -------------------------------------------------------
