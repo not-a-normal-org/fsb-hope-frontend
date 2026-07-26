@@ -431,7 +431,7 @@ export default function LeadModal({
                     type="button"
                     onClick={close}
                     data-autofocus
-                    className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm font-medium"
+                    className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
                   >
                     Done
                   </button>
@@ -455,7 +455,7 @@ export default function LeadModal({
                       <button
                         type="button"
                         onClick={() => setStep((s) => s - 1)}
-                        className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-medium"
+                        className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-sm font-medium transition-colors"
                       >
                         <ArrowLeft className="h-4 w-4" aria-hidden />
                         Back
@@ -469,7 +469,7 @@ export default function LeadModal({
                         type="button"
                         onClick={() => setStep((s) => s + 1)}
                         disabled={!canAdvance}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-70"
                       >
                         Next
                         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -479,7 +479,7 @@ export default function LeadModal({
                         type="button"
                         onClick={submit}
                         disabled={!emailOk || status === 'submitting'}
-                        className="sm-cta inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-70"
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-70"
                       >
                         {status === 'submitting' ? (
                           <>
