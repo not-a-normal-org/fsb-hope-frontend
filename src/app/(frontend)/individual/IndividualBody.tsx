@@ -20,15 +20,15 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 const STEPS = [
   {
     title: 'Tell us the trip',
-    body: 'Where you want to go and the points you hold. No account, no long form.',
+    body: 'Where you want to go and the points you hold. No account, no long form. Then forget it.',
   },
   {
-    title: 'A person searches',
-    body: 'We search your points by hand across 30+ programs — the routings tools miss.',
+    title: 'A specialist takes over',
+    body: 'Your specialist works your points across 30+ programs, including the routings the tools miss.',
   },
   {
     title: 'You get proof',
-    body: 'A screenshot and the exact point cost. You only pay the $99 fee if we find a bookable seat.',
+    body: 'A screenshot and the exact point cost, sent straight to you. You only pay the $99 fee if we find a seat you can book.',
   },
 ];
 
@@ -83,9 +83,9 @@ export default function IndividualBody() {
                 <span className="text-sm text-ink-sub">deposit to start</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                Then a flat <span className="text-ink">$99</span> — any cabin — charged
-                only once we confirm a bookable seat. Find nothing? Your deposit comes
-                back in full.
+                Then a flat <span className="text-ink">$99</span>, any cabin, charged
+                only once your specialist confirms a seat you can book. If we find
+                nothing, your deposit comes back in full.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <button
@@ -125,8 +125,8 @@ export default function IndividualBody() {
             {...inViewOnce}
             className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-ink-sub"
           >
-            The Weekly Lookup Alert watches your routes and tells you when award space
-            opens up — $4.99/mo, cancel anytime.
+            The Weekly Lookup Alert keeps watch on your routes and tells you the moment
+            award space opens up. $4.99/mo, cancel anytime.
           </motion.p>
           <motion.div variants={entrance} {...inViewOnce} className="mt-7">
             <Link

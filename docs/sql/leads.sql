@@ -25,7 +25,11 @@ create table if not exists public.leads (
   whatsapp          text,   -- individual, optional
   phone             text,   -- business, optional
   cal_booking_id    text,   -- business callback booked via Cal.com (later slice)
-  status            text not null default 'new'  -- new | contacted | searching | closed
+  status            text not null default 'new',  -- new | contacted | searching | closed
+
+  -- richer individual questionnaire answers: dates, flexibility, passengers,
+  -- cabin, preferences, notes (the wizard's per-step notes)
+  details           jsonb
 );
 
 -- Lock down: only the service-role key (which bypasses RLS) can read/write.

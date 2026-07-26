@@ -25,7 +25,11 @@ interface LeadBody {
   email?: string;
   whatsapp?: string;
   phone?: string;
+  details?: Record<string, unknown>;
 }
+
+// Extra individual questionnaire answers stored in leads.details (jsonb).
+const DETAIL_KEYS = ['dates', 'flexibility', 'passengers', 'cabin', 'preferences', 'notes'];
 
 /** Trim, cap length, and normalise empty → null. */
 function clip(value: unknown, max = 2000): string | null {
@@ -55,6 +59,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
   }
 
+  // Take only known detail keys, clipped — never store arbitrary client JSON.
+  const rawDetails =
+    body.details && typeof body.details === 'object' ? (body.details as Record<string, unknown>) : {};
+  const details: Record<string, string> = {};
+  for (const key of DETAIL_KEYS) {
+    const value = clip(rawDetails[key]);
+    if (value) details[key] = value;
+  }
+
   const { error } = await supabaseAdmin.from('leads').insert({
     type,
     route,
@@ -65,6 +78,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     email,
     whatsapp: clip(body.whatsapp, 40),
     phone: clip(body.phone, 40),
+    details: Object.keys(details).length ? details : null,
   });
 
   if (error) {
