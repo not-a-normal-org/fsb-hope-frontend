@@ -120,6 +120,10 @@ export default function LeadModal({
   }, [open, step, status]);
 
   const submit = async () => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+      setError('Please enter a valid email address.');
+      return;
+    }
     setStatus('submitting');
     setError(null);
     try {
@@ -165,8 +169,20 @@ export default function LeadModal({
 
   if (!mounted) return null;
 
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
   const canAdvance = !business && step === 0 ? data.route.trim().length > 0 : true;
+
+  const goNext = () => {
+    if (!canAdvance) {
+      setError('Please tell us where you want to go.');
+      return;
+    }
+    setError(null);
+    setStep((s) => s + 1);
+  };
+  const goBack = () => {
+    setError(null);
+    setStep((s) => s - 1);
+  };
 
   const individualStep = (s: number) => {
     switch (s) {
@@ -454,7 +470,7 @@ export default function LeadModal({
                     {step > 0 ? (
                       <button
                         type="button"
-                        onClick={() => setStep((s) => s - 1)}
+                        onClick={goBack}
                         className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-sm font-medium transition-colors"
                       >
                         <ArrowLeft className="h-4 w-4" aria-hidden />
@@ -467,9 +483,8 @@ export default function LeadModal({
                     {step < TOTAL_STEPS - 1 ? (
                       <button
                         type="button"
-                        onClick={() => setStep((s) => s + 1)}
-                        disabled={!canAdvance}
-                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-70"
+                        onClick={goNext}
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors"
                       >
                         Next
                         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -478,8 +493,8 @@ export default function LeadModal({
                       <button
                         type="button"
                         onClick={submit}
-                        disabled={!emailOk || status === 'submitting'}
-                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-70"
+                        disabled={status === 'submitting'}
+                        className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed"
                       >
                         {status === 'submitting' ? (
                           <>
