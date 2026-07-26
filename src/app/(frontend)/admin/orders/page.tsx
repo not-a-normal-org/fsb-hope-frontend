@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { tierNameByPriceId } from '@/lib/tiers';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -17,18 +18,6 @@ interface Order {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-const TIER_NAMES: Record<string, string> = {
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_EXPLORE!]:   'Explore',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_PLATINUM!]:  'Platinum',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_BLACK!]:     'Black',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE!]: 'Concierge',
-};
-
-function tierName(priceId: string | null): string {
-  if (!priceId) return 'One-time';
-  return TIER_NAMES[priceId] ?? `…${priceId.slice(-6)}`;
-}
 
 function fmtDate(iso: string): string {
   return new Intl.DateTimeFormat('en-AU', {
@@ -184,7 +173,7 @@ export default async function OrdersPage({
                       <p className="text-xs text-[#9DA3B4] mt-0.5">{order.customer?.email ?? '—'}</p>
                     </td>
                     {/* Product */}
-                    <td className="px-5 py-3.5 text-[#9DA3B4]">{tierName(order.stripe_price_id)}</td>
+                    <td className="px-5 py-3.5 text-[#9DA3B4]">{tierNameByPriceId(order.stripe_price_id)}</td>
                     {/* Amount */}
                     <td className="px-5 py-3.5 font-medium text-[#F5F5F0] tabular-nums whitespace-nowrap">
                       {fmtUSD(order.amount_cents)}

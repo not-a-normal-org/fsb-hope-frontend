@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { tierKeyFromTags } from '@/lib/tiers';
+import { TierSelect } from './TierSelect';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -14,6 +16,7 @@ interface Customer {
   company_name: string | null;
   business_type: string | null;
   annual_spend_range: string | null;
+  tags: string[] | null;
   status: CustomerStatus;
   created_at: string;
 }
@@ -54,7 +57,7 @@ function StatusBadge({ status }: { status: CustomerStatus }) {
 async function fetchCustomers(statusFilter: string) {
   let query = supabaseAdmin
     .from('customers')
-    .select('id, full_name, email, phone, company_name, business_type, annual_spend_range, status, created_at')
+    .select('id, full_name, email, phone, company_name, business_type, annual_spend_range, tags, status, created_at')
     .order('created_at', { ascending: false });
 
   if (statusFilter !== 'all') {
@@ -130,7 +133,7 @@ export default async function CustomersPage({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#1E2538]">
-                  {['Name', 'Contact', 'Company', 'Annual Spend', 'Status', 'Joined'].map((h) => (
+                  {['Name', 'Contact', 'Company', 'Tier', 'Annual Spend', 'Status', 'Joined'].map((h) => (
                     <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#5C6378] whitespace-nowrap">
                       {h}
                     </th>
@@ -160,6 +163,10 @@ export default async function CustomersPage({
                       {c.business_type && (
                         <p className="text-xs text-[#5C6378] mt-0.5">{c.business_type}</p>
                       )}
+                    </td>
+                    {/* Tier */}
+                    <td className="px-5 py-3.5">
+                      <TierSelect customerId={c.id} current={tierKeyFromTags(c.tags)} />
                     </td>
                     {/* Annual spend */}
                     <td className="px-5 py-3.5 text-[#9DA3B4] whitespace-nowrap">
