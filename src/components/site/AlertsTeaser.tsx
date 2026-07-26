@@ -16,12 +16,12 @@ const CARDS = [
   {
     name: 'Weekly Lookup Alert',
     price: '$4.99/mo',
-    body: 'An automated weekly scan of your routes. Cheap and broad — and honest that some space it surfaces may be phantom.',
+    body: 'An automated weekly scan of your routes. Broad and low cost, and honest that some of the space it surfaces may be phantom.',
   },
   {
     name: 'Human Search Alert',
     price: '$99.99/mo',
-    body: 'A real person checks your routes each cycle and sends verified results. The opposite of an automated feed.',
+    body: 'A specialist checks your routes every cycle and sends back verified results. The opposite of an automated feed.',
   },
 ];
 
@@ -33,7 +33,7 @@ export default function AlertsTeaser() {
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Alerts</p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            Not ready to book? Keep watching your routes.
+            Not ready to book yet? We’ll keep watch on your routes for you.
           </h2>
         </motion.div>
 

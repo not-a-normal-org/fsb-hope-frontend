@@ -73,7 +73,7 @@ export default function NavBar() {
             href="/individual"
             className="rounded-full px-4 py-2 text-sm font-medium transition-colors sm-cta"
           >
-            Check My Route
+            Get a points audit
           </Link>
         </div>
       </nav>

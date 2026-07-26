@@ -22,7 +22,7 @@ export default function CalculatorPage() {
       <PageHero
         eyebrow="Calculator"
         title="What are your points actually worth?"
-        intro="A quick estimate of what a balance could be worth in travel — and what it could realistically book. It’s an estimate, not a live search; the real answer comes from checking your dates."
+        intro="A quick estimate of what your balance could be worth in travel, and what it could realistically book. It’s a starting point, not a live search. The real answer comes from a specialist checking your dates."
       />
       <section className="relative">
         <div className="mx-auto max-w-6xl px-6 pb-20">

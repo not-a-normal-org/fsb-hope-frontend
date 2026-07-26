@@ -23,9 +23,9 @@ const GHOST = [
 ];
 
 const REAL = [
-  'A person opens the booking and confirms the seat',
-  'Proof: the exact seat and point cost',
-  '30+ programs and transfer partners, searched together',
+  'A specialist opens the booking and confirms your seat is really there',
+  'Proof in hand: the exact seat and the point cost',
+  '30+ programs and transfer partners, worked through for you',
   'Real availability on your dates, or an honest no',
 ];
 
@@ -49,7 +49,7 @@ export default function GhostVsRealCompare() {
             Automated vs. by hand
           </p>
           <h2 className="mt-4 font-display text-section font-bold text-ink">
-            The tools show you availability. We show you a bookable seat.
+            The tools show you availability. Your specialist hands you a seat you can book.
           </h2>
         </motion.div>
 

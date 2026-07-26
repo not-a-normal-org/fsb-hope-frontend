@@ -72,7 +72,7 @@ export default function BlogIndex({
         )}
 
         {posts.length === 0 ? (
-          <Empty message="We’re just getting started — the first posts are on the way. Check back soon." />
+          <Empty message="We’re just getting started. The first posts are on the way, so check back soon." />
         ) : filtered.length === 0 ? (
           <Empty
             message={query.trim() ? `No posts match “${query.trim()}”.` : 'No posts in this category yet.'}

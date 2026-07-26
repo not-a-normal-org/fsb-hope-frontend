@@ -32,18 +32,18 @@ export default function HomeHero() {
         <motion.div variants={entrance}>
           <GlassPanel maxWidth="max-w-2xl" padding="p-9 sm:p-11">
             <p className="font-mono text-eyebrow font-medium uppercase text-accent">
-              30+ Programs Checked By Hand
+              Your Own Points Specialist
             </p>
 
             <ShineText as="h1" className="mt-4 text-hero font-bold">
-              Your points are sitting idle. We find out what they&rsquo;re
-              actually worth.
+              The award system is broken. Your specialist makes it work for you.
             </ShineText>
 
             <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-ink-sub">
-              A real person searches every major loyalty program by hand and
-              sends proof — the exact seat and point cost. Real availability, not
-              the stale inventory automated tools show.
+              Tell us your plans and forget them. A specialist is assigned to
+              your account, works every major loyalty program, and gets the most
+              out of the points you already hold. You get a seat worth flying and
+              the exact cost to book it.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3.5">
@@ -51,7 +51,7 @@ export default function HomeHero() {
                 href="/individual"
                 className="rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors sm-cta"
               >
-                Check My Route — Free
+                Get a free points audit
               </Link>
               <Link
                 href="/how-it-works"

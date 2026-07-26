@@ -41,7 +41,7 @@ export default async function BlogIndexPage() {
         compact
         eyebrow="Blog"
         title="Notes on points, seats, and doing it by hand."
-        intro="Field notes from searching award space the manual way — what the tools miss, and how to actually use the points you have."
+        intro="Field notes from working award space the slow, correct way: what the tools miss, and how to actually use the points you have."
       />
       <BlogIndex posts={posts} />
       <Footer />

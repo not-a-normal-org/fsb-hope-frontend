@@ -38,16 +38,16 @@ export default function PricingPage() {
 
       <PageHero
         eyebrow="Pricing"
-        title="Pay for a person to find the seat."
-        intro="Two ways to search — once, or ongoing — plus alerts that keep watching your routes. Prices are flat and stated up front, and the one automated product says so plainly, right on its card."
+        title="Put a specialist on your points."
+        intro="Two ways to search, once or ongoing, plus alerts that keep watch on your routes. Prices are flat and stated up front, and the one automated product says so plainly, right on its card."
       />
 
       <section className="relative">
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-16">
           <GroupHeading
             label="One-off searches"
-            title="Pay per search. A person does the work."
-            sub="No subscription. Submit what you need and a real person searches 30+ programs by hand, then sends proof."
+            title="Pay per search. A specialist does the work."
+            sub="No subscription. Tell us what you need, a specialist works 30+ programs, then sends you the proof."
           />
           <StaggerGroup className="grid gap-6 md:grid-cols-2">
             {SEARCH_PRODUCTS.map((p) => (
@@ -61,8 +61,8 @@ export default function PricingPage() {
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-16">
           <GroupHeading
             label="Ongoing alerts"
-            title="Two ways to keep watching — one automated, one human."
-            sub="The difference is the whole point, so it's on the cards: a cheap automated scan that can surface phantom space, or a person checking your routes for real."
+            title="Two ways to keep watch on your routes: one automated, one specialist."
+            sub="The difference is the whole point, so it's on the cards: a low-cost automated scan that can surface phantom space, or a specialist checking your routes for real."
           />
           <StaggerGroup className="grid gap-6 md:grid-cols-2">
             {ALERT_PRODUCTS.map((p) => (
@@ -76,8 +76,8 @@ export default function PricingPage() {
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
           <p className="text-sm leading-relaxed text-ink-sub">
             No countdown timers, no fake deadlines. If we can’t find something
-            bookable, we tell you — and on an individual search, your deposit
-            comes back.
+            bookable, we tell you straight, and on an individual search, your
+            deposit comes back.
           </p>
         </div>
       </section>

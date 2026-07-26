@@ -139,7 +139,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
         href="/individual"
         className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta"
       >
-        Run a free search
+        Get a free points audit
       </Link>
     </GlassPanel>
   );

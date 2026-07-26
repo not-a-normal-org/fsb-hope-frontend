@@ -17,11 +17,12 @@ export default function CalculatorTeaser() {
         <motion.div variants={entrance} {...inViewOnce}>
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Calculator</p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            See what your points are roughly worth.
+            See what your points could be worth to you.
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-sub">
-            A quick estimate, not a live search. Enter a balance for a rough travel
-            value — then run a real search to see what’s actually bookable.
+            A quick estimate to get you started. Enter your balance for a rough
+            travel value, then let a specialist run the real audit to see what’s
+            actually bookable.
           </p>
         </motion.div>
 

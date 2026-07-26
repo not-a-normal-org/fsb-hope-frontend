@@ -50,8 +50,8 @@ export default function Footer() {
           <div className="max-w-xs">
             <Logo className="text-xl" />
             <p className="mt-5 text-sm leading-relaxed text-ink-sub">
-              Real award seats, found by hand across 30+ loyalty programs — not
-              the ghost availability automated tools show.
+              Award travel is broken. We assign you a specialist who fixes it,
+              working 30+ loyalty programs to get you a seat worth flying.
             </p>
             <div className="mt-6">
               <ModeToggle />

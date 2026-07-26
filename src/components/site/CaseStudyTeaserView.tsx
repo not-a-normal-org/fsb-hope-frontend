@@ -20,10 +20,10 @@ export default function CaseStudyTeaserView({ study }: { study: CaseStudy }) {
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Proof</p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            A real person found this seat.
+            A specialist found this seat.
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-            Not an algorithm’s guess — a booking our team confirmed by hand, shared with the
+            Not an algorithm’s guess. A booking a specialist confirmed and shared with the
             traveler’s permission.
           </p>
         </motion.div>

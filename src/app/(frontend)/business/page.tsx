@@ -23,7 +23,7 @@ export default function BusinessPage() {
       <PageHero
         eyebrow="For business"
         title="Turn company travel spend into premium seats."
-        intro="For teams that fly often. We run account-level award searches by hand across 30+ programs and deliver proof — so your travel budget reaches further, reliably."
+        intro="For teams that fly often. A specialist runs account-level award searches across 30+ programs and delivers the proof, so your travel budget reaches further without adding to anyone’s workload."
       />
       <BusinessBody />
       <Footer />

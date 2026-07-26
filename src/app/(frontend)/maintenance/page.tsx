@@ -31,8 +31,9 @@ export default function MaintenancePage() {
         <h1 className="mt-8 font-display text-section font-bold text-ink">Under construction</h1>
 
         <p className="mt-5 text-sm leading-relaxed text-ink-sub">
-          Award tools are full of seats that aren&rsquo;t there. We&rsquo;re
-          building the fix — real award seats, found by hand. Launching soon.
+          Award travel is broken, full of seats that aren&rsquo;t really there.
+          We&rsquo;re building the fix: a specialist assigned to your points,
+          getting you a seat worth flying. Launching soon.
         </p>
 
         <p className="mt-3 text-sm text-ink-sub">

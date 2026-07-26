@@ -21,8 +21,8 @@ export default function AboutPage() {
       <NavBar />
       <PageHero
         eyebrow="About"
-        title="We do by hand what everyone else automated."
-        intro="Award tools are fast, free, and full of seats that aren’t really there. Saver Miles is the opposite: a real person searches, verifies, and hands you a seat you can actually book."
+        title="The system was broken. We’re here to fix it."
+        intro="Award tools are fast, cheap, and full of seats that aren’t really there. Saver Miles is the opposite: a specialist assigned to you who sorts through the mess, verifies the seat, and hands you one you can actually book."
       />
       <AboutBody />
       <Footer />

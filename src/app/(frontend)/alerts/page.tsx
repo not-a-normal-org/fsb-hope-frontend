@@ -23,8 +23,8 @@ export default function AlertsPage() {
 
       <PageHero
         eyebrow="Alerts"
-        title="Keep watching your routes — automated, or by a person."
-        intro="Award space comes and goes. Choose a cheap automated weekly scan, or a real person checking your routes each cycle. One can surface phantom space; the other is verified. The card says which."
+        title="Keep watch on your routes: automated, or a specialist."
+        intro="Award space comes and goes. Choose a low-cost automated weekly scan, or a specialist checking your routes each cycle. One can surface phantom space, the other is verified. The card says which."
       />
 
       <section className="relative">

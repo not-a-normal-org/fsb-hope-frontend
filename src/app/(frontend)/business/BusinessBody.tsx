@@ -20,15 +20,15 @@ const START = 'mailto:hello@savermiles.com?subject=Business%20Search';
 const STEPS = [
   {
     title: 'Send us the route',
-    body: 'The trip your team needs and the points or programs you hold. One request — no procurement dance.',
+    body: 'The trip your team needs and the points or programs you hold. One request, then forget it.',
   },
   {
-    title: 'We search by hand',
-    body: 'A person searches 30+ programs and transfer partners for real, bookable business-class space — not the phantom seats tools surface.',
+    title: 'A specialist takes it from here',
+    body: 'Your specialist works 30+ programs and transfer partners for real, bookable business-class space, not the phantom seats the tools surface.',
   },
   {
     title: 'You get proof to book',
-    body: 'A screenshot and the exact point cost, per seat. Reliable enough to plan a team’s travel around.',
+    body: 'A screenshot and the exact point cost, per seat. Reliable enough to plan a whole team’s travel around.',
   },
 ];
 
@@ -46,7 +46,7 @@ export default function BusinessBody() {
             {...inViewOnce}
             className="max-w-2xl font-display text-section font-bold text-ink"
           >
-            Account-level search, done by hand
+            Account-level search, handled by a specialist
           </motion.h2>
           <motion.div
             variants={staggerParent}
@@ -82,7 +82,7 @@ export default function BusinessBody() {
                 <span className="text-sm text-ink-sub">flat, per search</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                Charged once, when you submit — no subscription, no retainer. The
+                Charged once, when you submit. No subscription, no retainer. The
                 account-level entry point for a team that flies often.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
@@ -123,7 +123,7 @@ export default function BusinessBody() {
             className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-ink-sub"
           >
             For accounts with high-stakes travel that repeats, the Human Search Alert
-            puts a real person on your routes every cycle — $99.99/mo, cancel anytime.
+            keeps a specialist on your routes every cycle. $99.99/mo, cancel anytime.
           </motion.p>
           <motion.div variants={entrance} {...inViewOnce} className="mt-7">
             <Link
