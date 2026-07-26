@@ -349,6 +349,31 @@
     inset 0 0 10px 0 color-mix(in srgb, var(--sm-accent) 28%, transparent);
 }
 
+/* ---- Cursor ripple (ambient background) ------------------------------------
+   Soft accent rings that expand + fade with cursor movement, behind the content.
+   Driven by CursorRipple (client); fine-pointer only, off under reduced-motion. */
+.sm-ripple {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 9999px;
+  border: 1.5px solid color-mix(in srgb, var(--sm-accent) 50%, transparent);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: sm-ripple 0.9s ease-out forwards;
+}
+@keyframes sm-ripple {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(7);
+    opacity: 0;
+  }
+}
+
 /* ---- Theme crossfade -------------------------------------------------------
    ModeToggle stamps [data-theme-anim] on <html> for ~320ms around a switch, so
    the ~300ms color transition is paid only during a switch — not on every hover
