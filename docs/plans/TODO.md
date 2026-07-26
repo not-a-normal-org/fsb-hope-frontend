@@ -6,7 +6,7 @@ this file is the at-a-glance "what's done / what's next."
 
 Legend: `[x]` done (merged) · `[~]` in progress / in review · `[ ]` not started
 
-_Last updated: 2026-07-23._
+_Last updated: 2026-07-26._
 
 ## Foundation — done
 
@@ -14,45 +14,50 @@ _Last updated: 2026-07-23._
 - [x] Construction wall (`src/proxy.ts`) — admin-gated; public sees `/maintenance`
 - [x] Logo (wordmark + green arc), fonts (Zilla Slab / IBM Plex)
 - [x] PR-per-feature git workflow (`AGENTS.md`)
+- [x] Custom cursor (dot + spring ring, accent glow, hover grow) — theme-aware, fine-pointer only
+- [x] Button hover system — filled `.sm-cta` (shine sweep) + outline `.sm-cta-ghost` (border/wash/sweep)
 
 ## Pages — done (frontend)
 
-- [x] `/` home — hero, audience fork, ghost-vs-real, alerts teaser, calculator teaser
-- [x] `/individual`, `/business` — audience pages (lead form deferred)
+- [x] `/` home — hero, audience fork, ghost-vs-real, alerts teaser, calculator teaser, proof teaser
+- [x] `/individual`, `/business` — audience pages (lead form still deferred — see below)
 - [x] `/pricing`, `/alerts` — the four products + phantom disclosure
 - [x] `/how-it-works` — 3-step explainer
 - [x] `/about` — mission + mechanism + transparent pricing
 - [x] `/calculator` — points-value estimate (placeholder numbers, flagged)
-- [x] `/results` — coming-soon state (no fabricated testimonials)
 - [x] `/contact` — email route (booking/form deferred)
 - [x] `/legal/privacy`, `/legal/terms` — honest placeholders
 
-## Next: case study section (NEW — requested)
+## Backend / CMS — done
 
-- [ ] **Case study section.** A real proof/case-study surface — likely a home
-      section that teases one study + the full wall on `/results` (currently
-      coming-soon). Depends on real, permission-cleared client stories; the data
-      source is the Payload `testimonials`/case-study collection (see below), so
-      it lands with or after the Payload work. **Do not fabricate** — ships from
-      real stories only (`docs/plans/00`).
+- [x] **Payload CMS on Next 16** (`spike-payload-next16.md`) — admin `/cms`, API `/cms-api`,
+      Postgres on the SaverMiles Supabase project (`payload` schema, session pooler)
+- [x] Collections: `posts`, `categories`, `deals-of-week`, `testimonials` (Case Studies)
+- [x] `/blog` + `/blog/[slug]` — searchable card grid, category pages, Guides/Deals nav
+- [x] Media → Supabase Storage (S3), per-post SEO (meta tab, OG images), drafts
+- [x] **Case-study section** — `/results` wall + `/results/[slug]` detail + home proof teaser,
+      driven by the `testimonials` collection (consent-gated; no fabrication)
 
-## Backend track — not started (needs external setup)
+## Next: lead capture + conversion — not started
 
-- [~] **Payload CMS on Next 16** — spike done, GREEN LIGHT
-      (see `spike-payload-next16.md`). Prerequisite: bump Next 16.2.0 → 16.2.11.
-  - [ ] `chore:` bump Next to 16.2.11, verify existing site unaffected
-  - [ ] Install Payload + `@payloadcms/db-postgres` → same Supabase Postgres
-  - [ ] Collections: `posts`, `categories`, `deals-of-week`, `testimonials`
-  - [ ] Deal of the Week (home) · `/blog` + `/blog/[slug]` · case-study source
-- [ ] **Supabase schema** — `leads`, `newsletter_subscribers`, `alert_subscriptions`, `search_requests` (`docs/plans/06`)
-- [ ] **Lead forms** — individual + business multi-step → Supabase (replaces interim `mailto:` CTAs)
-- [ ] **Newsletter band** — home + footer → Supabase/Resend
-- [ ] **Stripe checkout** — products/prices in dashboard; deposit (Checkout) + success fee (SetupIntent/Invoice); webhooks
+- [ ] **Lead forms** *(next up)* — individual + business multi-step → Supabase, replacing the
+      interim `mailto:` CTAs on `/individual`, `/business`, `/contact`. Kept API routes from the
+      prior build (`/api/contact`, `/api/apply`, `/api/newsletter`) + the admin portal are the
+      backend to wire into. Confirm/extend the Supabase schema as needed.
+- [ ] **Supabase schema** — `leads`, `newsletter_subscribers`, `alert_subscriptions`,
+      `search_requests` (`docs/plans/06`) — reconcile with what the kept API routes already use.
+- [ ] **Newsletter band** — home + footer → Supabase/Resend (Resend not yet configured)
+- [ ] **Stripe checkout** — products/prices in dashboard; deposit (Checkout) + success fee
+      (SetupIntent/Invoice); webhooks
 - [ ] **Cal.com** — business callback + `/contact` booking widget
 
 ## Pre-launch gates
 
 - [ ] Replace calculator placeholder numbers with real search-history data
 - [ ] Confirm "14+ yrs / 23,000+ searches" attribution (provenance vs. "no prior company")
-- [ ] Resolve Dependabot alerts (29 flagged; recheck after Payload's ~444 deps)
-- [ ] Final non-negotiables audit; then drop the construction wall
+- [ ] Resolve Dependabot alerts (recheck after Payload's deps)
+- [ ] Remove the **SAMPLE** case study seeded in the CMS (attribution starts with `SAMPLE`)
+- [ ] Configure Resend (Payload email adapter + newsletter/contact sends)
+- [ ] Add prod env to Vercel (`DATABASE_URI`, `PAYLOAD_SECRET`, `S3_*`, Supabase keys)
+- [ ] Rotate the DB password + S3 secret pasted during setup
+- [ ] Final non-negotiables audit; then drop the construction wall + the global `noindex`
