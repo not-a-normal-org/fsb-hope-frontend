@@ -45,7 +45,9 @@
 
   --sm-ink: #0A2540;
   --sm-ink-sub: #4B5A6B;
-  --sm-ink-muted: #7C8FA6;
+  /* Darker than dark-mode's muted: #7C8FA6 is too low-contrast on the near-white
+     light surfaces (labels, placeholders, meta). */
+  --sm-ink-muted: #5B6B80;
 
   --sm-accent: #3E7CB1;
   --sm-cta: #1877F2;
@@ -264,6 +266,22 @@
 :root:not([data-theme]) .sm-cta-ghost:hover,
 [data-theme='dark'] .sm-cta-ghost:hover {
   color: #ffffff;
+}
+
+/* ---- Icon button (close, dismiss) ------------------------------------------
+   A clearly-visible circular icon button for overlays/modals. Ink icon on a
+   subtle ink-tinted fill + border, so it reads on any surface (unlike the faint
+   ghost); accent hover. Use this for a modal close — never a bare ghost. */
+.sm-icon-btn {
+  color: var(--sm-ink);
+  background: color-mix(in srgb, var(--sm-ink) 9%, transparent);
+  border: 1px solid var(--sm-glass-border);
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.sm-icon-btn:hover {
+  background: color-mix(in srgb, var(--sm-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--sm-accent) 55%, transparent);
+  color: var(--sm-accent);
 }
 
 /* ---- Custom cursor ---------------------------------------------------------
