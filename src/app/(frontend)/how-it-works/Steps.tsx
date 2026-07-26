@@ -18,13 +18,13 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 const STEPS = [
   {
     n: '01',
-    title: 'Tell us the route',
-    body: 'Send us where you want to go and the points you hold. No account, no drawn-out form — just the trip you have in mind.',
+    title: 'Tell us the plan',
+    body: 'Send us where you want to go and the points you hold. No account, no drawn-out form, just the trip you have in mind. Then forget it.',
   },
   {
     n: '02',
-    title: 'We search 30+ programs by hand',
-    body: 'A real person searches live award space across 30+ loyalty programs and transfer partners — the routings an automated tool misses, and the seats it wrongly shows as bookable.',
+    title: 'A specialist works 30+ programs',
+    body: 'Your specialist searches live award space across 30+ loyalty programs and transfer partners, finding the routings an automated tool misses and skipping the seats it wrongly shows as bookable.',
   },
   {
     n: '03',
@@ -62,7 +62,7 @@ export default function Steps() {
             href="/individual"
             className={`${ctaPrimary} sm-cta`}
           >
-            Start an individual search
+            Get a free points audit
           </Link>
           <Link
             href="/business"

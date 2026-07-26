@@ -36,7 +36,7 @@ export default async function ResultsPage() {
       {studies.length === 0 ? (
         <NoticeSection
           heading="Results are coming in"
-          body="We’re a new brand doing the work by hand. Check back soon — or find out what your own points can book."
+          body="We’re a new brand, and every result here is one a specialist actually delivered. Check back soon, or find out what your own points can book."
           cta={{ label: 'Check your route', href: '/individual' }}
         />
       ) : (

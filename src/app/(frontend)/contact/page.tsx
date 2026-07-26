@@ -22,8 +22,8 @@ export default function ContactPage() {
       <NavBar />
       <PageHero
         eyebrow="Contact"
-        title="Talk to a person."
-        intro="Press, partnerships, or a question that doesn’t fit a search request — reach us directly. If you’re ready to search, the individual and business pages are the faster path."
+        title="Talk to a specialist."
+        intro="Press, partnerships, or a question that doesn’t fit a search request: reach us directly. If you’re ready to get the most from your points, the individual and business pages are the faster path."
       />
       <NoticeSection
         heading="Email us"
@@ -37,7 +37,7 @@ export default function ContactPage() {
             </a>
             <p className="mt-3 text-ink-muted">
               A booking calendar is on the way. For now, email is the fastest way to
-              reach a real person.
+              reach a specialist.
             </p>
           </>
         }

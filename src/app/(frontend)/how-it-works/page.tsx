@@ -31,11 +31,11 @@ export default function HowItWorksPage() {
             How it works
           </p>
           <ShineText as="h1" className="mt-4 max-w-3xl text-hero font-bold">
-            Three steps, and a real person in the middle of them.
+            Three steps, and a specialist doing the work in the middle.
           </ShineText>
           <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-sub">
             No automated tool surfacing seats that vanish at checkout. You tell us
-            the route, a person searches by hand, and you get proof you can act on.
+            the plan, a specialist takes over, and you get proof you can act on.
           </p>
         </div>
       </section>

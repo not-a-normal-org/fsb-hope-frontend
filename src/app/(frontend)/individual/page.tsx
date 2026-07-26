@@ -24,7 +24,7 @@ export default function IndividualPage() {
       <PageHero
         eyebrow="For individuals"
         title="200,000 points, and no idea what they’re worth."
-        intro="You earned them. We find the seat they can actually book — searched by hand, with proof of the exact point cost — so you finally use them for something worth flying."
+        intro="You earned them. We assign a specialist who gets the most out of them, finds the seat they can actually book, and hands you the exact point cost. You just tell us where you want to go."
       />
       <IndividualBody />
       <Footer />

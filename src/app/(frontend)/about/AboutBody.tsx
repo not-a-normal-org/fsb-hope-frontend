@@ -19,16 +19,16 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  */
 const HOW = [
   {
-    title: 'Searched by a person, not a feed',
-    body: 'Award space changes by the minute and cached data lies. A real person searches 30+ programs and transfer partners by hand — including the routings automated tools skip.',
+    title: 'A specialist, not a feed',
+    body: 'Award space changes by the minute and cached data lies. Your specialist works 30+ programs and transfer partners, including the routings automated tools skip.',
   },
   {
     title: 'Verified before you commit',
-    body: 'We open the booking and confirm the seat is really there, at the price we quoted, before you spend a point or a dollar.',
+    body: 'Your specialist opens the booking and confirms the seat is really there, at the price we quoted, before you spend a point or a dollar.',
   },
   {
     title: 'Delivered as proof',
-    body: 'You get a screenshot and the exact point cost — something you can book, not a lead or a maybe.',
+    body: 'You get a screenshot and the exact point cost, something you can book, not a lead or a maybe.',
   },
 ];
 
@@ -52,10 +52,10 @@ export default function AboutBody() {
             {...inViewOnce}
             className="mt-5 text-base leading-relaxed text-ink-sub"
           >
-            The tools that are supposed to help are fast, free, and full of seats that
-            vanish the moment you try to book them. We started Saver Miles to do it the
-            slow, correct way — search by hand, verify before you pay, and hand you a
-            seat you can actually book.
+            The tools that are supposed to help are quick, cheap, and full of seats that
+            vanish the moment you try to book them. We built Saver Miles to fix that:
+            assign you a specialist, get the most out of what you already hold, verify
+            before you pay, and hand you a seat you can actually book.
           </motion.p>
         </div>
       </section>
@@ -115,9 +115,9 @@ export default function AboutBody() {
             <h2 className="font-display text-section font-bold text-ink">How we charge</h2>
             <p className="mt-5 text-base leading-relaxed text-ink-sub">
               Flat fees for the work, listed in full on the pricing page. A business
-              search is $25. An individual booking is a $25 deposit plus a $99 fee — and
-              if we find nothing bookable, the deposit comes back. Ongoing alerts are
-              monthly. That’s the whole model.
+              search is $25. An individual booking is a $25 deposit plus a $99 fee, and
+              if your specialist finds nothing bookable, the deposit comes back. Ongoing
+              alerts are monthly. That’s the whole model, nothing hidden.
             </p>
             <Link
               href="/pricing"
@@ -136,7 +136,7 @@ export default function AboutBody() {
             {...inViewOnce}
             className="font-display text-section font-bold text-ink"
           >
-            Find out what your points can actually book.
+            Put a specialist on your points.
           </motion.h2>
           <motion.div
             variants={entrance}

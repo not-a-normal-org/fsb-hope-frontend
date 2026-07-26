@@ -16,15 +16,15 @@ const CARDS = [
   {
     href: '/individual',
     kicker: "I'm booking for myself",
-    title: 'Turn the points you earned into a seat worth flying.',
-    body: 'You have points and no clear way to use them well. We find the bookable award seat and show you exactly how to claim it.',
+    title: 'Hand your points to a specialist and forget the guesswork.',
+    body: 'You have the points and no clear way to spend them well. We assign a specialist who finds the seat that’s actually bookable and hands you exactly how to claim it.',
     cta: 'For individuals',
   },
   {
     href: '/business',
     kicker: "I'm managing company travel",
-    title: 'Convert business travel spend into premium seats, reliably.',
-    body: 'Account-level search for teams that fly often. We handle the programs and the proof so your travel budget goes further.',
+    title: 'Give your team’s travel to a specialist who makes the points work.',
+    body: 'Account-level search for teams that fly often. A specialist handles the programs, the seats, and the proof, so your travel budget goes further and nobody on your side lifts a finger.',
     cta: 'For business',
   },
 ];
