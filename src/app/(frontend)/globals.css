@@ -228,7 +228,9 @@
   z-index: 0;
   overflow: hidden;
   color: var(--sm-ink);
-  border: 1px solid var(--sm-glass-border);
+  /* Clearly-outlined resting border — the glass border is near-invisible on the
+     light theme. Ink-based so it reads in every mode. Hover recolors to accent. */
+  border: 1px solid color-mix(in srgb, var(--sm-ink) 30%, transparent);
   transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 .sm-cta-ghost:hover {
