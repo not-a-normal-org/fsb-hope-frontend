@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
+import LeadModal from '@/components/site/LeadModal';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**
@@ -12,11 +14,9 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  * you, the $25 + $99 pricing explained plainly (full breakdown on /pricing),
  * and the Weekly Lookup Alert cross-sell as the natural next step.
  *
- * The multi-step lead form and the inline calculator are deferred to the
- * backend phase; the primary CTA is an interim mailto until the form ships.
+ * The primary CTA opens the multi-step lead modal (LeadModal → /api/leads); the
+ * inline calculator is deferred to a later slice.
  */
-const START = 'mailto:hello@savermiles.com?subject=Individual%20Search';
-
 const STEPS = [
   {
     title: 'Tell us the trip',
@@ -36,6 +36,7 @@ const ctaBase =
   'inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors';
 
 export default function IndividualBody() {
+  const [leadOpen, setLeadOpen] = useState(false);
   return (
     <>
       <section className="relative overflow-hidden">
@@ -87,12 +88,13 @@ export default function IndividualBody() {
                 back in full.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <a
-                  href={START}
+                <button
+                  type="button"
+                  onClick={() => setLeadOpen(true)}
                   className={`${ctaBase} sm-cta`}
                 >
                   Start your search
-                </a>
+                </button>
                 <Link
                   href="/pricing"
                   className={`${ctaBase} sm-cta-ghost`}
@@ -136,6 +138,8 @@ export default function IndividualBody() {
           </motion.div>
         </div>
       </section>
+
+      <LeadModal open={leadOpen} onClose={() => setLeadOpen(false)} type="individual" />
     </>
   );
 }

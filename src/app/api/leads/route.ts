@@ -1,0 +1,76 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+import { supabaseAdmin } from '@/lib/supabase/admin';
+
+/**
+ * POST /api/leads — persist a lead from the individual/business search flows into
+ * the Supabase `leads` table (docs/plans/06). Server-only: uses the service-role
+ * admin client, which the table's RLS is otherwise locked against.
+ *
+ * Individual requires a route + email; business/contact are accepted too (the
+ * business flow lands in a later slice). Email notification is deferred to the
+ * Resend setup — the DB write is the source of truth so no lead is lost.
+ */
+export const dynamic = 'force-dynamic';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface LeadBody {
+  type?: string;
+  route?: string;
+  points_held?: string;
+  yearly_spend?: string;
+  flight_need?: string;
+  points_budget?: string;
+  email?: string;
+  whatsapp?: string;
+  phone?: string;
+}
+
+/** Trim, cap length, and normalise empty → null. */
+function clip(value: unknown, max = 2000): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  let body: LeadBody;
+  try {
+    body = (await req.json()) as LeadBody;
+  } catch {
+    return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+  }
+
+  const type =
+    body.type === 'business' ? 'business' : body.type === 'contact' ? 'contact' : 'individual';
+
+  const email = clip(body.email, 320);
+  if (!email || !EMAIL_REGEX.test(email)) {
+    return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
+  }
+
+  const route = clip(body.route);
+  if (type === 'individual' && !route) {
+    return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
+  }
+
+  const { error } = await supabaseAdmin.from('leads').insert({
+    type,
+    route,
+    points_held: clip(body.points_held),
+    yearly_spend: clip(body.yearly_spend),
+    flight_need: clip(body.flight_need),
+    points_budget: clip(body.points_budget),
+    email,
+    whatsapp: clip(body.whatsapp, 40),
+    phone: clip(body.phone, 40),
+  });
+
+  if (error) {
+    console.error('[api/leads] insert error:', error.message);
+    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true }, { status: 201 });
+}
