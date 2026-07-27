@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
 
 /**
  * POST /api/leads — persist a lead from the individual/business search flows into
@@ -68,6 +69,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (value) details[key] = value;
   }
 
+  // Attribution: the affiliate's code, captured into the sm_ref cookie on landing.
+  const referralCode = sanitizeRefCode(req.cookies.get(REF_COOKIE)?.value);
+
   const { error } = await supabaseAdmin.from('leads').insert({
     type,
     route,
@@ -78,6 +82,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     email,
     whatsapp: clip(body.whatsapp, 40),
     phone: clip(body.phone, 40),
+    referral_code: referralCode,
     details: Object.keys(details).length ? details : null,
   });
 

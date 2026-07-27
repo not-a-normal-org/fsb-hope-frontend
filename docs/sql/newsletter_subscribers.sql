@@ -12,6 +12,7 @@ create table if not exists public.newsletter_subscribers (
   full_name   text,
   source        text,   -- which page/component captured it, for attribution
   home_airport  text,   -- subscriber's home airport, to tailor the newsletter
+  referral_code text,   -- affiliate attribution (sm_ref cookie); see src/lib/referral.ts
   is_active     boolean not null default true,  -- false = unsubscribed
   created_at    timestamptz not null default now()
 );
