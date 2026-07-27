@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import { ChevronDown, Loader2 } from 'lucide-react';
+import { tierLabelFromTag } from '@/lib/tiers';
 import { approveApplication, rejectApplication } from './actions';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -70,7 +71,7 @@ function ApprovePanel({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
 
-  const tier = customer.tags?.[0] ?? 'Explore';
+  const tier = tierLabelFromTag(customer.tags?.[0]) ?? 'Economy';
 
   function handleSend() {
     if (!selectedPriceId) { setError('Please select a product.'); return; }
@@ -142,7 +143,7 @@ function ApplicationRow({
   const [isPending, startTransition]  = useTransition();
   const [rejectError, setRejectError] = useState('');
 
-  const tier = customer.tags?.[0] ?? '—';
+  const tier = tierLabelFromTag(customer.tags?.[0]) ?? '—';
   const isPendingStatus = customer.status === 'pending';
 
   function handleReject() {

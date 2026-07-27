@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { tierNameByPriceId } from '@/lib/tiers';
 import { cancelSubscription } from './actions';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -22,17 +23,6 @@ interface Subscription {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-const TIER_NAMES: Record<string, string> = {
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_EXPLORE!]:    'Explore',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_PLATINUM!]:   'Platinum',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_BLACK!]:      'Black',
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE!]:  'Concierge',
-};
-
-function tierName(priceId: string): string {
-  return TIER_NAMES[priceId] ?? `…${priceId.slice(-6)}`;
-}
 
 function fmtDate(iso: string): string {
   return new Intl.DateTimeFormat('en-AU', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso));
@@ -182,7 +172,7 @@ export default async function SubscriptionsPage() {
                         <p className="text-xs text-[#9DA3B4] mt-0.5">{sub.customer?.email ?? '—'}</p>
                       </td>
                       {/* Tier */}
-                      <td className="px-5 py-3.5 text-[#F5F5F0] font-medium">{tierName(sub.stripe_price_id)}</td>
+                      <td className="px-5 py-3.5 text-[#F5F5F0] font-medium">{tierNameByPriceId(sub.stripe_price_id)}</td>
                       {/* Status */}
                       <td className="px-5 py-3.5"><StatusBadge status={sub.status} /></td>
                       {/* Renewal date */}
