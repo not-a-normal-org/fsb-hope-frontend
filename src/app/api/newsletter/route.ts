@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -169,6 +170,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   }
 
+  // Attribution: only set when present, so a re-subscribe never nulls an
+  // existing referral_code (an omitted column is untouched on conflict update).
+  const referralCode = sanitizeRefCode(req.cookies.get(REF_COOKIE)?.value);
+
   // 3. Upsert — handles the re-subscribe case (was inactive, now active again)
   const { error: upsertError } = await supabaseAdmin
     .from('newsletter_subscribers')
@@ -179,6 +184,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         source:       source?.trim() || null,
         home_airport: home_airport?.trim().slice(0, 120) || null,
         is_active:    true,
+        ...(referralCode ? { referral_code: referralCode } : {}),
       },
       { onConflict: 'email' },
     );
