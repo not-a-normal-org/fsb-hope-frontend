@@ -2,12 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { ADMIN_COOKIE, MAINTENANCE_ENABLED, isAdminToken } from '@/lib/maintenance';
 
-// Endpoints that must stay reachable without a token, so an admin can get one.
+// Endpoints that must stay reachable without a token, so an admin (or an account
+// holder) can get one.
 const PUBLIC_PATHS = new Set([
   '/maintenance',
   '/admin/login',
   '/api/admin/login',
   '/api/admin/logout',
+  // Per-account login (Payload session) — separate from the shared-secret admin
+  // gate. The /portal area itself is gated in its own layout via payload.auth.
+  '/login',
+  '/api/account/login',
+  '/api/account/logout',
 ]);
 
 // Stripe cannot present an admin cookie. This route authenticates itself by
@@ -46,6 +52,14 @@ export function proxy(req: NextRequest): NextResponse {
     loginUrl.pathname = '/admin/login';
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // ── Account portal ──────────────────────────────────────────────────────────
+  // Gated in `portal/layout.tsx` via payload.auth (a real, signed-session check),
+  // so it is let through the construction wall: the layout redirects any
+  // unauthenticated visitor to /login before rendering, leaking nothing.
+  if (pathname.startsWith('/portal')) {
+    return NextResponse.next();
   }
 
   // ── Maintenance wall (TEMPORARY — see docs/maintenance-mode.md) ─────────────
