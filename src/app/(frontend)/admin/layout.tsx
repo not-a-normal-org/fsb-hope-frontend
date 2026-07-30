@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Users,
   UserCog,
+  Inbox,
   CreditCard,
   ShoppingBag,
   Package,
@@ -20,6 +21,7 @@ import {
 const NAV_ITEMS = [
   { label: 'Dashboard',     href: '/admin',               icon: LayoutDashboard },
   { label: 'Team',          href: '/admin/team',          icon: UserCog         },
+  { label: 'Leads',         href: '/admin/leads',         icon: Inbox           },
   { label: 'Customers',     href: '/admin/customers',     icon: Users           },
   { label: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard      },
   { label: 'Orders',        href: '/admin/orders',        icon: ShoppingBag     },
