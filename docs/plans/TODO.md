@@ -6,7 +6,7 @@ this file is the at-a-glance "what's done / what's next."
 
 Legend: `[x]` done (merged) · `[~]` in progress / in review · `[ ]` not started
 
-_Last updated: 2026-07-26._
+_Last updated: 2026-07-31._
 
 ## Foundation — done
 
@@ -38,18 +38,36 @@ _Last updated: 2026-07-26._
 - [x] **Case-study section** — `/results` wall + `/results/[slug]` detail + home proof teaser,
       driven by the `testimonials` collection (consent-gated; no fabrication)
 
-## Next: lead capture + conversion — not started
+## Lead capture + conversion
 
-- [ ] **Lead forms** *(next up)* — individual + business multi-step → Supabase, replacing the
-      interim `mailto:` CTAs on `/individual`, `/business`, `/contact`. Kept API routes from the
-      prior build (`/api/contact`, `/api/apply`, `/api/newsletter`) + the admin portal are the
-      backend to wire into. Confirm/extend the Supabase schema as needed.
-- [ ] **Supabase schema** — `leads`, `newsletter_subscribers`, `alert_subscriptions`,
-      `search_requests` (`docs/plans/06`) — reconcile with what the kept API routes already use.
-- [ ] **Newsletter band** — home + footer → Supabase/Resend (Resend not yet configured)
+- [x] **Lead forms** — individual + business multi-step modal → Supabase `leads` (#17, #19)
+- [x] **Newsletter band** — home + footer → Supabase `newsletter_subscribers`, home-airport field (#20)
+- [x] **Supabase schema committed** — `leads`, `newsletter_subscribers`; plus `customers`,
+      `subscriptions`, `orders`, `products`, `admin_audit_log` DDL committed + applied (#22)
 - [ ] **Stripe checkout** — products/prices in dashboard; deposit (Checkout) + success fee
       (SetupIntent/Invoice); webhooks
 - [ ] **Cal.com** — business callback + `/contact` booking widget
+
+## Accounts, roles & portals — done
+
+- [x] **Roles + access control** on Payload `users` (admin / agent / searcher / affiliate);
+      only admin reaches `/cms` or changes roles (#21)
+- [x] **Team console** `/admin/team` — create / edit / suspend / reset-password (#21)
+- [x] **Customer tiers** renamed to cabin classes — Economy / Premium / Business / First (#21)
+- [x] **Per-account login** `/login` + session-gated `/portal` (added alongside the shared-secret
+      admin gate — no lockout) (#23)
+- [x] **Affiliate portal** — referral link + referred leads; first-touch `?ref` attribution (#24, #25)
+- [x] **Admin Leads view** `/admin/leads` — filters + assign to a searcher/agent (`assigned_to`) (#26)
+- [x] **Searcher / agent portal** — assigned-lead queue + status updates (read-isolated, write
+      ownership-checked) (#27)
+
+## Near-term — accounts / ops follow-ups
+
+- [ ] **UI improvement pass** *(in progress)* — polish the admin console + portals
+- [ ] **Notify assignee on assignment** (Resend) — email the searcher/agent when a lead lands
+- [ ] **Affiliate payouts / commission** model (portal shows a placeholder today)
+- [ ] **Unify admin login** onto per-account (retire the shared `ADMIN_SECRET`)
+- [ ] **Customer-side referral view** once a public apply/customer flow exists
 
 ## Pre-launch gates
 
