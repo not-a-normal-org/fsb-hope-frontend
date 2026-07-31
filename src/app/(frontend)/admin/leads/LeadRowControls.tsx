@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 
 import { assignLead, setLeadStatus } from './actions';
-import { LEAD_STATUSES } from './status';
+import { LEAD_STATUSES } from '@/lib/leads';
 
 export interface Account {
   id: number;

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { LEAD_STATUSES } from './status';
+import { LEAD_STATUSES } from '@/lib/leads';
 
 /**
  * Admin actions over the `leads` table. `assigned_to` holds the Payload user id

@@ -4,13 +4,14 @@ import { redirect } from 'next/navigation';
 import GlassPanel from '@/components/system/GlassPanel';
 import { getPayloadClient } from '@/lib/payload';
 import AffiliateDashboard from './AffiliateDashboard';
+import AssignedLeadsDashboard from './AssignedLeadsDashboard';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Portal landing, dispatched by role. Affiliate has a real dashboard; the other
- * roles (agent/searcher/admin) show a short "what's coming" note until their own
- * dashboards land — each gated by the same session in the layout.
+ * Portal landing, dispatched by role. Affiliate sees referrals; searcher and
+ * agent see their assigned-lead queue; admin gets a link to the console. Each is
+ * gated by the same session in the layout.
  */
 
 const ROLE_LABELS: Record<string, string> = {
@@ -18,12 +19,6 @@ const ROLE_LABELS: Record<string, string> = {
   agent: 'Agent',
   searcher: 'Searcher',
   affiliate: 'Affiliate',
-};
-
-const ROLE_BLURB: Record<string, string> = {
-  admin: 'Use the admin console to manage accounts, customers, and content.',
-  agent: 'Your customer queue and assigned searches will appear here soon.',
-  searcher: 'Your assigned award searches and their status will appear here soon.',
 };
 
 export default async function PortalPage() {
@@ -48,10 +43,12 @@ export default async function PortalPage() {
 
       {user.role === 'affiliate' ? (
         <AffiliateDashboard user={user} />
+      ) : user.role === 'searcher' || user.role === 'agent' ? (
+        <AssignedLeadsDashboard user={user} />
       ) : (
         <GlassPanel padding="p-6 sm:p-8">
           <p className="text-sm text-ink-sub">
-            {ROLE_BLURB[user.role] ?? 'Your dashboard is being set up.'}
+            Use the admin console to manage accounts, customers, and content.
           </p>
           {user.role === 'admin' && (
             <a
