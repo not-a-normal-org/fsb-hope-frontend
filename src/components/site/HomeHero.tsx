@@ -7,7 +7,7 @@ import { Check } from 'lucide-react';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import ShineText from '@/components/system/ShineText';
 import StatStrip from './StatStrip';
-import SearchReportCard from './SearchReportCard';
+import RegionalReports from './RegionalReports';
 import { entrance, staggerParent } from '@/lib/animations';
 
 /**
@@ -68,9 +68,9 @@ export default function HomeHero() {
             </p>
           </motion.div>
 
-          {/* Right — the deliverable */}
+          {/* Right — the deliverable, by region */}
           <motion.div variants={entrance} className="w-full">
-            <SearchReportCard />
+            <RegionalReports />
           </motion.div>
         </div>
       </motion.div>
