@@ -18,9 +18,13 @@
   --sm-bg-elevated: #0F2038;
   --sm-bg-gradient: radial-gradient(circle at 20% 15%, #0F2038, #060B14 72%);
 
-  --sm-ink: #EAF1FB;
-  --sm-ink-sub: #A9BBD1;
-  --sm-ink-muted: #7C8FA6;
+  /* Four deliberate text tiers (dark tuned brighter to beat halation): primary
+     (headlines/numbers) → secondary (all body) → tertiary (captions/meta) →
+     label (eyebrows). Nothing else should introduce a one-off text brightness. */
+  --sm-ink: #F3F6FA;
+  --sm-ink-sub: #C6CFDB;
+  --sm-ink-muted: #98A4B4;
+  --sm-ink-label: #8792A2;
 
   --sm-accent: #6FA8DC;
   --sm-cta: #1877F2;
@@ -53,6 +57,7 @@
   /* Darker than dark-mode's muted: #7C8FA6 was too low-contrast on the near-white
      light surfaces. Tuned to clear 4.5:1 on both base and elevated. */
   --sm-ink-muted: #556478;
+  --sm-ink-label: #5B6A7D;
 
   --sm-accent: #3E7CB1;
   --sm-cta: #1877F2;
@@ -85,6 +90,7 @@
   --sm-ink-sub: #A8ACB3;
   /* Lightened from #7C8089 to clear 4.5:1 on the elevated (modal) surface. */
   --sm-ink-muted: #878B94;
+  --sm-ink-label: #93989F;
 
   --sm-accent: #C9CDD3;
   --sm-cta: rgba(255, 255, 255, 0.92);
@@ -125,6 +131,7 @@
   --color-ink: var(--sm-ink);
   --color-ink-sub: var(--sm-ink-sub);
   --color-ink-muted: var(--sm-ink-muted);
+  --color-ink-label: var(--sm-ink-label);
   --color-accent: var(--sm-accent);
   --color-proof: var(--sm-proof);
   --color-cta: var(--sm-cta);

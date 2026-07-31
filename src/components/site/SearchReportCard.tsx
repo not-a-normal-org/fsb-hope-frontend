@@ -107,7 +107,7 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
 
       {/* Cost */}
       <div className="mt-5 space-y-1">
-        <p className="font-mono text-xl font-semibold" style={{ color: 'var(--sm-proof)' }}>
+        <p className="font-mono text-xl font-semibold text-ink">
           {report.points} pts <span className="text-ink-muted">+</span> {report.taxes} taxes
         </p>
         <p className="text-xs text-ink-muted">
@@ -139,9 +139,9 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
         </div>
       </div>
 
-      {/* Footer */}
-      <p className="mt-4 flex items-center gap-1.5 text-[0.68rem] text-ink-muted">
-        <Check className="h-3 w-3" style={{ color: 'var(--sm-proof)' }} aria-hidden strokeWidth={3} />
+      {/* Footer — the single most important line in the card. */}
+      <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-ink-sub">
+        <Check className="h-3.5 w-3.5" style={{ color: 'var(--sm-proof)' }} aria-hidden strokeWidth={3} />
         Verified by hand
       </p>
     </div>

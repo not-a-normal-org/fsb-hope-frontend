@@ -94,4 +94,21 @@ export const REGIONS: Region[] = [
       seatNote: '1 seat · confirmed available',
     },
   },
+  {
+    key: 'americas',
+    label: 'Americas',
+    report: {
+      id: '4602',
+      from: 'JFK',
+      to: 'GRU',
+      airline: 'LATAM',
+      cabin: 'Business',
+      date: '09 Jan',
+      points: '75,000',
+      taxes: '$95',
+      retailUSD: '$5,200',
+      transfer: 'Capital One → 1:1',
+      seatNote: '1 seat · confirmed available',
+    },
+  },
 ];

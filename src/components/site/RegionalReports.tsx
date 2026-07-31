@@ -58,9 +58,10 @@ export default function RegionalReports() {
                       borderBottomColor: 'var(--sm-bg-elevated)',
                     }
                   : {
-                      color: 'var(--sm-ink-muted)',
+                      color: 'var(--sm-ink-sub)',
                       background: 'var(--sm-glass-bg)',
-                      border: '1px solid transparent',
+                      border: '1px solid var(--sm-glass-border)',
+                      borderBottomColor: 'transparent',
                     }
               }
             >

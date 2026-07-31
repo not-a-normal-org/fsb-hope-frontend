@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
-import ShineText from '@/components/system/ShineText';
 import StatStrip from './StatStrip';
 import RegionalReports from './RegionalReports';
 import { entrance, staggerParent } from '@/lib/animations';
@@ -36,13 +35,13 @@ export default function HomeHero() {
             <p className="font-mono text-eyebrow font-medium uppercase text-accent">
               Your Own Points Specialist
             </p>
-            <ShineText
-              as="h1"
-              className="mt-4 font-display font-bold"
+            <h1
+              className="mt-4 font-display font-bold text-ink"
               style={{ fontSize: 'clamp(2.6rem, 6vw, 4.5rem)', lineHeight: 1.04, letterSpacing: '-0.02em' }}
             >
-              The award system is broken. Your specialist makes it work.
-            </ShineText>
+              The award system <span className="text-ink-muted">is broken.</span> Your
+              specialist makes it work.
+            </h1>
             <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-ink-sub">
               A real specialist works every major loyalty program with the points
               you already hold — and hands back a seat worth flying, with the exact
