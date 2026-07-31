@@ -26,7 +26,9 @@ import {
  * mandatory and non-collapsible; do not ship without it.
  */
 export default function PointsCalculator({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
-  const [raw, setRaw] = useState('');
+  // Seed a live default so the result reads as a working example, not a broken
+  // em dash. Matches the input placeholder; the user can clear/replace it.
+  const [raw, setRaw] = useState('185,000');
   const [program, setProgram] = useState<ProgramKey>('flexible');
 
   const points = parsePoints(raw);
