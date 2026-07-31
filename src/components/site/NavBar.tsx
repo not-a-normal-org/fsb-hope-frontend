@@ -4,14 +4,15 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import Logo from './Logo';
+import ModeCycle from '@/components/system/ModeCycle';
 
 /**
  * Sticky top nav — docs/plans/04-components-spec.md.
  *
  * Transparent at the top of the page; picks up a glass backdrop-blur once
- * scrolled, consistent with the glass system (not transparent-on-white). The
- * theme toggle lives in the footer only, so the nav's right side stays focused on
- * the single primary CTA (it previously sat beside the CTA and competed with it).
+ * scrolled, consistent with the glass system (not transparent-on-white). Hosts a
+ * compact ModeCycle icon (click to rotate Light → Dark → Mono) and the single
+ * primary CTA; the fuller segmented toggle lives in the footer.
  */
 const NAV = [
   { label: 'Individual', href: '/individual' },
@@ -65,6 +66,7 @@ export default function NavBar() {
         </ul>
 
         <div className="flex items-center gap-3">
+          <ModeCycle className="hidden sm:inline-flex" />
           <Link
             href="/individual"
             className="rounded-full px-4 py-2 text-sm font-medium transition-colors sm-cta"
