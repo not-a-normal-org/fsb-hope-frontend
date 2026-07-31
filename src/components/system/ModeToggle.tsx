@@ -2,38 +2,22 @@
 
 import { useEffect, useState } from 'react';
 
+import { applyThemeMode, type ThemeMode } from '@/lib/theme';
+
 /**
  * 3-way theme control — Light / Dark / Mono (docs/plans/04-components-spec.md).
  *
- * Applies the choice by setting data-theme on <html>, which reassigns every
- * --sm-* token (see globals.css). Persists to localStorage under the same key
- * ThemeScript reads, so the pre-paint script and this component agree.
- *
- * The switch is a glass segmented pill. It carries radiogroup semantics and is
- * fully keyboard-operable. During a change it stamps [data-theme-anim] on <html>
- * so the ~300ms crossfade fires (and covers the CTA blue→off-white jump), then
- * clears it so hovers aren't transition-laden afterward.
+ * The theme mechanism lives in src/lib/theme.ts (shared with the nav ModeCycle
+ * icon). This is the glass segmented pill: radiogroup semantics, fully
+ * keyboard-operable, stamps the ~320ms crossfade via applyThemeMode.
  */
-const STORAGE_KEY = 'sm-theme';
 const MODES = [
   { value: 'light', label: 'Light' },
   { value: 'dark', label: 'Dark' },
   { value: 'mono', label: 'Mono' },
 ] as const;
 
-type Mode = (typeof MODES)[number]['value'];
-
-function applyMode(mode: Mode) {
-  const root = document.documentElement;
-  root.setAttribute('data-theme-anim', '');
-  root.dataset.theme = mode;
-  try {
-    localStorage.setItem(STORAGE_KEY, mode);
-  } catch {
-    /* private mode / storage disabled — the switch still works for this session */
-  }
-  window.setTimeout(() => root.removeAttribute('data-theme-anim'), 320);
-}
+type Mode = ThemeMode;
 
 export default function ModeToggle({ className = '' }: { className?: string }) {
   // Default matches SSR (dark); corrected on mount from the live attribute the
@@ -54,7 +38,7 @@ export default function ModeToggle({ className = '' }: { className?: string }) {
 
   function select(next: Mode) {
     setMode(next);
-    applyMode(next);
+    applyThemeMode(next);
   }
 
   return (
