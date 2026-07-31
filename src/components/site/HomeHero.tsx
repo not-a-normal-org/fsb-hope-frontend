@@ -2,54 +2,56 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
-import GlassPanel from '@/components/system/GlassPanel';
 import ShineText from '@/components/system/ShineText';
 import StatStrip from './StatStrip';
+import SearchReportCard from './SearchReportCard';
 import { entrance, staggerParent } from '@/lib/animations';
 
 /**
- * Home hero — docs/plans/02 (Home) + sample.html reference copy.
- *
- * Manual-first positioning: a real person searches, no AI claim (the AI product
- * is post-launch and not advertised — docs/plans/00-context.md). One orchestrated
- * entrance: glass panel → stat strip → CTA row (spec §5).
+ * Home hero — docs/plans/02 (Home). Two columns: the thesis on the left, the
+ * deliverable (an illustrative Search Report) on the right, so the page shows
+ * proof instead of only describing it. The track-record stats sit in a full-bleed
+ * strip below. Manual-first positioning — a real person searches, no AI claim
+ * (docs/plans/00-context.md).
  */
 export default function HomeHero() {
   return (
     <section className="relative overflow-hidden">
       <AmbientBackground variant="hero" />
-      {/* Radial-gradient wash behind the blobs, per the mockup. */}
+      {/* Radial-gradient wash behind the blobs — the one glow on the page. */}
       <div className="pointer-events-none absolute inset-0 -z-20" style={{ background: 'var(--sm-bg-gradient)' }} />
 
       <motion.div
         variants={staggerParent}
         initial="hidden"
         animate="visible"
-        className="mx-auto max-w-6xl px-6 pb-24 pt-24 md:pb-32 md:pt-28"
+        className="mx-auto max-w-6xl px-6 pb-14 pt-24 md:pt-28"
       >
-        <motion.div variants={entrance}>
-          <GlassPanel maxWidth="max-w-2xl" padding="p-9 sm:p-11">
+        <div className="grid items-center gap-10 md:grid-cols-[53fr_47fr] md:gap-12">
+          {/* Left — thesis */}
+          <motion.div variants={entrance}>
             <p className="font-mono text-eyebrow font-medium uppercase text-accent">
               Your Own Points Specialist
             </p>
-
-            <ShineText as="h1" className="mt-4 text-hero font-bold">
-              The award system is broken. Your specialist makes it work for you.
+            <ShineText
+              as="h1"
+              className="mt-4 font-display font-bold"
+              style={{ fontSize: 'clamp(2.6rem, 6vw, 4.5rem)', lineHeight: 1.04, letterSpacing: '-0.02em' }}
+            >
+              The award system is broken. Your specialist makes it work.
             </ShineText>
-
-            <p className="mt-5 max-w-[42ch] text-[15px] leading-relaxed text-ink-sub">
-              Tell us your plans and forget them. A specialist is assigned to
-              your account, works every major loyalty program, and gets the most
-              out of the points you already hold. You get a seat worth flying and
-              the exact cost to book it.
+            <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-ink-sub">
+              A real specialist works every major loyalty program with the points
+              you already hold — and hands back a seat worth flying, with the exact
+              cost to book it.
             </p>
-
-            <div className="mt-8 flex flex-wrap gap-3.5">
+            <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <Link
                 href="/individual"
-                className="rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors sm-cta"
+                className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors"
               >
                 Get a free points audit
               </Link>
@@ -60,13 +62,25 @@ export default function HomeHero() {
                 See How It Works
               </Link>
             </div>
-          </GlassPanel>
-        </motion.div>
+            <p className="mt-4 flex items-center gap-2 text-[13px] text-ink-muted">
+              <Check className="h-3.5 w-3.5" aria-hidden strokeWidth={2.5} />
+              Free points audit — no card, no commitment.
+            </p>
+          </motion.div>
 
-        <motion.div variants={entrance} className="mt-11">
-          <StatStrip />
-        </motion.div>
+          {/* Right — the deliverable */}
+          <motion.div variants={entrance} className="w-full">
+            <SearchReportCard />
+          </motion.div>
+        </div>
       </motion.div>
+
+      {/* Full-bleed stats strip — the track record, promoted to real authority. */}
+      <div className="border-y" style={{ borderColor: 'var(--sm-glass-border)' }}>
+        <div className="mx-auto max-w-6xl px-6 py-7">
+          <StatStrip />
+        </div>
+      </div>
     </section>
   );
 }

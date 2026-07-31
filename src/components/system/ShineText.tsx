@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 /**
  * Metallic shine-sweep headline (docs/plans/01 §5, 04-components-spec.md).
@@ -15,9 +15,11 @@ type ShineTextProps = {
   children: ReactNode;
   as?: 'h1' | 'h2';
   className?: string;
+  /** Merged after the clip styles — for per-use type sizing (e.g. the hero). */
+  style?: CSSProperties;
 };
 
-export default function ShineText({ children, as: Tag = 'h1', className = '' }: ShineTextProps) {
+export default function ShineText({ children, as: Tag = 'h1', className = '', style }: ShineTextProps) {
   return (
     <Tag
       className={`animate-shine font-display ${className}`}
@@ -27,6 +29,7 @@ export default function ShineText({ children, as: Tag = 'h1', className = '' }: 
         WebkitBackgroundClip: 'text',
         color: 'transparent',
         WebkitTextFillColor: 'transparent',
+        ...style,
       }}
     >
       {children}

@@ -4,17 +4,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import Logo from './Logo';
-import ModeToggle from '@/components/system/ModeToggle';
 
 /**
  * Sticky top nav — docs/plans/04-components-spec.md.
  *
  * Transparent at the top of the page; picks up a glass backdrop-blur once
- * scrolled, consistent with the glass system (not transparent-on-white). Hosts
- * the 3-way ModeToggle and the primary "Check My Route" CTA.
- *
- * Full nav list is docs/plans/02. This first slice only needs Home, the toggle,
- * and the CTA — the other links point at routes built in later slices.
+ * scrolled, consistent with the glass system (not transparent-on-white). The
+ * theme toggle lives in the footer only, so the nav's right side stays focused on
+ * the single primary CTA (it previously sat beside the CTA and competed with it).
  */
 const NAV = [
   { label: 'Individual', href: '/individual' },
@@ -68,12 +65,11 @@ export default function NavBar() {
         </ul>
 
         <div className="flex items-center gap-3">
-          <ModeToggle className="hidden sm:inline-flex" />
           <Link
             href="/individual"
             className="rounded-full px-4 py-2 text-sm font-medium transition-colors sm-cta"
           >
-            Get a points audit
+            Get a free points audit
           </Link>
         </div>
       </nav>
