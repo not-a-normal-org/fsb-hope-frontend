@@ -26,6 +26,7 @@ create table if not exists public.leads (
   phone             text,   -- business, optional
   cal_booking_id    text,   -- business callback booked via Cal.com (later slice)
   referral_code     text,   -- affiliate attribution (sm_ref cookie); see src/lib/referral.ts
+  assigned_to       integer, -- Payload user id (payload.users) of the searcher/agent working it
   status            text not null default 'new',  -- new | contacted | searching | closed
 
   -- richer individual questionnaire answers: dates, flexibility, passengers,
