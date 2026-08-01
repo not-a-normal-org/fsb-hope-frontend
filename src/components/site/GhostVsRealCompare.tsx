@@ -33,8 +33,11 @@ function Row({ text, tone }: { text: string; tone: 'warning' | 'success' }) {
   const color = tone === 'success' ? 'var(--sm-success)' : 'var(--sm-warning)';
   const Icon = tone === 'success' ? Check : X;
   return (
-    <li className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: 'var(--sm-ink-invert-sub)' }}>
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" style={{ color }} strokeWidth={2.5} aria-hidden />
+    <li
+      className="flex items-start gap-3 text-base font-medium leading-relaxed sm:text-[1.05rem]"
+      style={{ color: 'var(--sm-ink-invert)' }}
+    >
+      <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color }} strokeWidth={2.75} aria-hidden />
       {text}
     </li>
   );
@@ -45,7 +48,10 @@ export default function GhostVsRealCompare() {
     <section className="relative" style={{ background: 'var(--sm-surface-invert)' }}>
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-proof)' }}>
+          <p
+            className="font-mono text-sm font-semibold uppercase tracking-[0.14em]"
+            style={{ color: 'var(--sm-ink-invert-sub)' }}
+          >
             Automated vs. by hand
           </p>
           <h2 className="mt-4 font-display text-section font-bold" style={{ color: 'var(--sm-ink-invert)' }}>
@@ -63,7 +69,7 @@ export default function GhostVsRealCompare() {
           <div className="grid md:grid-cols-2">
             {/* Automated */}
             <div className="p-6 sm:p-8">
-              <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert-sub)' }}>
+              <p className="font-mono text-sm font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--sm-ink-invert-sub)' }}>
                 What automated tools show
               </p>
               <ul className="mt-5 space-y-3.5">
@@ -78,7 +84,7 @@ export default function GhostVsRealCompare() {
               className="border-t p-6 sm:p-8 md:border-l md:border-t-0"
               style={{ borderColor: 'var(--sm-invert-border)' }}
             >
-              <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert)' }}>
+              <p className="font-mono text-sm font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--sm-ink-invert)' }}>
                 What a specialist delivers
               </p>
               <ul className="mt-5 space-y-3.5">
