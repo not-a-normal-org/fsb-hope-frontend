@@ -43,6 +43,9 @@
   --sm-surface-invert: #EDF1F8;
   --sm-ink-invert: #14213A;
   --sm-ink-invert-sub: #47566C;
+  /* Accent that reads on the inverted (light) surface — a darker blue than the
+     page accent. Mono keeps it hueless (a dark neutral), no blue leak. */
+  --sm-accent-invert: #1B4FB0;
   --sm-invert-border: rgba(20, 33, 58, 0.14);
 
   --sm-glass-bg: rgba(120, 165, 220, 0.08);
@@ -82,6 +85,7 @@
   --sm-surface-invert: #0F1B2E;
   --sm-ink-invert: #EAF1FB;
   --sm-ink-invert-sub: #A9BBD1;
+  --sm-accent-invert: #6FA8DC;
   --sm-invert-border: rgba(255, 255, 255, 0.12);
 
   --sm-glass-bg: rgba(255, 255, 255, 0.55);
@@ -122,6 +126,7 @@
   --sm-surface-invert: #ECEDEB;
   --sm-ink-invert: #17181B;
   --sm-ink-invert-sub: #4B4D53;
+  --sm-accent-invert: #3A3C42;
   --sm-invert-border: rgba(20, 20, 22, 0.14);
 
   --sm-glass-bg: rgba(255, 255, 255, 0.05);
