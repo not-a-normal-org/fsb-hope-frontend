@@ -12,7 +12,10 @@ import { entrance, inViewOnce } from '@/lib/animations';
  */
 export default function CalculatorTeaser() {
   return (
-    <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
+    <section
+      className="relative border-t"
+      style={{ background: 'var(--sm-surface-raised)', borderColor: 'var(--sm-glass-border)' }}
+    >
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center md:py-24">
         <motion.div variants={entrance} {...inViewOnce}>
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Calculator</p>

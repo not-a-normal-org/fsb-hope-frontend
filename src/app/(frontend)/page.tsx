@@ -25,11 +25,11 @@ export default function Home() {
       <NavBar />
       <HomeHero />
       <AudienceFork />
+      <PricingBand />
+      <AlertsTeaser />
       <GhostVsRealCompare />
       <CaseStudyTeaser />
-      <AlertsTeaser />
       <CalculatorTeaser />
-      <PricingBand />
       <Footer />
     </>
   );

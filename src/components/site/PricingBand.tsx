@@ -14,10 +14,7 @@ import { entrance, inViewOnce } from '@/lib/animations';
  */
 export default function PricingBand() {
   return (
-    <section
-      className="relative border-t"
-      style={{ background: 'var(--sm-surface-raised)', borderColor: 'var(--sm-glass-border)' }}
-    >
+    <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <motion.div
         variants={entrance}
         {...inViewOnce}
