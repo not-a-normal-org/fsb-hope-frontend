@@ -36,7 +36,7 @@ export default function Logo({ variant = 'full', className = '', label = 'Saver 
         <path
           d="M4 7 Q16 14 28 7"
           stroke={ARC_GREEN}
-          strokeWidth="2.6"
+          strokeWidth="3.3"
           fill="none"
           strokeLinecap="round"
         />
@@ -65,7 +65,7 @@ export default function Logo({ variant = 'full', className = '', label = 'Saver 
         <path
           d="M4 3 Q50 31 96 3"
           stroke={ARC_GREEN}
-          strokeWidth="2.4"
+          strokeWidth="3.2"
           fill="none"
           strokeLinecap="round"
         />
