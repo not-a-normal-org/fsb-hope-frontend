@@ -50,7 +50,10 @@ export const metadata: Metadata = {
   description: SITE_TAGLINE,
   robots: "noindex, nofollow",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
     apple: "/apple-touch-icon.png",
   },
 };

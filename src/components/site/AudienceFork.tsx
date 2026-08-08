@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
 import { entrance, staggerParent, inViewOnce, hoverGlass } from '@/lib/animations';
 
@@ -31,8 +30,7 @@ const CARDS = [
 
 export default function AudienceFork() {
   return (
-    <section className="relative overflow-hidden">
-      <AmbientBackground variant="section" />
+    <section className="relative" style={{ background: 'var(--sm-surface-raised)' }}>
       <motion.div
         variants={staggerParent}
         {...inViewOnce}

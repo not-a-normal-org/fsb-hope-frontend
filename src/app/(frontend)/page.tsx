@@ -5,7 +5,7 @@ import GhostVsRealCompare from '@/components/site/GhostVsRealCompare';
 import CaseStudyTeaser from '@/components/site/CaseStudyTeaser';
 import AlertsTeaser from '@/components/site/AlertsTeaser';
 import CalculatorTeaser from '@/components/site/CalculatorTeaser';
-import NewsletterBand from '@/components/site/NewsletterBand';
+import PricingBand from '@/components/site/PricingBand';
 import Footer from '@/components/site/Footer';
 
 /**
@@ -25,11 +25,11 @@ export default function Home() {
       <NavBar />
       <HomeHero />
       <AudienceFork />
+      <PricingBand />
+      <AlertsTeaser />
       <GhostVsRealCompare />
       <CaseStudyTeaser />
-      <AlertsTeaser />
       <CalculatorTeaser />
-      <NewsletterBand />
       <Footer />
     </>
   );
