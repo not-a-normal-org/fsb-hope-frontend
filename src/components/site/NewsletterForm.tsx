@@ -21,10 +21,14 @@ export default function NewsletterForm({
   source,
   buttonLabel = 'Subscribe',
   compact = false,
+  onSuccess,
 }: {
   source: string;
   buttonLabel?: string;
   compact?: boolean;
+  /** Fired once on a successful (or already-subscribed) signup — e.g. the popup
+   *  uses it to record the subscription so it never reopens. */
+  onSuccess?: () => void;
 }) {
   const [email, setEmail] = useState('');
   const [homeAirport, setHomeAirport] = useState('');
@@ -55,11 +59,13 @@ export default function NewsletterForm({
       if (res.ok) {
         setStatus('success');
         setMessage('You’re in — check your inbox.');
+        onSuccess?.();
         return;
       }
       if (res.status === 409) {
         setStatus('success');
         setMessage('You’re already on the list.');
+        onSuccess?.();
         return;
       }
       const detail = (await res.json().catch(() => ({}))) as { error?: string };
