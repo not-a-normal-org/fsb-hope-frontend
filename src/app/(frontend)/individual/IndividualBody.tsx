@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -37,6 +37,25 @@ const ctaBase =
 
 export default function IndividualBody() {
   const [leadOpen, setLeadOpen] = useState(false);
+  const [initialRoute, setInitialRoute] = useState<string | undefined>();
+
+  // Arriving from a deals tile (/individual?from=JFK&to=NRT) opens the audit with
+  // the route pre-filled — the grid's whole point is to pre-populate a search
+  // (Review v3 §10). Read from the URL directly to avoid a Suspense boundary.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const from = p.get('from');
+    const to = p.get('to');
+    if (!from || !to) return;
+    // Defer a tick so the state updates land in a callback, not synchronously in
+    // the effect body.
+    const id = window.setTimeout(() => {
+      setInitialRoute(`${from.toUpperCase()} → ${to.toUpperCase()}`);
+      setLeadOpen(true);
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
+
   return (
     <>
       <section className="relative overflow-hidden">
@@ -139,7 +158,7 @@ export default function IndividualBody() {
         </div>
       </section>
 
-      <LeadModal open={leadOpen} onClose={() => setLeadOpen(false)} type="individual" />
+      <LeadModal open={leadOpen} onClose={() => setLeadOpen(false)} type="individual" initialRoute={initialRoute} />
     </>
   );
 }

@@ -1,9 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 
 import { entrance, inViewOnce } from '@/lib/animations';
+
+// Scroll reveal (Review v3 §10.5): the ghost column staggers in, then the real
+// column follows — the argument lands in sequence instead of all at once.
+const colStagger = (delayChildren: number): Variants => ({
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren } },
+});
+const revealOnce = {
+  initial: 'hidden',
+  whileInView: 'visible',
+  viewport: { once: true, amount: 0.3 },
+} as const;
 
 /**
  * Ghost-vs-real comparison (docs/plans/04): what automated tools show vs. what a
@@ -33,10 +45,10 @@ function Row({ text, tone }: { text: string; tone: 'warning' | 'success' }) {
   const color = tone === 'success' ? 'var(--sm-success)' : 'var(--sm-warning)';
   const Icon = tone === 'success' ? Check : X;
   return (
-    <li className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: 'var(--sm-ink-invert-sub)' }}>
+    <motion.li variants={entrance} className="flex items-start gap-3 text-sm leading-relaxed" style={{ color: 'var(--sm-ink-invert-sub)' }}>
       <Icon className="mt-0.5 h-4 w-4 shrink-0" style={{ color }} strokeWidth={2.5} aria-hidden />
       {text}
-    </li>
+    </motion.li>
   );
 }
 
@@ -69,11 +81,11 @@ export default function GhostVsRealCompare() {
               <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert-sub)' }}>
                 What automated tools show
               </p>
-              <ul className="mt-5 space-y-3.5">
+              <motion.ul className="mt-5 space-y-3.5" variants={colStagger(0)} {...revealOnce}>
                 {GHOST.map((t) => (
                   <Row key={t} text={t} tone="warning" />
                 ))}
-              </ul>
+              </motion.ul>
             </div>
 
             {/* By hand — center divider on desktop, stacked divider on mobile */}
@@ -84,11 +96,11 @@ export default function GhostVsRealCompare() {
               <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert)' }}>
                 What a specialist delivers
               </p>
-              <ul className="mt-5 space-y-3.5">
+              <motion.ul className="mt-5 space-y-3.5" variants={colStagger(0.45)} {...revealOnce}>
                 {REAL.map((t) => (
                   <Row key={t} text={t} tone="success" />
                 ))}
-              </ul>
+              </motion.ul>
             </div>
           </div>
         </motion.div>

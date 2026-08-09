@@ -68,6 +68,16 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
             {range ?? <span className="text-ink-muted">—</span>}
           </p>
           <p className="mt-1 text-xs text-ink-muted">in travel value · estimate only</p>
+          {hasValue && (
+            // Tie the estimate to a concrete example (Review v3 §10.3): the two
+            // best interactive elements finally point at each other.
+            <Link
+              href="/individual?from=JFK&to=NRT"
+              className="mt-3 inline-block text-xs text-ink-sub transition-colors hover:text-ink"
+            >
+              ≈ a business seat to Tokyo — start that audit →
+            </Link>
+          )}
         </div>
         <Link
           href="/calculator"
