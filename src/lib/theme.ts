@@ -12,6 +12,14 @@
 export const THEME_MODES = ['light', 'dark', 'mono'] as const;
 export type ThemeMode = (typeof THEME_MODES)[number];
 
+/**
+ * Modes the UI actually offers. Mono is HELD for launch (Review v3 §10/§11): its
+ * CSS + `mono` as a valid ThemeMode stay intact (so a stored `mono` still renders,
+ * and it can return by re-adding it here), but the nav + footer controls only
+ * expose Light and Dark — dropping the QA surface from three themes to two.
+ */
+export const SELECTABLE_MODES = ['light', 'dark'] as const satisfies readonly ThemeMode[];
+
 /** Must match ThemeScript + ModeToggle's original key. */
 export const THEME_STORAGE_KEY = 'sm-theme';
 
@@ -33,7 +41,12 @@ export function readThemeMode(): ThemeMode | null {
   return t === 'light' || t === 'dark' || t === 'mono' ? t : null;
 }
 
-/** The next mode in the cycle: light → dark → mono → light. */
+/**
+ * The next mode in the cycle, restricted to the SELECTABLE modes (Light ⇄ Dark
+ * while Mono is held). If the current mode is not selectable (e.g. a stored
+ * `mono`), the cycle re-enters at the first selectable mode.
+ */
 export function nextThemeMode(mode: ThemeMode): ThemeMode {
-  return THEME_MODES[(THEME_MODES.indexOf(mode) + 1) % THEME_MODES.length];
+  const i = SELECTABLE_MODES.indexOf(mode as (typeof SELECTABLE_MODES)[number]);
+  return SELECTABLE_MODES[(i + 1) % SELECTABLE_MODES.length];
 }

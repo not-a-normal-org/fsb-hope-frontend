@@ -11,14 +11,16 @@ import ModeCycle from '@/components/system/ModeCycle';
  *
  * Transparent at the top of the page; picks up a glass backdrop-blur once
  * scrolled, consistent with the glass system (not transparent-on-white). Hosts a
- * compact ModeCycle icon (click to rotate Light → Dark → Mono) and the single
- * primary CTA; the fuller segmented toggle lives in the footer.
+ * compact ModeCycle icon (click to toggle Light ⇄ Dark; Mono is held) and the
+ * single primary CTA; the fuller segmented toggle lives in the footer.
  */
+// Guides + Deals removed for launch (Review v3 §8): they pointed at
+// /blog/category/{guides,deals}, which 404 unless the CMS is seeded — a dead link
+// on a deposit-asking site costs more than a missing section. Deals returns with
+// the deals grid; Guides only if it gets real content.
 const NAV = [
   { label: 'Individual', href: '/individual' },
   { label: 'Business', href: '/business' },
-  { label: 'Guides', href: '/blog/category/guides' },
-  { label: 'Deals', href: '/blog/category/deals' },
   { label: 'Alerts', href: '/alerts' },
   { label: 'Pricing', href: '/pricing' },
 ];

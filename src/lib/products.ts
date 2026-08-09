@@ -90,7 +90,7 @@ export const PRODUCTS: Record<string, Product> = {
     name: 'Human Search Alert',
     price: '$99.99',
     priceUnit: '/ month',
-    tagline: 'A specialist checks your routes, 99.99% phantom-flight-proof.',
+    tagline: 'A specialist confirms the seat before you hear from us.',
     description:
       'The same rigor as our one-off search, run as an ongoing service. A specialist checks your routes each cycle and sends verified results, the opposite of an automated scan.',
     features: [

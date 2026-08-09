@@ -2,20 +2,19 @@
 
 import { useEffect, useState } from 'react';
 
-import { applyThemeMode, type ThemeMode } from '@/lib/theme';
+import { applyThemeMode, SELECTABLE_MODES, type ThemeMode } from '@/lib/theme';
 
 /**
- * 3-way theme control — Light / Dark / Mono (docs/plans/04-components-spec.md).
+ * Segmented theme control — Light / Dark (docs/plans/04-components-spec.md). Mono
+ * is held for launch (Review v3 §10/§11), so the pill is driven off
+ * SELECTABLE_MODES; re-adding `mono` there brings the third segment back.
  *
  * The theme mechanism lives in src/lib/theme.ts (shared with the nav ModeCycle
- * icon). This is the glass segmented pill: radiogroup semantics, fully
- * keyboard-operable, stamps the ~320ms crossfade via applyThemeMode.
+ * icon). Glass segmented pill: radiogroup semantics, fully keyboard-operable,
+ * stamps the ~320ms crossfade via applyThemeMode.
  */
-const MODES = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'mono', label: 'Mono' },
-] as const;
+const LABELS: Record<ThemeMode, string> = { light: 'Light', dark: 'Dark', mono: 'Mono' };
+const MODES = SELECTABLE_MODES.map((value) => ({ value, label: LABELS[value] }));
 
 type Mode = ThemeMode;
 
