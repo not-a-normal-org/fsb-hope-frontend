@@ -10,8 +10,9 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  * $99.99 Human Search Alert is featured (larger, amber-bordered, "Most accurate")
  * so it reads as a different category, not a 20× markup on the $4.99 scan. The
  * $4.99 tier keeps its mandatory phantom-flight disclosure beside the price
- * (docs/plans/03 §3). "99.99% phantom-flight-proof" is the ceiling of the claim —
- * never rounded to 100% (§4). On a raised surface; the page's one glow is the hero.
+ * (docs/plans/03 §3). The Human tier sells the process — "a specialist confirms
+ * the seat" — not an invented precision stat (Review v3 §6). On a raised surface;
+ * the page's one glow is the hero.
  */
 export default function AlertsTeaser() {
   return (
@@ -77,9 +78,9 @@ export default function AlertsTeaser() {
                 <span className="shrink-0 font-mono text-sm text-ink">$99.99/mo</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                A specialist checks your routes every cycle and sends back verified results —
-                the opposite of an automated feed. Advertised at{' '}
-                <span className="font-medium text-ink">99.99% phantom-flight-proof</span>.
+                A specialist checks your routes every cycle — the opposite of an automated
+                feed. <span className="font-medium text-ink">They open the booking and
+                confirm the seat before you hear from us.</span>
               </p>
             </div>
           </motion.div>

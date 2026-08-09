@@ -6,9 +6,11 @@ import { Sun, Moon, Contrast } from 'lucide-react';
 import { applyThemeMode, nextThemeMode, readThemeMode, type ThemeMode } from '@/lib/theme';
 
 /**
- * Compact theme control for the nav — one icon that cycles Light → Dark → Mono
- * on each click (the fuller segmented ModeToggle lives in the footer). Shares the
- * theme mechanism in src/lib/theme.ts so the two never drift.
+ * Compact theme control for the nav — one icon that toggles Light ⇄ Dark on each
+ * click (Mono is held for launch; see SELECTABLE_MODES in src/lib/theme.ts). The
+ * fuller segmented ModeToggle lives in the footer. Both share the theme mechanism
+ * so they can never drift. The `mono` entries below only render if a visitor has a
+ * stored `mono` preference from before it was held.
  */
 const ICON: Record<ThemeMode, typeof Sun> = { light: Sun, dark: Moon, mono: Contrast };
 const LABEL: Record<ThemeMode, string> = { light: 'Light', dark: 'Dark', mono: 'Mono' };
