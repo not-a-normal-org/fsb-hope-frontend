@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
+import AlertPreviewCard from '@/components/site/AlertPreviewCard';
 import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
 import { ALERT_PRODUCTS } from '@/lib/products';
@@ -25,6 +26,7 @@ export default function AlertsPage() {
         eyebrow="Alerts"
         title="Keep watch on your routes: automated, or a specialist."
         intro="Award space comes and goes. Choose a low-cost automated weekly scan, or a specialist checking your routes each cycle. One can surface phantom space, the other is verified. The card says which."
+        aside={<AlertPreviewCard />}
       />
 
       <section className="relative">

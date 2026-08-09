@@ -69,6 +69,15 @@ export default function PriceCard({ product }: { product: Product }) {
           </p>
         )}
 
+        {product.note && !product.footnote && (
+          <p
+            className="mt-6 rounded-lg px-3.5 py-2.5 text-sm font-medium text-ink-sub"
+            style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
+          >
+            {product.note}
+          </p>
+        )}
+
         {product.disclosure && (
           <div
             className="mt-6 rounded-lg px-3.5 py-3"
