@@ -21,6 +21,9 @@ export type Product = {
   features: string[];
   /** Featured trust line (Individual's refund). Rendered prominently, success-toned. */
   footnote?: string;
+  /** Neutral institutional callout (e.g. Business's "invoiced, not per seat"), so
+   *  a card without a success footnote isn't left with an empty gap (§5). */
+  note?: string;
   /** Phantom-flight disclosure (Weekly Lookup). Required inline with the price. */
   disclosure?: string;
   cta: { label: string; href: string };
@@ -43,6 +46,7 @@ export const PRODUCTS: Record<string, Product> = {
       'Screenshots and the exact point cost',
       'Per-search billing, no subscription',
     ],
+    note: 'Invoiced per search — never charged per seat.',
     cta: { label: 'Start a business search', href: '/business' },
     group: 'search',
   },
@@ -104,5 +108,7 @@ export const PRODUCTS: Record<string, Product> = {
 };
 
 /** Ordered for the pricing page: one-off searches, then ongoing alerts. */
-export const SEARCH_PRODUCTS = [PRODUCTS.business, PRODUCTS.individual];
+// Individual first — the nav, hero, and homepage all lead with individuals, so
+// the pricing cards should too (Review v3 §5).
+export const SEARCH_PRODUCTS = [PRODUCTS.individual, PRODUCTS.business];
 export const ALERT_PRODUCTS = [PRODUCTS.weekly, PRODUCTS.human];
