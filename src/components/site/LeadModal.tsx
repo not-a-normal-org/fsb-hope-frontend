@@ -51,10 +51,14 @@ export default function LeadModal({
   open,
   onClose,
   type = 'individual',
+  initialRoute,
 }: {
   open: boolean;
   onClose: () => void;
   type?: LeadType;
+  /** Pre-fill the individual "Where to?" field — used when a deals tile hands a
+   *  route to the audit (Review v3 §10). */
+  initialRoute?: string;
 }) {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(0);
@@ -68,6 +72,14 @@ export default function LeadModal({
   const business = type === 'business';
 
   useEffect(() => setMounted(true), []);
+
+  // Seed the route when opened from a deals tile (Review v3 §10). Runs on the
+  // open transition, not on keystrokes, so it never clobbers the user's edits.
+  useEffect(() => {
+    if (open && initialRoute) {
+      setData((d) => ({ ...d, route: initialRoute }));
+    }
+  }, [open, initialRoute]);
 
   const set = (key: keyof typeof EMPTY) => (e: Change) =>
     setData((d) => ({ ...d, [key]: e.target.value }));
