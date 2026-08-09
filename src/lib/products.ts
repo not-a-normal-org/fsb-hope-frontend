@@ -71,16 +71,16 @@ export const PRODUCTS: Record<string, Product> = {
     name: 'Weekly Lookup Alert',
     price: '$4.99',
     priceUnit: '/ month',
-    tagline: 'An automated weekly scan of your routes.',
+    tagline: 'An early signal on routes you’re watching casually.',
     description:
-      'Every Monday for 12 months: which airlines have award space on your routes, which card programs (Amex MR, Chase UR, Citi TYP, Capital One…) transfer in, the dates it exists, and the points required.',
+      'Every Monday for 12 months, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. Cheap enough to set and forget — a heads-up, not a booking.',
     features: [
       'Delivered every Monday, for 12 months',
       'Airlines, transfer partners, dates, points',
       'Cancel anytime',
     ],
     disclosure:
-      'This is an automated scan, not a specialist search. It shows availability, not flight numbers or booking-ready confirmation. Some listed space may be phantom: it appears in the data but won’t hold at booking. For verified results, use the Human Search Alert or a one-off search.',
+      'Automated scan — shows availability, not a confirmed seat, and some space may be phantom. For a booking you can rely on, use the Human Search Alert or a one-off search.',
     cta: { label: 'Get weekly alerts', href: `${CONTACT}?subject=Weekly%20Lookup%20Alert` },
     group: 'alert',
   },
