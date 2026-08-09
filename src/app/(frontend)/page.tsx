@@ -2,6 +2,7 @@ import NavBar from '@/components/site/NavBar';
 import HomeHero from '@/components/site/HomeHero';
 import AudienceFork from '@/components/site/AudienceFork';
 import GhostVsRealCompare from '@/components/site/GhostVsRealCompare';
+import DealsGrid from '@/components/site/DealsGrid';
 import CaseStudyTeaser from '@/components/site/CaseStudyTeaser';
 import AlertsTeaser from '@/components/site/AlertsTeaser';
 import CalculatorTeaser from '@/components/site/CalculatorTeaser';
@@ -28,6 +29,7 @@ export default function Home() {
       <PricingBand />
       <AlertsTeaser />
       <GhostVsRealCompare />
+      <DealsGrid />
       <CaseStudyTeaser />
       <CalculatorTeaser />
       <Footer />
