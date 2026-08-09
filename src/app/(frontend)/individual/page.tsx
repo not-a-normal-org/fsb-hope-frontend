@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
+import SearchReportCard from '@/components/site/SearchReportCard';
+import { REGIONS } from '@/lib/reports';
 import IndividualBody from './IndividualBody';
 
 /**
@@ -25,6 +27,7 @@ export default function IndividualPage() {
         eyebrow="For individuals"
         title="200,000 points, and no idea what they’re worth."
         intro="You earned them. We assign a specialist who gets the most out of them, finds the seat they can actually book, and hands you the exact point cost. You just tell us where you want to go."
+        aside={<SearchReportCard report={REGIONS[0].report} />}
       />
       <IndividualBody />
       <Footer />
