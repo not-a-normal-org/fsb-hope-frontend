@@ -7,6 +7,7 @@ import CaseStudyTeaser from '@/components/site/CaseStudyTeaser';
 import AlertsTeaser from '@/components/site/AlertsTeaser';
 import CalculatorTeaser from '@/components/site/CalculatorTeaser';
 import PricingBand from '@/components/site/PricingBand';
+import FAQ from '@/components/site/FAQ';
 import Footer from '@/components/site/Footer';
 
 /**
@@ -32,6 +33,7 @@ export default function Home() {
       <DealsGrid />
       <CaseStudyTeaser />
       <CalculatorTeaser />
+      <FAQ />
       <Footer />
     </>
   );
