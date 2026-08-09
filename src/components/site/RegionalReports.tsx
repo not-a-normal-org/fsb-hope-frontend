@@ -12,13 +12,16 @@ const MANUAL_MS = 10000; // longer pause after a manual pick, so it can be read
 
 /**
  * Region-tabbed example Search Reports. Vertical index-card bookmarks run down the
- * LEFT edge; the card overlaps their right edge so they read as bookmarks tucked
- * behind it. Behaviour:
- *  - auto-advances every 5s, shaking the card on each change;
- *  - pauses while the pointer is over it (hovering to read/click);
- *  - a click (or arrow key) selects that region with a pop effect and holds it
- *    for 10s before auto-advance resumes.
- * Under reduced motion the auto-advance + shake are disabled; clicks still work.
+ * LEFT edge; the ACTIVE bookmark sits above the card seam (never clipped) while
+ * inactive ones tuck behind it (Review v3 §3 — the old layout hid AUSTRALIA/
+ * AFRICA/AMERICAS behind the card). Behaviour:
+ *  - auto-advances every 5s; the active bookmark carries a thin progress bar that
+ *    tracks the countdown, so a static screenshot and the live page look different;
+ *  - pauses (bar + advance) while the pointer is over it;
+ *  - a click (or arrow key) selects that region with a pop, and holds it for 10s;
+ *  - the card shakes on each change.
+ * Under reduced motion the auto-advance, shake, and progress bar are disabled;
+ * clicks still work.
  */
 export default function RegionalReports() {
   const [active, setActive] = useState(0);
@@ -67,7 +70,7 @@ export default function RegionalReports() {
         role="tablist"
         aria-label="Example award bookings by region"
         aria-orientation="vertical"
-        className="relative z-0 flex flex-col items-stretch gap-1.5 pt-10"
+        className="relative flex flex-col items-stretch gap-1.5 pt-10"
       >
         {REGIONS.map((r, i) => {
           const on = i === active;
@@ -89,8 +92,10 @@ export default function RegionalReports() {
                   pick(active - 1);
                 }
               }}
-              className={`rounded-l-xl py-2.5 pl-3.5 pr-6 text-right font-mono text-[0.6rem] uppercase tracking-[0.12em] transition-colors ${
-                on ? '' : 'opacity-80 hover:opacity-100'
+              className={`relative overflow-hidden rounded-l-lg py-2.5 pl-3.5 pr-7 text-right font-mono text-[0.62rem] font-medium uppercase tracking-[0.12em] transition-all ${
+                // Active bookmark rides ABOVE the card seam so its label is never
+                // clipped; inactive ones tuck a touch behind and to the right.
+                on ? 'z-20 translate-x-px' : 'z-0 opacity-90 hover:opacity-100'
               }`}
               style={
                 on
@@ -98,22 +103,37 @@ export default function RegionalReports() {
                       color: 'var(--sm-ink)',
                       background: 'var(--sm-bg-elevated)',
                       boxShadow:
-                        'inset 1px 0 0 var(--sm-glass-border), inset 0 1px 0 var(--sm-glass-border), inset 0 -1px 0 var(--sm-glass-border)',
+                        'inset 2px 0 0 var(--sm-accent), inset 0 1px 0 var(--sm-glass-border), inset 0 -1px 0 var(--sm-glass-border)',
                     }
-                  : { color: 'var(--sm-ink-sub)', background: 'var(--sm-glass-bg)' }
+                  : {
+                      color: 'var(--sm-ink-sub)',
+                      background: 'var(--sm-glass-bg)',
+                      boxShadow: 'inset 0 0 0 1px var(--sm-glass-border)',
+                    }
               }
             >
               {r.label}
+              {/* Countdown bar — remounts on each change and on un-pause (key), so
+                  it always tracks the freshly-armed timer; frozen while paused. */}
+              {on && !reduce && (
+                <span
+                  key={`${active}-${paused ? 'p' : 'r'}`}
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-0.5 origin-left"
+                  style={{
+                    background: 'var(--sm-accent)',
+                    animation: `sm-progress ${delayRef.current}ms linear forwards`,
+                    animationPlayState: paused ? 'paused' : 'running',
+                  }}
+                />
+              )}
             </button>
           );
         })}
       </div>
 
-      {/* Card — shakes on change; overlaps the tabs so they read as bookmarks */}
-      <motion.div
-        animate={controls}
-        className="relative z-10 -ml-2 min-w-0 flex-1"
-      >
+      {/* Card — shakes on change; sits over the inactive bookmarks' right edge. */}
+      <motion.div animate={controls} className="relative z-10 -ml-2 min-w-0 flex-1">
         <div id="region-report-panel" role="tabpanel" aria-labelledby={`region-tab-${region.key}`}>
           <AnimatePresence mode="wait">
             <motion.div

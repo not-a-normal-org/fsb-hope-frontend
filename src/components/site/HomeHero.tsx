@@ -75,8 +75,10 @@ export default function HomeHero() {
         </div>
       </motion.div>
 
-      {/* Full-bleed stats strip — the track record, promoted to real authority. */}
-      <div className="border-y" style={{ borderColor: 'var(--sm-glass-border)' }}>
+      {/* Full-bleed stats strip — the track record, promoted to real authority.
+          One of two deliberate blue bands on the page (Review v3 §1): the accent
+          surface makes it read as emphasis against the white sections. */}
+      <div className="border-y bg-surface-accent" style={{ borderColor: 'var(--sm-glass-border)' }}>
         <div className="mx-auto max-w-6xl px-6 py-7">
           <StatStrip />
         </div>

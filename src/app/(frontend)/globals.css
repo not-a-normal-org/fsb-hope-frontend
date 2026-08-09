@@ -40,6 +40,9 @@
      Invert = a deliberately opposite-tone surface for the ONE standout section
      (the comparison); it flips per theme so it always contrasts the page. */
   --sm-surface-raised: #0B1220;
+  /* A deliberately blue-tinted band — used sparingly (stats strip, pricing band)
+     as emphasis, never as an ambient page wash. See the light block's note. */
+  --sm-surface-accent: #0D1B30;
   --sm-surface-invert: #EDF1F8;
   --sm-ink-invert: #14213A;
   --sm-ink-invert-sub: #47566C;
@@ -60,9 +63,12 @@
 }
 
 [data-theme="light"] {
-  --sm-bg-base: #DCE8F5;
-  --sm-bg-elevated: #F2F7FC;
-  --sm-bg-gradient: radial-gradient(circle at 20% 15%, #F2F7FC, #DCE8F5 72%);
+  /* Near-white base (Review v3 §1: the old #DCE8F5 tint on every section left the
+     page an undifferentiated pale-blue wash). White base + white raised panels +
+     real card borders; blue is reserved for the two --sm-surface-accent bands. */
+  --sm-bg-base: #FCFDFE;
+  --sm-bg-elevated: #FFFFFF;
+  --sm-bg-gradient: radial-gradient(circle at 20% 15%, #FFFFFF, #F4F8FD 72%);
 
   --sm-ink: #0A2540;
   --sm-ink-sub: #4B5A6B;
@@ -80,17 +86,21 @@
   --sm-proof: #B4791E;
   --sm-proof-soft: rgba(180, 121, 30, 0.12);
 
-  /* In light mode the raised panel lifts toward white; the invert goes dark. */
-  --sm-surface-raised: #E8F0FA;
+  /* Raised panels are plain white (they read as sections via card borders, not
+     tint); the invert goes dark; --sm-surface-accent is the one pale-blue band. */
+  --sm-surface-raised: #FFFFFF;
+  --sm-surface-accent: #E4EDF8;
   --sm-surface-invert: #0F1B2E;
   --sm-ink-invert: #EAF1FB;
   --sm-ink-invert-sub: #A9BBD1;
   --sm-accent-invert: #6FA8DC;
   --sm-invert-border: rgba(255, 255, 255, 0.12);
 
-  --sm-glass-bg: rgba(255, 255, 255, 0.55);
-  --sm-glass-border: rgba(255, 255, 255, 0.75);
-  --sm-glass-shadow: 0 20px 50px -20px rgba(10, 37, 64, 0.18);
+  /* Opaque white cards with a real, visible hairline + a soft lift, so card edges
+     no longer dissolve into the surface (Review v3 §1). */
+  --sm-glass-bg: #FFFFFF;
+  --sm-glass-border: #DCE4EE;
+  --sm-glass-shadow: 0 12px 32px -16px rgba(10, 37, 64, 0.28);
 
   --sm-blob-1: rgba(62, 124, 177, 0.20);
   --sm-blob-2: rgba(24, 119, 242, 0.14);
@@ -121,8 +131,9 @@
   --sm-proof: #ECEDEF;
   --sm-proof-soft: rgba(255, 255, 255, 0.08);
 
-  /* Mono: raised is a hueless lift; invert is a light hueless panel. */
+  /* Mono: raised is a hueless lift; accent band + invert stay hueless too. */
   --sm-surface-raised: #131316;
+  --sm-surface-accent: #1C1D21;
   --sm-surface-invert: #ECEDEB;
   --sm-ink-invert: #17181B;
   --sm-ink-invert-sub: #4B4D53;
@@ -163,6 +174,7 @@
   --color-accent: var(--sm-accent);
   --color-proof: var(--sm-proof);
   --color-surface-raised: var(--sm-surface-raised);
+  --color-surface-accent: var(--sm-surface-accent);
   --color-surface-invert: var(--sm-surface-invert);
   --color-ink-invert: var(--sm-ink-invert);
   --color-ink-invert-sub: var(--sm-ink-invert-sub);
@@ -351,6 +363,19 @@
   [data-custom-cursor] * {
     cursor: none !important;
   }
+  /* …but keep the native text caret (I-beam) over editable fields — the custom
+     ring alone gives no insertion point, which broke the calculator / lead inputs
+     (Review v3 §2). Higher specificity + later position beats the rule above. */
+  [data-custom-cursor] input,
+  [data-custom-cursor] textarea,
+  [data-custom-cursor] select,
+  [data-custom-cursor] [contenteditable="true"],
+  [data-custom-cursor] [contenteditable=""] {
+    cursor: text !important;
+  }
+  [data-custom-cursor] select {
+    cursor: pointer !important;
+  }
 }
 .sm-cursor-pos {
   position: fixed;
@@ -459,6 +484,19 @@
 .animate-shine {
   background-size: 200% auto;
   animation: sm-shine 6s linear infinite;
+}
+
+/* ---- Region-bookmark countdown bar (RegionalReports) -----------------------
+   Fills left→right over the auto-advance interval so the rotating hero cards
+   read as live, not a static mockup. Duration is set inline per interval;
+   animation-play-state pauses it on hover. Reduced motion hides it entirely. */
+@keyframes sm-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* Blog post body — RichText (lexical) output. Minimal typographic defaults;

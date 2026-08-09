@@ -14,7 +14,7 @@ import { entrance, inViewOnce } from '@/lib/animations';
  */
 export default function PricingBand() {
   return (
-    <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
+    <section className="relative border-y bg-surface-accent" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <motion.div
         variants={entrance}
         {...inViewOnce}
@@ -27,7 +27,7 @@ export default function PricingBand() {
           className="mt-4 font-display font-bold text-ink"
           style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)', lineHeight: 1.1, letterSpacing: '-0.01em' }}
         >
-          $99 per person, per way. All cabins.{' '}
+          $99 per person, per direction. All cabins.{' '}
           <span className="text-accent">Only if you fly.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-sub">

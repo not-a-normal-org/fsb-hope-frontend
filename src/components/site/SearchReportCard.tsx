@@ -24,20 +24,29 @@ function cabinCode(cabin: string): string {
   return 'Y';
 }
 
-/** Gold EMV chip (hueless in Mono — proof resolves to a neutral there). */
+/**
+ * Gold EMV chip (hueless in Mono — proof resolves to a neutral there). The
+ * classic contact-pad grid (inset outline + cross rules) is what makes it read
+ * as a card chip rather than a broken logo block (Review v3 §3); kept small and
+ * lower-contrast so it never becomes the loudest thing on the card.
+ */
 function Chip() {
+  const line = 'rgba(0,0,0,0.24)';
   return (
     <div
-      className="relative h-6 w-9 rounded-md"
+      className="relative h-5 w-7 rounded"
       style={{
         background:
-          'linear-gradient(135deg, color-mix(in srgb, var(--sm-proof) 80%, #ffffff) 0%, var(--sm-proof) 100%)',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.10)',
+          'linear-gradient(135deg, color-mix(in srgb, var(--sm-proof) 76%, #ffffff) 0%, var(--sm-proof) 100%)',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.32), inset 0 0 0 1px rgba(0,0,0,0.10)',
       }}
       aria-hidden
     >
-      <span className="absolute left-1/2 top-1/2 h-2.5 w-px -translate-x-1/2 -translate-y-1/2" style={{ background: 'rgba(0,0,0,0.20)' }} />
-      <span className="absolute left-1/2 top-1/2 h-px w-4 -translate-x-1/2 -translate-y-1/2" style={{ background: 'rgba(0,0,0,0.20)' }} />
+      {/* central contact pad */}
+      <span className="absolute inset-[3px] rounded-[2px]" style={{ border: `1px solid ${line}` }} />
+      {/* cross rules that split the pads */}
+      <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2" style={{ background: line }} />
+      <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2" style={{ background: line }} />
     </div>
   );
 }
@@ -156,13 +165,16 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
             {report.airline} · {report.cabin} · {report.date}
           </p>
 
-          {/* Cost */}
-          <div className="mt-5 space-y-1">
+          {/* Cost — points vs. the struck retail fare IS the whole argument, so
+              the retail anchor is set as loud as the points/taxes line (Review v3 §3). */}
+          <div className="mt-5 space-y-1.5">
             <p className="font-mono text-xl font-semibold text-ink">
               {report.points} pts <span className="text-ink-muted">+</span> {report.taxes} taxes
             </p>
-            <p className="text-xs text-ink-muted">
-              Retail fare <span className="line-through">{report.retailUSD}</span> · you pay points
+            <p className="font-mono text-base font-medium text-ink-sub">
+              Retail fare{' '}
+              <span className="text-ink line-through decoration-2">{report.retailUSD}</span>
+              <span className="text-ink-muted"> · you pay points</span>
             </p>
           </div>
 
