@@ -22,17 +22,26 @@ export const metadata: Metadata = {
   title: 'Blog',
 };
 
-export default async function BlogIndexPage() {
-  const payload = await getPayloadClient();
-  const { docs } = await payload.find({
-    collection: 'posts',
-    where: { _status: { equals: 'published' } },
-    sort: '-publishedAt',
-    limit: 100,
-    depth: 1, // populate coverImage + category
-  });
+// A DB hiccup or an unmigrated `posts` table degrades to an empty grid (the
+// grid's own "just getting started" empty state) instead of a 500.
+async function getPosts(): Promise<BlogCard[]> {
+  try {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: 'posts',
+      where: { _status: { equals: 'published' } },
+      sort: '-publishedAt',
+      limit: 100,
+      depth: 1, // populate coverImage + category
+    });
+    return docs.map(toBlogCard);
+  } catch {
+    return [];
+  }
+}
 
-  const posts: BlogCard[] = docs.map(toBlogCard);
+export default async function BlogIndexPage() {
+  const posts = await getPosts();
 
   return (
     <>

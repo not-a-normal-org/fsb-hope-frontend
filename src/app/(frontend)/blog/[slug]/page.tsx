@@ -21,15 +21,20 @@ export const dynamic = 'force-dynamic';
 
 type Params = { params: Promise<{ slug: string }> };
 
+// On a DB error, treat the post as not found (404) rather than throwing a 500.
 async function getPost(slug: string) {
-  const payload = await getPayloadClient();
-  const { docs } = await payload.find({
-    collection: 'posts',
-    where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
-    limit: 1,
-    depth: 1, // populate coverImage + category + meta.image
-  });
-  return docs[0] ?? null;
+  try {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: 'posts',
+      where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
+      limit: 1,
+      depth: 1, // populate coverImage + category + meta.image
+    });
+    return docs[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
