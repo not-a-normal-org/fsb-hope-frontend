@@ -9,6 +9,7 @@ import CalculatorTeaser from '@/components/site/CalculatorTeaser';
 import PricingBand from '@/components/site/PricingBand';
 import NewsletterInline from '@/components/site/NewsletterInline';
 import NewsletterPopup from '@/components/site/NewsletterPopup';
+import FAQ from '@/components/site/FAQ';
 import Footer from '@/components/site/Footer';
 
 /**
@@ -35,6 +36,7 @@ export default function Home() {
       <NewsletterInline />
       <CaseStudyTeaser />
       <CalculatorTeaser />
+      <FAQ />
       <Footer />
       <NewsletterPopup />
     </>

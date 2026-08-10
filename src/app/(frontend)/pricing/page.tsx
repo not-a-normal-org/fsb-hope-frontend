@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
+import ReceiptCard from '@/components/site/ReceiptCard';
 import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
 import { SEARCH_PRODUCTS, ALERT_PRODUCTS } from '@/lib/products';
@@ -40,6 +41,7 @@ export default function PricingPage() {
         eyebrow="Pricing"
         title="Put a specialist on your points."
         intro="Two ways to search, once or ongoing, plus alerts that keep watch on your routes. Prices are flat and stated up front, and the one automated product says so plainly, right on its card."
+        aside={<ReceiptCard />}
       />
 
       <section className="relative">
