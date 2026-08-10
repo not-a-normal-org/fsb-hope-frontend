@@ -14,15 +14,18 @@ import ModeCycle from '@/components/system/ModeCycle';
  * compact ModeCycle icon (click to toggle Light ⇄ Dark; Mono is held) and the
  * single primary CTA; the fuller segmented toggle lives in the footer.
  */
-// Guides + Deals removed for launch (Review v3 §8): they pointed at
-// /blog/category/{guides,deals}, which 404 unless the CMS is seeded — a dead link
-// on a deposit-asking site costs more than a missing section. Deals returns with
-// the deals grid; Guides only if it gets real content.
+// Blog + its two surfaced categories. Guides/Deals point at
+// /blog/category/{guides,deals}; those pages now render a graceful empty state
+// instead of 404-ing when the CMS has no matching category yet (see
+// blog/category/[slug]/page.tsx), so the links are safe even before seeding.
 const NAV = [
   { label: 'Individual', href: '/individual' },
   { label: 'Business', href: '/business' },
   { label: 'Alerts', href: '/alerts' },
   { label: 'Pricing', href: '/pricing' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Guides', href: '/blog/category/guides' },
+  { label: 'Deals', href: '/blog/category/deals' },
 ];
 
 export default function NavBar() {

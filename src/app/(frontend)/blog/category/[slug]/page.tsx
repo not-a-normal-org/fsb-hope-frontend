@@ -13,6 +13,10 @@ import BlogIndex from '../../BlogIndex';
  * blog grid (search on, category pills off). Generic: works for any category.
  * "Guides" and "Deals" are the two surfaced in the nav. Dynamic so the build
  * doesn't need the database.
+ *
+ * The nav links here must never dead-end: a slug we have tailored COPY for
+ * (guides/deals) renders its hero + a graceful empty state even when the CMS has
+ * no such category yet. Only a slug with neither a category doc nor COPY 404s.
  */
 export const dynamic = 'force-dynamic';
 
@@ -32,15 +36,39 @@ const COPY: Record<string, { title: string; intro: string }> = {
 
 type CategoryDoc = { id: string | number; name: string; slug: string };
 
+// A DB hiccup or an unmigrated table degrades to "no such category" rather than
+// throwing a 500 — the page then decides 404 (unknown slug) vs empty state.
 async function getCategory(slug: string): Promise<CategoryDoc | null> {
-  const payload = await getPayloadClient();
-  const { docs } = await payload.find({
-    collection: 'categories',
-    where: { slug: { equals: slug } },
-    limit: 1,
-    depth: 0,
-  });
-  return (docs[0] as CategoryDoc | undefined) ?? null;
+  try {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: 'categories',
+      where: { slug: { equals: slug } },
+      limit: 1,
+      depth: 0,
+    });
+    return (docs[0] as CategoryDoc | undefined) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getPosts(categoryId: string | number): Promise<BlogCard[]> {
+  try {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: 'posts',
+      where: {
+        and: [{ _status: { equals: 'published' } }, { category: { equals: categoryId } }],
+      },
+      sort: '-publishedAt',
+      limit: 100,
+      depth: 1,
+    });
+    return docs.map(toBlogCard);
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -50,28 +78,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategory(slug);
-  if (!category) return { title: 'Blog' };
-  return { title: COPY[slug]?.title ?? category.name };
+  return { title: COPY[slug]?.title ?? category?.name ?? 'Blog' };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const category = await getCategory(slug);
-  if (!category) notFound();
-
-  const payload = await getPayloadClient();
-  const { docs } = await payload.find({
-    collection: 'posts',
-    where: {
-      and: [{ _status: { equals: 'published' } }, { category: { equals: category.id } }],
-    },
-    sort: '-publishedAt',
-    limit: 100,
-    depth: 1,
-  });
-  const posts: BlogCard[] = docs.map(toBlogCard);
-
   const copy = COPY[slug];
+
+  // Only a slug with neither a real category nor tailored copy is a true 404.
+  // Guides/Deals (COPY) always render, empty state and all, so the nav links live.
+  if (!category && !copy) notFound();
+
+  const posts = category ? await getPosts(category.id) : [];
 
   return (
     <>
@@ -79,8 +98,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <PageHero
         compact
         eyebrow="Blog"
-        title={copy?.title ?? category.name}
-        intro={copy?.intro ?? `Everything we’ve filed under ${category.name}.`}
+        title={copy?.title ?? category?.name ?? slug}
+        intro={
+          copy?.intro ??
+          (category ? `Everything we’ve filed under ${category.name}.` : '')
+        }
       />
       <BlogIndex posts={posts} hideFilters />
       <Footer />

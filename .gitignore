@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but the keys-only template IS committed, so contributors and Vercel know
+# which variables to set.
+!.env.example
 
 # vercel
 .vercel
