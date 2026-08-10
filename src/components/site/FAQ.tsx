@@ -4,9 +4,9 @@ import { ChevronDown } from 'lucide-react';
  * FAQ (Review v3 §8) — answers the top objections the site was silent on:
  * turnaround, whether we need your logins, who books, refunds, and what happens
  * if space vanishes. Native <details>/<summary> so it needs no client JS and stays
- * keyboard-accessible. Answers track existing site copy (docs/plans/03, the
- * transactional emails' "within 5 business days", and the "we hand you a seat you
- * can book" model) — nothing invented.
+ * keyboard-accessible. Answers track existing site copy (docs/plans/03 and the "we
+ * hand you a seat you can book" model); turnaround (within 24 hours) is the
+ * owner-confirmed SLA.
  */
 const FAQS: { q: string; a: string }[] = [
   {
@@ -15,7 +15,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'How long does a search take?',
-    a: 'Most searches come back within five business days, often sooner. Anything time-sensitive we flag the moment we find it.',
+    a: 'Most searches come back within 24 hours. Anything time-sensitive we flag the moment we find it.',
   },
   {
     q: 'Do you need my airline or credit-card logins?',
