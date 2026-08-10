@@ -62,39 +62,39 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <tr>
             <td style="padding:36px 48px;">
               <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                You're now on the inside. We help Australian business owners turn everyday expenses into guaranteed Business Class flights — and we're excited to share everything we know with you.
+                You're on the list. Each Monday we'll email where your points can actually go — verified award space a real person checked, on the routes that matter to you.
               </p>
               <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                Here's what you can expect from us:
+                Here's what lands in your inbox:
               </p>
               <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Exclusive tips on earning and redeeming points
+                    Award space on your routes, checked by hand
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Business Class sweet spots most travellers miss
+                    Which card points transfer in — and at what rate
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Qantas, Velocity &amp; partner airline strategies
+                    The dates space exists and the exact points required
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Member-only events and early access offers
+                    Business- and first-class sweet spots most travellers miss
                   </td>
                 </tr>
               </table>
               <p style="margin:0;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                In the meantime, explore our <a href="${process.env.NEXT_PUBLIC_APP_URL}/membership" style="color:#E8963A;text-decoration:none;">membership tiers</a> to see how we can take your travel to the next level.
+                When you're ready to book one, a specialist confirms the seat before you pay. See <a href="${process.env.NEXT_PUBLIC_APP_URL}/how-it-works" style="color:#E8963A;text-decoration:none;">how it works</a>.
               </p>
             </td>
           </tr>
@@ -102,9 +102,9 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <!-- CTA -->
           <tr>
             <td style="padding:0 48px 40px;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL}/membership"
+              <a href="${process.env.NEXT_PUBLIC_APP_URL}/how-it-works"
                  style="display:inline-block;background-color:#E8963A;color:#07090F;font-weight:700;font-size:15px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:0.02em;">
-                Explore Membership →
+                See how it works →
               </a>
             </td>
           </tr>
