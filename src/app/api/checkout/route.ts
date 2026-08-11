@@ -10,6 +10,14 @@ interface CheckoutRequestBody {
   mode: 'subscription' | 'payment';
   customerEmail?: string;
   metadata?: Record<string, string>;
+  /** Internal path to return to after success/cancel (must start with "/"). */
+  successPath?: string;
+  cancelPath?: string;
+}
+
+/** Only same-origin paths — never let the client hand us an absolute URL. */
+function safePath(value: unknown): string | null {
+  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : null;
 }
 
 // ── Route handler ─────────────────────────────────────────────────────────────
@@ -27,6 +35,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const { priceId, mode, customerEmail, metadata } = body;
+  const successBase = safePath(body.successPath) ?? '/alerts?checkout=success';
+  const cancelBase = safePath(body.cancelPath) ?? '/alerts';
 
   // 1. Validate required fields
   if (!priceId || typeof priceId !== 'string') {
@@ -50,8 +60,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     payment_method_types:       ['card'],
     mode,
     line_items:                 [{ price: priceId, quantity: 1 }],
-    success_url:                `${appUrl}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:                 `${appUrl}/membership`,
+    success_url:                `${appUrl}${successBase}${successBase.includes('?') ? '&' : '?'}session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url:                 `${appUrl}${cancelBase}`,
     billing_address_collection: 'required',
     ...(customerEmail ? { customer_email: customerEmail } : {}),
     ...(metadata      ? { metadata }                     : {}),
