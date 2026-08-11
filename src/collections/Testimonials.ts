@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
+import { contentAccess } from './access';
+
 /** Slugify a title: lowercase, strip punctuation, hyphenate. */
 const formatSlug = (val: string): string =>
   val
@@ -22,6 +24,7 @@ const formatSlug = (val: string): string =>
  */
 export const Testimonials: CollectionConfig = {
   slug: 'testimonials',
+  access: contentAccess,
   labels: { singular: 'Case Study', plural: 'Case Studies' },
   admin: {
     useAsTitle: 'title',

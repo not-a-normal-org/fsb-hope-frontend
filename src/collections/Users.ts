@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, FieldAccess } from 'payload';
 
+import { hasRole, CMS_CONTENT_ROLES } from '../lib/access';
+
 /**
  * Auth collection — the single identity store for every internal/partner account
  * (docs/plans/06 + the admin-user-management plan). Payload owns the auth
@@ -50,7 +52,9 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email', 'role', 'status'],
   },
   access: {
-    admin: ({ req: { user } }) => isAdmin(user), // can this user open the /cms panel?
+    // Content editors (admin/agent/searcher) may open the /cms panel; affiliates
+    // cannot. Managing users stays admin-only via the rules below.
+    admin: ({ req: { user } }) => hasRole(user, CMS_CONTENT_ROLES),
     read: adminOrSelf,
     create: adminOnly,
     update: adminOrSelf,

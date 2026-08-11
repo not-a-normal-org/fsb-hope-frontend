@@ -73,12 +73,17 @@ it first; it is the source of truth.** This file is how to work in the repo.
 ## The construction wall
 
 The whole site is gated by `src/proxy.ts`: anonymous visitors get a **503 rewrite
-to `/maintenance`**; only a signed-in admin sees real pages. The Stripe webhook
-(`/api/webhooks/stripe`) is exempt. See [`docs/maintenance-mode.md`](docs/maintenance-mode.md).
+to `/maintenance`**; only a signed-in staff member sees real pages. The Stripe
+webhook (`/api/webhooks/stripe`) is exempt. See [`docs/maintenance-mode.md`](docs/maintenance-mode.md).
 
-To view real pages locally: sign in at `/admin/login` (password = `ADMIN_SECRET`
-from `.env.local`), or set `MAINTENANCE_MODE=off` in `.env.local`. The wall comes
-down at launch.
+**Auth is per-user Payload sessions with roles** (admin/agent/searcher/affiliate),
+not a shared secret. Sign in at `/admin/login` with a staff account (created in
+`/admin/team` or seeded via `npm run seed:staff`). One `payload-token` session
+governs `/admin` (roles decide which sections — see `src/lib/access.ts`), the
+`/cms` panel, and lifting the wall. The edge middleware verifies that JWT with
+`jose` (`src/lib/session-edge.ts`); the authoritative role check is `payload.auth`
+in the `/admin` layout (`src/lib/auth.ts`). `MAINTENANCE_MODE=off` drops the wall
+entirely for local work. The wall comes down at launch.
 
 ## Product non-negotiables (from `docs/plans/00-context.md`)
 
