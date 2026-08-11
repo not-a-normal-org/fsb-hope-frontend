@@ -5,6 +5,7 @@ import { Resend } from 'resend';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { logAudit } from '@/lib/audit';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -122,22 +123,6 @@ function rejectionEmail(firstName: string): string {
   `.trim();
 }
 
-// ── Audit log helper ──────────────────────────────────────────────────────────
-
-async function logAudit(action: string, recordId: string, newValue: Record<string, unknown> = {}) {
-  const { error } = await supabaseAdmin
-    .from('admin_audit_log')
-    .insert({
-      action,
-      table_name: 'customers',
-      record_id:  recordId,
-      new_value:  newValue,
-    });
-  if (error) {
-    console.warn('[audit] log failed:', error.message);
-  }
-}
-
 // ── Server Actions ────────────────────────────────────────────────────────────
 
 export async function approveApplication(
@@ -183,7 +168,12 @@ export async function approveApplication(
   }
 
   // 4. Audit log
-  await logAudit('approve_application', customerId, { tier, priceId, paymentLinkId: paymentLink.id });
+  await logAudit({
+    action: 'approve_application',
+    table: 'customers',
+    recordId: customerId,
+    detail: { tier, priceId, paymentLinkId: paymentLink.id },
+  });
 
   revalidatePath('/admin/applications');
 }
@@ -217,7 +207,7 @@ export async function rejectApplication(
   }
 
   // 3. Audit log
-  await logAudit('reject_application', customerId, {});
+  await logAudit({ action: 'reject_application', table: 'customers', recordId: customerId });
 
   revalidatePath('/admin/applications');
 }

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { logAudit } from '@/lib/audit';
 import { CUSTOMER_TIERS, isTierTag, type CustomerTierKey } from '@/lib/tiers';
 
 const VALID_TIERS = new Set<string>(CUSTOMER_TIERS.map((t) => t.key));
@@ -36,5 +37,13 @@ export async function setCustomerTier(customerId: string, tierKey: string): Prom
     .eq('id', customerId);
 
   if (error) throw new Error(`setCustomerTier: ${error.message}`);
+
+  await logAudit({
+    action: 'set_customer_tier',
+    table: 'customers',
+    recordId: customerId,
+    detail: { tier: tierKey || null },
+  });
+
   revalidatePath('/admin/customers');
 }
