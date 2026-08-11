@@ -4,8 +4,9 @@ import AlertPurchase from '@/components/site/AlertPurchase';
 import { PRODUCTS } from '@/lib/products';
 
 /**
- * /alerts/weekly — buy the Weekly Lookup Alert (the automated scan). Reuses the
- * Stripe "Seat Alert Service — Essential" prices (monthly + annual).
+ * /alerts/weekly — buy the Weekly Lookup Alert ($4.99/mo, $49.90/yr, USD).
+ * Prices are the dedicated USD Stripe products (test mode). A missing price ID
+ * renders a safe "not configured" state rather than charging the wrong amount.
  */
 export const metadata: Metadata = {
   title: 'Weekly Lookup Alert',
@@ -17,8 +18,8 @@ export default function WeeklyAlertPage() {
     <AlertPurchase
       product={PRODUCTS.weekly}
       eyebrow="Weekly alert"
-      monthlyPriceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ALERTS_ESSENTIAL_MONTHLY}
-      annualPriceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_ALERTS_ESSENTIAL_ANNUAL}
+      monthlyPriceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_MONTHLY}
+      annualPriceId={process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_ANNUAL}
       cancelPath="/alerts/weekly"
     />
   );
