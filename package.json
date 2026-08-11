@@ -13,7 +13,8 @@
     "lint": "eslint",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "seed:blog": "payload run src/scripts/seed-blog.ts"
+    "seed:blog": "payload run src/scripts/seed-blog.ts",
+    "seed:staff": "payload run src/scripts/seed-staff.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -29,6 +30,7 @@
     "framer-motion": "^12.38.0",
     "graphql": "^16.14.2",
     "gsap": "^3.14.2",
+    "jose": "^5.10.0",
     "lucide-react": "^0.577.0",
     "next": "16.2.11",
     "payload": "^3.86.0",

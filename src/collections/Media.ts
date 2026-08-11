@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
+import { contentAccess } from './access';
+
 /**
  * Uploads — blog cover images and social/OG images. Stored in Supabase Storage
  * via the s3Storage plugin (see payload.config.ts); public read.
@@ -9,7 +11,7 @@ import type { CollectionConfig } from 'payload';
  */
 export const Media: CollectionConfig = {
   slug: 'media',
-  access: { read: () => true },
+  access: contentAccess,
   upload: {
     mimeTypes: ['image/*'],
     focalPoint: true,

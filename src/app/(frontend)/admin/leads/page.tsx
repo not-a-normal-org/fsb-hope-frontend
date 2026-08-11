@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getPayloadClient } from '@/lib/payload';
+import { getCurrentUser } from '@/lib/auth';
 import { AssigneeSelect, StatusSelect, type Account } from './LeadRowControls';
 
 export const dynamic = 'force-dynamic';
@@ -55,10 +56,17 @@ function TypeBadge({ type }: { type: string | null }) {
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
-async function fetchLeads(statusFilter: string) {
+async function fetchLeads(statusFilter: string, redactPII: boolean) {
+  // Searchers work the request without the customer's contact details, so we
+  // don't even SELECT the PII columns for them (never reaches the server memory
+  // or the HTML).
+  const columns = redactPII
+    ? 'id, type, route, flight_need, status, referral_code, assigned_to, created_at'
+    : 'id, type, route, flight_need, email, whatsapp, phone, status, referral_code, assigned_to, created_at';
+
   let query = supabaseAdmin
     .from('leads')
-    .select('id, type, route, flight_need, email, whatsapp, phone, status, referral_code, assigned_to, created_at')
+    .select(columns)
     .order('created_at', { ascending: false });
 
   if (statusFilter !== 'all') query = query.eq('status', statusFilter);
@@ -69,7 +77,7 @@ async function fetchLeads(statusFilter: string) {
     .from('leads')
     .select('*', { count: 'exact', head: true });
 
-  return { leads: (rows ?? []) as Lead[], totalCount: totalCount ?? 0, error };
+  return { leads: (rows ?? []) as unknown as Lead[], totalCount: totalCount ?? 0, error };
 }
 
 async function fetchAssignableAccounts(): Promise<Account[]> {
@@ -94,8 +102,11 @@ export default async function LeadsPage({
   const { status: rawStatus } = await searchParams;
   const activeTab = TABS.some((t) => t.value === rawStatus) ? (rawStatus ?? 'all') : 'all';
 
+  const user = await getCurrentUser();
+  const redactPII = user?.role === 'searcher';
+
   const [{ leads, totalCount, error }, accounts] = await Promise.all([
-    fetchLeads(activeTab),
+    fetchLeads(activeTab, redactPII),
     fetchAssignableAccounts(),
   ]);
 
@@ -168,10 +179,12 @@ export default async function LeadsPage({
                     {/* Lead */}
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-[#F5F5F0] leading-tight">{l.email ?? '—'}</span>
+                        <span className="font-medium text-[#F5F5F0] leading-tight">
+                          {redactPII ? `Lead #${l.id.slice(0, 8)}` : (l.email ?? '—')}
+                        </span>
                         <TypeBadge type={l.type} />
                       </div>
-                      {(l.whatsapp || l.phone) && (
+                      {!redactPII && (l.whatsapp || l.phone) && (
                         <p className="text-xs text-[#5C6378] mt-0.5">{l.whatsapp ?? l.phone}</p>
                       )}
                     </td>

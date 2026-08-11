@@ -21,15 +21,20 @@ crawler-facing 503s all say *under construction*.)
 
 ## How to get in
 
-Open the site, click **Admin sign in** at the bottom of the notice, enter
-`ADMIN_SECRET`. It posts to the existing `/api/admin/login`, so there is one
-password and one cookie for both the wall and the admin portal — signing in
-here also signs you into `/admin`.
+Auth is per-user Payload sessions with roles (admin/agent/searcher/affiliate) —
+**not** a shared secret. Open the site, click **Staff sign in** at the bottom of
+the notice, enter your staff email + password (or go straight to `/admin/login`).
+It posts to `/api/account/login`. That one `payload-token` session lifts the wall
+**and** gates `/admin` (roles decide which sections) and the `/cms` panel — see
+`src/lib/access.ts`. Need accounts? Create them in `/admin/team` or seed test
+users of every role with `npm run seed:staff`.
 
-The cookie is `admin_token`: httpOnly, `sameSite: lax`, 24-hour expiry,
-`secure` in production. It expires after a day; sign in again.
+The cookie is `payload-token`: httpOnly, `sameSite: lax`, ~2-hour expiry, `secure`
+in production. `src/proxy.ts` verifies its JWT at the edge with `jose`
+(`src/lib/session-edge.ts`) as a fast pre-filter; `payload.auth` in the `/admin`
+layout is the authoritative role check.
 
-To sign out, `POST /api/admin/logout`.
+To sign out, `POST /api/account/logout`.
 
 ## Why the webhook is exempt
 
@@ -65,35 +70,37 @@ you are not signing in constantly.
 
 | File | Role |
 |---|---|
-| [`src/lib/maintenance.ts`](../src/lib/maintenance.ts) | Flag, cookie name, `isAdminToken()` |
-| [`src/app/maintenance/page.tsx`](../src/app/maintenance/page.tsx) | The notice |
-| [`src/app/maintenance/AdminUnlockForm.tsx`](../src/app/maintenance/AdminUnlockForm.tsx) | Unlock form |
-| [`src/proxy.ts`](../src/proxy.ts) | The wall + the pre-existing admin gate |
+| [`src/lib/maintenance.ts`](../src/lib/maintenance.ts) | The `MAINTENANCE_ENABLED` flag only |
+| [`src/lib/session-edge.ts`](../src/lib/session-edge.ts) | Edge JWT verify (staff session) |
+| [`src/app/(frontend)/maintenance/page.tsx`](../src/app/(frontend)/maintenance/page.tsx) | The notice |
+| [`src/app/(frontend)/maintenance/AdminUnlockForm.tsx`](../src/app/(frontend)/maintenance/AdminUnlockForm.tsx) | Staff unlock form |
+| [`src/proxy.ts`](../src/proxy.ts) | The wall + the session-based admin gate |
 
 `src/lib/maintenance.ts` is imported by `src/proxy.ts`, which runs in the edge
 runtime. It must stay free of `server-only`, `next/headers`, and Node
 built-ins.
 
-### Two things that were fixed along the way
+### Two things to keep in mind
 
-**`isAdminToken()` checks that `ADMIN_SECRET` exists.** The previous
-`token !== process.env.ADMIN_SECRET` comparison passed when *both* sides were
-`undefined` — an environment missing the secret treated every anonymous
-visitor as an admin. Keep the presence check when this code is removed.
+**The edge session check fails closed.** `verifyStaffToken` (jose) returns `null`
+for a missing/expired/tampered `payload-token`, and `MAINTENANCE_ENABLED` defaults
+on — so a deploy that forgets `PAYLOAD_SECRET` or `MAINTENANCE_MODE` shows the
+public the notice rather than leaking the site. The edge check reads role/status
+from the JWT (login-time values, ≤2h); the authoritative check is `payload.auth`
+in the `/admin` layout.
 
-**The proxy matcher is now a catch-all**, which still covers `/admin/*` and
-`/api/admin/*`. The old matcher listed both explicitly. If you narrow it during
-removal, keep both prefixes: `/api/admin/*` is **not** covered by
-`/admin/:path*`, and a version that matched only the latter leaked customer PII
-from `applications-data` and `products-data`.
+**The proxy matcher is a catch-all** covering `/admin/*` and `/api/admin/*`. If you
+narrow it, keep both prefixes: `/api/admin/*` is **not** covered by `/admin/:path*`,
+and a version that matched only the latter leaked customer PII from
+`applications-data` and `products-data`.
 
-## Removal checklist
+## Removal checklist (at launch)
 
-1. Delete `src/lib/maintenance.ts` and `src/app/maintenance/`.
-2. In `src/proxy.ts`: drop the maintenance branch, the `ADMIN_COOKIE` /
-   `MAINTENANCE_ENABLED` / `isAdminToken` import, and `/maintenance` from
-   `PUBLIC_PATHS`. **Keep** `ALWAYS_OPEN`, the admin gate, and the
-   `ADMIN_SECRET` presence check (inline it).
+1. Delete `src/lib/maintenance.ts` and `src/app/(frontend)/maintenance/`.
+2. In `src/proxy.ts`: drop the maintenance branch and the `MAINTENANCE_ENABLED`
+   import, and remove `/maintenance` from `PUBLIC_PATHS`. **Keep** `ALWAYS_OPEN`
+   and the session-based admin gate (the `/admin` role auth is permanent, not part
+   of the wall).
 3. Restore the matcher to `['/admin/:path*', '/api/admin/:path*']` — the wall
    is the only reason it runs site-wide.
 4. Remove `MAINTENANCE_MODE` from all environments.

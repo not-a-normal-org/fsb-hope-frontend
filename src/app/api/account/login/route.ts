@@ -6,12 +6,12 @@ import type { User } from '@/payload-types';
 /**
  * Per-account login for internal/partner accounts (admin/agent/searcher/
  * affiliate). Authenticates against the Payload `users` collection via the local
- * API and sets Payload's own `payload-token` cookie, so `/portal` can be gated by
- * `payload.auth` in its layout. This is SEPARATE from the shared-secret admin gate
- * (`/api/admin/login` + `admin_token`) — that stays intact, so no lockout risk.
+ * API and sets Payload's own `payload-token` cookie. This one session powers
+ * everything gated by `payload.auth`: `/portal`, the `/admin` console (roles
+ * decide which sections), the `/cms` panel, and lifting the construction wall.
  *
  * This route is exempt from the construction wall (see PUBLIC_PATHS in proxy.ts)
- * so accounts can sign in while the marketing site is still walled.
+ * so staff can sign in while the marketing site is still walled.
  */
 
 const COOKIE_NAME = 'payload-token'; // Payload's default (cookiePrefix 'payload')
