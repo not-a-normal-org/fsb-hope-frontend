@@ -7,10 +7,10 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**
  * Home alerts teaser (docs/plans/02). The two tiers are NOT visual equals: the
- * $99.99 Human Search Alert is featured (larger, amber-bordered, "Most accurate")
- * so it reads as a different category, not a 20× markup on the $4.99 scan. The
- * $4.99 tier keeps its mandatory phantom-flight disclosure beside the price
- * (docs/plans/03 §3). The Human tier sells the process — "a specialist confirms
+ * Human Search Alert is featured (larger, amber-bordered, "Most accurate") so it
+ * reads as a different category — verified, not automated — rather than a pricier
+ * version of the scan. The Weekly tier keeps its mandatory phantom-flight
+ * disclosure beside the price (docs/plans/03 §3). The Human tier sells the process — "a specialist confirms
  * the seat" — not an invented precision stat (Review v3 §6). On a raised surface;
  * the page's one glow is the hero.
  */
@@ -33,7 +33,7 @@ export default function AlertsTeaser() {
           {...inViewOnce}
           className="mt-10 grid items-stretch gap-6 md:grid-cols-[2fr_3fr]"
         >
-          {/* Weekly Lookup Alert — the low-cost scan (decoy) */}
+          {/* Weekly Lookup Alert — the automated scan */}
           <motion.div variants={entrance}>
             <div
               className="flex h-full flex-col rounded-2xl p-6 sm:p-7"
@@ -41,10 +41,10 @@ export default function AlertsTeaser() {
             >
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="font-display text-card font-bold text-ink">Weekly Lookup Alert</h3>
-                <span className="shrink-0 font-mono text-sm text-ink-sub">$4.99/mo</span>
+                <span className="shrink-0 font-mono text-sm text-ink-sub">A$47/mo</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                An automated weekly scan of your routes — broad and low cost.
+                An automated weekly scan of your routes — broad and hands-off.
               </p>
               <p className="mt-3 text-xs leading-relaxed text-ink-muted">
                 Automated scan: some listed space may be phantom and not hold at booking.
@@ -75,7 +75,7 @@ export default function AlertsTeaser() {
               </span>
               <div className="mt-1 flex items-baseline justify-between gap-4">
                 <h3 className="font-display text-card font-bold text-ink">Human Search Alert</h3>
-                <span className="shrink-0 font-mono text-sm text-ink">$99.99/mo</span>
+                <span className="shrink-0 font-mono text-sm text-ink">A$97/mo</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
                 A specialist checks your routes every cycle — the opposite of an automated

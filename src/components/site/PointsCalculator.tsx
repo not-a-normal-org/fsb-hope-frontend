@@ -148,7 +148,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
       <p className="mt-6 text-xs leading-relaxed text-ink-muted">{CALCULATOR_DISCLAIMER}</p>
 
       <Link
-        href="/individual"
+        href="/audit"
         className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta"
       >
         Get a free points audit

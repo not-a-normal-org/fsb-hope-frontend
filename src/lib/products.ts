@@ -28,9 +28,11 @@ export type Product = {
   disclosure?: string;
   cta: { label: string; href: string };
   group: 'search' | 'alert';
+  /** Recurring vs one-off — set on the alert products that go through Stripe. */
+  mode?: 'subscription' | 'payment';
+  /** Annual price display, for products whose buy page has a monthly/annual toggle. */
+  priceAnnual?: string;
 };
-
-const CONTACT = 'mailto:hello@savermiles.com';
 
 export const PRODUCTS: Record<string, Product> = {
   business: {
@@ -73,36 +75,40 @@ export const PRODUCTS: Record<string, Product> = {
   weekly: {
     id: 'weekly',
     name: 'Weekly Lookup Alert',
-    price: '$4.99',
+    price: 'A$47',
     priceUnit: '/ month',
-    tagline: 'An early signal on routes you’re watching casually.',
+    priceAnnual: 'A$397',
+    mode: 'subscription',
+    tagline: 'A standing weekly signal on routes you’re watching.',
     description:
-      'Every Monday for 12 months, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. Cheap enough to set and forget — a heads-up, not a booking.',
+      'Every Monday, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. A hands-off heads-up, not a booking.',
     features: [
-      'Delivered every Monday, for 12 months',
+      'Delivered every Monday',
       'Airlines, transfer partners, dates, points',
       'Cancel anytime',
     ],
     disclosure:
       'Automated scan — shows availability, not a confirmed seat, and some space may be phantom. For a booking you can rely on, use the Human Search Alert or a one-off search.',
-    cta: { label: 'Get weekly alerts', href: `${CONTACT}?subject=Weekly%20Lookup%20Alert` },
+    cta: { label: 'Get weekly alerts', href: '/alerts/weekly' },
     group: 'alert',
   },
 
   human: {
     id: 'human',
     name: 'Human Search Alert',
-    price: '$99.99',
+    price: 'A$97',
     priceUnit: '/ month',
+    priceAnnual: 'A$797',
+    mode: 'subscription',
     tagline: 'A specialist confirms the seat before you hear from us.',
     description:
       'The same rigor as our one-off search, run as an ongoing service. A specialist checks your routes each cycle and sends verified results, the opposite of an automated scan.',
     features: [
       'Specialist-run search, every cycle',
       'Verified bookable space, not raw feed data',
-      'Monthly, cancel anytime',
+      'Monthly or annual, cancel anytime',
     ],
-    cta: { label: 'Get human alerts', href: `${CONTACT}?subject=Human%20Search%20Alert` },
+    cta: { label: 'Get human alerts', href: '/alerts/human' },
     group: 'alert',
   },
 };

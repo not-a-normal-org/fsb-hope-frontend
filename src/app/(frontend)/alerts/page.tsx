@@ -17,7 +17,13 @@ export const metadata: Metadata = {
   title: 'Alerts',
 };
 
-export default function AlertsPage() {
+export default async function AlertsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ checkout?: string }>;
+}) {
+  const { checkout } = await searchParams;
+
   return (
     <>
       <NavBar />
@@ -25,9 +31,24 @@ export default function AlertsPage() {
       <PageHero
         eyebrow="Alerts"
         title="Keep watch on your routes: automated, or a specialist."
-        intro="Award space comes and goes. Choose a low-cost automated weekly scan, or a specialist checking your routes each cycle. One can surface phantom space, the other is verified. The card says which."
+        intro="Award space comes and goes. Choose an automated weekly scan, or a specialist checking your routes each cycle. One can surface phantom space, the other is verified. The card says which."
         aside={<AlertPreviewCard />}
       />
+
+      {checkout === 'success' && (
+        <div className="mx-auto max-w-4xl px-6">
+          <p
+            className="rounded-xl px-4 py-3 text-sm font-medium"
+            style={{
+              color: 'var(--sm-success)',
+              background: 'color-mix(in srgb, var(--sm-success) 10%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--sm-success) 28%, transparent)',
+            }}
+          >
+            You’re subscribed — thank you. A confirmation is on its way to your email.
+          </p>
+        </div>
+      )}
 
       <section className="relative">
         <div className="mx-auto max-w-4xl px-6 py-14 md:py-16">
