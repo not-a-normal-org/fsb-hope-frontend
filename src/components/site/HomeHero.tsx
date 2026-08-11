@@ -50,7 +50,7 @@ export default function HomeHero() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <Link
-                href="/individual"
+                href="/audit"
                 className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors"
               >
                 Get a free points audit

@@ -59,7 +59,7 @@ export default function Steps() {
 
         <motion.div variants={entrance} {...inViewOnce} className="mt-12 flex flex-wrap gap-3">
           <Link
-            href="/individual"
+            href="/audit"
             className={`${ctaPrimary} sm-cta`}
           >
             Get a free points audit

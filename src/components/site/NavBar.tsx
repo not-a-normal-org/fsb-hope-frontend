@@ -73,7 +73,7 @@ export default function NavBar() {
         <div className="flex items-center gap-3">
           <ModeCycle className="hidden sm:inline-flex" />
           <Link
-            href="/individual"
+            href="/audit"
             className="rounded-full px-4 py-2 text-sm font-medium transition-colors sm-cta"
           >
             Get a free points audit
