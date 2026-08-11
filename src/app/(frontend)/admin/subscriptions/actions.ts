@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { logAudit } from '@/lib/audit';
 
 /**
  * Cancel an active Stripe subscription and mark it canceled in Supabase.
@@ -27,6 +28,13 @@ export async function cancelSubscription(
   if (error) {
     throw new Error(`Failed to update subscription in DB: ${error.message}`);
   }
+
+  await logAudit({
+    action: 'cancel_subscription',
+    table: 'subscriptions',
+    recordId: subscriptionId,
+    detail: { stripeSubId },
+  });
 
   revalidatePath('/admin/subscriptions');
 }

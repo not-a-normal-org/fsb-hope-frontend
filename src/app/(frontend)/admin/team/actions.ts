@@ -3,13 +3,15 @@
 import { revalidatePath } from 'next/cache';
 
 import { getPayloadClient } from '@/lib/payload';
+import { logAudit } from '@/lib/audit';
 
 /**
  * Server actions for the Team console — CRUD over the Payload `users` collection
  * (roles: admin/agent/searcher/affiliate). These run through Payload's local API
  * with access override on, so they are NOT constrained by the collection's access
- * rules; they are privileged and reachable only behind the shared-secret admin
- * wall in `src/proxy.ts`. Passwords are hashed by Payload on create/update.
+ * rules; they are privileged and reachable only from the admin-only `/admin/team`
+ * page (gated in the /admin layout by role). Every mutation is written to the
+ * audit log with the acting user. Passwords are hashed by Payload on create/update.
  */
 
 export type Role = 'admin' | 'agent' | 'searcher' | 'affiliate';
@@ -51,8 +53,9 @@ export async function createUser(formData: FormData): Promise<ActionResult> {
   if (!STATUSES.includes(status)) return { ok: false, error: 'Pick a valid status.' };
 
   const payload = await getPayloadClient();
+  let createdId: number | string;
   try {
-    await payload.create({
+    const created = await payload.create({
       collection: 'users',
       data: {
         name,
@@ -66,10 +69,12 @@ export async function createUser(formData: FormData): Promise<ActionResult> {
         notes: field(formData, 'notes') || undefined,
       },
     });
+    createdId = created.id;
   } catch (e) {
     return { ok: false, error: friendlyError(e) };
   }
 
+  await logAudit({ action: 'create_user', table: 'users', recordId: String(createdId), detail: { email, role, status } });
   revalidatePath('/admin/team');
   return { ok: true };
 }
@@ -101,6 +106,7 @@ export async function updateUser(id: number, formData: FormData): Promise<Action
     return { ok: false, error: friendlyError(e) };
   }
 
+  await logAudit({ action: 'update_user', table: 'users', recordId: String(id), detail: { name, role, status } });
   revalidatePath('/admin/team');
   return { ok: true };
 }
@@ -113,6 +119,7 @@ export async function setStatus(id: number, status: Status): Promise<ActionResul
   } catch (e) {
     return { ok: false, error: friendlyError(e) };
   }
+  await logAudit({ action: 'set_user_status', table: 'users', recordId: String(id), detail: { status } });
   revalidatePath('/admin/team');
   return { ok: true };
 }
@@ -126,6 +133,8 @@ export async function resetPassword(id: number, password: string): Promise<Actio
   } catch (e) {
     return { ok: false, error: friendlyError(e) };
   }
+  // Never log the password itself — just that it was reset, by whom.
+  await logAudit({ action: 'reset_user_password', table: 'users', recordId: String(id) });
   revalidatePath('/admin/team');
   return { ok: true };
 }
