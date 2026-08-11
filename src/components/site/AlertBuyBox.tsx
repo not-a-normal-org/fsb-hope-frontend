@@ -10,7 +10,8 @@ type Interval = 'monthly' | 'annual';
  * Buy widget for a subscription alert product: a monthly/annual toggle, an
  * optional email to pre-fill Stripe, and the CheckoutButton for the selected
  * interval. Price IDs are resolved on the server (from NEXT_PUBLIC_STRIPE_PRICE_*)
- * and handed in — this component only picks which one to charge.
+ * and handed in — this only picks which one to charge. A missing price ID renders
+ * a safe "not configured" state rather than charging anything.
  */
 export default function AlertBuyBox({
   productKey,
@@ -66,6 +67,11 @@ export default function AlertBuyBox({
         <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-ink-muted">
           {unit}
         </span>
+        {interval === 'annual' && (
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.1em] text-accent">
+            2 months free
+          </span>
+        )}
       </div>
 
       {/* Optional email (pre-fills Stripe Checkout) */}

@@ -30,7 +30,7 @@ export type Product = {
   group: 'search' | 'alert';
   /** Recurring vs one-off — set on the alert products that go through Stripe. */
   mode?: 'subscription' | 'payment';
-  /** Annual price display, for products whose buy page has a monthly/annual toggle. */
+  /** Annual price display, for the alert buy pages' monthly/annual toggle. */
   priceAnnual?: string;
 };
 
@@ -75,15 +75,15 @@ export const PRODUCTS: Record<string, Product> = {
   weekly: {
     id: 'weekly',
     name: 'Weekly Lookup Alert',
-    price: 'A$47',
+    price: '$4.99',
     priceUnit: '/ month',
-    priceAnnual: 'A$397',
+    priceAnnual: '$49.90',
     mode: 'subscription',
-    tagline: 'A standing weekly signal on routes you’re watching.',
+    tagline: 'An early signal on routes you’re watching casually.',
     description:
-      'Every Monday, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. A hands-off heads-up, not a booking.',
+      'Every Monday for 12 months, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. Cheap enough to set and forget — a heads-up, not a booking.',
     features: [
-      'Delivered every Monday',
+      'Delivered every Monday, for 12 months',
       'Airlines, transfer partners, dates, points',
       'Cancel anytime',
     ],
@@ -96,9 +96,9 @@ export const PRODUCTS: Record<string, Product> = {
   human: {
     id: 'human',
     name: 'Human Search Alert',
-    price: 'A$97',
+    price: '$99.99',
     priceUnit: '/ month',
-    priceAnnual: 'A$797',
+    priceAnnual: '$999.90',
     mode: 'subscription',
     tagline: 'A specialist confirms the seat before you hear from us.',
     description:
@@ -106,7 +106,7 @@ export const PRODUCTS: Record<string, Product> = {
     features: [
       'Specialist-run search, every cycle',
       'Verified bookable space, not raw feed data',
-      'Monthly or annual, cancel anytime',
+      'Monthly, cancel anytime',
     ],
     cta: { label: 'Get human alerts', href: '/alerts/human' },
     group: 'alert',
