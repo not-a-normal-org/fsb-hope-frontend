@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 type Ripple = { id: number; x: number; y: number };
 
@@ -12,11 +13,13 @@ type Ripple = { id: number; x: number; y: number };
  * disabled under prefers-reduced-motion (the native cursor / no motion instead).
  */
 export default function CursorRipple() {
+  const disabled = (usePathname() ?? '').startsWith('/admin');
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const idRef = useRef(0);
   const last = useRef({ x: 0, y: 0, t: 0 });
 
   useEffect(() => {
+    if (disabled) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!fine.matches || reduce.matches) return;
@@ -31,7 +34,9 @@ export default function CursorRipple() {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
-  }, []);
+  }, [disabled]);
+
+  if (disabled) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>

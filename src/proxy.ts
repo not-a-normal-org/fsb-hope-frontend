@@ -10,9 +10,12 @@ const SESSION_COOKIE = 'payload-token';
 const PUBLIC_PATHS = new Set([
   '/maintenance',
   '/admin/login',
+  '/admin/reset-password',
   '/login',
   '/api/account/login',
   '/api/account/logout',
+  '/api/account/forgot',
+  '/api/account/reset',
 ]);
 
 // Stripe cannot present a session cookie. This route authenticates itself by
@@ -28,9 +31,18 @@ const TEXT_PATHS = new Set(['/robots.txt', '/sitemap.xml']);
 export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
 
+  // Pass the request through, forwarding the authoritative pathname so the /admin
+  // server layout can read it (per-role page gate + "auth screens render bare").
+  // Overwritten unconditionally, so a client can't spoof x-pathname.
+  const pass = () => {
+    const headers = new Headers(req.headers);
+    headers.set('x-pathname', pathname);
+    return NextResponse.next({ request: { headers } });
+  };
+
   // Let the auth endpoints and the webhook through unconditionally.
   if (ALWAYS_OPEN.has(pathname) || PUBLIC_PATHS.has(pathname)) {
-    return NextResponse.next();
+    return pass();
   }
 
   // Fast edge pre-filter: verify the payload-token JWT (signature + expiry) and
@@ -44,12 +56,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   // ── Admin surface ───────────────────────────────────────────────────────────
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     if (isStaff) {
-      // Forward the authoritative pathname so the /admin server layout can do the
-      // per-role page check in one place (canAccessAdminPath). We overwrite the
-      // header unconditionally, so a client can't spoof it.
-      const headers = new Headers(req.headers);
-      headers.set('x-pathname', pathname);
-      return NextResponse.next({ request: { headers } });
+      return pass();
     }
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -63,7 +70,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   // ── Account portal ──────────────────────────────────────────────────────────
   // Gated in portal/layout.tsx via payload.auth (a real, signed-session check).
   if (pathname.startsWith('/portal')) {
-    return NextResponse.next();
+    return pass();
   }
 
   // ── Maintenance wall (TEMPORARY — see docs/maintenance-mode.md) ─────────────
@@ -96,7 +103,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
     });
   }
 
-  return NextResponse.next();
+  return pass();
 }
 
 export const config = {

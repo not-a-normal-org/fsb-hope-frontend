@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 /**
@@ -19,6 +20,9 @@ const INTERACTIVE =
   'a[href], button, [role="button"], input, select, textarea, summary, label, [data-cursor="hover"]';
 
 export default function CustomCursor() {
+  // The dot cursor is a marketing flourish — the /admin console wants the native
+  // cursor for precise, data-dense work.
+  const disabled = (usePathname() ?? '').startsWith('/admin');
   const [hovered, setHovered] = useState(false);
   const [pressed, setPressed] = useState(false);
 
@@ -30,6 +34,7 @@ export default function CustomCursor() {
   const ringY = useSpring(y, { stiffness: 260, damping: 28, mass: 0.4 });
 
   useEffect(() => {
+    if (disabled) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (!fine.matches || reduce.matches) return;
@@ -66,7 +71,9 @@ export default function CustomCursor() {
       window.removeEventListener('mouseup', onUp);
       root.removeAttribute('data-custom-cursor');
     };
-  }, [x, y]);
+  }, [x, y, disabled]);
+
+  if (disabled) return null;
 
   return (
     <>
