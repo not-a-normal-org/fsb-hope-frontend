@@ -10,12 +10,14 @@ function LoginForm() {
   const rawFrom = searchParams.get('from') ?? '/admin';
   const from = rawFrom.startsWith('/admin') && rawFrom !== '/admin/login' ? rawFrom : '/admin';
 
+  const [mode, setMode] = useState<'login' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!EMAIL_RE.test(email.trim())) {
       setError('Enter a valid email address.');
@@ -43,6 +45,34 @@ function LoginForm() {
     }
   }
 
+  async function handleForgot(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!EMAIL_RE.test(email.trim())) {
+      setError('Enter a valid email address.');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      await fetch('/api/account/forgot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      setSent(true); // neutral confirmation regardless of whether the email exists
+    } catch {
+      setError('Network error — please try again');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function switchMode(next: 'login' | 'forgot') {
+    setMode(next);
+    setError('');
+    setSent(false);
+  }
+
   const inputClass =
     'w-full px-4 py-3 rounded-xl text-sm text-[#F5F5F0] bg-[#13182A] border border-[#1E2538] placeholder:text-[#5C6378] focus:outline-none focus:border-[#E8963A] focus:ring-1 focus:ring-[#E8963A]/40 transition-colors';
 
@@ -54,57 +84,125 @@ function LoginForm() {
             SaverMiles
           </p>
           <h1 className="text-2xl font-bold text-[#F5F5F0]">Admin Console</h1>
-          <p className="mt-1 text-sm text-[#9DA3B4]">Sign in with your staff account</p>
+          <p className="mt-1 text-sm text-[#9DA3B4]">
+            {mode === 'login' ? 'Sign in with your staff account' : 'Reset your password'}
+          </p>
         </div>
 
         <div className="bg-[#0E1220] border border-[#1E2538] rounded-2xl p-8">
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-[#9DA3B4] mb-2">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@savermiles.com"
-                className={inputClass}
-              />
-            </div>
+          {mode === 'login' ? (
+            <>
+              <form onSubmit={handleLogin} noValidate>
+                <div className="mb-4">
+                  <label htmlFor="email" className="block text-sm font-medium text-[#9DA3B4] mb-2">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@savermiles.com"
+                    className={inputClass}
+                  />
+                </div>
 
-            <div className="mb-5">
-              <label htmlFor="password" className="block text-sm font-medium text-[#9DA3B4] mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className={inputClass}
-              />
-            </div>
+                <div className="mb-5">
+                  <label htmlFor="password" className="block text-sm font-medium text-[#9DA3B4] mb-2">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className={inputClass}
+                  />
+                </div>
 
-            {error && (
-              <p className="mb-4 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
-                {error}
+                {error && (
+                  <p className="mb-4 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading || !email || !password}
+                  className="w-full py-3 rounded-xl font-semibold text-sm text-[#07090F] bg-[#E8963A] hover:bg-[#F2AA5E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  {loading ? 'Signing in…' : 'Sign in'}
+                </button>
+              </form>
+              <button
+                type="button"
+                onClick={() => switchMode('forgot')}
+                className="mt-4 w-full text-center text-xs text-[#9DA3B4] hover:text-[#E8963A] transition-colors"
+              >
+                Forgot your password?
+              </button>
+            </>
+          ) : sent ? (
+            <div className="text-center">
+              <p className="text-sm text-[#9DA3B4] mb-6">
+                If an account exists for that email, a password-reset link is on its way. It’s valid
+                for one hour.
               </p>
-            )}
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="text-sm text-[#E8963A] hover:underline"
+              >
+                Back to sign in
+              </button>
+            </div>
+          ) : (
+            <>
+              <form onSubmit={handleForgot} noValidate>
+                <div className="mb-5">
+                  <label htmlFor="forgot-email" className="block text-sm font-medium text-[#9DA3B4] mb-2">
+                    Email
+                  </label>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@savermiles.com"
+                    className={inputClass}
+                  />
+                </div>
 
-            <button
-              type="submit"
-              disabled={loading || !email || !password}
-              className="w-full py-3 rounded-xl font-semibold text-sm text-[#07090F] bg-[#E8963A] hover:bg-[#F2AA5E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-            >
-              {loading ? 'Signing in…' : 'Sign in'}
-            </button>
-          </form>
+                {error && (
+                  <p className="mb-4 text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading || !email}
+                  className="w-full py-3 rounded-xl font-semibold text-sm text-[#07090F] bg-[#E8963A] hover:bg-[#F2AA5E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  {loading ? 'Sending…' : 'Send reset link'}
+                </button>
+              </form>
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="mt-4 w-full text-center text-xs text-[#9DA3B4] hover:text-[#E8963A] transition-colors"
+              >
+                Back to sign in
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
