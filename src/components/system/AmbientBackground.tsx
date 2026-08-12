@@ -47,7 +47,9 @@ export default function AmbientBackground({
             bottom: b.bottom,
             left: b.left,
             right: b.right,
-            filter: `blur(${hero ? 82 : 70}px)`,
+            // Smaller blur radii render far cheaper (large-radius blur needs a big
+            // offscreen buffer, and glass panels re-blur this via backdrop-filter).
+            filter: `blur(${hero ? 48 : 40}px)`,
           }}
         />
       ))}

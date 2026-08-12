@@ -159,6 +159,33 @@
   --sm-error: #D9534F;
 }
 
+/* Theme-aware scrollbars — thumb recolors from --sm-accent, so a Light/Dark swap
+   (and Mono, if it returns — its accent is gray) restyles it with no JS. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--sm-accent) 55%, transparent) transparent;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--sm-accent) 55%, transparent);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sm-accent);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* Expose the flat color tokens as Tailwind utilities. `inline` emits the
    var(...) reference directly into each utility, so a runtime [data-theme] swap
    restyles every bg, text, and border utility at once. Glass, blob, and gradient

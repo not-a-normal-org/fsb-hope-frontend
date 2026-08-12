@@ -4,7 +4,6 @@ import "./globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
 import ThemeScript from "@/components/system/ThemeScript";
 import CustomCursor from "@/components/system/CustomCursor";
-import CursorRipple from "@/components/system/CursorRipple";
 import ReferralCapture from "@/components/system/ReferralCapture";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 
@@ -83,7 +82,6 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col bg-bg-base font-body text-ink">
         <MotionProvider>
           <ReferralCapture />
-          <CursorRipple />
           <div className="flex-1">{children}</div>
           <CustomCursor />
         </MotionProvider>
