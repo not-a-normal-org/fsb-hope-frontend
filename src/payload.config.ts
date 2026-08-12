@@ -53,7 +53,16 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI || '' },
+    // DATABASE_URI MUST be the Supabase TRANSACTION pooler (port 6543): it
+    // multiplexes the many short-lived connections Vercel's serverless functions
+    // open. The SESSION pooler (5432) is capped (pool_size 15) and throws
+    // EMAXCONNSESSION under load — a 500 on /cms and "Login failed" on /admin.
+    // (Don't cap `max` to 1 here — Payload nests connection use, so a 1-connection
+    // pool deadlocks; the transaction pooler is what bounds total connections.)
+    pool: {
+      connectionString: process.env.DATABASE_URI || '',
+      idleTimeoutMillis: 30_000,
+    },
     // Isolate Payload's tables from the app's `public` schema.
     schemaName: 'payload',
   }),

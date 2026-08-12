@@ -21,10 +21,14 @@ required for both **Build** and **Runtime**. In Vercel add them under
 
 Gotchas:
 
-- **`DATABASE_URI` must be the Supabase _Session pooler_ connection string**, not
-  the direct 5432 string and not the service-role key. Serverless functions open
-  many short-lived connections; the pooler is what survives that. Payload needs
-  this at build time too, so a missing/wrong value fails the build.
+- **`DATABASE_URI` must be the Supabase _Transaction pooler_ (port 6543)**, not the
+  Session pooler (5432), the direct 5432 string, or the service-role key. Vercel
+  opens many short-lived serverless connections; the **transaction** pooler
+  multiplexes them, while the session pooler is capped (~15 clients) and throws
+  `EMAXCONNSESSION: max clients reached in session mode` under load — which surfaces
+  as a 500 on `/cms` and "Login failed" on `/admin`. The app also caps its own pool
+  (`max: 1`) in `payload.config.ts`. Payload needs this at build + runtime.
+  (Use the session/direct connection only for one-off migrations.)
 - **`NEXT_PUBLIC_APP_URL`** must be the real production origin
   (`https://<your-domain>`), no trailing slash — it builds Stripe redirect URLs
   and email links. Do **not** leave it pointing at a `*.vercel.app` preview URL
