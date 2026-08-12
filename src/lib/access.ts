@@ -45,6 +45,9 @@ export const ADMIN_NAV: readonly NavItem[] = [
   { key: 'products',      label: 'Products',      href: '/admin/products',      roles: ['admin'] },
   { key: 'team',          label: 'Team',          href: '/admin/team',          roles: ['admin'] },
   { key: 'referrals',     label: 'Referrals',     href: '/admin/referrals',     roles: ['admin', 'affiliate'] },
+  // Opens the Payload CMS (Posts/Deals/Testimonials/Media). Not an /admin path,
+  // so it never matches in canAccessAdminPath — it's a link out to /cms.
+  { key: 'blog',          label: 'Blog (CMS)',    href: '/cms/collections/posts', roles: ['admin', 'agent', 'searcher'] },
 ];
 
 /** The nav a given role sees, in order. */

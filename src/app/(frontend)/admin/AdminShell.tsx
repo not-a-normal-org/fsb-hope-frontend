@@ -14,6 +14,7 @@ import {
   Calendar,
   ClipboardList,
   Handshake,
+  Newspaper,
   LogOut,
   type LucideIcon,
 } from 'lucide-react';
@@ -33,6 +34,7 @@ const ICONS: Record<string, LucideIcon> = {
   appointments: Calendar,
   applications: ClipboardList,
   referrals: Handshake,
+  blog: Newspaper,
 };
 
 export default function AdminShell({
@@ -72,26 +74,37 @@ export default function AdminShell({
           <ul className="space-y-0.5">
             {nav.map(({ key, label, href }) => {
               const Icon = ICONS[key] ?? LayoutDashboard;
+              // Links outside the /admin route group (e.g. the CMS) need a full
+              // navigation, not a client-side Link.
+              const external = !href.startsWith('/admin');
               const isActive =
-                href === '/admin'
-                  ? pathname === '/admin'
-                  : pathname === href || pathname.startsWith(href + '/');
+                !external &&
+                (href === '/admin' ? pathname === '/admin' : pathname === href || pathname.startsWith(href + '/'));
+              const className = `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 relative ${
+                isActive
+                  ? 'bg-[#13182A] text-[#F5F5F0]'
+                  : 'text-[#9DA3B4] hover:bg-[#13182A]/60 hover:text-[#F5F5F0]'
+              }`;
+              const inner = (
+                <>
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#E8963A] rounded-full" />
+                  )}
+                  <Icon size={16} className={isActive ? 'text-[#E8963A]' : 'text-current'} />
+                  {label}
+                </>
+              );
               return (
                 <li key={href}>
-                  <Link
-                    href={href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 relative ${
-                      isActive
-                        ? 'bg-[#13182A] text-[#F5F5F0]'
-                        : 'text-[#9DA3B4] hover:bg-[#13182A]/60 hover:text-[#F5F5F0]'
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#E8963A] rounded-full" />
-                    )}
-                    <Icon size={16} className={isActive ? 'text-[#E8963A]' : 'text-current'} />
-                    {label}
-                  </Link>
+                  {external ? (
+                    <a href={href} className={className}>
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link href={href} className={className}>
+                      {inner}
+                    </Link>
+                  )}
                 </li>
               );
             })}
