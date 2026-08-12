@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getPayloadClient } from '@/lib/payload';
 import { getCurrentUser } from '@/lib/auth';
-import { AssigneeSelect, StatusSelect, type Account } from './LeadRowControls';
+import { AssigneeSelect, StatusSelect, LeadEditButton, type Account } from './LeadRowControls';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +17,10 @@ interface Lead {
   email: string | null;
   whatsapp: string | null;
   phone: string | null;
+  points_held: string | null;
+  yearly_spend: string | null;
+  points_budget: string | null;
+  details: { notes?: string } | null;
   status: string;
   referral_code: string | null;
   assigned_to: number | null;
@@ -62,7 +66,7 @@ async function fetchLeads(statusFilter: string, redactPII: boolean) {
   // or the HTML).
   const columns = redactPII
     ? 'id, type, route, flight_need, status, referral_code, assigned_to, created_at'
-    : 'id, type, route, flight_need, email, whatsapp, phone, status, referral_code, assigned_to, created_at';
+    : 'id, type, route, flight_need, email, whatsapp, phone, points_held, yearly_spend, points_budget, details, status, referral_code, assigned_to, created_at';
 
   let query = supabaseAdmin
     .from('leads')
@@ -166,8 +170,8 @@ export default async function LeadsPage({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#1E2538]">
-                  {['Lead', 'Interest', 'Referral', 'Assignee', 'Status', 'Received'].map((h) => (
-                    <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#5C6378] whitespace-nowrap">
+                  {['Lead', 'Interest', 'Referral', 'Assignee', 'Status', 'Received', ...(redactPII ? [] : [''])].map((h, hi) => (
+                    <th key={h || `col-${hi}`} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#5C6378] whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -210,6 +214,25 @@ export default async function LeadsPage({
                     <td className="px-5 py-3.5 text-[#9DA3B4] tabular-nums whitespace-nowrap text-xs">
                       {fmtDate(l.created_at)}
                     </td>
+                    {/* Edit — admin/agent only (searchers can't see/edit PII) */}
+                    {!redactPII && (
+                      <td className="px-5 py-3.5 text-right">
+                        <LeadEditButton
+                          lead={{
+                            id: l.id,
+                            email: l.email,
+                            whatsapp: l.whatsapp,
+                            phone: l.phone,
+                            route: l.route,
+                            flight_need: l.flight_need,
+                            points_held: l.points_held,
+                            yearly_spend: l.yearly_spend,
+                            points_budget: l.points_budget,
+                            notes: l.details?.notes ?? null,
+                          }}
+                        />
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
