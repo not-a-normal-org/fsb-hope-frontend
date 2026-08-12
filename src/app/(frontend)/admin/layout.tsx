@@ -17,15 +17,24 @@ import AdminShell from './AdminShell';
  */
 export const dynamic = 'force-dynamic';
 
+const AUTH_SCREENS = new Set(['/admin/login', '/admin/reset-password']);
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = (await headers()).get('x-pathname') ?? '';
+
+  // The login / reset screens are standalone — never wrap them in the console
+  // chrome, signed in or not.
+  if (AUTH_SCREENS.has(pathname)) {
+    return <>{children}</>;
+  }
+
   const user = await getCurrentUser();
 
   if (!user || user.status !== 'active') {
     return <>{children}</>;
   }
 
-  const pathname = (await headers()).get('x-pathname') ?? '';
-  if (pathname && pathname !== '/admin/login' && !canAccessAdminPath(user.role, pathname)) {
+  if (pathname && !canAccessAdminPath(user.role, pathname)) {
     redirect(adminHome(user.role));
   }
 
