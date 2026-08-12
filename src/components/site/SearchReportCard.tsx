@@ -1,7 +1,7 @@
 'use client';
 
 import { type MouseEvent, useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
+import { motion, useInView, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
 import { Check, Plane } from 'lucide-react';
 
 import type { FlightReport } from '@/lib/reports';
@@ -60,6 +60,9 @@ function FlightPath({ replayKey }: { replayKey: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const reduce = useReducedMotion();
+  // Pause the looping plane when the card is scrolled off-screen so it isn't
+  // burning a rAF loop the whole time the homepage is open.
+  const inView = useInView(ref, { margin: '0px 0px -10% 0px' });
 
   useEffect(() => {
     const el = ref.current;
@@ -81,8 +84,12 @@ function FlightPath({ replayKey }: { replayKey: string }) {
           className="absolute top-1/2"
           style={{ y: '-50%', color: 'var(--sm-accent)' }}
           initial={{ x: 0 }}
-          animate={{ x: width - 12 }}
-          transition={{ duration: 2.6, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.1 }}
+          animate={inView ? { x: width - 12 } : { x: 0 }}
+          transition={
+            inView
+              ? { duration: 2.6, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.1 }
+              : { duration: 0 }
+          }
         >
           <Plane className="h-3.5 w-3.5" style={{ transform: 'rotate(45deg)' }} aria-hidden />
         </motion.span>
