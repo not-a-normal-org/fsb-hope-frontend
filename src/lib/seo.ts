@@ -41,7 +41,7 @@ export function articleJsonLd(post: PostSeo): Record<string, unknown> {
       '@type': 'Organization',
       name: SITE_NAME,
       url: SITE_URL,
-      logo: { '@type': 'ImageObject', url: absoluteUrl('/logo.png') },
+      logo: { '@type': 'ImageObject', url: absoluteUrl('/savermiles-logo.png') },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
