@@ -15,8 +15,9 @@ import Image from 'next/image';
  * with that type size exactly as the old drawn lockup did. 1.5em height matches
  * the previous wordmark's width, so nav/footer layout is unchanged.
  *
- * Social/share exports live beside it: savermiles-og.png (1200x630 link preview)
- * and savermiles-square.png (1000x1000 profile picture).
+ * Social/share exports are generated from this same asset: og-image.png /
+ * twitter-image.png (1200x630 link previews) and public/img/ (1000x1000 avatar,
+ * 512x512 nav icon).
  */
 const LOGO_W = 640;
 const LOGO_H = 198;

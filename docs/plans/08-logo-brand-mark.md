@@ -20,8 +20,10 @@ and rejected (it reads as a different logo).
 (640×198, ~3.23:1), real alpha channel, so it sits on Dark and Light alike; the
 dark outline is what keeps the cream lettering legible on light surfaces. Sized
 in `em` by `src/components/site/Logo.tsx` (height `1.5em`) so it scales with the
-caller's `text-*` class. Social exports: `savermiles-og.png` (1200×630 link
-preview) and `savermiles-square.png` (1000×1000 profile picture).
+caller's `text-*` class. Social exports, all generated from the same asset on the
+brand base: `og-image.png` / `twitter-image.png` (1200×630 link previews),
+`img/savermiles-avatar.png` (1000×1000 profile picture),
+`img/rsz_savermiles-avatar.png` (267×208) and `img/nav_icon.png` (512×512).
 
 **Underline mark:** a rounded arc beneath the wordmark ending in a **plane** at
 the upper right, with an **arrowhead** at the left — it reads as a return flight
