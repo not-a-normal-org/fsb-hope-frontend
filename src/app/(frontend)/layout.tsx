@@ -48,6 +48,23 @@ export const metadata: Metadata = {
   },
   description: SITE_TAGLINE,
   robots: "noindex, nofollow",
+  // Link-preview card (X/LinkedIn/Slack/WhatsApp). savermiles-og.png is the
+  // brand lockup on the dark base; savermiles-square.png is the matching
+  // profile-picture export for social accounts.
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_TAGLINE,
+    url: SITE_URL,
+    images: [{ url: "/savermiles-og.png", width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_TAGLINE,
+    images: ["/savermiles-og.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
