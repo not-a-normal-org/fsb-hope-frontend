@@ -13,7 +13,7 @@
     "lint": "eslint",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "seed:blog": "payload run src/scripts/seed-blog.ts",
+    "seed:blog": "payload run src/scripts/seed-foundation-post.ts",
     "seed:staff": "payload run src/scripts/seed-staff.ts"
   },
   "dependencies": {

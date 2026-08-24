@@ -52,11 +52,13 @@ export type BlogCard = {
   excerpt: string | null;
   publishedAt: string | null;
   readingMinutes: number;
-  cover: { url: string; alt: string } | null;
+  /** `url` feeds the 3-up grid (768w render); `wideUrl` the larger featured card. */
+  cover: { url: string; wideUrl: string; alt: string } | null;
   category: { name: string; slug: string } | null;
 };
 
-type MediaDoc = { alt?: string; filename?: string; sizes?: { card?: { filename?: string } } };
+type MediaSize = { filename?: string };
+type MediaDoc = { alt?: string; filename?: string; sizes?: { card?: MediaSize; wide?: MediaSize } };
 type CategoryDoc = { name?: string; slug?: string };
 type PostDoc = {
   id: string | number;
@@ -72,13 +74,18 @@ type PostDoc = {
 /**
  * Map a Payload `posts` doc (loaded with `depth: 1`) to the small card shape
  * the client grid consumes. Shared by the blog index and category pages so the
- * two stay in lockstep. Cover images resolve to the public Supabase URL (the
- * 768w "card" render when available) rather than the wall-gated /cms-api route.
+ * two stay in lockstep. Cover images resolve to the public Supabase URL rather
+ * than the wall-gated /cms-api route, and to the smallest render that still
+ * covers the slot: 768w for a grid card, 1600w for the featured one. Each falls
+ * back to the original if that render is missing (e.g. an image uploaded before
+ * the size existed).
  */
 export function toBlogCard(doc: PostDoc): BlogCard {
   const media = typeof doc.coverImage === 'object' && doc.coverImage ? (doc.coverImage as MediaDoc) : null;
   const cat = typeof doc.category === 'object' && doc.category ? (doc.category as CategoryDoc) : null;
-  const coverUrl = mediaPublicUrl(media?.sizes?.card?.filename ?? media?.filename ?? null);
+  const original = media?.filename ?? null;
+  const coverUrl = mediaPublicUrl(media?.sizes?.card?.filename ?? original);
+  const wideUrl = mediaPublicUrl(media?.sizes?.wide?.filename ?? media?.sizes?.card?.filename ?? original);
   return {
     id: String(doc.id),
     title: String(doc.title ?? ''),
@@ -86,7 +93,9 @@ export function toBlogCard(doc: PostDoc): BlogCard {
     excerpt: (doc.excerpt as string | undefined) ?? null,
     publishedAt: (doc.publishedAt as string | undefined) ?? null,
     readingMinutes: readingMinutes(doc.content),
-    cover: coverUrl ? { url: coverUrl, alt: media?.alt || String(doc.title ?? '') } : null,
+    cover: coverUrl
+      ? { url: coverUrl, wideUrl: wideUrl ?? coverUrl, alt: media?.alt || String(doc.title ?? '') }
+      : null,
     category: cat?.name && cat?.slug ? { name: cat.name, slug: cat.slug } : null,
   };
 }

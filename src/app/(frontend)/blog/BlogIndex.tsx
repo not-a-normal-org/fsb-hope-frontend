@@ -207,7 +207,7 @@ function FeaturedCard({ post }: { post: BlogCard }) {
         <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto md:min-h-[340px]">
           {post.cover ? (
             <Image
-              src={post.cover.url}
+              src={post.cover.wideUrl}
               alt={post.cover.alt}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
