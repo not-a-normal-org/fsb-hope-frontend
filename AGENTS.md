@@ -41,7 +41,10 @@ it first; it is the source of truth.** This file is how to work in the repo.
 - **Never hardcode hex in components.** Read tokens: `bg-bg-base`, `text-ink`,
   `text-ink-sub`, `text-accent`, `bg-cta`, `text-cta-text`, `border-accent`, or raw
   `var(--sm-*)` for glass/blob/gradient. The **only** exception is the logo arc's
-  fixed green `#0E7C50` (see `docs/plans/08-logo-brand-mark.md`).
+  green, which is baked into the logo artwork and used nowhere else (see
+  `docs/plans/08-logo-brand-mark.md`). The logo itself is the supplied raster
+  `public/savermiles-logo.png`, rendered by `src/components/site/Logo.tsx` — do
+  not redraw the wordmark in a webfont.
 - **Three theme modes: dark (default), light, mono.** Each reassigns the *same*
   canonical `--sm-*` names under `[data-theme=...]`. Never introduce a
   mode-specific name (e.g. `--sm-mono-cta`) that a component reads — Mono would

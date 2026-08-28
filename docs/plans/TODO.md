@@ -71,6 +71,24 @@ _Last updated: 2026-07-31._
 
 ## Pre-launch gates
 
+- [ ] **Light-mode logo variant.** The current logo (`public/savermiles-logo.png`)
+      is the dark-mode artwork — it reads on light because of its dark outline,
+      but a purpose-made light version is coming from Moon. When it lands:
+      drop it in as `public/savermiles-logo-light.png` and make
+      `src/components/site/Logo.tsx` swap on theme. The theme is `[data-theme]`
+      on `<html>`, so render both `<Image>`s and toggle with CSS (no JS/flash) —
+      do NOT branch on a client-side theme hook, that flashes the wrong logo on
+      first paint. Regenerate the social/avatar exports for the light variant too
+      if they're wanted on a light background.
+- [ ] **Mark-only avatar for small sizes.** The square exports
+      (`img/savermiles-avatar.png`, `img/nav_icon.png`) centre the full wordmark,
+      which is unreadable once a profile picture renders at ~48px. The smiley
+      mark already used for the favicon is the right art for those slots.
+- [ ] **Vector logo.** There is no vector source — the lockup is custom lettering
+      supplied as raster, so `img/savermiles-avatar.svg` was retired rather than
+      recreated. If a vector is ever produced, it replaces the PNG set and the
+      exports can be generated at any size.
+
 - [ ] Replace calculator placeholder numbers with real search-history data
 - [ ] Confirm "14+ yrs / 23,000+ searches" attribution (provenance vs. "no prior company")
 - [ ] Resolve Dependabot alerts (recheck after Payload's deps)

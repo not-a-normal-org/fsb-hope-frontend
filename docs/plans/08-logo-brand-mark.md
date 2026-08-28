@@ -1,16 +1,39 @@
 # Logo & Wordmark — LOCKED
 
-Status: **Locked.** Final direction after wordmark concept review. Do not propose alternate logo concepts. Minor execution refinements (exact curve math, spacing) are fine if a real rendering problem is found; the construction itself does not change without an explicit new decision from Moon/Tanzil.
+Status: **Locked.** Do not propose alternate logo concepts.
+
+> **Superseded construction (2026-08):** the lockup is now the supplied artwork
+> (`public/savermiles-logo.png`), not drawn in code — an explicit decision by Moon.
+> Sections 1 and 2 below are updated to match; the discipline rules (green is
+> logo-only, clear space, minimum size) are unchanged and still binding. The
+> previous code-drawn construction is kept at the end of §1 for reference.
 
 ## 1. Construction
 
-**Wordmark:** "SaverMiles," one word, single weight and color (not the two-tone mixed-weight treatment from the rejected Concept C). Set in Zilla Slab, weight 700, letter-spacing -0.01em, size scales contextually (nav ~20px, hero/footer larger, see `01-brand-design-system.md` type scale for reference sizing).
+**Wordmark:** "SaverMiles," one word, set in a custom heavy slab with a dark
+outline — part of the supplied artwork, NOT a webfont. It is deliberately
+chunkier than the site's Zilla Slab display face. Because the letterforms are
+artwork, the lockup ships as a raster asset; redrawing it in Zilla Slab was tried
+and rejected (it reads as a different logo).
+
+**Asset:** `public/savermiles-logo.png` — trimmed to the artwork's bounds
+(640×198, ~3.23:1), real alpha channel, so it sits on Dark and Light alike; the
+dark outline is what keeps the cream lettering legible on light surfaces. Sized
+in `em` by `src/components/site/Logo.tsx` (height `1.5em`) so it scales with the
+caller's `text-*` class. Social exports, all generated from the same asset on the
+brand base: `og-image.png` / `twitter-image.png` (1200×630 link previews),
+`img/savermiles-avatar.png` (1000×1000 profile picture),
+`img/rsz_savermiles-avatar.png` (267×208) and `img/nav_icon.png` (512×512).
+
+**Underline mark:** a rounded arc beneath the wordmark ending in a **plane** at
+the upper right, with an **arrowhead** at the left — it reads as a return flight
+path as well as a smile. Part of the same artwork.
 
 **Underline mark:** a rounded arc beneath the wordmark, curved enough to read as a smile, not a subtle flight-path line. This is the one signature graphic element of the mark.
 
 Target proportions: the arc is **~64% of the wordmark width** (centered under it, not full-width) with **~15% curve depth** (sag ÷ chord), sitting close under the text. A full-width, shallow arc reads as a flight path, not a smile — do not flatten it back toward that; and do not deepen it much past ~18% (deeper reads as a bowl, not a smile). Options were reviewed in `logo-samples/index.html`; "Medium · Close" was chosen.
 
-SVG reference (scale proportionally, don't redraw at different aspect ratios):
+Previous code-drawn construction (retired — kept for reference only):
 
 ```html
 <svg width="100" height="21" viewBox="0 0 100 21">
@@ -21,9 +44,9 @@ SVG reference (scale proportionally, don't redraw at different aspect ratios):
 ## 2. Color rules
 
 - **Wordmark text color** follows the standard mode-aware ink tokens from `01-brand-design-system.md` — `--sm-ink` in Dark/Light, `--sm-mono-ink` in Mono. No separate logo-specific text color.
-- **Arc color is a hardcoded exception: `#0E7C50` (Emerald), fixed across all three modes.** This is the one deliberate break from "no green anywhere in the brand." It does not read from `--sm-accent` or any mode token — it is always this exact green, in Light, Dark, and Mono alike.
+- **Arc color is a hardcoded exception: `#74F12C` (bright lime), baked into the artwork and therefore identical in every mode.** This is the one deliberate break from "no green anywhere in the brand." It does not read from `--sm-accent` or any mode token. (The previous code-drawn arc used `#0E7C50` Emerald; that value is retired with the drawn construction.)
 - **This is the deepest green that reliably survives all three modes.** Deeper greens (forest, hunter) were tested and rejected — they lose visible contrast against the Dark/Mono navy-black backgrounds, to the point of nearly disappearing. Do not darken this value without re-testing contrast on the actual Dark and Mono backgrounds, not just in isolation on white.
-- **This green is logo-only.** Do not reuse `#0E7C50` anywhere else on the site: not as a link color, not as a highlight, not as a secondary CTA, not as a hover state. If it starts appearing outside the logo, that's a bug against this spec, not a style choice. Note also that this is a *different* green from `--sm-success` (#1F9D63) defined in the design system doc — the two are not meant to match, and the logo's green does not replace or reference the semantic success color.
+- **This green is logo-only.** Do not reuse the logo green anywhere else on the site: not as a link color, not as a highlight, not as a secondary CTA, not as a hover state. If it starts appearing outside the logo, that's a bug against this spec, not a style choice. Note also that this is a *different* green from `--sm-success` (#1F9D63) defined in the design system doc — the two are not meant to match, and the logo's green does not replace or reference the semantic success color.
 - Rest of the site's single-accent-blue discipline is unaffected. This is intentionally the one exception, not a precedent for adding more color elsewhere.
 
 ## 3. Clear space & minimum size
