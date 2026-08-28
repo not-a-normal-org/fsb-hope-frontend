@@ -206,6 +206,14 @@ export interface Media {
       filesize?: number | null;
       filename?: string | null;
     };
+    wide?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
     og?: {
       url?: string | null;
       width?: number | null;
@@ -247,6 +255,9 @@ export interface Post {
     [k: string]: unknown;
   } | null;
   publishedAt?: string | null;
+  /**
+   * Upload at 1600×1000 (16:10). The blog grid crops to 16:10, but the “Latest” featured card crops tighter — keep the subject in the middle and no text near the edges. See docs/blog-images.md.
+   */
   coverImage?: (number | null) | Media;
   category?: (number | null) | Category;
   author?: string | null;
@@ -482,6 +493,16 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
         card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        wide?:
           | T
           | {
               url?: T;

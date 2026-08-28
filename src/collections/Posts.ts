@@ -57,7 +57,17 @@ export const Posts: CollectionConfig = {
     },
     { name: 'content', type: 'richText' },
     { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
-    { name: 'coverImage', type: 'upload', relationTo: 'media' },
+    {
+      name: 'coverImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description:
+          'Upload at 1600×1000 (16:10). The blog grid crops to 16:10, but the ' +
+          '“Latest” featured card crops tighter — keep the subject in the middle ' +
+          'and no text near the edges. See docs/blog-images.md.',
+      },
+    },
     { name: 'category', type: 'relationship', relationTo: 'categories' },
     {
       name: 'author',
