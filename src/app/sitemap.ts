@@ -23,6 +23,7 @@ const STATIC_PATHS = [
   '/contact',
   '/legal/privacy',
   '/legal/terms',
+  '/legal/cookies',
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
