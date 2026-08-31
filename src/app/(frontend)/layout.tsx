@@ -6,6 +6,7 @@ import ThemeScript from "@/components/system/ThemeScript";
 import CustomCursor from "@/components/system/CustomCursor";
 import ReferralCapture from "@/components/system/ReferralCapture";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 /* ========== FONTS (docs/plans/01-brand-design-system.md §3) ========== */
 
@@ -95,6 +96,15 @@ export default function RootLayout({
         <ThemeScript />
         <meta name="theme-color" content="#060B14" />
         <link rel="manifest" href="/site.webmanifest" />
+        {/* Site-wide entity graph — helps search + AI resolve who Saver Miles is. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+        />
       </head>
 
       <body className="flex min-h-screen flex-col bg-bg-base font-body text-ink">
