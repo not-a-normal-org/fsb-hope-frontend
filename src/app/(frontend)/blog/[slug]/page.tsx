@@ -8,8 +8,16 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
-import { mediaPublicUrl } from '@/lib/blog';
-import { absoluteUrl, ogImageUrl, articleJsonLd, type PostSeo } from '@/lib/seo';
+import { mediaPublicUrl, readingMinutes, wordCount, extractFaq } from '@/lib/blog';
+import {
+  absoluteUrl,
+  ogImageUrl,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  type PostSeo,
+} from '@/lib/seo';
+import { SITE_URL } from '@/lib/constants';
 
 /**
  * /blog/[slug] — a single PUBLISHED post from Payload (drafts stay private).
@@ -62,6 +70,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       images: [{ url: image, width: 1200, height: 630 }],
     },
     twitter: { card: 'summary_large_image', title, description, images: [image] },
+    // Opt blog content into indexing over the site-wide default.
+    robots: { index: true, follow: true },
   };
 }
 
@@ -80,13 +90,37 @@ export default async function BlogPostPage({ params }: Params) {
 
   const cover = typeof post.coverImage === 'object' && post.coverImage ? post.coverImage : null;
   const category = typeof post.category === 'object' && post.category ? post.category : null;
+  const catSlug = (category as { slug?: string } | null)?.slug;
+
+  const reading = readingMinutes(post.content);
+  const faqs = extractFaq(post.content);
+  const crumbs = [
+    { name: 'Home', url: SITE_URL },
+    { name: 'Blog', url: absoluteUrl('/blog') },
+    ...(category?.name && catSlug
+      ? [{ name: category.name, url: absoluteUrl(`/blog/category/${catSlug}`) }]
+      : []),
+    { name: post.title, url: absoluteUrl(`/blog/${post.slug}`) },
+  ];
+
+  const jsonLd: Record<string, unknown>[] = [
+    articleJsonLd(post as unknown as PostSeo, {
+      wordCount: wordCount(post.content),
+      section: category?.name || undefined,
+    }),
+    breadcrumbJsonLd(crumbs),
+    ...(faqs.length ? [faqJsonLd(faqs)] : []),
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post as unknown as PostSeo)) }}
-      />
+      {jsonLd.map((block, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}
+        />
+      ))}
       <NavBar />
 
       <article className="relative">
@@ -100,6 +134,7 @@ export default async function BlogPostPage({ params }: Params) {
               {category?.name ? `${category.name} · ` : ''}
               {post.author || 'Saver Miles Team'}
               {date ? ` · ${date}` : ''}
+              {` · ${reading} min read`}
             </p>
             <h1 className="mt-4 font-display text-hero font-bold text-ink">{post.title}</h1>
             {post.excerpt && (

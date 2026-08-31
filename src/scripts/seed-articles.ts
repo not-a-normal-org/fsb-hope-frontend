@@ -1,6 +1,7 @@
 /**
- * Blog articles seed — the Review-v3 content build-out. Seven original,
- * competitor-gap-driven guides, each with a generated hero image, published live.
+ * Blog articles seed — the blog content library. Eight original, competitor-gap-
+ * driven guides (a pillar foundation post + seven supporting articles), each with a
+ * generated hero image, published live.
  *
  * Run: `npm run seed:articles` (→ `payload run src/scripts/seed-articles.ts`).
  * `payload run` loads `.env.local` (DATABASE_URI, PAYLOAD_SECRET, S3_*) via @next/env.
@@ -182,6 +183,10 @@ const ORDER = [
   'avoid-fuel-surcharges-award-flights',
   'no-award-space-what-a-specialist-does',
   'book-premium-seats-for-family-with-points',
+  // The pillar/foundation guide (migrated from the retired seed-foundation-post.ts).
+  // It already exists, so the upsert UPDATES it in place (keeps its original
+  // publishedAt) and uploads its new cover image.
+  'how-to-fly-for-free-with-credit-card-points',
 ];
 
 const ASSETS = path.resolve('src/scripts/assets/blog');

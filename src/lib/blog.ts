@@ -35,6 +35,55 @@ export function readingMinutes(content: unknown): number {
   return Math.max(1, Math.round(words / 200));
 }
 
+/** Total word count of a post's Lexical content (for schema.org wordCount). */
+export function wordCount(content: unknown): number {
+  return lexicalToText(content as LexicalNode)
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+}
+
+type FaqNode = { type?: string; tag?: string; text?: string; children?: FaqNode[]; root?: FaqNode };
+
+/** Concatenate the visible text of a node (headings, paragraphs, links). */
+function inlineText(n?: FaqNode | null): string {
+  if (!n) return '';
+  const own = typeof n.text === 'string' ? n.text : '';
+  const kids = Array.isArray(n.children) ? n.children.map(inlineText).join('') : '';
+  return own + kids;
+}
+
+/**
+ * Pull Q&A pairs out of a post's `## Frequently asked questions` section — an H2
+ * whose text matches /frequently asked question/i, then each following H3
+ * (question) with the paragraph(s) beneath it (answer), until the next H2 or the
+ * end. Drives the FAQPage JSON-LD. Returns [] when there's no FAQ section.
+ */
+export function extractFaq(content: unknown): { question: string; answer: string }[] {
+  const kids = (content as { root?: FaqNode })?.root?.children;
+  if (!Array.isArray(kids)) return [];
+  let i = kids.findIndex(
+    (n) => n.type === 'heading' && n.tag === 'h2' && /frequently asked question/i.test(inlineText(n)),
+  );
+  if (i === -1) return [];
+  const faqs: { question: string; answer: string }[] = [];
+  for (i += 1; i < kids.length; i++) {
+    const n = kids[i];
+    if (n.type === 'heading' && n.tag === 'h2') break;
+    if (n.type === 'heading' && n.tag === 'h3') {
+      const question = inlineText(n).trim();
+      const parts: string[] = [];
+      for (i += 1; i < kids.length && kids[i].type !== 'heading'; i++) {
+        const t = inlineText(kids[i]).trim();
+        if (t) parts.push(t);
+      }
+      i -= 1; // step back so the outer loop re-examines the heading that stopped us
+      if (question) faqs.push({ question, answer: parts.join(' ') });
+    }
+  }
+  return faqs;
+}
+
 export function formatDate(value?: string | null): string | null {
   if (!value) return null;
   return new Date(value).toLocaleDateString('en-US', {

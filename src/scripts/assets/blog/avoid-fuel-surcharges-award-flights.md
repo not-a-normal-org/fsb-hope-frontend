@@ -28,11 +28,17 @@ Book the identical Lufthansa seat through **Air Canada Aeroplan** or **United Mi
 The programs that pass through the steepest surcharges, based on current behavior, are:
 
 - **British Airways Executive Club:** some of the highest in the industry; transatlantic Club World awards can carry $700–$900+ round-trip in surcharges alone, on top of the Avios.
-- **Lufthansa Miles &amp; More:** heavy surcharges on its own premium-cabin metal, especially US–Europe First and Business.
+- **Lufthansa Miles &amp; More:** heavy surcharges on its own premium-cabin metal, especially US-Europe First and Business.
 - **Virgin Atlantic Flying Club:** meaningful surcharges when booking Virgin's own flights.
 - **Air France-KLM Flying Blue:** moderate by comparison, but still present on many long-haul routes.
 
-Figures move around and airlines adjust them without much notice, so treat these as direction, not gospel. The ranking of who's expensive is more durable than any single dollar amount.
+Figures move around and airlines adjust them without much notice, so treat these as direction, not gospel. The ranking of who's expensive is more durable than any single dollar amount. British Airways raised its surcharges again in late 2025, and Virgin Atlantic pushed its US-UK Upper Class charge past $700 per direction. The trend, unhelpfully, runs upward.
+
+## The surcharge depends on the metal, not just the program
+
+There's a second layer worth understanding, because it explains a lot of confusion. A program's surcharge behavior often differs between its *own* flights and its *partner* flights. Virgin Atlantic Flying Club is a clean example: book Virgin's own Upper Class across the Atlantic and you'll see heavy surcharges, but redeem the same Flying Club miles on a partner like Delta or ANA and the cash cost drops sharply. The program didn't change. The operating carrier did.
+
+This is why blanket statements ("program X never has surcharges") are unreliable. What you actually need is the intersection: this program, booking this operating carrier, on this route. That three-way lookup is where most self-serve searches quietly fall short, and it's closely related to why a listed seat isn't always a real one, something we cover in [why award seats vanish](/blog/phantom-award-space-why-seats-vanish).
 
 ## The programs that pass through little or nothing
 
@@ -43,8 +49,11 @@ On the other side are programs that absorb most or all carrier-imposed surcharge
 - **Avianca LifeMiles:** long a favorite for surcharge-free Star Alliance premium cabins.
 - **Turkish Miles &amp; Smiles:** strong for surcharge-free Star Alliance bookings.
 - **Alaska Mileage Plan:** passes through little on most partners, with some exceptions.
+- **Singapore Airlines KrisFlyer:** does not add surcharges on its own metal, which makes redemptions on Singapore's own premium cabins unusually clean, though partner bookings can still carry them.
 
-The pattern: many of the best programs for *avoiding* surcharges are not the airline you actually want to fly. You accumulate flexible points, then transfer or spend them through the program that books the seat most cheaply. Understanding which transfer partner unlocks which airline is the core skill, and our [transfer partners guide](/blog/transfer-partners-explained-guide) walks through how those relationships map out.
+A few programs sit in a more nuanced middle. ANA Mileage Club, for instance, does not pass through surcharges on several European carriers it partners with (including Swiss and Austrian), yet applies them on other routes and on its own long-haul metal. The lesson isn't to memorize a list. It's that "does this program have surcharges" is the wrong question. The right one is "does this program have surcharges on the specific seat I'm booking."
+
+The pattern underneath all of it: many of the best programs for *avoiding* surcharges are not the airline you actually want to fly. You accumulate flexible points, then transfer or spend them through the program that books the seat most cheaply. Understanding which transfer partner unlocks which airline is the core skill, and our [transfer partners guide](/blog/transfer-partners-explained-guide) walks through how those relationships map out. The order of operations matters here: transfers are almost always one-way and irreversible, so the decision about *where* to book has to come before you move a single point.
 
 ## Four ways to dodge the surcharge
 
@@ -54,7 +63,9 @@ The pattern: many of the best programs for *avoiding* surcharges are not the air
 
 **3. Route around the surcharge-heavy carrier.** Sometimes the cleanest fix is avoiding the airline entirely. If British Airways to London is loaded with fees, a Star Alliance carrier into a nearby European hub, then a short separate hop, can cost a fraction in cash, even if it adds a connection.
 
-**4. Watch the direction of travel.** Some carriers apply surcharges asymmetrically, heavier on flights departing certain countries. A different origin or a self-connect can change the number materially.
+**4. Watch the direction of travel.** Some carriers apply surcharges asymmetrically, heavier on flights departing certain countries. A different origin or a self-connect can change the number materially. A ticket that's loaded departing London may be far lighter departing a nearby continental city, so where you start the journey is itself a lever.
+
+There's a fifth move that's easy to overlook: run the math on the whole trip, not one leg. The cheapest *outbound* through one program plus the cheapest *return* through another can leave you with two separate tickets, two sets of fees, and no protection if a connection breaks. Sometimes the slightly-more-expensive single itinerary is the better buy once you count the cash surcharge, the flexibility, and the risk. Weighing that is the same judgment call that separates a listed seat from a bookable plan, the heart of [what a specialist actually does](/blog/no-award-space-what-a-specialist-does).
 
 None of this shows up in a simple "is there a seat?" search. It takes knowing, for a specific route on a specific date, which of 30-plus programs books that metal, and which one does it without the cash penalty. That comparison is judgment, not availability, and it is exactly what a human specialist does by hand.
 
@@ -64,6 +75,24 @@ Award charts, transfer ratios, and surcharge policies interact in ways no single
 
 That's what we do manually. A specialist checks the real fare construction across programs, confirms the surcharge each one would actually charge, and hands you a bookable seat with the exact point cost and the exact cash cost, side by side. A real person checked it. Not an index of open seats, but a decision.
 
-If you're sitting on points and not sure which program spends them without the surcharge tax, start with a free [points audit](/individual). We'll look at what you have and where it flies cheapest. New to all of this? The [foundation guide](/blog/how-to-fly-for-free-with-credit-card-points) covers the basics first, and [how it works](/how-it-works) explains the process. For a worked example of surcharge-aware routing in practice, see [business class to Tokyo with points](/blog/business-class-to-tokyo-with-points).
+## Frequently asked questions
+
+### What are carrier-imposed surcharges?
+
+A carrier-imposed surcharge is a fee the airline sets and adds to your ticket, listed on the fare breakdown under a code like "YQ" or "YR." It began as a way to pass fuel costs to passengers, but today it's simply airline revenue that has little connection to the price of fuel. On an award ticket it appears as a cash charge on top of your miles, and whether you pay it depends on the program you booked through.
+
+### Which programs have no fuel surcharges?
+
+At the time of writing, Air Canada Aeroplan does not add carrier-imposed surcharges on its own or partner awards, and United MileagePlus, Avianca LifeMiles, and Turkish Miles &amp; Smiles book most Star Alliance partners without them. Singapore KrisFlyer is clean on Singapore's own metal. These policies do shift, so the surcharge-free program for a given seat is worth confirming at the moment you book rather than assuming.
+
+### Are award taxes the same as surcharges?
+
+No, and the difference matters. Genuine government taxes and airport fees (departure taxes, security and facility charges) are set by authorities, apply no matter how you book, and are usually modest. A carrier-imposed surcharge is set by the airline, is often far larger, and can be avoided entirely by choosing a different program for the same flight. Two quotes for the same seat can show near-identical taxes but wildly different surcharges.
+
+### Can I get a fuel surcharge refunded?
+
+Not by asking. The surcharge is baked into the ticket you bought, so there's no refund lever after the fact. The only real control is on the front end: pick a program that doesn't levy the fee, or route around the carrier that does, before you commit the points. Once miles land in a high-surcharge program, your options narrow considerably.
+
+If you're sitting on points and not sure which program spends them without the surcharge tax, start with a free [points audit](/individual). We'll look at what you have and where it flies cheapest. New to all of this? The [foundation guide](/blog/how-to-fly-for-free-with-credit-card-points) covers the basics first, [how it works](/how-it-works) explains the process, and [our pricing](/pricing) lays out what a hand-checked booking costs. For a worked example of surcharge-aware routing in practice, see [business class to Tokyo with points](/blog/business-class-to-tokyo-with-points).
 
 The seat is only free if you don't overpay in cash to sit in it. Knowing the difference is the whole point.
