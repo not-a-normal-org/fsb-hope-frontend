@@ -5,6 +5,8 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
+import { absoluteUrl, breadcrumbJsonLd } from '@/lib/seo';
+import { SITE_NAME } from '@/lib/constants';
 import BlogIndex from './BlogIndex';
 
 /**
@@ -18,8 +20,18 @@ import BlogIndex from './BlogIndex';
  */
 export const dynamic = 'force-dynamic';
 
+const BLOG_DESC =
+  'Guides to booking flights with points and miles, checked by a real specialist — not an algorithm.';
+
 export const metadata: Metadata = {
   title: 'Blog',
+  description: BLOG_DESC,
+  alternates: {
+    canonical: absoluteUrl('/blog'),
+    types: { 'application/rss+xml': absoluteUrl('/blog/feed.xml') },
+  },
+  openGraph: { type: 'website', url: absoluteUrl('/blog'), title: `Blog | ${SITE_NAME}`, description: BLOG_DESC },
+  robots: { index: true, follow: true },
 };
 
 // A DB hiccup or an unmigrated `posts` table degrades to an empty grid (the
@@ -43,8 +55,28 @@ async function getPosts(): Promise<BlogCard[]> {
 export default async function BlogIndexPage() {
   const posts = await getPosts();
 
+  const blogJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${SITE_NAME} — Blog`,
+    url: absoluteUrl('/blog'),
+    description: BLOG_DESC,
+    blogPost: posts.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.title,
+      url: absoluteUrl(`/blog/${p.slug}`),
+      datePublished: p.publishedAt || undefined,
+    })),
+  };
+  const crumbs = [
+    { name: 'Home', url: absoluteUrl('/') },
+    { name: 'Blog', url: absoluteUrl('/blog') },
+  ];
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(crumbs)) }} />
       <NavBar />
       <PageHero
         compact
