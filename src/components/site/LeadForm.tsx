@@ -441,6 +441,16 @@ export default function LeadForm({
               </button>
             )}
           </div>
+
+          {step === TOTAL_STEPS - 1 && (
+            <p className="mt-3 text-xs text-ink-muted">
+              By submitting you agree to our{' '}
+              <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+                Privacy Policy
+              </a>
+              .
+            </p>
+          )}
         </>
       )}
     </div>

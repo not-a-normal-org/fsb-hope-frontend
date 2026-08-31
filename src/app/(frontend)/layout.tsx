@@ -38,8 +38,11 @@ const plexMono = IBM_Plex_Mono({
 });
 
 /* ========== SEO METADATA ========== */
-// Minimal on purpose: the site is behind the construction wall and set to
-// noindex. Richer metadata belongs with the pages it describes.
+// Minimal on purpose; richer metadata belongs with the pages it describes.
+// No global robots directive: the launched marketing site should index. While the
+// construction wall is up it 503s + no-stores anonymous traffic, and the
+// /maintenance notice sets its own noindex — so the wall handles crawlers without
+// this needing to suppress the real pages.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -47,7 +50,6 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_TAGLINE,
-  robots: "noindex, nofollow",
   // Link-preview card (X/LinkedIn/Slack/WhatsApp) — the brand lockup on the dark
   // base. Matching social exports live in public/img/ (square avatar, nav icon).
   openGraph: {

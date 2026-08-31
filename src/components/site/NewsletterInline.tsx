@@ -125,7 +125,10 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
             </p>
           )}
           {step === 'email' && status !== 'success' && (
-            <p className="mt-2 text-xs text-ink-muted">Watching {airport.trim().toUpperCase()} — where should we send it?</p>
+            <p className="mt-2 text-xs text-ink-muted">
+              Watching {airport.trim().toUpperCase()} — where should we send it? By confirming you agree to our{' '}
+              <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">Privacy Policy</a>.
+            </p>
           )}
         </div>
       </div>
