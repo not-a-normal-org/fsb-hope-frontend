@@ -6,6 +6,8 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
+import { absoluteUrl, breadcrumbJsonLd } from '@/lib/seo';
+import { SITE_URL } from '@/lib/constants';
 import BlogIndex from '../../BlogIndex';
 
 /**
@@ -78,7 +80,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategory(slug);
-  return { title: COPY[slug]?.title ?? category?.name ?? 'Blog' };
+  const title = COPY[slug]?.title ?? category?.name ?? 'Blog';
+  const description =
+    COPY[slug]?.intro ?? (category ? `Everything we’ve filed under ${category.name}.` : undefined);
+  const url = absoluteUrl(`/blog/category/${slug}`);
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: 'website', url, title, description },
+    robots: { index: true, follow: true },
+  };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -92,8 +104,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   const posts = category ? await getPosts(category.id) : [];
 
+  const crumbs = [
+    { name: 'Home', url: SITE_URL },
+    { name: 'Blog', url: absoluteUrl('/blog') },
+    { name: copy?.title ?? category?.name ?? slug, url: absoluteUrl(`/blog/category/${slug}`) },
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(crumbs)) }}
+      />
       <NavBar />
       <PageHero
         compact
