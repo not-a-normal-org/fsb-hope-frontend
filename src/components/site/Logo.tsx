@@ -16,7 +16,7 @@ import Image from 'next/image';
  * announced by screen readers and (being lazy) is not downloaded until shown.
  */
 const DARK = { src: '/savermiles-logo.png', w: 640, h: 198 };
-const LIGHT = { src: '/savermiles-logo-light.png', w: 1353, h: 451 };
+const LIGHT = { src: '/savermiles-logo-light.png', w: 640, h: 213 };
 const HEIGHT = '1.2em';
 
 type LogoProps = {
