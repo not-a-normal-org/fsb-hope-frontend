@@ -127,6 +127,13 @@ export default function NewsletterForm({
       >
         {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : buttonLabel}
       </button>
+      <p className={`mt-2 text-ink-muted ${compact ? 'text-[11px]' : 'text-xs'}`}>
+        By subscribing you agree to our{' '}
+        <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+          Privacy Policy
+        </a>
+        .
+      </p>
       {status === 'error' && (
         <p className="mt-2 text-sm" style={{ color: 'var(--sm-error)' }} role="alert">
           {message}
