@@ -6,7 +6,7 @@ this file is the at-a-glance "what's done / what's next."
 
 Legend: `[x]` done (merged) · `[~]` in progress / in review · `[ ]` not started
 
-_Last updated: 2026-07-31._
+_Last updated: 2026-08-31._
 
 ## Foundation — done
 
@@ -97,3 +97,42 @@ _Last updated: 2026-07-31._
 - [ ] Add prod env to Vercel (`DATABASE_URI`, `PAYLOAD_SECRET`, `S3_*`, Supabase keys)
 - [ ] Rotate the DB password + S3 secret pasted during setup
 - [ ] Final non-negotiables audit; then drop the construction wall + the global `noindex`
+
+## Launch — unresolved, fix one by one (added 2026-08-31)
+
+Go-live gate = **`MAINTENANCE_MODE=off` in Vercel Production** (the wall fails
+closed). Done since the last pass: the blog build-out (7 original articles + hero
+images, published) and **PR #49** (drop global `noindex` + add form consent links).
+The rest is below; see the `launch-readiness` memory for detail.
+
+### Code
+- [~] Drop global `noindex` + PII-form consent links — **PR #49** (open, not merged).
+- [ ] Fix 4 dead post-payment redirects (only fire once payments go live):
+      `/dashboard` (`admin/applications/actions.ts`, `api/portal/route.ts`),
+      `/research/intake` + `/alerts/preferences` (`api/webhooks/stripe/route.ts`).
+- [ ] Blog: add the `publishedAt <= now` public filter (`blog/page.tsx` TODO), so a
+      future-dated post can't show early.
+
+### Business decisions
+- [ ] Resolve **$99-vs-$25 business pricing** (homepage band implies $99 is universal;
+      business search is currently flat $25, no success fee). Then unify the wording.
+- [ ] Real **Privacy / Terms** copy (currently honest placeholders; forms now link to
+      them at the point of collection).
+
+### Prod data — Payload `/cms` or `/admin`
+- [ ] Purge `rbactest-*` staff accounts (seeded with a published password).
+- [ ] Remove the SAMPLE testimonial (id 5) + the leftover **test media** (id 3, alt
+      "test"). Blog posts are already clean — only real content remains.
+
+### Ops / Vercel
+- [ ] Set `MAINTENANCE_MODE=off` (the launch switch).
+- [ ] Rotate the DB password + S3 secret.
+- [ ] Confirm every non-OPTIONAL `.env.example` key is set for **Production**.
+      Launch-critical: `MAINTENANCE_MODE`, `PAYLOAD_SECRET`, `DATABASE_URI` (txn
+      pooler :6543), `NEXT_PUBLIC_APP_URL` (prod origin, no trailing slash),
+      `NEXT_PUBLIC_SUPABASE_URL` / `_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+      `S3_ACCESS_KEY_ID` / `_SECRET`, `STRIPE_SECRET_KEY` /
+      `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` / `STRIPE_WEBHOOK_SECRET` (+ the
+      `NEXT_PUBLIC_STRIPE_PRICE_*` IDs the buy buttons read), `RESEND_API_KEY`,
+      `ADMIN_EMAIL`. Deprecated / removable: `ADMIN_SECRET`. (Prod env can't be read
+      from the repo — verify in the Vercel dashboard, or `vercel link && vercel env ls`.)
