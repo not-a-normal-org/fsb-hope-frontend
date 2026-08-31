@@ -2,25 +2,22 @@ import Image from 'next/image';
 
 /**
  * Saver Miles logo — the brand lockup (wordmark + green arc + plane), shipped as
- * the supplied artwork (public/savermiles-logo.png).
+ * supplied artwork, with a light/dark variant swapped by theme.
  *
- * It is an image, not drawn in code: the wordmark is a custom slab with a dark
- * outline that no webfont reproduces, and redrawing it drifts off-brand. The
- * asset is trimmed to the artwork's bounds and has a real alpha channel, so it
- * sits cleanly on Dark, Light, and any surface in between — the outline is what
- * keeps the cream lettering legible on light backgrounds.
+ * Two images render; CSS shows the one for the active theme via the `[data-theme]`
+ * attribute `ThemeScript` sets pre-paint, so the correct lockup is present on first
+ * paint with no flash (see the `.sm-logo-*` rules in globals.css). Dark + Mono use
+ * the cream, dark-outlined lockup (`savermiles-logo.png`); Light uses the
+ * dark-lettering lockup (`savermiles-logo-light.png`). Both are trimmed to the
+ * artwork with a real alpha channel, so they sit cleanly on any surface.
  *
- * Sizing stays font-driven so every caller's existing `text-*` class keeps
- * working: the height is set in `em`, so `<Logo className="text-lg" />` scales
- * with that type size exactly as the old drawn lockup did. 1.5em height matches
- * the previous wordmark's width, so nav/footer layout is unchanged.
- *
- * Social/share exports are generated from this same asset: og-image.png /
- * twitter-image.png (1200x630 link previews) and public/img/ (1000x1000 avatar,
- * 512x512 nav icon).
+ * Sizing stays font-driven: height is set in `em`, so `<Logo className="text-lg" />`
+ * scales with that type size. The hidden variant is `display:none`, so it is not
+ * announced by screen readers and (being lazy) is not downloaded until shown.
  */
-const LOGO_W = 640;
-const LOGO_H = 198;
+const DARK = { src: '/savermiles-logo.png', w: 640, h: 198 };
+const LIGHT = { src: '/savermiles-logo-light.png', w: 640, h: 213 };
+const HEIGHT = '1.2em';
 
 type LogoProps = {
   className?: string;
@@ -30,15 +27,26 @@ type LogoProps = {
 
 export default function Logo({ className = '', label = 'Saver Miles' }: LogoProps) {
   return (
-    <Image
-      src="/savermiles-logo.png"
-      alt={label}
-      width={LOGO_W}
-      height={LOGO_H}
-      priority
-      draggable={false}
-      className={className}
-      style={{ height: '1.5em', width: 'auto' }}
-    />
+    <>
+      <Image
+        src={DARK.src}
+        alt={label}
+        width={DARK.w}
+        height={DARK.h}
+        priority
+        draggable={false}
+        className={`sm-logo-dark ${className}`}
+        style={{ height: HEIGHT, width: 'auto' }}
+      />
+      <Image
+        src={LIGHT.src}
+        alt={label}
+        width={LIGHT.w}
+        height={LIGHT.h}
+        draggable={false}
+        className={`sm-logo-light ${className}`}
+        style={{ height: HEIGHT, width: 'auto' }}
+      />
+    </>
   );
 }

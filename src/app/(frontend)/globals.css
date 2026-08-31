@@ -513,6 +513,22 @@ html {
   animation: sm-shine 6s linear infinite;
 }
 
+/* ---- Logo theme swap -------------------------------------------------------
+   The Logo component renders both lockups; this shows the one for the active
+   theme by the [data-theme] attribute ThemeScript sets pre-paint, so there is no
+   flash of the wrong logo. Dark + Mono (and the SSR default) use the cream,
+   dark-outlined lockup; Light uses the dark-lettering lockup. The hidden one is
+   display:none, so it is out of the a11y tree and not downloaded until shown. */
+.sm-logo-light {
+  display: none;
+}
+[data-theme='light'] .sm-logo-dark {
+  display: none;
+}
+[data-theme='light'] .sm-logo-light {
+  display: inline-block;
+}
+
 /* ---- Region-bookmark countdown bar (RegionalReports) -----------------------
    Fills left→right over the auto-advance interval so the rotating hero cards
    read as live, not a static mockup. Duration is set inline per interval;
