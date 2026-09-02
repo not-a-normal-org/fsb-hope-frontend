@@ -4,14 +4,14 @@ import LegalDoc from '@/components/site/LegalDoc';
 
 /**
  * /legal/cookies — Cookie Policy. Lists the exact cookies/storage the site sets
- * today (referral, session, theme, newsletter-popup), notes there is no analytics
- * or advertising tracking yet, and flags that a consent mechanism will be added if
- * analytics are introduced. NOTE: structure-reviewed, not legal advice.
+ * today (referral, session, theme, newsletter-popup) plus Google Analytics 4 for
+ * aggregate traffic measurement, and how to opt out. No advertising cookies.
+ * NOTE: structure-reviewed, not legal advice.
  */
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description:
-    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them. We currently use no analytics or advertising cookies.',
+    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them, including Google Analytics for aggregate traffic measurement. We use no advertising cookies.',
   robots: { index: true, follow: true },
 };
 
@@ -38,7 +38,8 @@ export default function CookiePolicyPage() {
         &ldquo;local storage&rdquo; and &ldquo;session storage,&rdquo; let a site remember small pieces
         of information on your device. They can be <em>strictly necessary</em> (needed for the site to
         work), <em>functional</em> (remembering your preferences), or used for <em>analytics</em> or{' '}
-        <em>advertising</em>. We currently use only strictly-necessary and functional items.
+        <em>advertising</em>. We use strictly-necessary and functional items, plus a single <em>analytics</em>{' '}
+        tool (Google Analytics) for aggregate traffic measurement. We use no advertising cookies.
       </p>
 
       <h2>2. What we use, and why</h2>
@@ -63,6 +64,13 @@ export default function CookiePolicyPage() {
           <em>strictly necessary.</em> Set only if you sign in to a staff or affiliate account; it keeps
           you logged in. It is not set for ordinary visitors.
         </li>
+        <li>
+          <strong>Analytics</strong> (cookies <code>_ga</code> and <code>_ga_&lt;id&gt;</code>, set by
+          Google Analytics, up to about 13 months) &mdash; <em>analytics.</em> These help us measure
+          aggregate traffic: how many people visit, which pages and articles are read, and broadly
+          where visitors arrive from. They do not tell us who you are, and we never use them for
+          advertising. See section 4 for how to opt out.
+        </li>
       </ul>
 
       <h2>3. Third-party cookies</h2>
@@ -76,10 +84,31 @@ export default function CookiePolicyPage() {
 
       <h2>4. Analytics and advertising</h2>
       <p>
-        We do <strong>not</strong> currently use any analytics or advertising cookies or third-party
-        tracking on the website. If we add analytics in the future, we will update this policy and, where
-        the law requires it, ask for your consent (for example, through a cookie banner) before setting
-        non-essential cookies.
+        We use <strong>Google Analytics 4</strong>, a web-analytics service provided by Google, to
+        understand how the website is used in aggregate so we can improve it. Google Analytics sets the
+        cookies listed above (<code>_ga</code> and <code>_ga_&lt;id&gt;</code>) and processes usage data
+        such as pages viewed, approximate location (derived from a truncated IP address, not stored), and
+        device and browser type. We have configured it for measurement only: we do{' '}
+        <strong>not</strong> use it for advertising, ad personalization, or Google Ads, and we do not
+        sell or share this data. Google&rsquo;s handling of the data is governed by{' '}
+        <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Google&rsquo;s
+        privacy policy</a>.
+      </p>
+      <p>You can opt out of Google Analytics at any time:</p>
+      <ul>
+        <li>
+          Install the{' '}
+          <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener noreferrer" target="_blank">Google
+          Analytics Opt-out Browser Add-on</a>, which stops Google Analytics on every site you visit.
+        </li>
+        <li>Block or delete the <code>_ga</code> cookies through your browser settings (see section 5).</li>
+        <li>Use your browser&rsquo;s &ldquo;Do Not Track&rdquo; or tracking-protection features.</li>
+      </ul>
+      <p>
+        We use no advertising, remarketing, or social-media tracking cookies. Where the law requires
+        consent before setting non-essential cookies (for example for visitors in the EU, UK, or similar
+        jurisdictions), that requirement applies to the analytics cookies above, and you can exercise the
+        opt-out choices in this section at any time.
       </p>
 
       <h2>5. How to control cookies</h2>

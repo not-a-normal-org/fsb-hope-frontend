@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Logo from './Logo';
 import NewsletterForm from './NewsletterForm';
 import ModeToggle from '@/components/system/ModeToggle';
+import CookiePreferencesButton from '@/components/system/CookiePreferencesButton';
 
 /**
  * Footer — docs/plans/02-site-structure.md. Sitemap links, legal, a compact
@@ -90,9 +91,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="mt-12 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-          © {new Date().getFullYear()} Saver Miles
-        </p>
+        <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
+            © {new Date().getFullYear()} Saver Miles
+          </p>
+          <CookiePreferencesButton />
+        </div>
       </div>
     </footer>
   );
