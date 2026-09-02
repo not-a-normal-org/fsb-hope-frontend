@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import LegalDoc from '@/components/site/LegalDoc';
+import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 /**
  * /legal/terms — Terms & Conditions. Grounded in the real fee model
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 const UPDATED = 'August 31, 2026';
-const EMAIL = 'hello@savermiles.com';
+const EMAIL = SITE_EMAIL;
 
 export default function TermsPage() {
   return (
@@ -250,7 +251,7 @@ export default function TermsPage() {
       <h2>17. Contact</h2>
       <p>
         Questions about these Terms? Contact <strong>Saver Miles LLC</strong> at{' '}
-        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Registered address: [registered address to be completed].
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Registered address: {SITE_LEGAL_NAME}, {SITE_ADDRESS_INLINE}.
       </p>
     </LegalDoc>
   );

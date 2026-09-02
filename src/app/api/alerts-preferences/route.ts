@@ -76,18 +76,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     <p>Thanks — your Seat Alert preferences are set. We'll start monitoring your routes and let you
     know the moment a Business Class award seat appears.</p>
     <p>You can update your routes any time by replying to this email.</p>
-    <p>— SaverMiles</p>
+    <p>— Saver Miles</p>
   `;
 
   const [adminResult, customerResult] = await Promise.allSettled([
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: 'Saver Miles <hello@savermiles.com>',
       to: adminEmailAddress,
       subject: `Alert preferences — ${fullName}`,
       html: adminHtml,
     }),
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: 'Saver Miles <hello@savermiles.com>',
       to: email,
       subject: 'Your seat alerts are set up',
       html: customerHtml,

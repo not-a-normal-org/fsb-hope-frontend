@@ -81,7 +81,7 @@ function LoginForm() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <p className="text-xs tracking-[0.18em] uppercase text-[#E8963A] font-semibold mb-3">
-            SaverMiles
+            Saver Miles
           </p>
           <h1 className="text-2xl font-bold text-[#F5F5F0]">Admin Console</h1>
           <p className="mt-1 text-sm text-[#9DA3B4]">

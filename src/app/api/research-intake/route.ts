@@ -87,18 +87,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     research your best Business Class options and send your report (PDF + a short video walkthrough)
     within <strong>5 business days</strong>.</p>
     <p>If we need anything else, we'll email you at this address.</p>
-    <p>— SaverMiles</p>
+    <p>— Saver Miles</p>
   `;
 
   const [adminResult, customerResult] = await Promise.allSettled([
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: 'Saver Miles <hello@savermiles.com>',
       to: adminEmailAddress,
       subject: `Research intake — ${fullName}`,
       html: adminHtml,
     }),
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: 'Saver Miles <hello@savermiles.com>',
       to: email,
       subject: 'We’ve received your research report details',
       html: customerHtml,

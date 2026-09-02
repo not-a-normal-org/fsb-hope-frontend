@@ -41,11 +41,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (token && apiKey && apiKey !== 'your_resend_key') {
       const link = `${process.env.NEXT_PUBLIC_APP_URL ?? ''}/admin/reset-password?token=${token}`;
       await new Resend(apiKey).emails.send({
-        from: 'SaverMiles <hello@savermiles.com>',
+        from: 'Saver Miles <hello@savermiles.com>',
         to: email,
-        subject: 'Reset your SaverMiles admin password',
+        subject: 'Reset your Saver Miles admin password',
         html: `
-          <p>We received a request to reset your SaverMiles admin password.</p>
+          <p>We received a request to reset your Saver Miles admin password.</p>
           <p><a href="${link}">Reset your password</a> (this link is valid for one hour).</p>
           <p>If you didn't request this, you can safely ignore this email.</p>
         `,

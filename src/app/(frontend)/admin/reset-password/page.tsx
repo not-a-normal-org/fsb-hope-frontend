@@ -52,7 +52,7 @@ function ResetForm() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <p className="text-xs tracking-[0.18em] uppercase text-[#E8963A] font-semibold mb-3">
-            SaverMiles
+            Saver Miles
           </p>
           <h1 className="text-2xl font-bold text-[#F5F5F0]">Set a new password</h1>
         </div>
