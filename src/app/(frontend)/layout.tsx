@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
@@ -113,6 +114,20 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
           <CustomCursor />
         </MotionProvider>
+
+        {/* Google Analytics 4 (gtag.js). Loaded after the page is interactive so
+            it never blocks paint. Injected via next/script per the App Router
+            guidance; a raw inline <script> in JSX would not execute. */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-50ZT6S22C6"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-50ZT6S22C6');`}
+        </Script>
       </body>
     </html>
   );
