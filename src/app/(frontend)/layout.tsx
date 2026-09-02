@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
 import ThemeScript from "@/components/system/ThemeScript";
+import ConsentBanner from "@/components/system/ConsentBanner";
 import CustomCursor from "@/components/system/CustomCursor";
 import ReferralCapture from "@/components/system/ReferralCapture";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
@@ -94,6 +96,15 @@ export default function RootLayout({
     >
       <head>
         <ThemeScript />
+        {/* Google Consent Mode v2 — deny analytics by default (privacy-first), before
+            gtag.js loads. Re-grants immediately for a returning visitor who accepted;
+            the ConsentBanner flips it on the visitor's choice. */}
+        <Script id="ga-consent-default" strategy="beforeInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+try{if(localStorage.getItem('sm-consent')==='granted'){gtag('consent','update',{analytics_storage:'granted'});}}catch(e){}`}
+        </Script>
         <meta name="theme-color" content="#060B14" />
         <link rel="manifest" href="/site.webmanifest" />
         {/* Site-wide entity graph — helps search + AI resolve who Saver Miles is. */}
@@ -113,6 +124,23 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
           <CustomCursor />
         </MotionProvider>
+
+        <ConsentBanner />
+
+        {/* Google Analytics 4 (gtag.js). Loaded after the page is interactive so it
+            never blocks paint. Consent Mode (set in <head>) gates it: it sends only
+            cookieless signals until the visitor accepts. Injected via next/script
+            because a raw inline <script> in App Router JSX would not execute. */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-50ZT6S22C6"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-50ZT6S22C6');`}
+        </Script>
       </body>
     </html>
   );

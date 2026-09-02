@@ -68,8 +68,18 @@ export default function PrivacyPage() {
         technical data such as your IP address, browser and device type, pages viewed, and timestamps,
         as part of delivering and securing the site. We also use a small number of cookies and
         browser-storage items, described in our{' '}
-        <a href="/legal/cookies">Cookie Policy</a>. We do <strong>not</strong> currently use analytics or
-        advertising cookies or third-party tracking pixels.
+        <a href="/legal/cookies">Cookie Policy</a>.
+      </p>
+      <p>
+        We use <strong>Google Analytics 4</strong> to understand, in aggregate, how the website is used
+        (for example how many people visit and which articles are read) so we can improve it. It sets
+        analytics cookies and processes usage data such as pages viewed, approximate location, and device
+        type. We use it for <strong>measurement only</strong> &mdash; not for advertising, ad
+        personalization, or Google Ads &mdash; and we do not sell or share this data. Analytics cookies
+        are non-essential; where the law requires it we ask for your consent before they are set, and you
+        can opt out at any time as described in our{' '}
+        <a href="/legal/cookies">Cookie Policy</a>. We do <strong>not</strong> use advertising cookies or
+        third-party advertising pixels.
       </p>
 
       <h2>2. How we use your information</h2>
@@ -104,8 +114,9 @@ export default function PrivacyPage() {
         <li>
           <strong>Service providers (processors)</strong> who act on our instructions:
           {' '}<strong>Supabase</strong> (database and file storage), <strong>Stripe</strong> (payment
-          processing), <strong>Resend</strong> (transactional and newsletter email delivery), and{' '}
-          <strong>Vercel</strong> (website hosting). Each receives only the data needed for its function.
+          processing), <strong>Resend</strong> (transactional and newsletter email delivery),{' '}
+          <strong>Vercel</strong> (website hosting), and <strong>Google</strong> (Google Analytics, for
+          aggregate traffic measurement). Each receives only the data needed for its function.
         </li>
         <li>
           <strong>Affiliates.</strong> If you arrive through an affiliate link, we attribute your inquiry
@@ -141,7 +152,7 @@ export default function PrivacyPage() {
       <p>
         We use reasonable technical and organizational measures to protect personal information,
         including encrypted connections and access controls, and we rely on established providers
-        (Supabase, Stripe, Resend, Vercel) with their own security programs. No method of transmission or
+        (Supabase, Stripe, Resend, Vercel, Google) with their own security programs. No method of transmission or
         storage is completely secure, so we cannot guarantee absolute security.
       </p>
 
