@@ -6,6 +6,7 @@ import { Resend } from 'resend';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit';
+import { SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -15,35 +16,35 @@ function approvalEmail(firstName: string, tier: string, paymentLink: string): st
   return `
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8" /><title>Membership Approved</title></head>
+<head><meta charset="UTF-8" /><title>Application Approved</title></head>
 <body style="margin:0;padding:0;background-color:#07090F;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#07090F;padding:40px 16px;">
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
 
         <tr><td style="padding-bottom:32px;text-align:center;">
-          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVERMILES</p>
+          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVER MILES</p>
         </td></tr>
 
         <tr><td style="background-color:#0E1220;border:1px solid #1E2538;border-radius:16px;padding:40px 36px;">
 
           <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#F5F5F0;">Congratulations, ${firstName}!</p>
           <p style="margin:0 0 28px;font-size:15px;color:#9DA3B4;line-height:1.6;">
-            Your application for the <strong style="color:#E8963A;text-transform:capitalize;">${tier}</strong> membership
-            has been approved. You're one step away from joining SaverMiles.
+            Your application for the <strong style="color:#E8963A;text-transform:capitalize;">${tier}</strong> plan
+            has been approved. You're one step away from getting started with Saver Miles.
           </p>
 
           <hr style="border:none;border-top:1px solid #1E2538;margin:0 0 28px;" />
 
           <p style="margin:0 0 20px;font-size:14px;color:#F5F5F0;line-height:1.6;">
-            Click the button below to complete your enrolment and secure your membership.
+            Click the button below to complete your signup and get started.
           </p>
 
           <table cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
             <tr><td>
               <a href="${paymentLink}"
                  style="display:inline-block;background-color:#E8963A;color:#07090F;font-weight:700;font-size:15px;padding:16px 32px;border-radius:10px;text-decoration:none;">
-                Complete Your Enrolment →
+                Complete Your Signup →
               </a>
             </td></tr>
           </table>
@@ -56,14 +57,14 @@ function approvalEmail(firstName: string, tier: string, paymentLink: string): st
 
           <p style="margin:0;font-size:13px;color:#9DA3B4;line-height:1.6;">
             Questions? Reply to this email or call us directly — we're here to help.<br /><br />
-            <strong style="color:#F5F5F0;">SaverMiles Team</strong><br />
+            <strong style="color:#F5F5F0;">Saver Miles Team</strong><br />
             <a href="mailto:hello@savermiles.com" style="color:#E8963A;text-decoration:none;">hello@savermiles.com</a>
           </p>
 
         </td></tr>
 
         <tr><td style="padding-top:24px;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 SaverMiles · Australia</p>
+          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 ${SITE_LEGAL_NAME} · ${SITE_ADDRESS_INLINE}</p>
         </td></tr>
 
       </table>
@@ -85,19 +86,19 @@ function rejectionEmail(firstName: string): string {
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
 
         <tr><td style="padding-bottom:32px;text-align:center;">
-          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVERMILES</p>
+          <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">SAVER MILES</p>
         </td></tr>
 
         <tr><td style="background-color:#0E1220;border:1px solid #1E2538;border-radius:16px;padding:40px 36px;">
 
           <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#F5F5F0;">Hi ${firstName},</p>
           <p style="margin:0 0 24px;font-size:15px;color:#9DA3B4;line-height:1.6;">
-            Thank you for your interest in SaverMiles. After reviewing your application,
+            Thank you for your interest in Saver Miles. After reviewing your application,
             we don't think it's quite the right fit at this time.
           </p>
           <p style="margin:0 0 24px;font-size:14px;color:#9DA3B4;line-height:1.6;">
-            This isn't a reflection on you or your business — our membership criteria are specific
-            to ensure the best possible outcomes for every member. We'd encourage you to reapply
+            This isn't a reflection on you or your business — our criteria are specific
+            to ensure the best possible outcomes for everyone. We'd encourage you to reapply
             as your business grows, or explore our Points Concierge service in the meantime.
           </p>
 
@@ -105,14 +106,14 @@ function rejectionEmail(firstName: string): string {
 
           <p style="margin:0;font-size:13px;color:#9DA3B4;line-height:1.6;">
             If you have any questions, please don't hesitate to reach out.<br /><br />
-            <strong style="color:#F5F5F0;">SaverMiles Team</strong><br />
+            <strong style="color:#F5F5F0;">Saver Miles Team</strong><br />
             <a href="mailto:hello@savermiles.com" style="color:#E8963A;text-decoration:none;">hello@savermiles.com</a>
           </p>
 
         </td></tr>
 
         <tr><td style="padding-top:24px;text-align:center;">
-          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 SaverMiles · Australia</p>
+          <p style="margin:0;font-size:11px;color:#5C6378;">© 2026 ${SITE_LEGAL_NAME} · ${SITE_ADDRESS_INLINE}</p>
         </td></tr>
 
       </table>
@@ -157,9 +158,9 @@ export async function approveApplication(
   // 3. Send approval email
   const firstName = customerName.split(' ')[0];
   const { error: emailError } = await resend.emails.send({
-    from:    'SaverMiles <hello@savermiles.com>',
+    from:    'Saver Miles <hello@savermiles.com>',
     to:      customerEmail,
-    subject: 'Your SaverMiles membership is ready — complete your enrolment',
+    subject: 'Your Saver Miles plan is ready — complete your signup',
     html:    approvalEmail(firstName, tier, paymentLink.url),
   });
 
@@ -196,9 +197,9 @@ export async function rejectApplication(
   // 2. Send rejection email
   const firstName = customerName.split(' ')[0];
   const { error: emailError } = await resend.emails.send({
-    from:    'SaverMiles <hello@savermiles.com>',
+    from:    'Saver Miles <hello@savermiles.com>',
     to:      customerEmail,
-    subject: 'Your SaverMiles application — an update',
+    subject: 'Your Saver Miles application — an update',
     html:    rejectionEmail(firstName),
   });
 

@@ -11,7 +11,7 @@ import LegalDoc from '@/components/site/LegalDoc';
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description:
-    'The cookies and browser storage SaverMiles uses, why we use them, and how to control them. We currently use no analytics or advertising cookies.',
+    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them. We currently use no analytics or advertising cookies.',
   robots: { index: true, follow: true },
 };
 
@@ -26,7 +26,7 @@ export default function CookiePolicyPage() {
       intro="This policy explains the cookies and browser storage our website uses, what they do, and how you can control them."
     >
       <p>
-        This Cookie Policy describes how <strong>Saver Miles LLC</strong> (&ldquo;SaverMiles,&rdquo;
+        This Cookie Policy describes how <strong>Saver Miles LLC</strong> (&ldquo;Saver Miles,&rdquo;
         &ldquo;we,&rdquo; &ldquo;us&rdquo;) uses cookies and similar browser-storage technologies on
         savermiles.com. It should be read together with our{' '}
         <a href="/legal/privacy">Privacy Policy</a>.

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { SITE_EMAIL } from '@/lib/constants';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -77,20 +78,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const customerHtml = `
     <p>Hi ${esc(firstName)},</p>
-    <p>Thanks for reaching out to SaverMiles — we've received your message and
+    <p>Thanks for reaching out to Saver Miles — we've received your message and
     will be in touch within one business day.</p>
-    <p>— SaverMiles</p>
+    <p>— Saver Miles</p>
   `;
 
   const [adminResult, customerResult] = await Promise.allSettled([
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: `Saver Miles <${SITE_EMAIL}>`,
       to: adminEmailAddress,
       subject: `New enquiry — ${name}`,
       html: adminHtml,
     }),
     resend.emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
+      from: `Saver Miles <${SITE_EMAIL}>`,
       to: email,
       subject: 'We’ve received your message',
       html: customerHtml,

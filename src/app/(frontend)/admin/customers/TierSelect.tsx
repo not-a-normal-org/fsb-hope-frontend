@@ -20,7 +20,7 @@ export function TierSelect({
 
   return (
     <select
-      aria-label="Membership tier"
+      aria-label="Plan tier"
       value={current ?? ''}
       disabled={isPending}
       onChange={(e) =>

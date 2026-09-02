@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +29,7 @@ function applicantEmail(firstName: string, tier: string): string {
           <tr>
             <td style="padding-bottom:32px;text-align:center;">
               <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">
-                SAVERMILES
+                SAVER MILES
               </p>
             </td>
           </tr>
@@ -44,7 +45,7 @@ function applicantEmail(firstName: string, tier: string): string {
               <p style="margin:0 0 28px;font-size:15px;color:#9DA3B4;line-height:1.6;">
                 We've received your application for the
                 <strong style="color:#E8963A;text-transform:capitalize;">${tier}</strong>
-                membership tier.
+                plan.
               </p>
 
               <!-- Divider -->
@@ -75,7 +76,7 @@ function applicantEmail(firstName: string, tier: string): string {
                   <td style="padding:10px 0;">
                     <p style="margin:0;font-size:14px;color:#F5F5F0;">
                       <span style="color:#E8963A;margin-right:10px;">03</span>
-                      We'll walk you through how the membership works for your business
+                      We'll walk you through how we'll work with you
                     </p>
                   </td>
                 </tr>
@@ -86,7 +87,7 @@ function applicantEmail(firstName: string, tier: string): string {
                 If you have any questions in the meantime, reply to this email and we'll get back to you.
                 <br /><br />
                 Looking forward to welcoming you,<br />
-                <strong style="color:#F5F5F0;">SaverMiles Team</strong>
+                <strong style="color:#F5F5F0;">Saver Miles Team</strong>
               </p>
 
             </td>
@@ -96,7 +97,7 @@ function applicantEmail(firstName: string, tier: string): string {
           <tr>
             <td style="padding-top:24px;text-align:center;">
               <p style="margin:0;font-size:11px;color:#5C6378;">
-                © 2026 SaverMiles · Australia
+                © 2026 ${SITE_LEGAL_NAME} · ${SITE_ADDRESS_INLINE}
               </p>
             </td>
           </tr>
@@ -156,7 +157,7 @@ function adminEmail(data: {
           <tr>
             <td style="padding-bottom:24px;">
               <p style="margin:0;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#E8963A;font-family:'Courier New',monospace;">
-                SAVERMILES · ADMIN
+                SAVER MILES · ADMIN
               </p>
             </td>
           </tr>
@@ -276,15 +277,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const [applicantResult, adminResult] = await Promise.allSettled([
     resend.emails.send({
-      from:    'SaverMiles <hello@savermiles.com>',
+      from:    'Saver Miles <hello@savermiles.com>',
       to:      email,
-      subject: 'Your application to SaverMiles has been received',
+      subject: 'Your application to Saver Miles has been received',
       html:    applicantEmail(firstName, selectedTier),
     }),
     resend.emails.send({
-      from:    'SaverMiles <hello@savermiles.com>',
+      from:    'Saver Miles <hello@savermiles.com>',
       to:      adminEmailAddress,
-      subject: `New membership application — ${fullName} (${selectedTier})`,
+      subject: `New application — ${fullName} (${selectedTier})`,
       html:    adminEmail({ fullName, email, phone, companyName, businessType, annualSpend, abn: abn ?? '', goals: goals ?? '', selectedTier, referralSource: referralSource ?? '' }),
     }),
   ]);

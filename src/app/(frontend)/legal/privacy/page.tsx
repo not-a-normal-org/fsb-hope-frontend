@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import LegalDoc from '@/components/site/LegalDoc';
+import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 /**
  * /legal/privacy — Privacy Policy. Grounded in the real data inventory: the
@@ -12,12 +13,12 @@ import LegalDoc from '@/components/site/LegalDoc';
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description:
-    'How SaverMiles collects, uses, shares, and protects your personal information, the processors we use, and your privacy rights (including GDPR and California).',
+    'How Saver Miles collects, uses, shares, and protects your personal information, the processors we use, and your privacy rights (including GDPR and California).',
   robots: { index: true, follow: true },
 };
 
 const UPDATED = 'August 31, 2026';
-const EMAIL = 'hello@savermiles.com';
+const EMAIL = SITE_EMAIL;
 
 export default function PrivacyPage() {
   return (
@@ -27,7 +28,7 @@ export default function PrivacyPage() {
       intro="This policy explains what personal information we collect, how we use and share it, and the choices and rights you have."
     >
       <p>
-        <strong>Saver Miles LLC</strong>, a Wyoming limited liability company (&ldquo;SaverMiles,&rdquo;
+        <strong>Saver Miles LLC</strong>, a Wyoming limited liability company (&ldquo;Saver Miles,&rdquo;
         &ldquo;we,&rdquo; &ldquo;us&rdquo;), is the controller of the personal information described in
         this policy. It applies to savermiles.com and the services we provide (the &ldquo;Services&rdquo;).
         By using the Services you agree to this policy.
@@ -113,7 +114,7 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Legal and safety.</strong> Where required by law, legal process, or to protect the
-          rights, safety, and property of SaverMiles, our users, or others.
+          rights, safety, and property of Saver Miles, our users, or others.
         </li>
         <li>
           <strong>Business transfers.</strong> In connection with a merger, acquisition, financing, or
@@ -191,7 +192,7 @@ export default function PrivacyPage() {
       <h2>12. Contact us</h2>
       <p>
         For any privacy question or to exercise your rights, contact <strong>Saver Miles LLC</strong> at{' '}
-        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Registered address: [registered address to be completed].
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Registered address: {SITE_LEGAL_NAME}, {SITE_ADDRESS_INLINE}.
       </p>
     </LegalDoc>
   );

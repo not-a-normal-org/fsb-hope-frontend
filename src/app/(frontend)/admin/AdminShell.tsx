@@ -65,7 +65,7 @@ export default function AdminShell({
       <aside className="w-60 shrink-0 fixed inset-y-0 left-0 flex flex-col bg-[#0E1220] border-r border-[#1E2538] z-20">
         <div className="px-6 py-6 border-b border-[#1E2538]">
           <p className="text-[10px] tracking-[0.18em] uppercase text-[#E8963A] font-semibold mb-0.5">
-            SaverMiles
+            Saver Miles
           </p>
           <p className="text-xs text-[#5C6378]">Admin Console</p>
         </div>

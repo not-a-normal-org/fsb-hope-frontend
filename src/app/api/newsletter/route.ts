@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
+import { SITE_URL, SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -32,15 +33,15 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
   const firstName = name?.split(' ')[0] ?? 'there';
 
   await resend.emails.send({
-    from:    'SaverMiles <hello@savermiles.com>',
+    from:    `Saver Miles <${SITE_EMAIL}>`,
     to:      email,
-    subject: 'Welcome to SaverMiles ✈',
+    subject: 'Welcome to Saver Miles ✈',
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to SaverMiles</title>
+  <title>Welcome to Saver Miles</title>
 </head>
 <body style="margin:0;padding:0;background-color:#07090F;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#07090F;padding:48px 16px;">
@@ -51,7 +52,7 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <!-- Header -->
           <tr>
             <td style="padding:40px 48px 32px;border-bottom:1px solid #1E2538;">
-              <p style="margin:0;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#E8963A;font-weight:600;">SaverMiles</p>
+              <p style="margin:0;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#E8963A;font-weight:600;">Saver Miles</p>
               <h1 style="margin:12px 0 0;font-size:28px;font-weight:700;color:#F5F5F0;line-height:1.3;">
                 Welcome aboard, ${firstName}.
               </h1>
@@ -62,39 +63,39 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <tr>
             <td style="padding:36px 48px;">
               <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                You're now on the inside. We help Australian business owners turn everyday expenses into guaranteed Business Class flights — and we're excited to share everything we know with you.
+                You're on the list. Saver Miles is a points-and-miles concierge: a real specialist searches award availability by hand, so you can fly premium cabins on the points you already hold. No algorithm, no guesswork — a person who does this all day.
               </p>
               <p style="margin:0 0 20px;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                Here's what you can expect from us:
+                Here's what we'll send your way:
               </p>
               <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Exclusive tips on earning and redeeming points
+                    Practical tips on earning and redeeming points
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Business Class sweet spots most travellers miss
+                    Business- and first-class sweet spots most travelers miss
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Qantas, Velocity &amp; partner airline strategies
+                    How transfer partners and award charts actually work
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:8px 0;font-size:15px;color:#F5F5F0;">
                     <span style="color:#E8963A;margin-right:10px;">✦</span>
-                    Member-only events and early access offers
+                    The occasional standout award we spot worth flying for
                   </td>
                 </tr>
               </table>
               <p style="margin:0;font-size:16px;line-height:1.7;color:#9DA3B4;">
-                In the meantime, explore our <a href="${process.env.NEXT_PUBLIC_APP_URL}/membership" style="color:#E8963A;text-decoration:none;">membership tiers</a> to see how we can take your travel to the next level.
+                Want a head start? Read our <a href="${SITE_URL}/blog" style="color:#E8963A;text-decoration:none;">points guides</a> or see exactly how a search works.
               </p>
             </td>
           </tr>
@@ -102,9 +103,9 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <!-- CTA -->
           <tr>
             <td style="padding:0 48px 40px;">
-              <a href="${process.env.NEXT_PUBLIC_APP_URL}/membership"
+              <a href="${SITE_URL}/how-it-works"
                  style="display:inline-block;background-color:#E8963A;color:#07090F;font-weight:700;font-size:15px;padding:14px 32px;border-radius:100px;text-decoration:none;letter-spacing:0.02em;">
-                Explore Membership →
+                See how it works →
               </a>
             </td>
           </tr>
@@ -112,9 +113,12 @@ async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
           <!-- Footer -->
           <tr>
             <td style="padding:24px 48px;border-top:1px solid #1E2538;">
-              <p style="margin:0;font-size:13px;color:#5C6378;line-height:1.6;">
+              <p style="margin:0 0 8px;font-size:13px;color:#5C6378;line-height:1.6;">
                 You're receiving this because you signed up at savermiles.com.
                 If this was a mistake, you can safely ignore this email.
+              </p>
+              <p style="margin:0;font-size:12px;color:#5C6378;line-height:1.6;">
+                ${SITE_LEGAL_NAME} · ${SITE_ADDRESS_INLINE}
               </p>
             </td>
           </tr>
