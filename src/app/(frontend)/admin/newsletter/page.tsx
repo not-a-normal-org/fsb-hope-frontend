@@ -10,7 +10,6 @@ interface Subscriber {
   full_name: string | null;
   source: string | null;
   is_active: boolean;
-  subscribed_at: string | null;
   created_at: string;
 }
 
@@ -28,8 +27,8 @@ function fmtDate(iso: string | null): string {
 export default async function NewsletterPage() {
   const { data: rows } = await supabaseAdmin
     .from('newsletter_subscribers')
-    .select('id, email, full_name, source, is_active, subscribed_at, created_at')
-    .order('subscribed_at', { ascending: false, nullsFirst: false });
+    .select('id, email, full_name, source, is_active, created_at')
+    .order('created_at', { ascending: false, nullsFirst: false });
 
   const subscribers = (rows ?? []) as Subscriber[];
   const activeCount  = subscribers.filter((s) => s.is_active).length;
@@ -41,7 +40,7 @@ export default async function NewsletterPage() {
     .map((s) => ({
       email:         s.email,
       full_name:     s.full_name,
-      subscribed_at: s.subscribed_at ?? s.created_at,
+      subscribed_at: s.created_at,
     }));
 
   return (
@@ -108,7 +107,7 @@ export default async function NewsletterPage() {
                       </td>
                       {/* Subscribed date */}
                       <td className="px-5 py-3.5 text-[#9DA3B4] tabular-nums whitespace-nowrap text-xs">
-                        {fmtDate(sub.subscribed_at ?? sub.created_at)}
+                        {fmtDate(sub.created_at)}
                       </td>
                       {/* Active badge */}
                       <td className="px-5 py-3.5">
