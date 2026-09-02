@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { sendEmail } from '@/lib/email';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -59,14 +59,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     reference: body.reference?.trim() ?? '',
   };
 
-  // Skip sending when Resend isn't configured (local/test) — still succeed.
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey || apiKey === 'your_resend_key') {
-    console.warn('[api/research-intake] RESEND_API_KEY not configured — skipping email send.');
-    return NextResponse.json({ success: true });
-  }
-
-  const resend = new Resend(apiKey);
   const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@savermiles.com';
   const firstName = fullName.split(' ')[0];
 
@@ -90,27 +82,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     <p>— Saver Miles</p>
   `;
 
-  const [adminResult, customerResult] = await Promise.allSettled([
-    resend.emails.send({
-      from: 'Saver Miles <hello@savermiles.com>',
+  await Promise.allSettled([
+    sendEmail({
       to: adminEmailAddress,
+      replyTo: email,
       subject: `Research intake — ${fullName}`,
       html: adminHtml,
     }),
-    resend.emails.send({
-      from: 'Saver Miles <hello@savermiles.com>',
+    sendEmail({
       to: email,
       subject: 'We’ve received your research report details',
       html: customerHtml,
     }),
   ]);
-
-  if (adminResult.status === 'rejected') {
-    console.error('[api/research-intake] admin email error:', adminResult.reason);
-  }
-  if (customerResult.status === 'rejected') {
-    console.error('[api/research-intake] customer email error:', customerResult.reason);
-  }
 
   return NextResponse.json({ success: true });
 }

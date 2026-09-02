@@ -1,14 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { Resend } from 'resend';
+import { sendEmail } from '@/lib/email';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit';
 import { SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── Email helpers ─────────────────────────────────────────────────────────────
 
@@ -157,15 +155,14 @@ export async function approveApplication(
 
   // 3. Send approval email
   const firstName = customerName.split(' ')[0];
-  const { error: emailError } = await resend.emails.send({
-    from:    'Saver Miles <hello@savermiles.com>',
+  const { ok: emailOk } = await sendEmail({
     to:      customerEmail,
     subject: 'Your Saver Miles plan is ready — complete your signup',
     html:    approvalEmail(firstName, tier, paymentLink.url),
   });
 
-  if (emailError) {
-    console.error('[approveApplication] email error:', emailError);
+  if (!emailOk) {
+    console.error('[approveApplication] approval email was not sent');
   }
 
   // 4. Audit log
@@ -196,15 +193,14 @@ export async function rejectApplication(
 
   // 2. Send rejection email
   const firstName = customerName.split(' ')[0];
-  const { error: emailError } = await resend.emails.send({
-    from:    'Saver Miles <hello@savermiles.com>',
+  const { ok: emailOk } = await sendEmail({
     to:      customerEmail,
     subject: 'Your Saver Miles application — an update',
     html:    rejectionEmail(firstName),
   });
 
-  if (emailError) {
-    console.error('[rejectApplication] email error:', emailError);
+  if (!emailOk) {
+    console.error('[rejectApplication] rejection email was not sent');
   }
 
   // 3. Audit log

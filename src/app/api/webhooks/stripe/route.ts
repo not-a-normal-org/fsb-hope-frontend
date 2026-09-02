@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { Resend } from 'resend';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendEmail } from '@/lib/email';
 
 // ── Disable Next.js body parsing — Stripe requires the raw bytes ──────────────
 export const dynamic = 'force-dynamic';
@@ -18,17 +18,10 @@ function bad(message: string): NextResponse {
   return NextResponse.json({ error: message }, { status: 400 });
 }
 
-/** Fire-and-forget transactional email. No-ops if Resend isn't configured. */
-async function sendResend(to: string | null | undefined, subject: string, html: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey || apiKey === 'your_resend_key' || !to) return;
-  const resend = new Resend(apiKey);
-  await resend.emails.send({
-    from: 'Saver Miles <hello@savermiles.com>',
-    to,
-    subject,
-    html,
-  });
+/** Fire-and-forget transactional email. No-ops if email isn't configured or no recipient. */
+async function sendMail(to: string | null | undefined, subject: string, html: string): Promise<void> {
+  if (!to) return;
+  await sendEmail({ to, subject, html });
 }
 
 /** First active line-item price ID for a checkout session (best-effort). */
@@ -58,7 +51,7 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
   try {
     if (productKey === 'research') {
       const link = `${appUrl}/research/intake?session=${session.id}`;
-      await sendResend(
+      await sendMail(
         email,
         'Your report is next — a couple of quick details',
         `<p>Thanks for ordering a Redemption Research Report.</p>
@@ -67,10 +60,10 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
          <p>We'll deliver your report within 5 business days.</p>
          <p>— Saver Miles</p>`,
       );
-      await sendResend(adminEmail, 'New Research Report purchase', `<p>Research Report purchased. Session: ${session.id}. Awaiting intake.</p>`);
+      await sendMail(adminEmail, 'New Research Report purchase', `<p>Research Report purchased. Session: ${session.id}. Awaiting intake.</p>`);
     } else if (productKey.startsWith('alerts_')) {
       const link = `${appUrl}/alerts/preferences?session=${session.id}`;
-      await sendResend(
+      await sendMail(
         email,
         'Set up your Business Class seat alerts',
         `<p>Welcome to the Seat Alert Service.</p>
@@ -78,7 +71,7 @@ async function sendPurchaseFollowup(session: Stripe.Checkout.Session): Promise<v
          <p><a href="${link}">Set your routes →</a></p>
          <p>— Saver Miles</p>`,
       );
-      await sendResend(adminEmail, `New Alerts subscription (${productKey})`, `<p>New alerts subscription: ${productKey}. Session: ${session.id}.</p>`);
+      await sendMail(adminEmail, `New Alerts subscription (${productKey})`, `<p>New alerts subscription: ${productKey}. Session: ${session.id}.</p>`);
     }
   } catch (err) {
     console.error('[stripe/webhook] follow-up email failed:', err);
