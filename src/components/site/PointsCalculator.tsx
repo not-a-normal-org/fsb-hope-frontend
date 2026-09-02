@@ -68,14 +68,16 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
             {range ?? <span className="text-ink-muted">—</span>}
           </p>
           <p className="mt-1 text-xs text-ink-muted">in travel value · estimate only</p>
-          {hasValue && (
+          {flights.length > 0 && (
             // Tie the estimate to a concrete example (Review v3 §10.3): the two
-            // best interactive elements finally point at each other.
+            // best interactive elements finally point at each other. The example
+            // is the top tier the balance actually clears, not a fixed claim —
+            // 15k points must not read as "a business seat to Tokyo."
             <Link
-              href="/individual?from=JFK&to=NRT"
+              href="/individual"
               className="mt-3 inline-block text-xs text-ink-sub transition-colors hover:text-ink"
             >
-              ≈ a business seat to Tokyo — start that audit →
+              ≈ {flights[0]} — start that audit →
             </Link>
           )}
         </div>

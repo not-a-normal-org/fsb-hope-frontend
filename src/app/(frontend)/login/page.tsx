@@ -24,7 +24,7 @@ export default function LoginPage() {
         <GlassPanel className="w-full" padding="p-8 sm:p-10">
           <h1 className="mb-1 text-xl font-semibold text-ink">Sign in to your account</h1>
           <p className="mb-6 text-sm text-ink-sub">
-            For SaverMiles team members and partners.
+            For Saver Miles team members and partners.
           </p>
 
           <Suspense fallback={null}>

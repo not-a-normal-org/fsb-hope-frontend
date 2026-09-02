@@ -12,7 +12,7 @@ import LegalDoc from '@/components/site/LegalDoc';
 export const metadata: Metadata = {
   title: 'Terms & Conditions',
   description:
-    'The terms that govern SaverMiles award-search and alert services: fees, the deposit and success fee, refunds and cancellations, and the limits of what we do.',
+    'The terms that govern Saver Miles award-search and alert services: fees, the deposit and success fee, refunds and cancellations, and the limits of what we do.',
   robots: { index: true, follow: true },
 };
 
@@ -28,7 +28,7 @@ export default function TermsPage() {
     >
       <p>
         These Terms &amp; Conditions (the &ldquo;Terms&rdquo;) are a binding agreement between you
-        and <strong>Saver Miles LLC</strong>, a Wyoming limited liability company (&ldquo;SaverMiles,&rdquo;
+        and <strong>Saver Miles LLC</strong>, a Wyoming limited liability company (&ldquo;Saver Miles,&rdquo;
         &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), governing your access to and use of the
         website at savermiles.com and the services we provide (together, the &ldquo;Services&rdquo;). By
         using the Services, requesting a search, subscribing to an alert, or making a payment, you agree
@@ -37,7 +37,7 @@ export default function TermsPage() {
 
       <h2>1. Who we are, and what the Services are</h2>
       <p>
-        SaverMiles is a manual, human-run points-and-miles concierge. A specialist searches award
+        Saver Miles is a manual, human-run points-and-miles concierge. A specialist searches award
         availability by hand across loyalty programs and transfer partners and reports what is bookable
         with the points you already hold, together with the point cost and the steps to book. We offer
         one-off searches (for individuals and for businesses) and ongoing route alerts.
@@ -184,7 +184,7 @@ export default function TermsPage() {
 
       <h2>10. Intellectual property</h2>
       <p>
-        The website, its content, branding, and the SaverMiles name and marks are owned by us or our
+        The website, its content, branding, and the Saver Miles name and marks are owned by us or our
         licensors and are protected by intellectual-property laws. We grant you a limited, personal,
         non-exclusive, non-transferable license to use the website for its intended purpose. You may not
         copy, reproduce, republish, or exploit our content except as expressly permitted or with our
@@ -202,7 +202,7 @@ export default function TermsPage() {
 
       <h2>12. Limitation of liability</h2>
       <p>
-        To the fullest extent permitted by law, SaverMiles and its members, officers, employees, and
+        To the fullest extent permitted by law, Saver Miles and its members, officers, employees, and
         contractors will not be liable for any indirect, incidental, special, consequential, punitive, or
         exemplary damages, or for lost profits, points, miles, travel, opportunities, or data, arising out
         of or relating to the Services, even if advised of the possibility. Our total aggregate liability
@@ -214,7 +214,7 @@ export default function TermsPage() {
 
       <h2>13. Indemnification</h2>
       <p>
-        You agree to indemnify and hold harmless SaverMiles and its members, officers, employees, and
+        You agree to indemnify and hold harmless Saver Miles and its members, officers, employees, and
         contractors from any claims, damages, losses, liabilities, and expenses (including reasonable
         legal fees) arising out of your misuse of the Services, your violation of these Terms, or your
         violation of any law or third-party right, including the terms of any loyalty program.
