@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+
 import NavBar from '@/components/site/NavBar';
 import HomeHero from '@/components/site/HomeHero';
 import AudienceFork from '@/components/site/AudienceFork';
@@ -22,6 +24,16 @@ import Footer from '@/components/site/Footer';
  * src/proxy.ts rewrites anonymous requests to /maintenance (503).
  */
 export const dynamic = 'force-dynamic';
+
+// Home-page title override (absolute, so it bypasses the "%s | Saver Miles"
+// template). The site-wide tagline still serves as the meta description; only the
+// <title> and social titles change here.
+const HOME_TITLE = 'Saver Miles - Done for You Award Concierge Service';
+export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  openGraph: { title: HOME_TITLE },
+  twitter: { title: HOME_TITLE },
+};
 
 export default function Home() {
   return (
