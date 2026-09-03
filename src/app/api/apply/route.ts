@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendEmail } from '@/lib/email';
 import { SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── Email helpers ─────────────────────────────────────────────────────────────
 
@@ -271,31 +269,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     console.warn('[api/apply] newsletter upsert warning:', newsletterError.message);
   }
 
-  // Send emails via Resend
+  // Send emails (Gmail SMTP) — best-effort, never fails the request.
   const firstName = fullName.split(' ')[0];
   const adminEmailAddress = process.env.ADMIN_EMAIL ?? 'admin@savermiles.com';
 
-  const [applicantResult, adminResult] = await Promise.allSettled([
-    resend.emails.send({
-      from:    'Saver Miles <hello@savermiles.com>',
+  await Promise.allSettled([
+    sendEmail({
       to:      email,
       subject: 'Your application to Saver Miles has been received',
       html:    applicantEmail(firstName, selectedTier),
     }),
-    resend.emails.send({
-      from:    'Saver Miles <hello@savermiles.com>',
+    sendEmail({
       to:      adminEmailAddress,
+      replyTo: email,
       subject: `New application — ${fullName} (${selectedTier})`,
       html:    adminEmail({ fullName, email, phone, companyName, businessType, annualSpend, abn: abn ?? '', goals: goals ?? '', selectedTier, referralSource: referralSource ?? '' }),
     }),
   ]);
-
-  if (applicantResult.status === 'rejected') {
-    console.error('[api/apply] applicant email error:', applicantResult.reason);
-  }
-  if (adminResult.status === 'rejected') {
-    console.error('[api/apply] admin email error:', adminResult.reason);
-  }
 
   return NextResponse.json({ success: true });
 }

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
-import { SITE_URL, SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
+import { SITE_URL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -26,14 +26,9 @@ function isValidEmail(value: unknown): value is string {
 // ── Welcome email ─────────────────────────────────────────────────────────────
 
 async function sendWelcomeEmail(email: string, name?: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey || apiKey === 'your_resend_key') return; // not configured yet
-
-  const resend = new Resend(apiKey);
   const firstName = name?.split(' ')[0] ?? 'there';
 
-  await resend.emails.send({
-    from:    `Saver Miles <${SITE_EMAIL}>`,
+  await sendEmail({
     to:      email,
     subject: 'Welcome to Saver Miles ✈',
     html: `<!DOCTYPE html>

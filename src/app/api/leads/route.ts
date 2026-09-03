@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
 
 /**
@@ -11,7 +11,7 @@ import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
  *
  * Individual requires a route + email; business/contact are accepted too (the
  * business flow lands in a later slice). The DB write is the source of truth (so
- * no lead is lost); a best-effort Resend notification then emails the team at
+ * no lead is lost); a best-effort email notification then reaches the team at
  * hello@savermiles.com — its failure never fails the request.
  */
 export const dynamic = 'force-dynamic';
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 /**
  * Best-effort team notification. Awaited so it runs before the serverless
  * function is frozen, but its own failure is swallowed — the lead is already
- * saved, and a missing/placeholder RESEND_API_KEY just skips the send.
+ * saved, and unconfigured Gmail credentials just skip the send.
  */
 async function notifyTeam(record: {
   type: string;
@@ -129,12 +129,6 @@ async function notifyTeam(record: {
   referral_code: string | null;
   details: Record<string, string> | null;
 }): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey || apiKey === 'your_resend_key') {
-    console.warn('[api/leads] RESEND_API_KEY not configured — skipping team notification.');
-    return;
-  }
-
   const row = (label: string, value: string | null) =>
     value ? `<p><strong>${label}:</strong> ${esc(value)}</p>` : '';
   const detailRows = record.details
@@ -157,15 +151,10 @@ async function notifyTeam(record: {
     ${row('Referral', record.referral_code)}
   `;
 
-  try {
-    await new Resend(apiKey).emails.send({
-      from: 'SaverMiles <hello@savermiles.com>',
-      to: TEAM_INBOX,
-      replyTo: record.email,
-      subject: `New ${record.type} lead — ${record.route ?? record.email}`,
-      html,
-    });
-  } catch (err) {
-    console.error('[api/leads] team notification failed:', err instanceof Error ? err.message : err);
-  }
+  await sendEmail({
+    to: TEAM_INBOX,
+    replyTo: record.email,
+    subject: `New ${record.type} lead — ${record.route ?? record.email}`,
+    html,
+  });
 }
