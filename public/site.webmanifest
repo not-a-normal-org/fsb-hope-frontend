@@ -1,15 +1,21 @@
 {
-  "name": "SaverMiles",
-  "short_name": "SaverMiles",
-  "description": "Turn everyday points into Business Class. Concierge, research, and seat alerts for smart travellers.",
+  "name": "Saver Miles",
+  "short_name": "Saver Miles",
+  "description": "Award flights found by a real specialist, not an algorithm. A points-and-miles concierge.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#07090F",
-  "theme_color": "#07090F",
+  "background_color": "#0E1220",
+  "theme_color": "#0E1220",
   "icons": [
     {
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
