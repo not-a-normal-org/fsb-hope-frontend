@@ -7,7 +7,7 @@ import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constant
  * /legal/privacy — Privacy Policy. Grounded in the real data inventory: the
  * lead / newsletter / contact / application / alert / research forms, Stripe
  * payments (no card data stored by us), and the processors Supabase, Stripe,
- * Resend, Vercel. US (Wyoming) entity with GDPR + California sections. NOTE:
+ * Vercel, Google. US (Wyoming) entity with GDPR + California sections. NOTE:
  * structure-reviewed, not legal advice — have counsel sign off before launch.
  */
 export const metadata: Metadata = {
@@ -114,9 +114,9 @@ export default function PrivacyPage() {
         <li>
           <strong>Service providers (processors)</strong> who act on our instructions:
           {' '}<strong>Supabase</strong> (database and file storage), <strong>Stripe</strong> (payment
-          processing), <strong>Resend</strong> (transactional and newsletter email delivery),{' '}
-          <strong>Vercel</strong> (website hosting), and <strong>Google</strong> (Google Analytics, for
-          aggregate traffic measurement). Each receives only the data needed for its function.
+          processing), <strong>Vercel</strong> (website hosting), and <strong>Google</strong> (Google
+          Workspace, for transactional and newsletter email delivery; and Google Analytics, for aggregate
+          traffic measurement). Each receives only the data needed for its function.
         </li>
         <li>
           <strong>Affiliates.</strong> If you arrive through an affiliate link, we attribute your inquiry
@@ -152,7 +152,7 @@ export default function PrivacyPage() {
       <p>
         We use reasonable technical and organizational measures to protect personal information,
         including encrypted connections and access controls, and we rely on established providers
-        (Supabase, Stripe, Resend, Vercel, Google) with their own security programs. No method of transmission or
+        (Supabase, Stripe, Vercel, Google) with their own security programs. No method of transmission or
         storage is completely secure, so we cannot guarantee absolute security.
       </p>
 
