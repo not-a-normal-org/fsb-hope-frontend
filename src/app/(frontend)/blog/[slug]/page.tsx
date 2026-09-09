@@ -8,7 +8,8 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
-import { mediaPublicUrl, readingMinutes, wordCount, extractFaq } from '@/lib/blog';
+import { mediaPublicUrl, readingMinutes, wordCount, extractFaq, toBlogCard, type BlogCard } from '@/lib/blog';
+import { RelatedSidebar, RelatedInline, PostNav } from './post-parts';
 import {
   absoluteUrl,
   ogImageUrl,
@@ -45,6 +46,44 @@ async function getPost(slug: string) {
   }
 }
 
+/**
+ * The published-post pool (newest first) used to compute related posts and the
+ * prev/next pager. Degrades to [] on any DB error so the article still renders.
+ */
+async function getPostPool(): Promise<BlogCard[]> {
+  try {
+    const payload = await getPayloadClient();
+    const { docs } = await payload.find({
+      collection: 'posts',
+      where: { _status: { equals: 'published' } },
+      sort: '-publishedAt',
+      limit: 100,
+      depth: 1, // populate coverImage + category
+    });
+    return docs.map(toBlogCard);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * From the newest-first pool, pick up to 4 related posts (same category first,
+ * then most-recent others) and the chronologically adjacent posts: `next` is the
+ * newer neighbor, `prev` the older one.
+ */
+function postContext(pool: BlogCard[], slug: string, catSlug?: string) {
+  const idx = pool.findIndex((c) => c.slug === slug);
+  const next = idx > 0 ? pool[idx - 1] : null;
+  const prev = idx >= 0 && idx < pool.length - 1 ? pool[idx + 1] : null;
+
+  const rest = pool.filter((c) => c.slug !== slug);
+  const sameCat = catSlug ? rest.filter((c) => c.category?.slug === catSlug) : [];
+  const others = rest.filter((c) => !catSlug || c.category?.slug !== catSlug);
+  const related = [...sameCat, ...others].slice(0, 4);
+
+  return { related, prev, next };
+}
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
@@ -77,7 +116,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Params) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const [post, pool] = await Promise.all([getPost(slug), getPostPool()]);
   if (!post) notFound();
 
   const date = post.publishedAt
@@ -91,6 +130,7 @@ export default async function BlogPostPage({ params }: Params) {
   const cover = typeof post.coverImage === 'object' && post.coverImage ? post.coverImage : null;
   const category = typeof post.category === 'object' && post.category ? post.category : null;
   const catSlug = (category as { slug?: string } | null)?.slug;
+  const { related, prev, next } = postContext(pool, String(post.slug), catSlug);
 
   const reading = readingMinutes(post.content);
   const faqs = extractFaq(post.content);
@@ -123,44 +163,55 @@ export default async function BlogPostPage({ params }: Params) {
       ))}
       <NavBar />
 
-      <article className="relative">
-        <div className="mx-auto max-w-2xl px-6 pb-24 pt-16 md:pt-20">
-          <Link href="/blog" className="text-sm text-ink-sub transition-colors hover:text-ink">
-            ← All posts
-          </Link>
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16 md:pt-20">
+        <Link href="/blog" className="text-sm text-ink-sub transition-colors hover:text-ink">
+          ← All posts
+        </Link>
 
-          <header className="mt-8">
-            <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
-              {category?.name ? `${category.name} · ` : ''}
-              {post.author || 'Saver Miles Team'}
-              {date ? ` · ${date}` : ''}
-              {` · ${reading} min read`}
-            </p>
-            <h1 className="mt-4 font-display text-hero font-bold text-ink">{post.title}</h1>
-            {post.excerpt && (
-              <p className="mt-5 text-lg leading-relaxed text-ink-sub">{post.excerpt}</p>
+        <div
+          className={`mt-8 ${
+            related.length > 0 ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14' : 'mx-auto max-w-2xl'
+          }`}
+        >
+          <article className="min-w-0 max-w-2xl">
+            <header>
+              <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
+                {category?.name ? `${category.name} · ` : ''}
+                {post.author || 'Saver Miles Team'}
+                {date ? ` · ${date}` : ''}
+                {` · ${reading} min read`}
+              </p>
+              <h1 className="mt-4 font-display text-hero font-bold text-ink">{post.title}</h1>
+              {post.excerpt && (
+                <p className="mt-5 text-lg leading-relaxed text-ink-sub">{post.excerpt}</p>
+              )}
+            </header>
+
+            {(mediaPublicUrl(cover?.filename) ?? cover?.url) && (
+              <div className="mt-10 overflow-hidden rounded-2xl" style={{ border: '1px solid var(--sm-glass-border)' }}>
+                <Image
+                  src={(mediaPublicUrl(cover?.filename) ?? cover?.url) as string}
+                  alt={cover?.alt || post.title}
+                  width={cover?.width || 1200}
+                  height={cover?.height || 675}
+                  className="h-auto w-full"
+                />
+              </div>
             )}
-          </header>
 
-          {(mediaPublicUrl(cover?.filename) ?? cover?.url) && (
-            <div className="mt-10 overflow-hidden rounded-2xl" style={{ border: '1px solid var(--sm-glass-border)' }}>
-              <Image
-                src={(mediaPublicUrl(cover?.filename) ?? cover?.url) as string}
-                alt={cover?.alt || post.title}
-                width={cover?.width || 1200}
-                height={cover?.height || 675}
-                className="h-auto w-full"
-              />
-            </div>
-          )}
+            {post.content && (
+              <div className="sm-prose mt-10 text-ink-sub">
+                <RichText data={post.content as SerializedEditorState} />
+              </div>
+            )}
 
-          {post.content && (
-            <div className="sm-prose mt-10 text-ink-sub">
-              <RichText data={post.content as SerializedEditorState} />
-            </div>
-          )}
+            <PostNav prev={prev} next={next} />
+            <RelatedInline posts={related} />
+          </article>
+
+          <RelatedSidebar posts={related} />
         </div>
-      </article>
+      </div>
 
       <Footer />
     </>
