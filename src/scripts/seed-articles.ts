@@ -221,14 +221,22 @@ async function main() {
     const existing = await payload.find({ collection: 'posts', where: { slug: { equals: slug } }, limit: 1, depth: 0 });
     const prev = existing.docs[0] as { id: number; coverImage?: number | null } | undefined;
 
-    // Cover image: reuse the post's existing one on a re-run; otherwise upload.
+    // Cover image: normally reuse the post's existing one on a re-run. With
+    // RESEED_COVERS=1 set, re-upload from the <slug>.jpg source and REPLACE it —
+    // the one-off blog-art refresh — then remove the superseded media at the end
+    // so the storage bucket doesn't accumulate orphans.
+    const reseedCovers = process.env.RESEED_COVERS === '1' || process.env.RESEED_COVERS === 'true';
     let coverImage = prev?.coverImage ?? undefined;
-    if (!coverImage && existsSync(imgPath)) {
+    let oldCoverToDelete: number | undefined;
+    if (existsSync(imgPath) && (!coverImage || reseedCovers)) {
       const media = await payload.create({
         collection: 'media',
         filePath: imgPath,
-        data: { alt: `Editorial illustration for “${article.title}”` },
+        data: { alt: `Editorial photograph for “${article.title}”` },
       });
+      if (reseedCovers && coverImage && coverImage !== (media.id as number)) {
+        oldCoverToDelete = coverImage;
+      }
       coverImage = media.id as number;
       console.log(`  ↑ uploaded cover for "${slug}" → media ${coverImage}`);
     }
@@ -247,6 +255,15 @@ async function main() {
     if (prev) {
       await payload.update({ collection: 'posts', id: prev.id, data });
       console.log(`✓ updated "${slug}" (${article.category})`);
+      // Now that the post points at the new cover, drop the old media.
+      if (oldCoverToDelete) {
+        try {
+          await payload.delete({ collection: 'media', id: oldCoverToDelete });
+          console.log(`  ✗ removed superseded cover media ${oldCoverToDelete}`);
+        } catch (err) {
+          console.log(`  ! could not remove old cover media ${oldCoverToDelete}: ${(err as Error).message}`);
+        }
+      }
     } else {
       await payload.create({
         collection: 'posts',
