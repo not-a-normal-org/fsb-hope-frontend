@@ -5,6 +5,15 @@ EXCERPT: Nobody flies for literally free, but you can pay for a $2,400 seat with
 META_TITLE: How to Fly for Free with Credit Card Points
 META_DESCRIPTION: What award travel actually is, which points to hold, and the transfer mistake that costs the most. A plain-English guide to booking flights with credit card points.
 ---BODY---
+**"Flying for free" means covering the fare, the expensive part, with points you already earned, then paying only taxes, sometimes $43, sometimes several hundred.** Award travel works in six steps: earn transferable points, understand that award seats are limited inventory, find the seat first, book it through the cheapest program that can sell it, check the fees, then book. The costliest mistake is transferring points before the seat is confirmed.
+
+## Key takeaways
+
+- Hold transferable bank points (Amex, Chase, Capital One, Citi, Bilt); they move to many programs at 1:1 and let you book through whichever prices the seat cheapest.
+- An award seat is released inventory, not any open seat; a full cash flight can have zero award space, and the same seat costs different amounts in different programs.
+- Never transfer before the seat is confirmed: transfers are one-way, some take days, and tools show phantom space that vanishes at checkout.
+- Run the value math: (cash fare minus cash fees) divided by points spent; if it lands near a cent, take cashback instead.
+
 You have points. You have a trip in mind. Somewhere between those two facts is a system that almost nobody explains properly, so here it is properly: what award travel actually is, how the pieces fit, and where people lose money without realising it.
 
 ## First, the honest version of "free"

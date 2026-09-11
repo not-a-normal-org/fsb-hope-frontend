@@ -5,6 +5,15 @@ EXCERPT: Seats.aero, Point.me and Roame scan award space fast. Here is the exact
 META_TITLE: Human vs. Award-Search Tools: The Real Gap
 META_DESCRIPTION: What Seats.aero, Point.me and Roame do well, and the verification, routing and booking work a human specialist handles after the search.
 ---BODY---
+**Award-search tools find where space might be; a human confirms it and books it.** Tools like Seats.aero, Point.me and Roame scan availability fast, but they cannot verify a displayed seat is actually bookable, price the surcharges and transfer tradeoffs for the points you hold, solve multi-passenger or multi-city routings, or move your miles safely. That closing work is the specialist's job.
+
+## Key takeaways
+
+- Award tools do discovery: fast, broad searches across roughly 15 to 30 programs. That is the front half of the job, not a ticket.
+- A search result is a cached snapshot, not a promise; a person re-confirms the seat in the program you would actually book through.
+- The cheapest headline point cost ignores fuel surcharges, transfer ratios, and which currency you already hold.
+- The hard cases, multiple passengers in one cabin, multi-city routings, points scattered across programs, are where a specialist earns their place.
+
 Award-search tools have changed how people find point flights. A decade ago, checking a single route across a handful of programs meant loading airline sites one by one. Now a tool can sweep a year of dates across dozens of programs in seconds. That is real progress, and it is worth crediting plainly.
 
 But finding *availability* and holding a *ticket* are two different things. The tools are very good at the first. The gap between the two is where a human specialist spends most of the work. This is a fair look at both: what the software genuinely does well, and what still needs a person.

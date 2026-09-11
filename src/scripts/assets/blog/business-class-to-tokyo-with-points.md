@@ -5,6 +5,15 @@ EXCERPT: A practical guide to flying US–Tokyo business class on points: which 
 META_TITLE: Book Business Class to Tokyo With Points
 META_DESCRIPTION: Which programs reach ANA and JAL business class US–Tokyo, the typical point ranges, and the watch-outs that trip up most bookings.
 ---BODY---
+**US to Tokyo business class runs roughly 52,500 to 60,000 points one-way, but only if you book through the right partner.** ANA and Japan Airlines fly the seats worth chasing; you reach them by transferring flexible card points into a partner program that prices the seat low and can see the space. ANA via Virgin Atlantic and JAL via American AAdvantage are the standout paths.
+
+## Key takeaways
+
+- ANA business via Virgin Atlantic prices around 52,500 points one-way from the West Coast and about 60,000 from the East Coast, plus fuel surcharges.
+- JAL business via American AAdvantage is about 60,000 miles one-way with near-zero taxes, one of the cleanest redemptions on the route.
+- Space opens in two windows: schedule release around eleven months out, and the final one to two weeks before departure; the middle months are leanest.
+- Confirm the seat before transferring, since ANA transfers are not instant and the same seat carries very different surcharges by program.
+
 Tokyo is one of the most rewarding award routes flying out of the US, and one of the most contested. The lie-flat seats people actually want to sit in (ANA's "The Room," Japan Airlines' Sky Suite) get redeemed fast, and the programs that price them cheaply are not always the programs you have points in. Booking this route well is less about finding a secret rate and more about knowing which door to walk through, and when. Here is how the US–Tokyo business-class map looks at the time of writing, and where the value actually sits.
 
 ## The two seats worth chasing

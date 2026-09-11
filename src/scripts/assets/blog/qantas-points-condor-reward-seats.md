@@ -5,6 +5,15 @@ EXCERPT: Qantas Frequent Flyer just added German leisure airline Condor as a par
 META_TITLE: Redeem Qantas Points on Condor Flights: Rates and Routes
 META_DESCRIPTION: Qantas Frequent Flyer now books Condor reward seats in Economy, Premium Economy and Business. Sample point costs, the best routes, and how US points get you there.
 ---BODY---
+**As of September 1, 2026, Qantas Frequent Flyer members can redeem points for Classic Reward seats on Condor**, the Frankfurt-based leisure airline, in Economy, Premium Economy and Business. It is redemption-only (you spend Qantas Points, you cannot earn them by flying Condor), and US flyers can reach it through transferable cards like American Express, Citi, Capital One and Bilt. A long-haul Condor business seat runs around 100,000 points plus surcharges.
+
+## Key takeaways
+
+- Redemption-only: spend Qantas Points on Condor flights, but you cannot earn Qantas Points or status by flying it.
+- Sample rates: about 108,000 points Bangkok to Frankfurt in Business, 51,800 points Los Angeles to Frankfurt in Economy, and 16,100-point short intra-Europe hops, all plus taxes and carrier charges.
+- Best pattern for US flyers: a transatlantic hop into Frankfurt, then Condor's cheap European and Mediterranean network from there.
+- Golden rule: confirm the Condor seat first, then transfer, because transfers into Qantas are effectively one-way.
+
 Qantas Frequent Flyer has added a new airline partner, and this one opens up a stretch of Europe that was previously hard to reach on points. As of September 1, 2026, members can redeem Qantas Points for Classic Reward seats on Condor, the Frankfurt-based leisure airline known for its beach-towel striped aircraft. The addition pushes the Qantas program past 30 airline partners and roughly 1,300 destinations, and it puts hundreds of thousands of new reward seats across Europe, the Mediterranean, North America, and the Caribbean within reach of a points balance.
 
 If you have never flown Qantas and never plan to, this still matters. Qantas Points are reachable in the United States through several transferable card currencies, which means a Condor business-class seat to Frankfurt can be booked with points you earned on everyday spending. Below is what the partnership actually delivers, what it costs, and the one discipline that keeps you from wasting points on it.

@@ -5,6 +5,15 @@ EXCERPT: Two people book the same seat with points. One pays $50 in cash, the ot
 META_TITLE: How to Avoid Fuel Surcharges on Award Flights
 META_DESCRIPTION: Carrier-imposed surcharges can add hundreds to a "free" award flight. Learn which programs pass them through, which absorb them, and how to route around them.
 ---BODY---
+**A carrier-imposed surcharge (the "YQ" line) is airline revenue added to an award ticket in cash on top of your miles, and whether you pay it depends on the program you book through, not the flight you take.** The same Lufthansa business seat can cost roughly $50 booked through Air Canada Aeroplan or United and $800 or more booked through Lufthansa's own Miles &amp; More. Choosing the booking program is how you avoid it.
+
+## Key takeaways
+
+- Surcharges are set by the airline and paid in cash on award tickets; genuine government taxes are separate and usually modest.
+- High pass-through programs include British Airways, Lufthansa Miles &amp; More, and Virgin Atlantic on its own metal; low-or-none programs include Air Canada Aeroplan, United, Avianca LifeMiles, and Turkish.
+- The surcharge depends on the intersection of program, operating carrier, and route, not the program alone.
+- Decide the surcharge-free booking path before you transfer, because points are flexible only until they land in a high-surcharge program.
+
 You redeemed the points. The seat is yours. Then the payment screen asks for another $786 in cash, and the "free" flight suddenly isn't.
 
 That charge usually isn't tax. It's a **carrier-imposed surcharge**, the fee airlines list on your ticket as "YQ," and it is the single most misunderstood cost in award travel. The frustrating part: the exact same seat, on the exact same plane, can cost you $50 or $800 depending only on which loyalty program you used to book it. Nothing about the flight changes. Only the paperwork does.

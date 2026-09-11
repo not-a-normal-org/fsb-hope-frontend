@@ -5,6 +5,15 @@ EXCERPT: Transferable card points become airline miles through partner programs,
 META_TITLE: Transfer Partners Explained: Card Points to Miles
 META_DESCRIPTION: How Amex, Chase, Citi, Capital One and Bilt points convert to airline miles: ratios, transfer times, and the one rule that prevents wasted points.
 ---BODY---
+**Transferable card points, from Amex, Chase, Citi, Capital One and Bilt, become airline miles by moving into a partner program, usually at 1:1 and almost always irreversibly.** The single rule that prevents wasted points: confirm the award seat is bookable before you transfer, because a transfer you cannot use cannot be undone.
+
+## Key takeaways
+
+- Five transferable currencies each partner with many airline and hotel programs; you book the same seat through whichever charges the fewest miles.
+- Most transfers are 1:1, but exceptions (American Express to Emirates at 5:4, some Citi cards at 10:7) quietly erase 20 to 30 percent, so check your exact card and partner.
+- Transfer speed is a booking risk: most airlines post instantly, while ANA, Singapore KrisFlyer and Iberia can take a day or two.
+- Golden rule: find the seat, verify the ratio, transfer only what the booking needs, then book immediately.
+
 Transferable points are the most flexible currency in the miles world, and the one beginners misuse most. The mistake is almost always the same: moving points to an airline before there's a seat to book. Transfers are usually irreversible. Get the order wrong and you can strand tens of thousands of points in a program you never meant to use.
 
 This guide explains what transferable points are, how partner transfers actually work, and the single discipline that separates a clean redemption from a costly one.

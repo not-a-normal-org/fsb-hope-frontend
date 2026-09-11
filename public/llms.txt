@@ -1,0 +1,28 @@
+# Saver Miles
+
+> Saver Miles is a done-for-you award-flight concierge. A real specialist searches award space by hand across 30+ airline and hotel loyalty programs, confirms seats are genuinely bookable, and tells you exactly which points to move and when. No algorithm handing back a cached result: a person who checked.
+
+## About
+
+- [How it works](https://www.savermiles.com/how-it-works): The manual, human search process, from a free points audit to a booked ticket.
+- [Pricing](https://www.savermiles.com/pricing): What a hand-checked award search and booking costs.
+- [Flight alerts](https://www.savermiles.com/alerts): An ongoing watch for award space on a specific route, cabin, and date.
+- [Free points audit](https://www.savermiles.com/individual): Tell us your balances and route; a specialist says what they can actually book.
+
+## Blog: award-travel guides and deals
+
+- [How to Fly for Free with Your Credit Card Points](https://www.savermiles.com/blog/how-to-fly-for-free-with-credit-card-points): The foundation guide to award travel. Which points to hold, what an award seat really is, and the transfer mistake that costs the most.
+- [Transfer Partners, Demystified: Points Into Miles](https://www.savermiles.com/blog/transfer-partners-explained-guide): How Amex, Chase, Citi, Capital One and Bilt points convert to airline miles. Ratios, transfer times, and the golden rule that prevents wasted points.
+- [Phantom Award Space: Why "Available" Seats Vanish](https://www.savermiles.com/blog/phantom-award-space-why-seats-vanish): Why search tools show award seats that do not hold at booking, and how a human confirms a seat is real before you transfer points.
+- [Fuel Surcharges: The Hidden Cost of Your "Free" Flight](https://www.savermiles.com/blog/avoid-fuel-surcharges-award-flights): Why the same award seat can cost $50 or $800 in cash, and which programs to book through to avoid carrier-imposed surcharges.
+- [A Human vs. the Award-Search Tools](https://www.savermiles.com/blog/human-vs-award-search-tools): What Seats.aero, Point.me and Roame do well, and the verification, routing and booking work a person handles after the search.
+- ["No Award Space." What a Specialist Does Next](https://www.savermiles.com/blog/no-award-space-what-a-specialist-does): The moves a specialist makes when a search returns zero seats. Partner inventory, phone desks, waitlists, and reshaping the trip.
+- [How to Actually Book Business Class to Tokyo With Points](https://www.savermiles.com/blog/business-class-to-tokyo-with-points): Which programs reach ANA and JAL business class US to Tokyo, the typical point ranges, and when the seats open up.
+- [Flying the Whole Family Up Front on Points](https://www.savermiles.com/blog/book-premium-seats-for-family-with-points): How to book two to four premium award seats together. Pooling points, splitting across programs, and realistic point costs.
+- [Qantas Points Now Book Condor: Reward Seats to Europe](https://www.savermiles.com/blog/qantas-points-condor-reward-seats): What the new Qantas Frequent Flyer partnership with Condor costs in points, the best routes, and how US points get you there.
+
+## Optional
+
+- [Blog index](https://www.savermiles.com/blog): All award-travel guides and deals.
+- [Privacy Policy](https://www.savermiles.com/legal/privacy)
+- [Terms of Service](https://www.savermiles.com/legal/terms)
