@@ -5,6 +5,15 @@ EXCERPT: Booking two to four premium seats together is the hardest award problem
 META_TITLE: Book Premium Family Seats With Points
 META_DESCRIPTION: How to book 2–4 business or first class award seats together for a family: strategy, realistic point ranges, and where a human specialist beats a solo search.
 ---BODY---
+**Booking two to four premium award seats together is the hardest common award request, because airlines release premium seats one or two at a time.** It is regularly done, but rarely from a single search: the seats are assembled by booking early or after a schedule change, splitting travelers across programs and partners, pooling household points, and staying flexible on dates and cabins.
+
+## Key takeaways
+
+- Premium cabins release a seat or two at a time; four together are found most reliably at schedule opening (about 11 to 12 months out) or after a schedule change.
+- Assemble seats from several sources: two travelers through one program and two through another, plus mixed-cabin or split-flight plans when one cabin is full.
+- Pool points through official programs (British Airways Household Account up to seven members; Air Canada Aeroplan Family Sharing up to eight), or run two currencies in parallel.
+- Typical cost per person round trip: about 100,000 to 160,000 points transatlantic business, 150,000 to 250,000 to Asia, plus surcharges that vary sharply by program.
+
 One business class seat to Europe is a solvable puzzle. Four seats on the same flight, in the same cabin, on the dates a family can actually travel, is a different order of difficulty. This is the request that breaks most do-it-yourself searches, and it is the one people most want to get right, because it is usually a once-a-year trip with children in tow.
 
 The good news is that it is regularly done. It just rewards planning, flexibility, and knowing which levers to pull, in what order. Here is how a family should think about it.
