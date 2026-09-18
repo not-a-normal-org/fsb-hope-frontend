@@ -1,7 +1,8 @@
 import GlassPanel from '@/components/system/GlassPanel';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { User } from '@/payload-types';
-import { MyLeadStatusSelect } from './AssignedLeadControls';
+import { describeLead, leadSummary, formatReceived } from '@/lib/leads';
+import { MyLeadStatusSelect, MyLeadViewButton } from './AssignedLeadControls';
 
 interface QueueLead {
   id: string;
@@ -13,6 +14,8 @@ interface QueueLead {
   phone: string | null;
   points_held: string | null;
   points_budget: string | null;
+  yearly_spend: string | null;
+  details: Record<string, unknown> | null;
   status: string;
   created_at: string;
 }
@@ -32,7 +35,7 @@ function fmtDate(iso: string): string {
 export default async function AssignedLeadsDashboard({ user }: { user: User }) {
   const { data, error } = await supabaseAdmin
     .from('leads')
-    .select('id, type, route, flight_need, email, whatsapp, phone, points_held, points_budget, status, created_at')
+    .select('id, type, route, flight_need, email, whatsapp, phone, points_held, points_budget, yearly_spend, details, status, created_at')
     .eq('assigned_to', user.id)
     .order('created_at', { ascending: false });
 
@@ -72,8 +75,8 @@ export default async function AssignedLeadsDashboard({ user }: { user: User }) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[color:var(--sm-glass-border)]">
-                  {['Request', 'Contact', 'Points', 'Status', 'Received'].map((h) => (
-                    <th key={h} className="px-6 py-3 text-left font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink-muted whitespace-nowrap">
+                  {['Request', 'Contact', 'Points', 'Status', 'Received', ''].map((h, hi) => (
+                    <th key={h || `col-${hi}`} className="px-6 py-3 text-left font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink-muted whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -84,7 +87,10 @@ export default async function AssignedLeadsDashboard({ user }: { user: User }) {
                   <tr key={l.id} className={i < leads.length - 1 ? 'border-b border-[color:var(--sm-glass-border)]' : ''}>
                     <td className="px-6 py-3.5">
                       <p className="font-medium text-ink">{l.route || l.flight_need || '—'}</p>
-                      <p className="text-xs text-ink-muted capitalize">{l.type ?? 'lead'}</p>
+                      <p className="text-xs text-ink-muted">
+                        <span className="capitalize">{l.type ?? 'lead'}</span>
+                        {leadSummary(l) && ` · ${leadSummary(l)}`}
+                      </p>
                     </td>
                     <td className="px-6 py-3.5">
                       <p className="text-ink-sub">{l.email ?? '—'}</p>
@@ -100,6 +106,14 @@ export default async function AssignedLeadsDashboard({ user }: { user: User }) {
                     </td>
                     <td className="px-6 py-3.5 text-ink-sub tabular-nums whitespace-nowrap text-xs">
                       {fmtDate(l.created_at)}
+                    </td>
+                    <td className="px-6 py-3.5 text-right">
+                      {/* Assignees already see contact for their own leads, so the view includes it. */}
+                      <MyLeadViewButton
+                        heading={l.route || l.flight_need || 'Lead'}
+                        meta={`Received ${formatReceived(l.created_at)}`}
+                        sections={describeLead(l, { includeContact: true })}
+                      />
                     </td>
                   </tr>
                 ))}

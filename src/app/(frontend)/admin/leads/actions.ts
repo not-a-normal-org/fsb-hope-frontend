@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { LEAD_STATUSES } from '@/lib/leads';
+import { LEAD_DETAIL_KEYS, LEAD_STATUSES } from '@/lib/leads';
 import { getCurrentUser } from '@/lib/auth';
 import { hasRole } from '@/lib/access';
 import { logAudit } from '@/lib/audit';
@@ -25,7 +25,8 @@ export type UpdateLeadInput = {
   points_held?: string;
   yearly_spend?: string;
   points_budget?: string;
-  notes?: string;
+  /** Questionnaire answers (leads.details). Only LEAD_DETAIL_KEYS are kept. */
+  details?: Record<string, string>;
 };
 
 type LeadActionResult = { ok: true } | { ok: false; error: string };
@@ -53,16 +54,20 @@ export async function updateLead(leadId: string, input: UpdateLeadInput): Promis
     return { ok: false, error: 'A valid email is required.' };
   }
 
-  // Merge notes into the details jsonb, preserving the other questionnaire keys.
+  // Merge the edited answers into the details jsonb. Only known questionnaire
+  // keys are touched; anything else already stored is preserved as-is.
   const { data: existing } = await supabaseAdmin
     .from('leads')
     .select('details')
     .eq('id', leadId)
     .single();
   const details = { ...((existing?.details as Record<string, unknown> | null) ?? {}) };
-  const notes = clean(input.notes);
-  if (notes) details.notes = notes;
-  else delete details.notes;
+  for (const key of LEAD_DETAIL_KEYS) {
+    if (!input.details || !(key in input.details)) continue;
+    const value = clean(input.details[key]);
+    if (value) details[key] = value;
+    else delete details[key];
+  }
 
   const { error } = await supabaseAdmin
     .from('leads')
