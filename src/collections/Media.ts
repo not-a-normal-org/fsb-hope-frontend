@@ -9,8 +9,9 @@ import { contentAccess } from './access';
  * Renders, smallest to largest: `thumbnail` (CMS list view), `card` (the 3-up
  * blog grid), `wide` (the blog index's "Latest" featured card, which is drawn
  * roughly twice as large as a grid card), and `og` (1200×630 social cards).
- * Cover images should be uploaded at 1600×1000 — see docs/blog-images.md; every
- * render above is derived down from that, and Payload never upscales.
+ * Cover images should be uploaded 1600 px wide at 16:9 (1600×893), see
+ * docs/blog-guide/images.md; every render above is derived down from that, and
+ * Payload never upscales.
  *
  * `alt` is required for accessibility.
  */

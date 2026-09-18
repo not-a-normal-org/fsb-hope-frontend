@@ -256,7 +256,7 @@ export interface Post {
   } | null;
   publishedAt?: string | null;
   /**
-   * Upload at 1600×1000 (16:10). The blog grid crops to 16:10, but the “Latest” featured card crops tighter — keep the subject in the middle and no text near the edges. See docs/blog-images.md.
+   * Upload at 1600 px wide, 16:9 (1600×893). The blog grid crops to 16:10 and the “Latest” featured card crops tighter, so keep the subject in the middle 60% and no text in frame. See docs/blog-guide/images.md.
    */
   coverImage?: (number | null) | Media;
   category?: (number | null) | Category;
