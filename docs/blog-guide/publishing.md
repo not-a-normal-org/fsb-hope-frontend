@@ -46,6 +46,11 @@ or `TITLE` or `EXCERPT` is empty.
    sed 's/\x1b\[[0-9;]*[A-Za-z]//g' /tmp/seed.log | tr '\r' '\n' | grep -E '✓|↑|failed|Refusing'
    ```
    For a new post, expect exactly `↑ uploaded cover` and `✓ created "<slug>"`.
+   **If the log holds only the two npm header lines, nothing ran and nothing was written.** It has
+   happened on the first real run of a session (twice on 2026-09-18, exit code still 0); an
+   immediate re-run worked both times. Dry runs never hit it. Root cause is still open, somewhere in
+   `payload run`'s tsx loading. So never trust the exit code: confirm the `✓` line, then confirm on
+   production.
 5. Verify on production (below), then open the PR. The post is already live, so merging just
    lands the source files, which keeps future reseeds consistent.
 
