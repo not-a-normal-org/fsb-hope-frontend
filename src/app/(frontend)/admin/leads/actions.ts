@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { LEAD_DETAIL_KEYS, LEAD_STATUSES } from '@/lib/leads';
+import { LEAD_DETAIL_KEYS, LEAD_STATUSES, composeRoute } from '@/lib/leads';
 import { getCurrentUser } from '@/lib/auth';
 import { hasRole } from '@/lib/access';
 import { logAudit } from '@/lib/audit';
@@ -75,7 +75,10 @@ export async function updateLead(leadId: string, input: UpdateLeadInput): Promis
       email,
       whatsapp: clean(input.whatsapp, 40),
       phone: clean(input.phone, 40),
-      route: clean(input.route),
+      // Leads with From/To keep `route` derived from them, so the table can't go stale.
+      route:
+        composeRoute(details.origin as string | undefined, details.destination as string | undefined) ??
+        clean(input.route),
       flight_need: clean(input.flight_need),
       points_held: clean(input.points_held),
       yearly_spend: clean(input.yearly_spend),
