@@ -1,5 +1,7 @@
 # Copy rewrite — current vs. updated
 
+> **Superseded (PR #55):** the "built for the AI era" positioning is retired; the voice is human-first ("a real specialist checked this"). Blog voice lives in [`docs/blog-guide/writing-guide.md`](docs/blog-guide/writing-guide.md).
+
 Voice: **customized for you, built for the AI era.** A concierge model, not self-serve. The core promise is "tell us your plans and forget them, a specialist is assigned to you, and getting the most out of your points is our job." We position against a broken award-travel system that we fix.
 
 Deliberate word choices:
