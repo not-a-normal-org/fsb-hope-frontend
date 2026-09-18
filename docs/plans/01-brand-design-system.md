@@ -146,7 +146,7 @@ The site should feel alive, not busy. Rules:
 ## 6. Iconography & imagery
 
 - No stock travel photography (airplane wings, sunset beaches). It undercuts the precise/data-driven positioning and every competitor already uses it.
-  - **Scoped exception: blog post covers.** At the owner's direction (PR #64), blog covers use realistic editorial luxury-travel photography, with no stock clichés, liveries, logos or text. See [`docs/blog-guide/images.md`](../blog-guide/images.md). Marketing pages and UI keep this rule.
+  - **Scoped exception: blog post covers.** At the owner's direction (PR #64), blog covers use realistic editorial luxury-travel photography, with no stock clichés, liveries or logos. Comparison posts get an explanatory split cover with labels set in the brand fonts (never AI-rendered text). See [`docs/blog-guide/images.md`](../blog-guide/images.md). Marketing pages and UI keep this rule.
 - Where visual interest is needed beyond glass/blobs, prefer abstract data-driven visuals: the departure-board/flip motif from the original prelaunch page is on-brand and can be reintroduced as a component within this new system (recolored to the blue glass tokens), not photography.
 - Icons: a single consistent icon set (Lucide, since it's already available in the component library) at consistent stroke width. No mixed icon styles.
 

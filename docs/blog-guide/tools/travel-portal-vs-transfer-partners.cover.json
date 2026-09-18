@@ -1,0 +1,22 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "out": "src/scripts/assets/blog/travel-portal-vs-transfer-partners.jpg",
+  "badge": "VS",
+  "blur": 2.2,
+  "left": {
+    "image": "/tmp/cover/portal-laptop.png",
+    "focusX": 0.52,
+    "eyebrow": "Book with points as cash",
+    "title": "Travel portal",
+    "items": ["Chase Travel", "Amex Travel", "Capital One Travel"],
+    "note": "Simple, usually about 1¢ a point"
+  },
+  "right": {
+    "image": "/tmp/cover/partner-tails.png",
+    "focusX": 0.40,
+    "eyebrow": "Move points to an airline",
+    "title": "Transfer partners",
+    "items": ["United MileagePlus", "Air Canada Aeroplan", "Virgin Atlantic Flying Club"],
+    "note": "More work, often worth far more"
+  }
+}
