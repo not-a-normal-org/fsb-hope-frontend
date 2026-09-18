@@ -102,6 +102,8 @@ No, and the difference matters. Genuine government taxes and airport fees (depar
 
 Not by asking. The surcharge is baked into the ticket you bought, so there's no refund lever after the fact. The only real control is on the front end: pick a program that doesn't levy the fee, or route around the carrier that does, before you commit the points. Once miles land in a high-surcharge program, your options narrow considerably.
 
+## Find the program that skips the surcharge
+
 If you're sitting on points and not sure which program spends them without the surcharge tax, start with a free [points audit](/individual). We'll look at what you have and where it flies cheapest. New to all of this? The [foundation guide](/blog/how-to-fly-for-free-with-credit-card-points) covers the basics first, [how it works](/how-it-works) explains the process, and [our pricing](/pricing) lays out what a hand-checked booking costs. For a worked example of surcharge-aware routing in practice, see [business class to Tokyo with points](/blog/business-class-to-tokyo-with-points).
 
 The seat is only free if you don't overpay in cash to sit in it. Knowing the difference is the whole point.

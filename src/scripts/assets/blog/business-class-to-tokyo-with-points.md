@@ -105,4 +105,6 @@ Aim for the release windows. The most reliable time is when the schedule first o
 
 You need points in a flexible program that transfers to the right partner. Amex reaches ANA's own program and Virgin Atlantic; Chase and Citi also reach Virgin at the time of writing; American miles are their own currency. The [transfer partners guide](/blog/transfer-partners-explained-guide) maps which currencies open which doors.
 
+## Planning Tokyo on points
+
 If Tokyo is on your list, start with a free [points audit](/individual), and we will look at what you already have and tell you what it can actually book. Here is [how it works](/how-it-works), and what a search [costs](/pricing).

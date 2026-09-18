@@ -112,4 +112,6 @@ For long-haul on the A330neo, generally yes. The lie-flat Business seat in a 1-2
 
 Transferring points before the seat is confirmed. Award space on a new partner can be volatile and occasionally phantom, and transfers into Qantas do not reverse. Always confirm the exact Condor segment is bookable, in your cabin and dates, then transfer only what that booking requires, then book immediately.
 
+## Is Condor the best use of your points?
+
 If you are holding points and want a person to tell you whether a Condor redemption is genuinely the best use of them, [start a free points audit](/individual) and a specialist will look at your balances and your route.
