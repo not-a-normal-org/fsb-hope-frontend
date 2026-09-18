@@ -109,4 +109,6 @@ It depends entirely on the partner. Most airline programs post miles instantly o
 
 There isn't one. The best partner is whichever program prices your specific route in the fewest miles, has a seat available, and transfers at a ratio and speed you can live with. That answer changes trip by trip, which is the whole reason transferable points are valuable.
 
+## Transfer once, in the right direction
+
 If you're holding transferable points and unsure how to use them without wasting them, [start with a free points audit](/individual). A specialist will look at your balances and tell you what they're genuinely worth.
