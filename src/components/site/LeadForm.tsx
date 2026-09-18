@@ -1,8 +1,18 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { cloneElement, useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, Loader2, ChevronDown } from 'lucide-react';
+
+import {
+  CABIN_OPTIONS,
+  FLEXIBILITY_OPTIONS,
+  PASSENGER_OPTIONS,
+  ROUTE_FLEX_OPTIONS,
+  TRIP_TYPE_OPTIONS,
+  composeRoute,
+  type LeadOption,
+} from '@/lib/leads';
 
 export type LeadType = 'individual' | 'business';
 type Status = 'form' | 'submitting' | 'success';
@@ -10,7 +20,10 @@ type Change = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextA
 
 const EMPTY = {
   // individual
-  route: '',
+  origin: '',
+  destination: '',
+  route_flexibility: '',
+  trip_type: '',
   dates: '',
   flexibility: '',
   passengers: '',
@@ -27,12 +40,18 @@ const EMPTY = {
   email: '',
 };
 
-const TOTAL_STEPS = 4;
+/** Split a pre-filled "JFK → NRT" (deal tiles) into From/To; anything else is taken as the destination. */
+function splitRoute(route?: string): { origin: string; destination: string } {
+  const parts = (route ?? '').split(/\s*(?:→|->)\s*/).map((p) => p.trim()).filter(Boolean);
+  return parts.length === 2
+    ? { origin: parts[0], destination: parts[1] }
+    : { origin: '', destination: (route ?? '').trim() };
+}
 
 /**
  * Multi-step lead-capture form (docs/plans/02) — the reusable body shared by the
  * `LeadModal` popup and the standalone `/audit` page. Two flows behind one `type`:
- *  - individual: trip (route/dates/flexibility) → travelers → points → contact
+ *  - individual: route (from/to/flexibility/trip type) → dates → travelers → points → contact
  *  - business:   spend → team's routes → points/budget → callback
  * Posts to /api/leads (typed columns + the rest in leads.details jsonb), which
  * also emails hello@savermiles.com.
@@ -64,7 +83,8 @@ export default function LeadForm({
   const [step, setStep] = useState(0);
   const [status, setStatus] = useState<Status>('form');
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState(() => ({ ...EMPTY, route: initialRoute ?? '' }));
+  const [data, setData] = useState(() => ({ ...EMPTY, ...splitRoute(initialRoute) }));
+  const totalSteps = business ? 4 : 5;
 
   const rootRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
@@ -101,11 +121,15 @@ export default function LeadForm({
           }
         : {
             type,
-            route: data.route,
+            route: composeRoute(data.origin, data.destination),
             points_held: data.points_held,
             email: data.email,
             whatsapp: data.whatsapp,
             details: {
+              origin: data.origin,
+              destination: data.destination,
+              route_flexibility: data.route_flexibility,
+              trip_type: data.trip_type,
               dates: data.dates,
               flexibility: data.flexibility,
               passengers: data.passengers,
@@ -129,11 +153,12 @@ export default function LeadForm({
     }
   };
 
-  const canAdvance = !business && step === 0 ? data.route.trim().length > 0 : true;
+  const canAdvance =
+    !business && step === 0 ? Boolean(data.origin.trim() && data.destination.trim()) : true;
 
   const goNext = () => {
     if (!canAdvance) {
-      setError('Please tell us where you want to go.');
+      setError('Please tell us where you’re flying from and to.');
       return;
     }
     setError(null);
@@ -148,14 +173,24 @@ export default function LeadForm({
     switch (s) {
       case 0:
         return (
-          <Step titleId={titleId} title="Where & when?" hint="Your destination and rough timing, exact dates optional.">
-            <Labeled label="Where to?">
+          <Step titleId={titleId} title="Where to?" hint="Cities or airports are both fine.">
+            <Labeled label="Flying from">
               <input
                 data-autofocus
                 type="text"
-                value={data.route}
-                onChange={set('route')}
-                placeholder="e.g. New York → Tokyo, or JFK–NRT"
+                value={data.origin}
+                onChange={set('origin')}
+                placeholder="e.g. New York (JFK), or anywhere on the West Coast"
+                className={inputClass}
+                style={inputStyle}
+              />
+            </Labeled>
+            <Labeled label="Flying to">
+              <input
+                type="text"
+                value={data.destination}
+                onChange={set('destination')}
+                placeholder="e.g. Tokyo, or Tokyo / Singapore / Hong Kong"
                 className={inputClass}
                 style={inputStyle}
                 onKeyDown={(e) => {
@@ -163,8 +198,30 @@ export default function LeadForm({
                 }}
               />
             </Labeled>
-            <Labeled label="When? (optional)">
+            <Labeled
+              label="Open to nearby airports or other cities?"
+              hint="Being flexible on either end widens the search a lot, and often finds the better seat."
+            >
+              <Select value={data.route_flexibility} onChange={set('route_flexibility')}>
+                <option value="">Choose one…</option>
+                <Options options={ROUTE_FLEX_OPTIONS} />
+              </Select>
+            </Labeled>
+            <Labeled label="Trip type" hint="Multi-city includes open-jaw, like flying into Amsterdam and home from Dublin.">
+              <Select value={data.trip_type} onChange={set('trip_type')}>
+                <option value="">Choose one…</option>
+                <Options options={TRIP_TYPE_OPTIONS} />
+              </Select>
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 1:
+        return (
+          <Step titleId={titleId} title="When?" hint="Rough timing is fine, exact dates optional.">
+            <Labeled label="Dates or timing (optional)">
               <input
+                data-autofocus
                 type="text"
                 value={data.dates}
                 onChange={set('dates')}
@@ -173,45 +230,40 @@ export default function LeadForm({
                 style={inputStyle}
               />
             </Labeled>
-            <Labeled label="How flexible are your dates?">
+            <Labeled
+              label="How flexible are your dates?"
+              hint="Flexible dates give you the best odds. Fixed dates can still work, but they narrow what’s bookable."
+            >
               <Select value={data.flexibility} onChange={set('flexibility')}>
                 <option value="">Choose one…</option>
-                <option value="flexible">Flexible — find me the best value</option>
-                <option value="fixed">Fixed — these exact dates</option>
-                <option value="unsure">Not sure yet</option>
-              </Select>
-            </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
-          </Step>
-        );
-      case 1:
-        return (
-          <Step titleId={titleId} title="Who’s flying?" hint="Headcount and the cabin you’re after.">
-            <Labeled label="How many travelers?">
-              <Select value={data.passengers} onChange={set('passengers')} autoFocus>
-                <option value="">Choose…</option>
-                <option value="1">1 traveler</option>
-                <option value="2">2 travelers</option>
-                <option value="3">3 travelers</option>
-                <option value="4">4 travelers</option>
-                <option value="5">5 travelers</option>
-                <option value="6+">6+ travelers</option>
-              </Select>
-            </Labeled>
-            <Labeled label="Which cabin?">
-              <Select value={data.cabin} onChange={set('cabin')}>
-                <option value="">Choose…</option>
-                <option value="economy">Economy</option>
-                <option value="premium">Premium economy</option>
-                <option value="business">Business</option>
-                <option value="first">First</option>
-                <option value="any">Any / best value</option>
+                <Options options={FLEXIBILITY_OPTIONS} />
               </Select>
             </Labeled>
             <NotesField value={data.notes} onChange={set('notes')} />
           </Step>
         );
       case 2:
+        return (
+          <Step titleId={titleId} title="Who’s flying?" hint="Headcount and the cabin you’re after.">
+            <Labeled
+              label="How many travelers?"
+              hint="Airlines usually release only one or two award seats per flight, so the more travelers, the harder it is to seat everyone together."
+            >
+              <Select value={data.passengers} onChange={set('passengers')} autoFocus>
+                <option value="">Choose…</option>
+                <Options options={PASSENGER_OPTIONS} />
+              </Select>
+            </Labeled>
+            <Labeled label="Which cabin?">
+              <Select value={data.cabin} onChange={set('cabin')}>
+                <option value="">Choose…</option>
+                <Options options={CABIN_OPTIONS} />
+              </Select>
+            </Labeled>
+            <NotesField value={data.notes} onChange={set('notes')} />
+          </Step>
+        );
+      case 3:
         return (
           <Step titleId={titleId} title="Which points do you have?" hint="Rough is fine. Not sure? Just say so, it helps your specialist find the best value.">
             <Labeled label="Points & miles (optional)">
@@ -387,7 +439,7 @@ export default function LeadForm({
       ) : (
         <>
           <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent">
-            Step {step + 1} of {TOTAL_STEPS}
+            Step {step + 1} of {totalSteps}
           </p>
 
           {business ? businessStep(step) : individualStep(step)}
@@ -412,7 +464,7 @@ export default function LeadForm({
               <span />
             )}
 
-            {step < TOTAL_STEPS - 1 ? (
+            {step < totalSteps - 1 ? (
               <button
                 type="button"
                 onClick={goNext}
@@ -442,7 +494,7 @@ export default function LeadForm({
             )}
           </div>
 
-          {step === TOTAL_STEPS - 1 && (
+          {step === totalSteps - 1 && (
             <p className="mt-3 text-xs text-ink-muted">
               By submitting you agree to our{' '}
               <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
@@ -486,14 +538,47 @@ function Step({
   );
 }
 
-function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
+/**
+ * A labelled control. An optional `hint` renders under it and is wired to the
+ * control via aria-describedby, so screen readers announce it without folding it
+ * into the field's name.
+ */
+function Labeled({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactElement<{ 'aria-describedby'?: string }>;
+}) {
+  const hintId = useId();
   return (
-    <label className="block">
-      <span className="mb-1.5 block font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink-muted">
-        {label}
-      </span>
-      {children}
-    </label>
+    <div>
+      <label className="block">
+        <span className="mb-1.5 block font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink-muted">
+          {label}
+        </span>
+        {hint ? cloneElement(children, { 'aria-describedby': hintId }) : children}
+      </label>
+      {hint && (
+        <p id={hintId} className="mt-1.5 text-xs leading-relaxed text-ink-muted">
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Options({ options }: { options: LeadOption[] }) {
+  return (
+    <>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </>
   );
 }
 
@@ -502,16 +587,19 @@ function Select({
   onChange,
   children,
   autoFocus,
+  'aria-describedby': describedBy,
 }: {
   value: string;
   onChange: (e: Change) => void;
   children: React.ReactNode;
   autoFocus?: boolean;
+  'aria-describedby'?: string;
 }) {
   return (
     <div className="relative">
       <select
         data-autofocus={autoFocus || undefined}
+        aria-describedby={describedBy}
         value={value}
         onChange={onChange}
         className={`${inputClass} appearance-none pr-10`}

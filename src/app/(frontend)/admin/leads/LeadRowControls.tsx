@@ -119,9 +119,11 @@ export function LeadEditButton({ lead }: { lead: LeadEditData }) {
   const [pending, start] = useTransition();
 
   const business = lead.type === 'business';
+  // Leads that gave From/To edit those instead; `route` is recomputed from them on save.
+  const hasFromTo = Boolean(lead.details.origin || lead.details.destination);
   const topFields = TOP_FIELDS.filter(
     (f) => !f.for || f.for === (business ? 'business' : 'individual') || lead[f.key],
-  );
+  ).filter((f) => !(f.key === 'route' && hasFromTo));
   // Trip questions are the individual questionnaire; notes apply to every lead.
   const detailFields = LEAD_DETAIL_FIELDS.filter(
     (f) => !business || f.section === 'notes' || lead.details[f.key],

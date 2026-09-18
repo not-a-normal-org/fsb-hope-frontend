@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
-import { LEAD_DETAIL_KEYS, describeLead, leadSummary } from '@/lib/leads';
+import { LEAD_DETAIL_KEYS, composeRoute, describeLead, leadSummary } from '@/lib/leads';
 import { leadEmailHtml } from '@/lib/lead-email';
 
 /**
@@ -60,11 +60,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
   }
 
-  const route = clip(body.route);
-  if (type === 'individual' && !route) {
-    return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
-  }
-
   // Take only known detail keys, clipped — never store arbitrary client JSON.
   const rawDetails =
     body.details && typeof body.details === 'object' ? (body.details as Record<string, unknown>) : {};
@@ -72,6 +67,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   for (const key of LEAD_DETAIL_KEYS) {
     const value = clip(rawDetails[key]);
     if (value) details[key] = value;
+  }
+
+  // The form sends From/To separately; `route` stays the one-line version the
+  // console tables show, composed here when the client didn't send it.
+  const route = clip(body.route) ?? composeRoute(details.origin, details.destination);
+  if (type === 'individual' && !route) {
+    return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
   }
 
   // Attribution: the affiliate's code, captured into the sm_ref cookie on landing.

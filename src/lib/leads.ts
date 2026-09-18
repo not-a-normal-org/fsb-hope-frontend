@@ -19,6 +19,19 @@ export type LeadStatus = (typeof LEAD_STATUSES)[number];
 /** `label` is what the customer picks in the form; `display` is the terse version staff read. */
 export type LeadOption = { value: string; label: string; display?: string };
 
+export const TRIP_TYPE_OPTIONS: LeadOption[] = [
+  { value: 'round_trip', label: 'Round-trip' },
+  { value: 'one_way', label: 'One-way' },
+  { value: 'multi_city', label: 'Multi-city / open-jaw' },
+];
+
+export const ROUTE_FLEX_OPTIONS: LeadOption[] = [
+  { value: 'both', label: 'Both ends — nearby airports or other cities are fine', display: 'Flexible on both ends' },
+  { value: 'origin', label: 'Departure only — I can leave from another airport', display: 'Departure flexible' },
+  { value: 'destination', label: 'Destination only — open to other cities', display: 'Destination flexible' },
+  { value: 'fixed', label: 'Neither — these exact cities', display: 'Fixed (exact cities)' },
+];
+
 export const FLEXIBILITY_OPTIONS: LeadOption[] = [
   { value: 'flexible', label: 'Flexible — find me the best value', display: 'Flexible' },
   { value: 'fixed', label: 'Fixed — these exact dates', display: 'Fixed (exact dates)' },
@@ -51,6 +64,10 @@ export type LeadDetailField = {
 };
 
 export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
+  { key: 'origin', label: 'From', section: 'trip' },
+  { key: 'destination', label: 'To', section: 'trip' },
+  { key: 'route_flexibility', label: 'Route flexibility', section: 'trip', options: ROUTE_FLEX_OPTIONS },
+  { key: 'trip_type', label: 'Trip type', section: 'trip', options: TRIP_TYPE_OPTIONS },
   { key: 'dates', label: 'Dates', section: 'trip' },
   { key: 'flexibility', label: 'Date flexibility', section: 'trip', options: FLEXIBILITY_OPTIONS },
   { key: 'passengers', label: 'Travelers', section: 'trip', options: PASSENGER_OPTIONS },
@@ -61,6 +78,12 @@ export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
 ];
 
 export const LEAD_DETAIL_KEYS = LEAD_DETAIL_FIELDS.map((f) => f.key);
+
+/** The `route` column for leads that give From/To separately: "Denver → Amsterdam". */
+export function composeRoute(origin?: string | null, destination?: string | null): string | null {
+  const parts = [origin, destination].map((p) => (p ?? '').trim()).filter(Boolean);
+  return parts.length ? parts.join(' → ') : null;
+}
 
 /** Staff-facing text for a stored answer; unknown values (older leads, free text) pass through. */
 export function displayAnswer(field: LeadDetailField | undefined, raw: string): string {
@@ -131,7 +154,9 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
     if (text) rows.push({ label, value: text });
   };
 
-  push(trip, 'Route', lead.route);
+  // Newer leads give From/To separately (and `route` is composed from them), so
+  // the Route row would only repeat them; older leads have Route alone.
+  if (!asText(details.origin) && !asText(details.destination)) push(trip, 'Route', lead.route);
   push(trip, 'Routes & cabins', lead.flight_need);
   for (const field of LEAD_DETAIL_FIELDS) {
     const raw = asText(details[field.key]);
@@ -165,12 +190,12 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
   ].filter((s) => s.rows.length > 0);
 }
 
-/** One-line glance summary for table rows and email subjects, e.g. "1 traveler · Business · Mid October". */
+/** One-line glance summary for table rows and email subjects, e.g. "1 traveler · One-way · Business · Mid October". */
 export function leadSummary(lead: LeadRecord): string {
   const details = detailsOf(lead);
   const pick = (key: string) => {
     const raw = asText(details[key]);
     return raw ? displayAnswer(LEAD_DETAIL_FIELDS.find((f) => f.key === key), raw) : null;
   };
-  return [pick('passengers'), pick('cabin'), pick('dates')].filter(Boolean).join(' · ');
+  return [pick('passengers'), pick('trip_type'), pick('cabin'), pick('dates')].filter(Boolean).join(' · ');
 }
