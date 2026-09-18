@@ -190,6 +190,7 @@ function parseArticle(md: string): Article {
 
 /* ── Run order (newest first). Flagship leads. ─────────────────────────────── */
 const ORDER = [
+  'travel-portal-vs-transfer-partners',
   'qantas-points-condor-reward-seats',
   'phantom-award-space-why-seats-vanish',
   'human-vs-award-search-tools',
