@@ -24,7 +24,24 @@ from memory.
 
 ---
 
-### travel-portal-vs-transfer-partners (2026-09-18)
+### travel-portal-vs-transfer-partners v2, explanatory split cover (2026-09-19): SHIPPED
+- Type: explanatory split cover, composed with `tools/compose-split-cover.mjs`
+  (config: `tools/travel-portal-vs-transfer-partners.cover.json`); no text from the model.
+- Model: requested nano_banana_pro, reported nano_banana_2; aspect 16:9; 4 images, 1 round, 8 credits
+- Portal half, shipped prompt:
+  > Editorial travel-magazine photograph: an open silver laptop on a warm walnut desk, its screen showing an out-of-focus online travel booking page with a list of flight results, screen content soft and indistinct with no readable text, a ceramic coffee cup and a folded paper itinerary beside it, warm golden late-afternoon window light, calm and simple. Centered composition, laptop in the middle of the frame. Shot on full-frame camera, 50mm lens, shallow depth of field, fine film grain, photorealistic, warm amber highlights and deep navy shadows. No readable text anywhere, no logos, no watermark, no people.
+- Partners half, shipped prompt:
+  > Editorial travel-magazine photograph: the tails of four widebody aircraft parked side by side at an airport gate area at blue hour, each tail painted a different plain solid color (deep red, navy blue, teal, cream), completely plain tails with no logos, no emblems, no liveries and no text, soft apron floodlights, cool navy sky with a thin warm amber glow on the horizon. Centered composition. Shot on full-frame camera, 85mm lens, shallow depth of field, fine film grain, photorealistic, deep navy shadows and warm amber highlights. No text, no logos, no watermark, no people.
+- Rejected halves: a phone with a booking app (bright UI buttons fought the overlay text); jets
+  seen through terminal glass (good, but read as "an airport", while distinct colored tails read as
+  "several airlines").
+- Composition: blur 2.2 and a navy scrim so the photos sit behind the type; focusX 0.52 / 0.40 (the
+  0.40 slice shows the red, navy and teal tails; 0.56 showed only two).
+- Output: src/scripts/assets/blog/travel-portal-vs-transfer-partners.jpg, 1600 × 893, 105 KB
+- COVER_ALT: Travel portal vs. transfer partners: Chase, Amex and Capital One Travel beside United, Aeroplan and Virgin Atlantic
+
+### travel-portal-vs-transfer-partners v1 (2026-09-18): REJECTED by the owner on 2026-09-19 ("not relevant"), replaced by v2
+- Lesson: for a comparison post, a metaphor (a bag at a forking corridor) doesn't tell the reader the topic. Show the options. See images.md section 0.
 - Model: requested nano_banana_pro, reported nano_banana_2; aspect 16:9
 - Concepts tried: 4; rounds: 1; credits: 8 (2 of 4 first submissions hit 429 and were resubmitted once jobs drained)
 - Shipped prompt:

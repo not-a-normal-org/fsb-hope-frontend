@@ -29,8 +29,9 @@ Related specs (linked, not moved): [`docs/plans/03-products-and-pricing.md`](../
    `ORDER` list in `src/scripts/seed-articles.ts` show every live post.
 2. **Outline.** Title, slug, meta, the answer-first lead, 4 key takeaways, H2s and 4 FAQ
    questions, following `writing-guide.md` §3.
-3. **Cover, in parallel with drafting.** Generate from the outline following `images.md`, and log
-   the prompt in `image-prompts.md`.
+3. **Cover, in parallel with drafting.** First pick the cover type (`images.md` section 0):
+   comparison posts get an explanatory split cover with labels, other posts an editorial photo.
+   Generate following `images.md`, and log the prompt in `image-prompts.md`.
 4. **Draft** the markdown following `writing-guide.md`.
 5. **Fact-check,** ideally by someone other than the writer: every price, ratio, partner,
    transfer time and policy against a primary source or two reputable outlets. Keep the source

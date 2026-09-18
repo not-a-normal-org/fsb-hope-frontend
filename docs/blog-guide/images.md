@@ -4,11 +4,24 @@ How we make, check, and ship a post's hero image. Every cover is one file,
 `src/scripts/assets/blog/<slug>.jpg`, that the seed uploads to the CMS.
 
 **The spec: 1600 × 893 px (16:9), JPEG at quality ~86, aim for ≤ 400 KB (hard ceiling ~800 KB),
-subject in the middle 60%, no text or logos in frame.**
+subject and any text in the middle 60%, no logos, never AI-rendered text.**
 
 Log every prompt you run in [`image-prompts.md`](image-prompts.md).
 
 ---
+
+## 0. Pick the cover type first
+
+A cover has to tell the reader what the post is about at a glance, not just set a mood.
+
+| Post type | Cover | Example |
+|---|---|---|
+| Comparison, "A vs. B" or decision posts | **Explanatory split cover:** two photo halves, each labeled with its option and 2–3 concrete examples, with a "VS" badge between them. See [Explanatory covers](#explanatory-covers-text-overlay). | `travel-portal-vs-transfer-partners` |
+| Guides about one idea, news, destinations | **Editorial photo:** one subject tied to the article's single idea (section 1) | `phantom-award-space-why-seats-vanish`, `qantas-points-condor-reward-seats` |
+
+When in doubt, go explanatory. A beautiful image that doesn't say what the post is about is the
+wrong image. On 2026-09-19 the owner rejected the portal post's first cover (a weekender bag at a
+forking corridor) as "not relevant". The fix was to show the two options, with examples and labels.
 
 ## 1. The look
 
@@ -20,7 +33,9 @@ Realistic editorial luxury-travel photography, like a spread in a travel magazin
   the site palette, and it's what makes nine different subjects read as one blog.
 - **Quiet luxury, not glitz.** Premium cabins, lounges, travel objects, destinations at golden or
   blue hour.
-- **No text, logos, watermarks, or identifiable airline liveries**, and no readable screens.
+- **No logos, watermarks, identifiable airline liveries or readable screens, and no text from
+  the image model.** Labels are added afterwards in our own fonts; see
+  [Explanatory covers](#explanatory-covers-text-overlay).
 - **Prefer no faces.** Hands, objects and empty premium seats photograph better, and AI faces are
   the fastest giveaway.
 
@@ -95,7 +110,8 @@ Keep the raw PNGs and previews in a scratch folder. Only the final JPEG goes in 
 
 ## 4. Review checklist (before it ships)
 1. It reads as a real photograph at 100% zoom: no AI tells from the list above.
-2. No text, logos, liveries or readable screens anywhere in frame.
+2. No logos, liveries, readable screens or model-rendered text. Any text is the composed
+   overlay, and it matches the article.
 3. The subject survives the **16:10** and **~1.2:1** crop previews.
 4. The grade matches the set: put it next to two existing covers and look.
 5. It's about *this* article; a reader could guess the topic from it.
@@ -103,11 +119,47 @@ Keep the raw PNGs and previews in a scratch folder. Only the final JPEG goes in 
 7. `COVER_ALT` is written: it describes what is **in the image**, ≤ 125 characters, and doesn't
    start with "Image of".
 
+## Explanatory covers: text overlay
+
+Text goes on a cover **only** through
+[`tools/compose-split-cover.mjs`](tools/compose-split-cover.mjs), never through the image
+prompt. The model garbles lettering (an older cover had a misspelled "PASSPORT") and can't use our
+fonts.
+
+1. **Generate each half separately** as a normal editorial photo **with no text**, using the
+   section 2 template. For the portal post, the portal half was a laptop on a booking page with the
+   screen out of focus, and the partners half was the plain, unbranded tails of several airlines.
+   One batch of 4 (2 options per side) is enough.
+2. **Write a config** like
+   [`tools/travel-portal-vs-transfer-partners.cover.json`](tools/travel-portal-vs-transfer-partners.cover.json).
+   Each side gets an eyebrow, a title, 2–3 examples and a one-line note, plus `focusX` to choose
+   which 800 px slice of its photo to use.
+3. **Get the fonts once** (the URLs are in the script header), then run:
+   ```bash
+   npm i --no-save opentype.js
+   node docs/blog-guide/tools/compose-split-cover.mjs docs/blog-guide/tools/<slug>.cover.json
+   ```
+4. **Review the output and both crop previews** (section 3). The script keeps all text inside
+   x 290–1310, the featured-card safe area.
+
+Rules:
+- **Names go in as plain text, never logos.** Program and issuer names are fine (the article
+  names them too). Generated or pasted logos are not.
+- **Cover copy must match the article.** "Usually about 1¢ a point" mirrors the article's portal
+  section. Don't put a claim on the cover that isn't in the post.
+- **Site fonts only.** Zilla Slab Bold for titles, IBM Plex Sans Medium for examples, IBM Plex
+  Mono for eyebrows. Cream `#F5F5F0` and amber `#E8963A` on a navy `#0E1220` scrim.
+- **Alt text includes the words on the image**, because screen readers can't read pixels.
+- **Gotcha:** `sharp`'s built-in text renderer silently falls back to Helvetica on macOS even with
+  `fontfile` set (a fontconfig issue). That's why the script draws each glyph as a vector path with
+  opentype.js.
+
 ## 5. Alt text
 
 Set `COVER_ALT:` in the post's front-matter. The seed writes it to the Media `alt` field (which is
 required). Describe what's in the picture, because the post title already sits next to it
-everywhere. Without `COVER_ALT`, the seed falls back to `Editorial photograph for "<title>"`,
+everywhere. For an explanatory cover, include the words it shows, for example "Travel portal vs.
+transfer partners: Chase, Amex and Capital One Travel beside United, Aeroplan and Virgin Atlantic". Without `COVER_ALT`, the seed falls back to `Editorial photograph for "<title>"`,
 which is valid but less useful.
 
 ---
