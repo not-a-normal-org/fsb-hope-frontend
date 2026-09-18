@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
+import { LEAD_DETAIL_KEYS, describeLead, leadSummary } from '@/lib/leads';
+import { leadEmailHtml } from '@/lib/lead-email';
 
 /**
  * POST /api/leads — persist a lead from the individual/business search flows into
@@ -21,14 +23,6 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** Notifications for new leads land here. */
 const TEAM_INBOX = 'hello@savermiles.com';
 
-function esc(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\n/g, '<br/>');
-}
-
 interface LeadBody {
   type?: string;
   route?: string;
@@ -42,8 +36,6 @@ interface LeadBody {
   details?: Record<string, unknown>;
 }
 
-// Extra individual questionnaire answers stored in leads.details (jsonb).
-const DETAIL_KEYS = ['dates', 'flexibility', 'passengers', 'cabin', 'preferences', 'notes'];
 
 /** Trim, cap length, and normalise empty → null. */
 function clip(value: unknown, max = 2000): string | null {
@@ -77,7 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const rawDetails =
     body.details && typeof body.details === 'object' ? (body.details as Record<string, unknown>) : {};
   const details: Record<string, string> = {};
-  for (const key of DETAIL_KEYS) {
+  for (const key of LEAD_DETAIL_KEYS) {
     const value = clip(rawDetails[key]);
     if (value) details[key] = value;
   }
@@ -99,29 +91,37 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     details: Object.keys(details).length ? details : null,
   };
 
-  const { error } = await supabaseAdmin.from('leads').insert(record);
+  const { data: saved, error } = await supabaseAdmin
+    .from('leads')
+    .insert(record)
+    .select('created_at')
+    .single();
 
   if (error) {
     console.error('[api/leads] insert error:', error.message);
     return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
   }
 
-  await notifyTeam(record);
+  await notifyTeam({ ...record, status: 'new', created_at: saved?.created_at ?? new Date().toISOString() });
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
 
 /**
- * Best-effort team notification. Awaited so it runs before the serverless
- * function is frozen, but its own failure is swallowed — the lead is already
+ * Best-effort team notification to hello@savermiles.com carrying EVERY answer
+ * the lead gave — laid out by the same describeLead() the admin view uses, so the
+ * email and the console never disagree. Awaited so it runs before the serverless
+ * function is frozen, but its own failure is swallowed: the lead is already
  * saved, and unconfigured Gmail credentials just skip the send.
  */
 async function notifyTeam(record: {
   type: string;
+  status: string;
+  created_at: string;
   route: string | null;
+  flight_need: string | null;
   points_held: string | null;
   yearly_spend: string | null;
-  flight_need: string | null;
   points_budget: string | null;
   email: string;
   whatsapp: string | null;
@@ -129,32 +129,13 @@ async function notifyTeam(record: {
   referral_code: string | null;
   details: Record<string, string> | null;
 }): Promise<void> {
-  const row = (label: string, value: string | null) =>
-    value ? `<p><strong>${label}:</strong> ${esc(value)}</p>` : '';
-  const detailRows = record.details
-    ? Object.entries(record.details)
-        .map(([k, v]) => row(k[0].toUpperCase() + k.slice(1), v))
-        .join('')
-    : '';
-
-  const html = `
-    <h2>New ${esc(record.type)} lead</h2>
-    ${row('Email', record.email)}
-    ${row('Route', record.route)}
-    ${row('WhatsApp', record.whatsapp)}
-    ${row('Phone', record.phone)}
-    ${row('Points held', record.points_held)}
-    ${row('Yearly spend', record.yearly_spend)}
-    ${row('Flight need', record.flight_need)}
-    ${row('Points / budget', record.points_budget)}
-    ${detailRows}
-    ${row('Referral', record.referral_code)}
-  `;
+  const heading = record.route ?? record.flight_need ?? record.email;
+  const summary = leadSummary(record);
 
   await sendEmail({
     to: TEAM_INBOX,
     replyTo: record.email,
-    subject: `New ${record.type} lead — ${record.route ?? record.email}`,
-    html,
+    subject: `New ${record.type} lead — ${heading}${summary ? ` · ${summary}` : ''}`,
+    html: leadEmailHtml(record.type, heading, describeLead(record, { includeContact: true })),
   });
 }

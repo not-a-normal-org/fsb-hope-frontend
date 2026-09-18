@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { Pencil } from 'lucide-react';
 
 import { assignLead, setLeadStatus, updateLead } from './actions';
-import { LEAD_STATUSES } from '@/lib/leads';
+import { LEAD_DETAIL_FIELDS, LEAD_STATUSES, type LeadOption, type LeadViewSection } from '@/lib/leads';
+import LeadDetailsButton, { type LeadDialogSkin } from '@/components/leads/LeadDetailsButton';
 
 export interface Account {
   id: number;
@@ -13,6 +15,7 @@ export interface Account {
 
 export interface LeadEditData {
   id: string;
+  type: string | null;
   email: string | null;
   whatsapp: string | null;
   phone: string | null;
@@ -21,7 +24,8 @@ export interface LeadEditData {
   points_held: string | null;
   yearly_spend: string | null;
   points_budget: string | null;
-  notes: string | null;
+  /** Stored questionnaire answers (leads.details), stringified. */
+  details: Record<string, string>;
 }
 
 const SELECT =
@@ -60,33 +64,72 @@ export function AssigneeSelect({
   );
 }
 
+// ── View ────────────────────────────────────────────────────────────────────
+
+const ICON_BTN =
+  'inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1E2538] bg-[#07090F] text-[#9DA3B4] hover:border-[#E8963A] hover:text-[#F5F5F0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8963A]/60 transition-colors';
+
+const ADMIN_SKIN: LeadDialogSkin = {
+  trigger: ICON_BTN,
+  panel: 'bg-[#0E1220] border border-[#1E2538] text-[#F5F5F0] backdrop:bg-[rgba(3,6,12,0.7)]',
+  meta: 'text-[#9DA3B4]',
+  sectionTitle: 'text-[#E8963A]',
+  label: 'text-[#5C6378]',
+  value: 'text-[#F5F5F0]',
+  divider: 'border-[#1E2538]',
+  close: 'border border-[#1E2538] bg-[#07090F] text-[#9DA3B4] hover:border-[#E8963A] hover:text-[#F5F5F0] transition-colors',
+};
+
+/** Read-only view of everything a lead submitted (eye icon). */
+export function LeadViewButton(props: { heading: string; meta?: string; sections: LeadViewSection[] }) {
+  return <LeadDetailsButton {...props} skin={ADMIN_SKIN} />;
+}
+
 // ── Edit ────────────────────────────────────────────────────────────────────
 
-const FIELDS: { key: keyof Omit<LeadEditData, 'id'>; label: string; type?: string; area?: boolean }[] = [
+type TopKey = Exclude<keyof LeadEditData, 'id' | 'type' | 'details'>;
+
+/** Which lead type a field belongs to. Off-type fields still show if they hold a value. */
+const TOP_FIELDS: { key: TopKey; label: string; type?: string; area?: boolean; for?: 'individual' | 'business' }[] = [
   { key: 'email', label: 'Email', type: 'email' },
   { key: 'whatsapp', label: 'WhatsApp', type: 'tel' },
   { key: 'phone', label: 'Phone', type: 'tel' },
-  { key: 'route', label: 'Route / destination' },
-  { key: 'flight_need', label: 'Flight need', area: true },
-  { key: 'points_held', label: 'Points held' },
-  { key: 'yearly_spend', label: 'Yearly spend' },
-  { key: 'points_budget', label: 'Points / budget' },
-  { key: 'notes', label: 'Notes', area: true },
+  { key: 'route', label: 'Route / destination', for: 'individual' },
+  { key: 'points_held', label: 'Points held', for: 'individual' },
+  { key: 'flight_need', label: 'Routes & cabins', area: true, for: 'business' },
+  { key: 'yearly_spend', label: 'Annual flight spend', for: 'business' },
+  { key: 'points_budget', label: 'Points / budget', for: 'business' },
 ];
 
 const INPUT =
   'w-full rounded-lg bg-[#07090F] border border-[#1E2538] px-3 py-2 text-sm text-[#F5F5F0] placeholder:text-[#5C6378] focus:outline-none focus:border-[#E8963A] focus:ring-1 focus:ring-[#E8963A]/30 transition-colors';
 
+/** Options for a select, keeping an older/free-text stored value selectable so saving never wipes it. */
+function optionsWithCurrent(options: LeadOption[], current: string): LeadOption[] {
+  return current && !options.some((o) => o.value === current)
+    ? [...options, { value: current, label: current }]
+    : options;
+}
+
 export function LeadEditButton({ lead }: { lead: LeadEditData }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<Record<string, string>>({});
+  const [top, setTop] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [pending, start] = useTransition();
 
+  const business = lead.type === 'business';
+  const topFields = TOP_FIELDS.filter(
+    (f) => !f.for || f.for === (business ? 'business' : 'individual') || lead[f.key],
+  );
+  // Trip questions are the individual questionnaire; notes apply to every lead.
+  const detailFields = LEAD_DETAIL_FIELDS.filter(
+    (f) => !business || f.section === 'notes' || lead.details[f.key],
+  ).filter((f) => f.key !== 'preferences' || lead.details.preferences);
+
   function launch() {
-    setForm(
-      Object.fromEntries(FIELDS.map((f) => [f.key, lead[f.key] ?? ''])) as Record<string, string>,
-    );
+    setTop(Object.fromEntries(TOP_FIELDS.map((f) => [f.key, lead[f.key] ?? ''])));
+    setAnswers(Object.fromEntries(LEAD_DETAIL_FIELDS.map((f) => [f.key, lead.details[f.key] ?? ''])));
     setError('');
     setOpen(true);
   }
@@ -94,20 +137,26 @@ export function LeadEditButton({ lead }: { lead: LeadEditData }) {
   function save() {
     setError('');
     start(async () => {
-      const res = await updateLead(lead.id, form);
+      const res = await updateLead(lead.id, { ...top, details: answers });
       if (res.ok) setOpen(false);
       else setError(res.error);
     });
   }
+
+  const label = (text: string) => (
+    <span className="mb-1 block text-[11px] uppercase tracking-wider text-[#5C6378]">{text}</span>
+  );
 
   return (
     <>
       <button
         type="button"
         onClick={launch}
-        className="rounded-lg border border-[#1E2538] bg-[#07090F] px-2.5 py-1.5 text-xs text-[#9DA3B4] hover:border-[#E8963A] hover:text-[#F5F5F0] transition-colors"
+        aria-label={`Edit lead ${lead.email ?? ''}`.trim()}
+        title="Edit"
+        className={ICON_BTN}
       >
-        Edit
+        <Pencil className="h-4 w-4" aria-hidden />
       </button>
 
       {open && (
@@ -121,28 +170,51 @@ export function LeadEditButton({ lead }: { lead: LeadEditData }) {
           <div className="w-full max-w-md max-h-[88vh] overflow-y-auto rounded-2xl bg-[#0E1220] border border-[#1E2538] p-6">
             <h2 className="text-sm font-semibold text-[#F5F5F0] mb-4">Edit lead</h2>
             <div className="space-y-3">
-              {FIELDS.map((f) => (
+              {topFields.map((f) => (
                 <label key={f.key} className="block">
-                  <span className="mb-1 block text-[11px] uppercase tracking-wider text-[#5C6378]">
-                    {f.label}
-                  </span>
+                  {label(f.label)}
                   {f.area ? (
                     <textarea
                       rows={2}
-                      value={form[f.key] ?? ''}
-                      onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
+                      value={top[f.key] ?? ''}
+                      onChange={(e) => setTop((s) => ({ ...s, [f.key]: e.target.value }))}
                       className={`${INPUT} resize-none`}
                     />
                   ) : (
                     <input
                       type={f.type ?? 'text'}
-                      value={form[f.key] ?? ''}
-                      onChange={(e) => setForm((s) => ({ ...s, [f.key]: e.target.value }))}
+                      value={top[f.key] ?? ''}
+                      onChange={(e) => setTop((s) => ({ ...s, [f.key]: e.target.value }))}
                       className={INPUT}
                     />
                   )}
                 </label>
               ))}
+
+              {detailFields.map((f) => {
+                const value = answers[f.key] ?? '';
+                const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+                  setAnswers((s) => ({ ...s, [f.key]: e.target.value }));
+                return (
+                  <label key={f.key} className="block">
+                    {label(f.label)}
+                    {f.options ? (
+                      <select value={value} onChange={onChange} className={INPUT}>
+                        <option value="">—</option>
+                        {optionsWithCurrent(f.options, value).map((o) => (
+                          <option key={o.value} value={o.value}>
+                            {o.display ?? o.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : f.area ? (
+                      <textarea rows={3} value={value} onChange={onChange} className={`${INPUT} resize-none`} />
+                    ) : (
+                      <input type="text" value={value} onChange={onChange} className={INPUT} />
+                    )}
+                  </label>
+                );
+              })}
             </div>
 
             {error && (

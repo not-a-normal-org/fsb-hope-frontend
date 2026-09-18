@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getPayloadClient } from '@/lib/payload';
 import { getCurrentUser } from '@/lib/auth';
-import { AssigneeSelect, StatusSelect, LeadEditButton, type Account } from './LeadRowControls';
+import { describeLead, leadSummary, formatReceived } from '@/lib/leads';
+import { AssigneeSelect, StatusSelect, LeadEditButton, LeadViewButton, type Account } from './LeadRowControls';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +21,7 @@ interface Lead {
   points_held: string | null;
   yearly_spend: string | null;
   points_budget: string | null;
-  details: { notes?: string } | null;
+  details: Record<string, unknown> | null;
   status: string;
   referral_code: string | null;
   assigned_to: number | null;
@@ -62,10 +63,11 @@ function TypeBadge({ type }: { type: string | null }) {
 
 async function fetchLeads(statusFilter: string, redactPII: boolean) {
   // Searchers work the request without the customer's contact details, so we
-  // don't even SELECT the PII columns for them (never reaches the server memory
-  // or the HTML).
+  // don't even SELECT the contact columns for them (never reaches the server
+  // memory or the HTML). They do get the trip answers and points — the request
+  // itself is what they need to search.
   const columns = redactPII
-    ? 'id, type, route, flight_need, status, referral_code, assigned_to, created_at'
+    ? 'id, type, route, flight_need, points_held, yearly_spend, points_budget, details, status, referral_code, assigned_to, created_at'
     : 'id, type, route, flight_need, email, whatsapp, phone, points_held, yearly_spend, points_budget, details, status, referral_code, assigned_to, created_at';
 
   let query = supabaseAdmin
@@ -170,7 +172,7 @@ export default async function LeadsPage({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#1E2538]">
-                  {['Lead', 'Interest', 'Referral', 'Assignee', 'Status', 'Received', ...(redactPII ? [] : [''])].map((h, hi) => (
+                  {['Lead', 'Interest', 'Referral', 'Assignee', 'Status', 'Received', ''].map((h, hi) => (
                     <th key={h || `col-${hi}`} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#5C6378] whitespace-nowrap">
                       {h}
                     </th>
@@ -195,6 +197,7 @@ export default async function LeadsPage({
                     {/* Interest */}
                     <td className="px-5 py-3.5 text-[#9DA3B4]">
                       {l.route || l.flight_need || <span className="text-[#5C6378]">—</span>}
+                      {leadSummary(l) && <p className="mt-0.5 text-xs text-[#5C6378]">{leadSummary(l)}</p>}
                     </td>
                     {/* Referral */}
                     <td className="px-5 py-3.5">
@@ -214,25 +217,35 @@ export default async function LeadsPage({
                     <td className="px-5 py-3.5 text-[#9DA3B4] tabular-nums whitespace-nowrap text-xs">
                       {fmtDate(l.created_at)}
                     </td>
-                    {/* Edit — admin/agent only (searchers can't see/edit PII) */}
-                    {!redactPII && (
-                      <td className="px-5 py-3.5 text-right">
-                        <LeadEditButton
-                          lead={{
-                            id: l.id,
-                            email: l.email,
-                            whatsapp: l.whatsapp,
-                            phone: l.phone,
-                            route: l.route,
-                            flight_need: l.flight_need,
-                            points_held: l.points_held,
-                            yearly_spend: l.yearly_spend,
-                            points_budget: l.points_budget,
-                            notes: l.details?.notes ?? null,
-                          }}
+                    {/* View (everyone) + Edit (admin/agent only — searchers can't see/edit PII) */}
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <LeadViewButton
+                          heading={l.route || l.flight_need || (redactPII ? `Lead #${l.id.slice(0, 8)}` : (l.email ?? 'Lead'))}
+                          meta={`${l.type ? l.type[0].toUpperCase() + l.type.slice(1) : 'Lead'} lead · received ${formatReceived(l.created_at)}`}
+                          sections={describeLead(l, { includeContact: !redactPII })}
                         />
-                      </td>
-                    )}
+                        {!redactPII && (
+                          <LeadEditButton
+                            lead={{
+                              id: l.id,
+                              type: l.type,
+                              email: l.email,
+                              whatsapp: l.whatsapp,
+                              phone: l.phone,
+                              route: l.route,
+                              flight_need: l.flight_need,
+                              points_held: l.points_held,
+                              yearly_spend: l.yearly_spend,
+                              points_budget: l.points_budget,
+                              details: Object.fromEntries(
+                                Object.entries(l.details ?? {}).map(([k, v]) => [k, String(v ?? '')]),
+                              ),
+                            }}
+                          />
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
