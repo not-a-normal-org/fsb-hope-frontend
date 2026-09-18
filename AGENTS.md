@@ -34,6 +34,7 @@ it first; it is the source of truth.** This file is how to work in the repo.
 | `src/proxy.ts` | The construction wall + admin auth gate. |
 | `src/app/admin/`, `src/app/api/` | Admin portal + API routes (Stripe/Supabase/Resend). Kept from the prior build — leave untouched unless the task is about them. |
 | `docs/plans/` | The build spec (design system, products, pages, phases). Source of truth. |
+| `docs/blog-guide/` | Blog playbook: writing rules, SEO/GEO, keyword research, cover images, and publishing (seed with `ONLY=`, never a full reseed). |
 | `archive/frontend-v1/` | Snapshot of the original frontend. Reference only; never import from it. |
 
 ## Design-system rules
