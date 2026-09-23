@@ -548,7 +548,12 @@ html {
   font-size: 1rem;
   line-height: 1.75;
 }
-.sm-prose > * + * {
+/* RichText wraps its output in <div class="payload-richtext">, so the stack
+   spacing has to reach through that wrapper, or every paragraph, list and quote
+   in a post body sits flush (Preflight zeroes their margins). :where() keeps
+   this at one-class specificity so the heading and figure rules below still win. */
+.sm-prose > * + *,
+.sm-prose > :where(.payload-richtext) > * + * {
   margin-top: 1.1em;
 }
 .sm-prose h2,
