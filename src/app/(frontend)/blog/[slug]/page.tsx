@@ -10,6 +10,7 @@ import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
 import { mediaPublicUrl, readingMinutes, wordCount, extractFaq, toBlogCard, type BlogCard } from '@/lib/blog';
 import { RelatedSidebar, RelatedInline, PostNav } from './post-parts';
+import { articleConverters } from './rich-text';
 import {
   absoluteUrl,
   ogImageUrl,
@@ -201,7 +202,7 @@ export default async function BlogPostPage({ params }: Params) {
 
             {post.content && (
               <div className="sm-prose mt-10 text-ink-sub">
-                <RichText data={post.content as SerializedEditorState} />
+                <RichText data={post.content as SerializedEditorState} converters={articleConverters} />
               </div>
             )}
 

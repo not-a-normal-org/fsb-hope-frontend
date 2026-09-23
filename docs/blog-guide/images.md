@@ -164,6 +164,37 @@ which is valid but less useful.
 
 ---
 
+## Body images (in the middle of an article)
+
+A long post earns 2 or 3 images inside the body. Same look and same rules as a cover, with a few
+extras.
+
+**Write them in the markdown** on their own line:
+
+```
+![Alt text describing the picture](<slug>-<descriptor>.jpg "Optional caption")
+```
+
+- The file lives beside the post in `src/scripts/assets/blog/` and **must** be named
+  `<slug>-<descriptor>.jpg`. The seed refuses anything else: the prefix is what scopes its cleanup
+  to images this post owns, so it never deletes something added by hand in `/cms`.
+- **Alt is required** and describes the picture. The caption is optional, shows under the image, and
+  is a place for a point the picture can't make on its own. Keep alt ≤125 and caption ≤160 chars.
+- **Size them like covers:** 1600 px wide, 16:9, ≤400 KB. The column is 672 px, so 1600 covers a
+  retina screen.
+- **Place them between sections**, never inside the FAQ (the dry run warns). Two images with no
+  prose between them is a smell.
+- **Facts belong in the prose, not only in a picture.** Nobody can search, quote or screen-read a
+  number that exists only inside a JPEG.
+
+**How it works:** the seed uploads each file once and writes a lexical `upload` node carrying a
+stable node id. Re-running reuses the same media rather than uploading duplicates; an image you
+remove from the markdown has its media deleted after the post saves. `RESEED_COVERS=1` re-uploads
+every image a post owns, cover and body, and deletes what it replaced.
+
+`ONLY=<slug> SEED_DRY_RUN=1 npm run seed:articles` lists each body image with its dimensions, file
+size, alt and caption, and the section it follows, so you can check placement before publishing.
+
 ## Reference: where a cover is used
 
 `src/collections/Media.ts` generates four renders on upload. Each surface picks the smallest one
