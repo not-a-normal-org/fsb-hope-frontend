@@ -104,13 +104,16 @@ render:
 | `1. item` | numbered list |
 | `> text` | blockquote (one line only) |
 | `**bold**`, `*italic*`, `[text](/url)` | inline formatting and links |
+| `![alt](<slug>-<descriptor>.jpg "caption")` | an in-article image, on its own line (see [`images.md`](images.md)) |
 
-Not supported: tables, images in the body, code, nested lists, h1, HTML.
+Not supported: tables, code, nested lists, h1, HTML.
 
 **Traps:**
 - A paragraph line that happens to start with `- ` or `1. ` turns into a list.
 - A lone `*` (for example "5*") starts italics. Rephrase.
 - A `)` inside a URL ends the link early.
+- An image directive has to be alone on its line, or it is swallowed into the paragraph and rendered
+  as a stray `!` plus a broken link.
 - `&amp;` and other entities are decoded; plain `&` also works.
 
 Run the dry run (see [`publishing.md`](publishing.md)). It prints the outline, word count, em-dash

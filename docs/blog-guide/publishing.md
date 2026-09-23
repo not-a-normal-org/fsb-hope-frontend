@@ -19,7 +19,7 @@ sitemap `lastmod`. Google says it stops trusting `lastmod` when it changes witho
 |---|---|
 | `ONLY=slug[,slug]` | Seed only these posts. Unknown slugs fail before any write. |
 | `SEED_DRY_RUN=1` | Validate and print a preflight report, then exit. **Never contacts the database.** |
-| `RESEED_COVERS=1` | Re-upload covers from `<slug>.jpg` and delete the superseded media. Combine with `ONLY=`. |
+| `RESEED_COVERS=1` | Re-upload every image the post owns (cover **and** body images) from source and delete the superseded media. Combine with `ONLY=`. |
 
 The seed refuses to run when a slug isn't in `ORDER`, a file is missing, `CATEGORY` isn't `guides`
 or `deals` (an unknown value would create a new public category), `SLUG` doesn't match the file,
@@ -85,6 +85,17 @@ Search Console is the only channel.
 - Wrong copy: fix the markdown, then run `ONLY=<slug>` again.
 - Pull a post entirely: set it to Draft in `/cms` (Posts). Drafts drop out of the blog, sitemap,
   RSS and llms.txt.
+
+## In-article images
+
+Body images are uploaded by the same seed run, once each, and reused on later runs (see
+[`images.md`](images.md)). Two things to know:
+
+- The seed deletes the media for an image you remove from the markdown, and only for images whose
+  node id starts with the post's slug, so anything inserted by hand in `/cms` is left alone.
+- Captions are stored on the image's lexical node. The `/cms` upload drawer has no caption field, so
+  opening and saving that node there can drop the caption. The markdown is the source of truth:
+  `ONLY=<slug> npm run seed:articles` puts it back.
 
 ## Known debt
 - `src/app/(frontend)/blog/page.tsx` has an open TODO: no `publishedAt <= now` filter on the index,

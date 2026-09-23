@@ -26,6 +26,7 @@
  */
 import { readFileSync, existsSync, statSync } from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 import { getPayload } from 'payload';
 import config from '@payload-config';
 
@@ -74,6 +75,24 @@ const list = (tag: 'ul' | 'ol', items: Node[][]): Node =>
     tag,
     start: 1,
   });
+/**
+ * Upload node: a decorator LEAF, so it is built by hand rather than through
+ * element(), which would wrongly give it children/indent/direction and version 1.
+ * `id` is the node's own id (not the media id) and must be stable, so re-running
+ * the seed can find the node again and reuse the media it already uploaded.
+ * `fields` is free-form here (UploadFeature has no configured sub-fields), which
+ * is where the caption rides along.
+ */
+const upload = (nodeId: string, mediaId: number, caption?: string): Node => ({
+  type: 'upload',
+  version: 3,
+  format: '',
+  id: nodeId,
+  relationTo: 'media',
+  value: mediaId,
+  fields: caption ? { caption } : {},
+});
+
 const doc = (children: Node[]) => ({
   root: { type: 'root', format: '' as const, indent: 0, version: 1, direction: 'ltr' as const, children },
 });
@@ -105,10 +124,18 @@ function parseInline(raw: string): Node[] {
   return out.length ? out : [text('')];
 }
 
-/** Block parser over the restricted markdown body. */
-function parseBody(body: string): Node[] {
+/** A body image: `![alt](<slug>-<descriptor>.jpg "optional caption")` on its own line. */
+export type BodyImage = { file: string; alt: string; caption?: string; nodeId: string };
+const IMAGE_RE = /^!\[([^\]]*)\]\(([^)"\s]+)(?:\s+"([^"]*)")?\)\s*$/;
+
+/**
+ * Block parser over the restricted markdown body. Image nodes are emitted with a
+ * placeholder media id of 0; main() swaps in the real id once the file is uploaded.
+ */
+function parseBody(body: string): { nodes: Node[]; images: BodyImage[] } {
   const lines = decodeEntities(body).replace(/\r\n/g, '\n').split('\n');
   const nodes: Node[] = [];
+  const images: BodyImage[] = [];
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
@@ -139,13 +166,24 @@ function parseBody(body: string): Node[] {
         i++;
       }
       nodes.push(list('ol', items));
+    } else if (IMAGE_RE.test(line)) {
+      const [, alt, file, caption] = line.match(IMAGE_RE)!;
+      const image: BodyImage = {
+        file,
+        alt: alt.trim(),
+        caption: caption?.trim() || undefined,
+        nodeId: file.replace(/\.[a-z0-9]+$/i, ''),
+      };
+      images.push(image);
+      nodes.push(upload(image.nodeId, 0, image.caption));
+      i++;
     } else {
       // Paragraph: gather consecutive plain lines.
       const buf: string[] = [];
       while (
         i < lines.length &&
         lines[i].trim() &&
-        !/^(#{2,3} |> |- |\d+\.\s)/.test(lines[i])
+        !/^(#{2,3} |> |- |\d+\.\s|!\[)/.test(lines[i])
       ) {
         buf.push(lines[i].trim());
         i++;
@@ -153,7 +191,7 @@ function parseBody(body: string): Node[] {
       nodes.push(paragraph(parseInline(buf.join(' '))));
     }
   }
-  return nodes;
+  return { nodes, images };
 }
 
 /* ── Front-matter ──────────────────────────────────────────────────────────── */
@@ -218,7 +256,17 @@ async function categoryId(payload: Awaited<ReturnType<typeof getPayload>>, slug:
   return created.id as number;
 }
 
-type Selected = { slug: string; idx: number; article: Article; imgPath: string; content: ReturnType<typeof doc> };
+type Selected = {
+  slug: string;
+  idx: number;
+  article: Article;
+  imgPath: string;
+  content: ReturnType<typeof doc>;
+  images: BodyImage[];
+};
+
+/** Body-image filenames are `<slug>-<descriptor>.<ext>`: unique per post, and the prefix scopes cleanup. */
+const bodyImageName = (slug: string) => new RegExp(`^${slug}-[a-z0-9-]+\\.(jpe?g|png|webp)$`);
 
 /**
  * Which posts this run touches. `idx` stays the post's position in ORDER so a new
@@ -259,15 +307,30 @@ function loadAndValidate(): Selected[] {
     for (const [key, value] of Object.entries({ TITLE: article.title, EXCERPT: article.excerpt })) {
       if (!value) problems.push(`"${slug}": ${key} is empty`);
     }
-    selected.push({ slug, idx, article, imgPath: path.join(ASSETS, `${slug}.jpg`), content: doc(parseBody(article.body)) });
+
+    const { nodes, images } = parseBody(article.body);
+    const seen = new Set<string>();
+    for (const image of images) {
+      if (!bodyImageName(slug).test(image.file)) {
+        problems.push(`"${slug}": body image "${image.file}" must be named <slug>-<descriptor>.jpg (no paths)`);
+      } else if (!existsSync(path.join(ASSETS, image.file))) {
+        problems.push(`"${slug}": body image "${image.file}" not found in ${ASSETS}`);
+      }
+      if (seen.has(image.file)) problems.push(`"${slug}": body image "${image.file}" is used twice`);
+      seen.add(image.file);
+      // alt is required on the media collection, and a screen reader needs it regardless.
+      if (!image.alt) problems.push(`"${slug}": body image "${image.file}" has empty alt text`);
+    }
+
+    selected.push({ slug, idx, article, imgPath: path.join(ASSETS, `${slug}.jpg`), content: doc(nodes), images });
   }
   if (problems.length) throw new Error(`Refusing to seed:\n  - ${problems.join('\n  - ')}`);
   return selected;
 }
 
-/** Preflight report for SEED_DRY_RUN — pure, no database. Warnings don't fail the run. */
-function report(post: Selected): void {
-  const { article, content, imgPath } = post;
+/** Preflight report for SEED_DRY_RUN — no database. Warnings don't fail the run. */
+async function report(post: Selected): Promise<void> {
+  const { article, content, imgPath, images } = post;
   const warnings: string[] = [];
   const len = (label: string, value: string, lo: number, hi: number) => {
     const n = value.length;
@@ -278,7 +341,8 @@ function report(post: Selected): void {
 
   const words = wordCount(content);
   const allText = [article.title, article.excerpt, article.metaTitle, article.metaDescription, article.coverAlt, article.body];
-  const emDashes = allText.join('\n').split('—').length - 1;
+  const imageText = images.flatMap((i) => [i.alt, i.caption ?? '']);
+  const emDashes = [...allText, ...imageText].join('\n').split('—').length - 1;
   const faqs = extractFaq(content);
   const headings = (content.root.children as { type: string; tag?: string; children?: { text?: string }[] }[])
     .filter((n) => n.type === 'heading')
@@ -304,7 +368,91 @@ function report(post: Selected): void {
   console.log(`  FAQ (${faqs.length} for FAQPage JSON-LD)`);
   faqs.forEach((f) => console.log(`    Q: ${f.question}`));
   if (faqs.length) console.log(`    last answer: ${faqs[faqs.length - 1].answer}`);
+  console.log(`  body images       ${images.length}`);
+  for (const image of images) {
+    const file = path.join(ASSETS, image.file);
+    let dims = 'missing';
+    let kb = 0;
+    if (existsSync(file)) {
+      kb = Math.round(statSync(file).size / 1024);
+      try {
+        const meta = await sharp(file).metadata();
+        dims = `${meta.width}×${meta.height}`;
+        if ((meta.width ?? 0) < 1200) warnings.push(`${image.file} is only ${meta.width}px wide (want ≥1200)`);
+      } catch {
+        dims = 'unreadable';
+      }
+      if (kb > 400) warnings.push(`${image.file} is ${kb} KB (want ≤400 KB)`);
+    }
+    // Which section it follows, so misplaced images are obvious in the report.
+    const before = (content.root.children as { type: string; tag?: string; children?: { text?: string }[] }[])
+      .slice(0, (content.root.children as { id?: string }[]).findIndex((n) => n.id === image.nodeId))
+      .filter((n) => n.type === 'heading');
+    const section = before.length ? (before[before.length - 1].children ?? []).map((c) => c.text ?? '').join('') : '(before the first heading)';
+    console.log(`    ${image.file}  ${dims}  ${kb} KB   after "${section}"`);
+    console.log(`      alt      ${String(image.alt.length).padStart(3)}  ${image.alt}`);
+    if (image.caption) console.log(`      caption  ${String(image.caption.length).padStart(3)}  ${image.caption}`);
+    if (image.alt.length > 125) warnings.push(`${image.file} alt is ${image.alt.length} chars (want ≤125)`);
+    if ((image.caption?.length ?? 0) > 160) warnings.push(`${image.file} caption is ${image.caption!.length} chars (want ≤160)`);
+    if (/frequently asked question/i.test(section)) warnings.push(`${image.file} sits inside the FAQ section`);
+  }
+  if (images.length && (images.length < 2 || images.length > 3)) {
+    warnings.push(`${images.length} body image(s) (house range is 2-3)`);
+  }
+
   console.log(warnings.length ? `  ⚠ ${warnings.join('\n  ⚠ ')}` : '  ✓ no warnings');
+}
+
+type PayloadClient = Awaited<ReturnType<typeof getPayload>>;
+
+/** Media ids of the upload nodes already stored on a post, keyed by node id. */
+function existingUploads(content: unknown): Map<string, number> {
+  const children = (content as { root?: { children?: Record<string, unknown>[] } })?.root?.children;
+  const map = new Map<string, number>();
+  for (const node of Array.isArray(children) ? children : []) {
+    if (node?.type === 'upload' && typeof node.id === 'string' && typeof node.value === 'number') {
+      map.set(node.id, node.value);
+    }
+  }
+  return map;
+}
+
+/**
+ * The media row for one image file, reusing what is already there so a re-run
+ * doesn't duplicate uploads or orphan storage objects:
+ *  1. the id already on the post (passed in by the caller), unless reseeding;
+ *  2. otherwise an existing media row with the same filename, which makes the
+ *     seed self-healing if an earlier run died between upload and post write;
+ *  3. otherwise a fresh upload.
+ * Returns the id to use plus the id it replaced, which the caller deletes only
+ * after the post has been written.
+ */
+async function syncImage(
+  payload: PayloadClient,
+  opts: { filePath: string; alt: string; existingId?: number; reseed: boolean; label: string },
+): Promise<{ id: number; superseded?: number }> {
+  const { filePath, alt, existingId, reseed, label } = opts;
+  if (existingId && !reseed) return { id: existingId };
+
+  if (!existingId && !reseed) {
+    const filename = path.basename(filePath);
+    const found = await payload.find({
+      collection: 'media',
+      where: { filename: { equals: filename } },
+      limit: 1,
+      depth: 0,
+    });
+    const hit = found.docs[0] as { id: number } | undefined;
+    if (hit) {
+      console.log(`  = reused media ${hit.id} for ${label}`);
+      return { id: hit.id };
+    }
+  }
+
+  const media = await payload.create({ collection: 'media', filePath, data: { alt } });
+  const id = media.id as number;
+  console.log(`  ↑ uploaded ${label} → media ${id}`);
+  return { id, superseded: existingId && existingId !== id ? existingId : undefined };
 }
 
 async function main() {
@@ -313,7 +461,7 @@ async function main() {
 
   if (process.env.SEED_DRY_RUN === '1' || process.env.SEED_DRY_RUN === 'true') {
     console.log(`SEED_DRY_RUN: ${scope}. Nothing is written; the database is not contacted.`);
-    selected.forEach(report);
+    for (const post of selected) await report(post);
     return;
   }
 
@@ -321,30 +469,55 @@ async function main() {
   const payload = await getPayload({ config });
   const now = Date.now();
 
-  for (const { slug, idx, article, imgPath, content } of selected) {
+  for (const { slug, idx, article, imgPath, content, images } of selected) {
     const catId = await categoryId(payload, article.category);
 
     const existing = await payload.find({ collection: 'posts', where: { slug: { equals: slug } }, limit: 1, depth: 0 });
-    const prev = existing.docs[0] as { id: number; coverImage?: number | null } | undefined;
+    const prev = existing.docs[0] as { id: number; coverImage?: number | null; content?: unknown } | undefined;
 
-    // Cover image: normally reuse the post's existing one on a re-run. With
-    // RESEED_COVERS=1 set, re-upload from the <slug>.jpg source and REPLACE it —
-    // the one-off blog-art refresh — then remove the superseded media at the end
-    // so the storage bucket doesn't accumulate orphans.
-    const reseedCovers = process.env.RESEED_COVERS === '1' || process.env.RESEED_COVERS === 'true';
+    // Images (cover and in-body) are normally reused on a re-run. RESEED_COVERS=1
+    // re-uploads every image this post owns from source and replaces it; the
+    // superseded media is deleted only after the post write succeeds.
+    const reseed = process.env.RESEED_COVERS === '1' || process.env.RESEED_COVERS === 'true';
+    const staleMedia: number[] = [];
+
     let coverImage = prev?.coverImage ?? undefined;
-    let oldCoverToDelete: number | undefined;
-    if (existsSync(imgPath) && (!coverImage || reseedCovers)) {
-      const media = await payload.create({
-        collection: 'media',
+    if (existsSync(imgPath)) {
+      const cover = await syncImage(payload, {
         filePath: imgPath,
-        data: { alt: article.coverAlt || `Editorial photograph for “${article.title}”` },
+        alt: article.coverAlt || `Editorial photograph for “${article.title}”`,
+        existingId: coverImage,
+        reseed,
+        label: `cover for "${slug}"`,
       });
-      if (reseedCovers && coverImage && coverImage !== (media.id as number)) {
-        oldCoverToDelete = coverImage;
+      coverImage = cover.id;
+      if (cover.superseded) staleMedia.push(cover.superseded);
+    }
+
+    // Body images: resolve each node's media id, then patch it into the content
+    // that parseBody built with a placeholder.
+    const priorUploads = existingUploads(prev?.content);
+    const usedNodeIds = new Set<string>();
+    for (const image of images) {
+      const synced = await syncImage(payload, {
+        filePath: path.join(ASSETS, image.file),
+        alt: image.alt,
+        existingId: priorUploads.get(image.nodeId),
+        reseed,
+        label: `body image ${image.file}`,
+      });
+      if (synced.superseded) staleMedia.push(synced.superseded);
+      usedNodeIds.add(image.nodeId);
+      for (const node of content.root.children as Record<string, unknown>[]) {
+        if (node.type === 'upload' && node.id === image.nodeId) node.value = synced.id;
       }
-      coverImage = media.id as number;
-      console.log(`  ↑ uploaded cover for "${slug}" → media ${coverImage}`);
+    }
+
+    // An image dropped from the markdown leaves its media behind. Only clean up
+    // nodes this post owns (ids start with the slug), so anything inserted by
+    // hand in /cms is left alone.
+    for (const [nodeId, mediaId] of priorUploads) {
+      if (!usedNodeIds.has(nodeId) && nodeId.startsWith(`${slug}-`)) staleMedia.push(mediaId);
     }
 
     const data = {
@@ -361,13 +534,13 @@ async function main() {
     if (prev) {
       await payload.update({ collection: 'posts', id: prev.id, data });
       console.log(`✓ updated "${slug}" (${article.category})`);
-      // Now that the post points at the new cover, drop the old media.
-      if (oldCoverToDelete) {
+      // Now that the post no longer points at them, drop the superseded media.
+      for (const mediaId of staleMedia) {
         try {
-          await payload.delete({ collection: 'media', id: oldCoverToDelete });
-          console.log(`  ✗ removed superseded cover media ${oldCoverToDelete}`);
+          await payload.delete({ collection: 'media', id: mediaId });
+          console.log(`  ✗ removed superseded media ${mediaId}`);
         } catch (err) {
-          console.log(`  ! could not remove old cover media ${oldCoverToDelete}: ${(err as Error).message}`);
+          console.log(`  ! could not remove media ${mediaId}: ${(err as Error).message}`);
         }
       }
     } else {
