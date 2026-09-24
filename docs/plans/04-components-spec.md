@@ -19,6 +19,13 @@ Three-way switch — **Light / Dark / Mono** — not a binary toggle. Persists c
 ### `<NavBar />` / `<Footer />`
 Per sitemap in `02-site-structure.md`. NavBar is sticky, gets a backdrop-blur treatment consistent with the glass system when scrolled (not transparent-on-white).
 
+**NavBar needs a mobile state, and it is not optional.** The desktop link row is hidden below `md`, so without one the site cannot be navigated on a phone at all — which is exactly what shipped until it was caught in production. Below `md` a menu button opens `<MobileMenu />`; the desktop row and the compact `ModeCycle` stay hidden there.
+
+### `<MobileMenu open onClose />`
+The nav below `md`. Because it is the *only* nav a phone visitor has, it carries the **whole public sitemap** grouped under the footer's column headings (Product / Read / Company), not just the shorter desktop row — nobody should have to scroll to the footer to reach `/calculator` or `/contact`. Link data for both surfaces lives in `src/lib/nav.ts`; don't re-declare it in a component.
+
+Requirements: portalled above the sticky header, scroll-locked, focus-trapped, Esc to close, focus restored to the menu button (all via `useOverlayChrome` in `src/lib/use-overlay-chrome.ts`, shared with `LeadModal`). Closes on link click, on route change, and when the viewport crosses `md` — that last one matters, because the panel is `md:hidden` and a rotation to landscape would otherwise hide it while leaving the page scroll-locked. Panel surface is `--sm-bg-elevated` over a scrim, **not** a `GlassPanel` (glass needs something blurred behind it). Carries the primary CTA and a `<ModeToggle />`, since `ModeCycle` is desktop-only.
+
 ## Marketing components
 
 ### `<StatStrip stats={[...]} />`
