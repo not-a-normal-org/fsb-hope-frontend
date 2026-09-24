@@ -107,6 +107,13 @@ Build in this order, since later pages reuse components built for earlier ones:
 - [ ] Full-site check across all three modes (Light / Dark / Mono) — every page, every component. Specifically check for any component that falls back to blue tokens when Mono is active (a sign it wasn't wired to the Mono token set)
 - [ ] Full-site copy audit: search for "Upwork," founder names, or prior company names — zero results required
 - [ ] Mobile responsive pass on all pages
+  - [x] Nav: `<MobileMenu />` — the public site had no mobile menu at all until this was
+        caught in production. Deferring this item is how that happened; treat the
+        remaining sub-items as load-bearing, not cosmetic.
+  - [ ] `AdminShell` sidebar is `w-60 fixed` with content at `ml-60` and no breakpoint
+        prefix anywhere, so on a 375px screen it permanently covers most of the viewport.
+        The admin console is unusable on a phone.
+  - [ ] Page-by-page audit below `md` (tables, wide grids, the calculator)
 - [ ] Keyboard-navigation pass on nav, mode toggle, both lead flows, calculator, forms
 - [ ] Reduced-motion pass
 - [ ] Stripe test-mode end-to-end run for each of the three Phase-6 checkout flows
