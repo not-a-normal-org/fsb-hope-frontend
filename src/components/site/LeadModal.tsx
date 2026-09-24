@@ -1,15 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useId, useRef, useSyncExternalStore } from 'react';
+import { useCallback, useId, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 import { DURATION, EASE_OUT } from '@/lib/animations';
+import { useOverlayChrome } from '@/lib/use-overlay-chrome';
 import LeadForm, { type LeadType } from './LeadForm';
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /** Never-changing subscription for the mount gate — the store value is constant. */
 const subscribeNoop = () => () => {};
@@ -34,7 +32,6 @@ export default function LeadModal({
   initialRoute?: string;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const restoreFocusRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
 
   // Client-mount gate for the portal — false during SSR (no document), true once
@@ -43,38 +40,9 @@ export default function LeadModal({
 
   const close = useCallback(() => onClose(), [onClose]);
 
-  // Scroll lock + focus trap + Esc, while open.
-  useEffect(() => {
-    if (!open) return;
-    restoreFocusRef.current = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = 'hidden';
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        close();
-        return;
-      }
-      if (e.key !== 'Tab') return;
-      const nodes = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE);
-      if (!nodes || nodes.length === 0) return;
-      const first = nodes[0];
-      const last = nodes[nodes.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
-      restoreFocusRef.current?.focus?.();
-    };
-  }, [open, close]);
+  // Scroll lock, focus trap, Esc and focus restore — shared with MobileMenu.
+  // No initialFocusRef: LeadForm focuses its own first field via autoFocusOnMount.
+  useOverlayChrome({ open, onClose: close, containerRef: dialogRef });
 
   if (!mounted) return null;
 
