@@ -153,6 +153,39 @@ Rules:
 - **Gotcha:** `sharp`'s built-in text renderer silently falls back to Helvetica on macOS even with
   `fontfile` set (a fontconfig issue). That's why the script draws each glyph as a vector path with
   opentype.js.
+- **Gotcha:** opentype's `toPathData(n)` rounds by string concatenation and returns **NaN** for any
+  coordinate JavaScript stringifies in exponential form. One NaN is enough for the rasteriser to
+  abandon the rest of that `<path>`, and the only symptom is a glyph near the end of a line
+  rendering as a blob — which is how "October 24, 2026" was nearly shipped as "October 24, 202▪".
+  Both scripts now serialise path commands themselves and refuse to write an SVG containing NaN.
+  **Always zoom into the finished JPEG and read every word before shipping it.**
+
+## Promo banners (a number that expires)
+
+A discount or bonus is the one thing on a cover with an end date, so it is stamped on as a **last
+pass** by [`tools/stamp-cover-promo.mjs`](tools/stamp-cover-promo.mjs) over a finished cover that is
+kept banner-free beside it as `<slug>.base.jpg`:
+
+```bash
+node docs/blog-guide/tools/stamp-cover-promo.mjs docs/blog-guide/tools/<slug>.promo.json
+```
+
+Taking it off when the promo ends is then a copy, not a re-shoot:
+
+```bash
+cp src/scripts/assets/blog/<slug>.base.jpg src/scripts/assets/blog/<slug>.jpg
+ONLY=<slug> RESEED_COVERS=1 npm run seed:articles
+```
+
+Keeping the base matters because **the source photographs behind a composed cover are not kept in
+the repo** — only the composite is — so without one there is no way back to an un-stamped cover.
+
+Rules:
+- **Put the end date in the image, under the number.** An undated promo claim goes stale invisibly;
+  a dated one announces itself. Add a dated reminder to the blog follow-ups note as well.
+- **The number is the only oversized thing.** One filled amber pill, top-centre, inside the
+  x 290–1310 safe area so it survives the featured-card and OG crops.
+- **The alt text has to change too**, because the cover now carries words.
 
 ## 5. Alt text
 

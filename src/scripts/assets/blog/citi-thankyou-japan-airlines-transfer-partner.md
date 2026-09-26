@@ -4,7 +4,7 @@ TITLE: Citi Just Added JAL: What the 30% Bonus Is Worth
 EXCERPT: Citi ThankYou points now transfer to Japan Airlines, with a 30% bonus through October 24. The cheaper-looking path to a JAL business seat can cost you $350 more in cash.
 META_TITLE: Citi Adds JAL: What the 30% Bonus Is Worth
 META_DESCRIPTION: Citi ThankYou points now transfer to Japan Airlines with a 30% bonus. What the miles buy, what the surcharges cost, and when to use American instead.
-COVER_ALT: Split cover: a phone on a desk labeled Citi ThankYou points, beside a business class seat labeled JAL Mileage Bank
+COVER_ALT: Split cover with a +30% transfer bonus badge: Citi ThankYou points at left, a JAL Mileage Bank business seat at right
 ---BODY---
 **Citi ThankYou points now transfer to Japan Airlines Mileage Bank at 1:1 on the annual-fee Strata cards, with a 30% bonus through October 24, 2026.** The bonus is real, and on paper it puts a lie-flat seat to Tokyo within reach of about 43,000 points. The part the coverage skips: JAL charges its own carrier surcharges, so that same seat carries roughly $350 in cash per person, each way.
 

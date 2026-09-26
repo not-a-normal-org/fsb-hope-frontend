@@ -31,10 +31,49 @@ const AMBER = '#E8963A';
 const CREAM = '#F5F5F0';
 
 const cfg = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-const font = (file) => opentype.loadSync(path.join(cfg.fontsDir, file));
+const font = (file) =>
+  // opentype.js 2.x removed loadSync; parse(readFileSync(...)) works on 1.x and 2.x.
+  opentype.parse(fs.readFileSync(path.join(cfg.fontsDir, file)).buffer);
 const SLAB = font('ZillaSlab-Bold.ttf');
 const SANS = font('IBMPlexSans-Medium.ttf');
 const MONO = font('IBMPlexMono-Medium.ttf');
+
+/**
+ * Serialise a glyph path ourselves instead of using opentype's `toPathData`.
+ *
+ * `toPathData(n)` rounds via the string trick `+(Math.round(v + "e+" + n) + "e-" + n)`,
+ * which yields **NaN** for any coordinate JavaScript stringifies in exponential
+ * form. One NaN control point is enough for the rasteriser to abandon the rest of
+ * that <path>, and the only symptom is a glyph quietly rendering as a blob near
+ * the end of a line — invisible unless you zoom into the output JPEG. That is
+ * exactly how "October 24, 2026" shipped as "October 24, 202<blob>".
+ *
+ * toFixed has no such failure mode, and the guard turns a silent corruption into
+ * a crash.
+ */
+const num = (v) => {
+  if (!Number.isFinite(v)) throw new Error(`non-finite path coordinate: ${v}`);
+  return v.toFixed(2);
+};
+const pathData = (p) =>
+  p.commands
+    .map((c) => {
+      switch (c.type) {
+        case 'M':
+          return `M${num(c.x)} ${num(c.y)}`;
+        case 'L':
+          return `L${num(c.x)} ${num(c.y)}`;
+        case 'C':
+          return `C${num(c.x1)} ${num(c.y1)} ${num(c.x2)} ${num(c.y2)} ${num(c.x)} ${num(c.y)}`;
+        case 'Q':
+          return `Q${num(c.x1)} ${num(c.y1)} ${num(c.x)} ${num(c.y)}`;
+        case 'Z':
+          return 'Z';
+        default:
+          throw new Error(`unknown path command: ${c.type}`);
+      }
+    })
+    .join('');
 
 /** Width of a line at `size`, with kerning and optional tracking (em units). */
 function measure(f, text, size, tracking = 0) {
@@ -60,7 +99,7 @@ function line(f, text, size, cx, baseline, fill, { tracking = 0, maxWidth = 460,
     m = measure(f, text, s, tracking);
   }
   const x0 = cx - m.width / 2;
-  const d = m.glyphs.map((g, i) => g.getPath(x0 + m.xs[i], baseline, s).toPathData(2)).join(' ');
+  const d = m.glyphs.map((g, i) => pathData(g.getPath(x0 + m.xs[i], baseline, s))).join(' ');
   return `<path d="${d}" fill="${fill}" fill-opacity="${opacity}"/>`;
 }
 
@@ -119,6 +158,8 @@ const overlay = `
   ${block(cfg.left, leftCx)}
   ${block(cfg.right, rightCx)}
 </svg>`;
+
+if (/NaN|undefined/.test(overlay)) throw new Error('overlay SVG contains NaN/undefined — text would render corrupted');
 
 const [left, right] = await Promise.all([half(cfg.left), half(cfg.right)]);
 await sharp({ create: { width: W, height: H, channels: 3, background: NAVY } })
