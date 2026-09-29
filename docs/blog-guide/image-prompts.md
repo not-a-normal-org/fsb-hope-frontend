@@ -24,6 +24,17 @@ from memory.
 
 ---
 
+### citi-thankyou-japan-airlines-transfer-partner — promo banner (2026-09-26)
+- No generation, no credits: the "+30% TRANSFER BONUS" pill was stamped onto the finished cover with
+  `tools/stamp-cover-promo.mjs` (config `tools/citi-thankyou-japan-airlines-transfer-partner.promo.json`).
+- The banner-free composite is kept as `<slug>.base.jpg`; restoring it after the bonus ends is a copy,
+  not a re-shoot. The two source photographs behind the composite were NOT kept, which is why the base
+  now is.
+- Caught while doing it: opentype's `toPathData` emitted a NaN control point and the rasteriser
+  silently dropped the rest of the line, so the first attempt read "Through October 24, 202▪". Both
+  cover scripts now serialise path commands themselves and throw on NaN. The live
+  travel-portal-vs-transfer-partners cover was checked and is clean.
+
 ### citi-thankyou-japan-airlines-transfer-partner (2026-09-24)
 - Model: requested nano_banana_pro, reported nano_banana_2; aspect 16:9
 - Concepts tried: 4 (2 cover halves + 2 body images); rounds: 1; credits: 8. Nothing rejected: all

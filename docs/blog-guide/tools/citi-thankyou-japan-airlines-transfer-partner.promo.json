@@ -1,0 +1,8 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "in": "src/scripts/assets/blog/citi-thankyou-japan-airlines-transfer-partner.base.jpg",
+  "out": "src/scripts/assets/blog/citi-thankyou-japan-airlines-transfer-partner.jpg",
+  "big": "+30%",
+  "small": "Transfer bonus",
+  "note": "Through October 24, 2026"
+}
