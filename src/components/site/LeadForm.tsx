@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, Loader2, ChevronDown } from 'lucide-react';
 
-import { TRIP_TYPE_OPTIONS } from '@/lib/leads';
+import { TRIP_TYPE_OPTIONS, hasContactNumber } from '@/lib/leads';
 
 export type LeadType = 'individual' | 'business';
 type Status = 'form' | 'submitting' | 'success';
@@ -87,6 +87,10 @@ export default function LeadForm({
   const submit = async () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
       setError('Please enter a valid email address.');
+      return;
+    }
+    if (!business && !hasContactNumber(data.whatsapp)) {
+      setError('Please add a WhatsApp or phone number so we can reach you.');
       return;
     }
     setStatus('submitting');
@@ -239,7 +243,7 @@ export default function LeadForm({
         );
       default:
         return (
-          <Step titleId={titleId} title="Where should we send your results?" hint="We’ll email a screenshot and the exact point cost. WhatsApp is optional.">
+          <Step titleId={titleId} title="Where should we send your results?" hint="We’ll email a screenshot and the exact point cost, and message you if something needs a quick answer.">
             <Labeled label="Email">
               <input
                 data-autofocus
@@ -252,9 +256,11 @@ export default function LeadForm({
                 style={inputStyle}
               />
             </Labeled>
-            <Labeled label="WhatsApp (optional)">
+            <Labeled label="WhatsApp or phone">
               <input
                 type="tel"
+                required
+                aria-required
                 value={data.whatsapp}
                 onChange={set('whatsapp')}
                 placeholder="+1 555 000 0000"

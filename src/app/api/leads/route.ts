@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
-import { LEAD_DETAIL_KEYS, describeLead, leadSummary } from '@/lib/leads';
+import { LEAD_DETAIL_KEYS, describeLead, hasContactNumber, leadSummary } from '@/lib/leads';
 import { leadEmailHtml } from '@/lib/lead-email';
 
 /**
@@ -11,8 +11,8 @@ import { leadEmailHtml } from '@/lib/lead-email';
  * the Supabase `leads` table (docs/plans/06). Server-only: uses the service-role
  * admin client, which the table's RLS is otherwise locked against.
  *
- * Individual requires a route + email; business/contact are accepted too (the
- * business flow lands in a later slice). The DB write is the source of truth (so
+ * Individual requires a route + email + WhatsApp/phone number; business/contact
+ * are accepted with just an email. The DB write is the source of truth (so
  * no lead is lost); a best-effort email notification then reaches the team at
  * hello@savermiles.com — its failure never fails the request.
  */
@@ -65,6 +65,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
   }
 
+  const whatsapp = clip(body.whatsapp, 40);
+  if (type === 'individual' && !hasContactNumber(whatsapp)) {
+    return NextResponse.json(
+      { error: 'Please add a WhatsApp or phone number so we can reach you.' },
+      { status: 400 },
+    );
+  }
+
   // Take only known detail keys, clipped — never store arbitrary client JSON.
   const rawDetails =
     body.details && typeof body.details === 'object' ? (body.details as Record<string, unknown>) : {};
@@ -85,7 +93,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     flight_need: clip(body.flight_need),
     points_budget: clip(body.points_budget),
     email,
-    whatsapp: clip(body.whatsapp, 40),
+    whatsapp,
     phone: clip(body.phone, 40),
     referral_code: referralCode,
     details: Object.keys(details).length ? details : null,

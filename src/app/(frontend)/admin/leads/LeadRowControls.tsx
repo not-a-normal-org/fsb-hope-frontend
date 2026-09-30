@@ -92,7 +92,7 @@ type TopKey = Exclude<keyof LeadEditData, 'id' | 'type' | 'details'>;
 /** Which lead type a field belongs to. Off-type fields still show if they hold a value. */
 const TOP_FIELDS: { key: TopKey; label: string; type?: string; area?: boolean; for?: 'individual' | 'business' }[] = [
   { key: 'email', label: 'Email', type: 'email' },
-  { key: 'whatsapp', label: 'WhatsApp', type: 'tel' },
+  { key: 'whatsapp', label: 'WhatsApp / phone', type: 'tel' },
   { key: 'phone', label: 'Phone', type: 'tel' },
   { key: 'route', label: 'Route / destination', for: 'individual' },
   { key: 'points_held', label: 'Points held', for: 'individual' },
