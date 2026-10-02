@@ -68,6 +68,11 @@ export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
 
 export const LEAD_DETAIL_KEYS = LEAD_DETAIL_FIELDS.map((f) => f.key);
 
+/** A usable WhatsApp/phone number: at least 7 digits once spacing and punctuation are ignored. */
+export function hasContactNumber(value: string | null | undefined): boolean {
+  return (value ?? '').replace(/\D/g, '').length >= 7;
+}
+
 /** Staff-facing text for a stored answer; unknown values (older leads, free text) pass through. */
 export function displayAnswer(field: LeadDetailField | undefined, raw: string): string {
   const opt = field?.options?.find((o) => o.value === raw);
@@ -153,7 +158,7 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
 
   if (opts.includeContact) {
     push(contact, 'Email', lead.email);
-    push(contact, 'WhatsApp', lead.whatsapp);
+    push(contact, 'WhatsApp / phone', lead.whatsapp);
     push(contact, 'Phone', lead.phone);
   }
 
