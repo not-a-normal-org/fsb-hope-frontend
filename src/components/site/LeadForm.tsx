@@ -4,6 +4,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, Loader2, ChevronDown } from 'lucide-react';
 
+import { TRIP_TYPE_OPTIONS } from '@/lib/leads';
+
 export type LeadType = 'individual' | 'business';
 type Status = 'form' | 'submitting' | 'success';
 type Change = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
@@ -11,6 +13,7 @@ type Change = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextA
 const EMPTY = {
   // individual
   route: '',
+  trip_type: 'round_trip',
   dates: '',
   flexibility: '',
   passengers: '',
@@ -32,7 +35,7 @@ const TOTAL_STEPS = 4;
 /**
  * Multi-step lead-capture form (docs/plans/02) — the reusable body shared by the
  * `LeadModal` popup and the standalone `/audit` page. Two flows behind one `type`:
- *  - individual: trip (route/dates/flexibility) → travelers → points → contact
+ *  - individual: trip (route/trip type/dates/flexibility) → travelers → points → contact
  *  - business:   spend → team's routes → points/budget → callback
  * Posts to /api/leads (typed columns + the rest in leads.details jsonb), which
  * also emails hello@savermiles.com.
@@ -106,6 +109,7 @@ export default function LeadForm({
             email: data.email,
             whatsapp: data.whatsapp,
             details: {
+              trip_type: data.trip_type,
               dates: data.dates,
               flexibility: data.flexibility,
               passengers: data.passengers,
@@ -163,12 +167,17 @@ export default function LeadForm({
                 }}
               />
             </Labeled>
+            <TripTypeToggle value={data.trip_type} onChange={set('trip_type')} />
             <Labeled label="When? (optional)">
               <input
                 type="text"
                 value={data.dates}
                 onChange={set('dates')}
-                placeholder="e.g. mid-March, ~7 nights, or exact dates"
+                placeholder={
+                  data.trip_type === 'one_way'
+                    ? 'e.g. mid-March, or an exact date'
+                    : 'e.g. mid-March, ~7 nights, or exact dates'
+                }
                 className={inputClass}
                 style={inputStyle}
               />
@@ -494,6 +503,40 @@ function Labeled({ label, children }: { label: string; children: React.ReactNode
       </span>
       {children}
     </label>
+  );
+}
+
+/**
+ * One-way / round-trip pills. A fieldset of native radios (not `Labeled`: a radio
+ * group can't live inside a single <label>), so arrow keys and screen readers get
+ * real radio semantics; the pill styling hangs off `:checked` / `:focus-visible`.
+ */
+function TripTypeToggle({ value, onChange }: { value: string; onChange: (e: Change) => void }) {
+  const name = useId();
+  return (
+    <fieldset>
+      <legend className="mb-1.5 block font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink-muted">
+        Trip type
+      </legend>
+      <div className="inline-flex rounded-full p-1" style={inputStyle}>
+        {TRIP_TYPE_OPTIONS.map((o) => (
+          <label
+            key={o.value}
+            className="cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium text-ink-sub transition-colors has-[:checked]:bg-cta has-[:checked]:text-cta-text has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent"
+          >
+            <input
+              type="radio"
+              name={name}
+              value={o.value}
+              checked={value === o.value}
+              onChange={onChange}
+              className="sr-only"
+            />
+            {o.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
   );
 }
 

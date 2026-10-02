@@ -38,6 +38,11 @@ export const CABIN_OPTIONS: LeadOption[] = [
   { value: 'any', label: 'Any / best value' },
 ];
 
+export const TRIP_TYPE_OPTIONS: LeadOption[] = [
+  { value: 'round_trip', label: 'Round trip' },
+  { value: 'one_way', label: 'One-way' },
+];
+
 // ── Questionnaire fields (leads.details) ──────────────────────────────────────
 
 export type LeadDetailField = {
@@ -51,6 +56,7 @@ export type LeadDetailField = {
 };
 
 export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
+  { key: 'trip_type', label: 'Trip type', section: 'trip', options: TRIP_TYPE_OPTIONS },
   { key: 'dates', label: 'Dates', section: 'trip' },
   { key: 'flexibility', label: 'Date flexibility', section: 'trip', options: FLEXIBILITY_OPTIONS },
   { key: 'passengers', label: 'Travelers', section: 'trip', options: PASSENGER_OPTIONS },
@@ -165,12 +171,12 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
   ].filter((s) => s.rows.length > 0);
 }
 
-/** One-line glance summary for table rows and email subjects, e.g. "1 traveler · Business · Mid October". */
+/** One-line glance summary for table rows and email subjects, e.g. "1 traveler · Business · Round trip · Mid October". */
 export function leadSummary(lead: LeadRecord): string {
   const details = detailsOf(lead);
   const pick = (key: string) => {
     const raw = asText(details[key]);
     return raw ? displayAnswer(LEAD_DETAIL_FIELDS.find((f) => f.key === key), raw) : null;
   };
-  return [pick('passengers'), pick('cabin'), pick('dates')].filter(Boolean).join(' · ');
+  return [pick('passengers'), pick('cabin'), pick('trip_type'), pick('dates')].filter(Boolean).join(' · ');
 }
