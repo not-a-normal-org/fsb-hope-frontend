@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'xodffpwxvzuylhoyivih.supabase.co' },
     ],
   },
+  async redirects() {
+    return [
+      // /audit (the free points audit page) is retired — the "Get started" popup
+      // replaced it. It was the individual lead form on a page of its own, so old
+      // links and bookmarks land on the individual page, whose CTA opens that form.
+      { source: '/audit', destination: '/individual', permanent: true },
+    ];
+  },
 };
 
 // withPayload wires Payload's admin (/cms) and API (/cms-api) into the Next build.

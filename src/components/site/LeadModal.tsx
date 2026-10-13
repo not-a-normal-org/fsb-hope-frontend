@@ -98,8 +98,8 @@ function LeadFlow({
 /**
  * Lead-capture popup — accessible dialog chrome (portalled, focus-trapped,
  * Esc/backdrop to close, body scroll locked, focus restored, glass +
- * reduced-motion-safe) around the shared {@link LeadForm}. The same form renders
- * inline on the /audit page; keep the multi-step logic there, not here.
+ * reduced-motion-safe) around the shared {@link LeadForm}. Keep the multi-step
+ * logic in the form, not here.
  */
 export default function LeadModal({
   open,

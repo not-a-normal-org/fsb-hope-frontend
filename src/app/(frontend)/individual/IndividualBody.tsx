@@ -39,7 +39,7 @@ export default function IndividualBody() {
   const [leadOpen, setLeadOpen] = useState(false);
   const [initialRoute, setInitialRoute] = useState<string | undefined>();
 
-  // Arriving from a deals tile (/individual?from=JFK&to=NRT) opens the audit with
+  // Arriving from a deals tile (/individual?from=JFK&to=NRT) opens the form with
   // the route pre-filled — the grid's whole point is to pre-populate a search
   // (Review v3 §10). Read from the URL directly to avoid a Suspense boundary.
   useEffect(() => {
