@@ -24,7 +24,7 @@ export default function CalculatorTeaser() {
           </h2>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-sub">
             A quick estimate to get you started. Enter your balance for a rough
-            travel value, then let a specialist run the real audit to see what’s
+            travel value, then let a specialist run the real search to see what’s
             actually bookable.
           </p>
         </motion.div>

@@ -16,7 +16,7 @@ import { entrance, inViewOnce, staggerParent } from '@/lib/animations';
  *
  * Framing is TYPICAL cost, not dated availability (see src/lib/deals.ts): a price
  * benchmark, so this never becomes the phantom-availability failure mode the rest
- * of the page argues against. Each tile hands its route to the audit CTA.
+ * of the page argues against. Each tile hands its route to the lead form.
  */
 
 const CABIN_LABEL: Record<Deal['cabin'], string> = {
@@ -37,7 +37,7 @@ function Tile({ deal }: { deal: Deal }) {
     >
       <Link
         href={dealHref(deal)}
-        aria-label={`${deal.city}: ${deal.from} to ${deal.to}, ${CABIN_LABEL[deal.cabin]}, from ${formatPoints(deal.points)} points — start an audit`}
+        aria-label={`${deal.city}: ${deal.from} to ${deal.to}, ${CABIN_LABEL[deal.cabin]}, from ${formatPoints(deal.points)} points — start a flight request`}
         className="group relative flex h-full flex-col overflow-hidden rounded-2xl p-5"
         style={{
           background:
@@ -107,7 +107,7 @@ export default function DealsGrid() {
           <p className="mt-4 text-sm leading-relaxed text-ink-sub">
             Typical business- and first-class award prices a specialist finds on these routes —
             with the cash fare you’d otherwise pay. Your dates and balance decide the real number;
-            an audit is where we find it.
+            a search is where we find it.
           </p>
         </motion.div>
 

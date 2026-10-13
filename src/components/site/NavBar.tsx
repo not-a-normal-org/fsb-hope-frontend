@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
 
 import Logo from './Logo';
+import LeadModal from './LeadModal';
 import MobileMenu from './MobileMenu';
 import ModeCycle from '@/components/system/ModeCycle';
 import { PRIMARY_NAV } from '@/lib/nav';
@@ -17,6 +18,11 @@ import { PRIMARY_NAV } from '@/lib/nav';
  * compact ModeCycle icon (click to toggle Light ⇄ Dark; Mono is held) and the
  * single primary CTA; the fuller segmented toggle lives in the footer.
  *
+ * "Get started" opens the lead popup on whatever page the visitor is on; with no
+ * `type` the popup asks "individual or business?" first. The popup is owned here
+ * rather than by the button so the mobile menu's copy of the CTA can open it too
+ * — the menu unmounts as it closes, and would take its own popup with it.
+ *
  * The link row is desktop-only. Below `md` a menu button opens {@link MobileMenu},
  * which carries the full public sitemap plus the theme control — before it existed
  * the footer was the only way to reach a second page on a phone.
@@ -24,6 +30,7 @@ import { PRIMARY_NAV } from '@/lib/nav';
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -68,14 +75,16 @@ export default function NavBar() {
           {/* Below md the theme control lives in the mobile menu instead, which
               keeps the bar from crowding on a narrow phone. */}
           <ModeCycle className="hidden md:inline-flex" />
-          <Link
-            href="/audit"
-            className="shrink-0 rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 sm-cta"
+          {/* Kept to two words: a longer label plus the menu button overflows a
+              320px bar. */}
+          <button
+            type="button"
+            onClick={() => setLeadOpen(true)}
+            aria-haspopup="dialog"
+            className="shrink-0 cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 sm-cta"
           >
-            {/* The full label plus a menu button overflows a 320px bar. */}
-            <span className="sm:hidden">Free audit</span>
-            <span className="hidden sm:inline">Get a free points audit</span>
-          </Link>
+            Get started
+          </button>
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -89,7 +98,15 @@ export default function NavBar() {
         </div>
       </nav>
 
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onGetStarted={() => {
+          setMenuOpen(false);
+          setLeadOpen(true);
+        }}
+      />
+      <LeadModal open={leadOpen} onClose={() => setLeadOpen(false)} />
     </header>
   );
 }

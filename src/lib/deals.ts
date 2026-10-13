@@ -83,7 +83,7 @@ export function formatPoints(n: number): string {
   return n.toLocaleString('en-US');
 }
 
-/** The audit CTA with the route pre-filled, so a tile hands off intent. */
+/** The individual lead form with the route pre-filled, so a tile hands off intent. */
 export function dealHref(deal: Deal): string {
   const params = new URLSearchParams({ from: deal.from, to: deal.to });
   return `/individual?${params.toString()}`;

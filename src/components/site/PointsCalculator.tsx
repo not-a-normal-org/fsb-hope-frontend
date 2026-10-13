@@ -77,7 +77,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
               href="/individual"
               className="mt-3 inline-block text-xs text-ink-sub transition-colors hover:text-ink"
             >
-              ≈ {flights[0]} — start that audit →
+              ≈ {flights[0]} — start that search →
             </Link>
           )}
         </div>
