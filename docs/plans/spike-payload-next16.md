@@ -67,6 +67,12 @@ returns `ENOTFOUND`, and Vercel is IPv4, so it fails in both. The Session pooler
 (IPv4, port **5432** — needed for Payload's schema DDL; do NOT use the 6543
 transaction pooler) works. Format:
 
+> **Superseded — do not copy this into Vercel.** That advice held for the local
+> spike only. On Vercel the session pooler is capped at 15 clients and takes the
+> CMS and `/admin` down with `EMAXCONNSESSION`; production and preview must use
+> the **transaction** pooler, port **6543** (see `docs/deployment.md`). Local dev
+> has run on 6543 since the August fix, schema push included.
+
 ```
 DATABASE_URI=postgresql://postgres.<ref>:<db-password>@aws-0-<region>.pooler.supabase.com:5432/postgres
 PAYLOAD_SECRET=<random 32-byte hex>
