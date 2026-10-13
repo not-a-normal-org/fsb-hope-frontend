@@ -42,7 +42,17 @@ function activeHref(pathname: string): string | undefined {
     .find((l) => pathname === l.href || pathname.startsWith(l.href + '/'))?.href;
 }
 
-export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MobileMenu({
+  open,
+  onClose,
+  onGetStarted,
+}: {
+  open: boolean;
+  onClose: () => void;
+  /** The "Get started" CTA. The caller closes this menu and opens the lead popup;
+   *  the popup can't live in here because the panel unmounts on close. */
+  onGetStarted: () => void;
+}) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname() ?? '';
@@ -187,13 +197,14 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
                 paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
               }}
             >
-              <Link
-                href="/audit"
-                onClick={close}
-                className="sm-cta block rounded-full px-4 py-3 text-center text-sm font-medium"
+              <button
+                type="button"
+                onClick={onGetStarted}
+                aria-haspopup="dialog"
+                className="sm-cta block w-full cursor-pointer rounded-full px-4 py-3 text-center text-sm font-medium"
               >
-                Get a free points audit
-              </Link>
+                Get started
+              </button>
               <div className="mt-4 flex items-center justify-between">
                 <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
                   Theme

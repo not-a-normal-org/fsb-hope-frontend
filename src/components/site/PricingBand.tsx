@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import LeadCta from './LeadCta';
 import { entrance, inViewOnce } from '@/lib/animations';
 
 /**
@@ -35,12 +36,9 @@ export default function PricingBand() {
           success fee is charged only once your seat is confirmed.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-          <Link
-            href="/audit"
-            className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors"
-          >
-            Get a free points audit
-          </Link>
+          <LeadCta className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors">
+            Start your flight request
+          </LeadCta>
           <Link
             href="/pricing"
             className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
+import LeadCta from '@/components/site/LeadCta';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**
@@ -58,12 +59,7 @@ export default function Steps() {
         </motion.ol>
 
         <motion.div variants={entrance} {...inViewOnce} className="mt-12 flex flex-wrap gap-3">
-          <Link
-            href="/audit"
-            className={`${ctaPrimary} sm-cta`}
-          >
-            Get a free points audit
-          </Link>
+          <LeadCta className={`${ctaPrimary} sm-cta`}>Start your flight request</LeadCta>
           <Link
             href="/business"
             className={`${ctaPrimary} sm-cta-ghost`}

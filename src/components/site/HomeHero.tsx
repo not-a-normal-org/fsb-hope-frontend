@@ -6,6 +6,7 @@ import { Check } from 'lucide-react';
 
 import AmbientBackground from '@/components/system/AmbientBackground';
 import ShineText from '@/components/system/ShineText';
+import LeadCta from './LeadCta';
 import StatStrip from './StatStrip';
 import RegionalReports from './RegionalReports';
 import { entrance, staggerParent } from '@/lib/animations';
@@ -49,12 +50,9 @@ export default function HomeHero() {
               cost to book it.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
-              <Link
-                href="/audit"
-                className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors"
-              >
-                Get a free points audit
-              </Link>
+              <LeadCta className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors">
+                Start your flight request
+              </LeadCta>
               <Link
                 href="/how-it-works"
                 className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"
@@ -64,7 +62,7 @@ export default function HomeHero() {
             </div>
             <p className="mt-4 flex items-center gap-2 text-[13px] text-ink-muted">
               <Check className="h-3.5 w-3.5" aria-hidden strokeWidth={2.5} />
-              Free points audit — no card, no commitment.
+              No card, no commitment.
             </p>
           </motion.div>
 

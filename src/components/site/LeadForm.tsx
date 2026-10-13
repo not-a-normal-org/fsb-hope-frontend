@@ -48,6 +48,7 @@ export default function LeadForm({
   type = 'individual',
   initialRoute,
   onDone,
+  onBack,
   autoFocusOnMount = false,
   titleId: titleIdProp,
 }: {
@@ -56,6 +57,9 @@ export default function LeadForm({
   initialRoute?: string;
   /** Called by the success "Done" button. When absent, success shows a home link. */
   onDone?: () => void;
+  /** Gives the first step a Back button — for a wrapper with something before the
+   *  form to return to (LeadModal's "individual or business?" question). */
+  onBack?: () => void;
   autoFocusOnMount?: boolean;
   /** So a wrapping dialog can point aria-labelledby at the current step heading. */
   titleId?: string;
@@ -414,10 +418,10 @@ export default function LeadForm({
           )}
 
           <div className="mt-7 flex items-center justify-between gap-3">
-            {step > 0 ? (
+            {step > 0 || onBack ? (
               <button
                 type="button"
-                onClick={goBack}
+                onClick={step > 0 ? goBack : onBack}
                 className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-sm font-medium transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden />
@@ -451,7 +455,7 @@ export default function LeadForm({
                 ) : business ? (
                   'Request a callback'
                 ) : (
-                  'Get my points audit'
+                  'Send my flight request'
                 )}
               </button>
             )}

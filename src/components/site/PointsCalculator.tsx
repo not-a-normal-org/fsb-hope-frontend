@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import GlassPanel from '@/components/system/GlassPanel';
+import LeadCta from './LeadCta';
 import {
   PROGRAMS,
   type ProgramKey,
@@ -77,7 +78,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
               href="/individual"
               className="mt-3 inline-block text-xs text-ink-sub transition-colors hover:text-ink"
             >
-              ≈ {flights[0]} — start that audit →
+              ≈ {flights[0]} — start that search →
             </Link>
           )}
         </div>
@@ -149,12 +150,9 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
 
       <p className="mt-6 text-xs leading-relaxed text-ink-muted">{CALCULATOR_DISCLAIMER}</p>
 
-      <Link
-        href="/audit"
-        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta"
-      >
-        Get a free points audit
-      </Link>
+      <LeadCta className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta">
+        Start your flight request
+      </LeadCta>
     </GlassPanel>
   );
 }
