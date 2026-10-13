@@ -38,6 +38,13 @@ export const CABIN_OPTIONS: LeadOption[] = [
   { value: 'any', label: 'Any / best value' },
 ];
 
+/** The form asks this as a checkbox, ticked by default; both answers are stored so
+ *  an explicit "no" can be told apart from an older lead that was never asked. */
+export const NEARBY_AIRPORTS_OPTIONS: LeadOption[] = [
+  { value: 'yes', label: 'Flexible with nearby airports', display: 'Flexible' },
+  { value: 'no', label: 'These airports only', display: 'Exact airports only' },
+];
+
 export const TRIP_TYPE_OPTIONS: LeadOption[] = [
   { value: 'round_trip', label: 'Round trip' },
   { value: 'one_way', label: 'One-way' },
@@ -56,6 +63,7 @@ export type LeadDetailField = {
 };
 
 export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
+  { key: 'nearby_airports', label: 'Nearby airports', section: 'trip', options: NEARBY_AIRPORTS_OPTIONS },
   { key: 'trip_type', label: 'Trip type', section: 'trip', options: TRIP_TYPE_OPTIONS },
   { key: 'dates', label: 'Dates', section: 'trip' },
   { key: 'flexibility', label: 'Date flexibility', section: 'trip', options: FLEXIBILITY_OPTIONS },
