@@ -26,9 +26,13 @@ Gotchas:
   opens many short-lived serverless connections; the **transaction** pooler
   multiplexes them, while the session pooler is capped (~15 clients) and throws
   `EMAXCONNSESSION: max clients reached in session mode` under load — which surfaces
-  as a 500 on `/cms` and "Login failed" on `/admin`. The app also caps its own pool
-  (`max: 1`) in `payload.config.ts`. Payload needs this at build + runtime.
-  (Use the session/direct connection only for one-off migrations.)
+  as "This page couldn't load" on `/cms`, edits that never save, staff bounced back
+  to the login screen, and "Login failed" on `/admin`. Payload needs this at build +
+  runtime. As a safety net, in production `src/lib/database-uri.ts` moves a Supabase
+  pooler URI from 5432 onto 6543 and logs a `[db]` warning — if that warning shows
+  up in the Vercel logs, the env var is wrong and should be corrected. (`next dev`
+  and `payload run` scripts are left alone, so a local session connection for
+  one-off work still behaves as configured.)
 - **`NEXT_PUBLIC_APP_URL`** must be the real production origin
   (`https://<your-domain>`), no trailing slash — it builds Stripe redirect URLs
   and email links. Do **not** leave it pointing at a `*.vercel.app` preview URL

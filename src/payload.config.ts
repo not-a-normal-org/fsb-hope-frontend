@@ -15,6 +15,7 @@ import { Categories } from './collections/Categories';
 import { Posts } from './collections/Posts';
 import { DealsOfWeek } from './collections/DealsOfWeek';
 import { Testimonials } from './collections/Testimonials';
+import { resolveDatabaseUri } from './lib/database-uri';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -35,9 +36,9 @@ const SUPABASE_REGION = 'us-west-1';
  * collide with this app's existing admin portal and API route handlers.
  *
  * The Postgres adapter points at the SAME Supabase database as the app, tables
- * isolated in a dedicated `payload` schema. It needs a direct Postgres string in
- * DATABASE_URI (Supabase Session pooler — a SEPARATE credential from the API
- * keys). Media uploads go to Supabase Storage (public `media` bucket) via the
+ * isolated in a dedicated `payload` schema. It needs a Postgres string in
+ * DATABASE_URI (Supabase TRANSACTION pooler, port 6543 — a SEPARATE credential
+ * from the API keys). Media uploads go to Supabase Storage (public `media` bucket) via the
  * s3Storage plugin; the `posts` collection gets a SEO "Meta" tab. All in
  * `.env.local`: DATABASE_URI, PAYLOAD_SECRET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY.
  */
@@ -57,10 +58,13 @@ export default buildConfig({
     // multiplexes the many short-lived connections Vercel's serverless functions
     // open. The SESSION pooler (5432) is capped (pool_size 15) and throws
     // EMAXCONNSESSION under load — a 500 on /cms and "Login failed" on /admin.
+    // That string has reached production twice, so in production
+    // resolveDatabaseUri() moves a session-pooler URI onto 6543 rather than
+    // trusting the env var.
     // (Don't cap `max` to 1 here — Payload nests connection use, so a 1-connection
     // pool deadlocks; the transaction pooler is what bounds total connections.)
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: resolveDatabaseUri(process.env.DATABASE_URI || ''),
       idleTimeoutMillis: 30_000,
     },
     // Isolate Payload's tables from the app's `public` schema.
