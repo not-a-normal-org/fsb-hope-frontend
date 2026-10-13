@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
-import { contentAccess } from './access';
+import { contentAccess, publishedOrEditor } from './access';
 
 /** Slugify a title: lowercase, strip punctuation, hyphenate. */
 const formatSlug = (val: string): string =>
@@ -15,7 +15,8 @@ const formatSlug = (val: string): string =>
 /**
  * Blog posts (docs/plans/06).
  * - Drafts enabled (autosave): authors write privately and publish explicitly;
- *   only `_status: published` renders publicly (see the /blog queries).
+ *   only `_status: published` renders publicly (see the /blog queries), and the
+ *   read rule keeps drafts out of the public REST API as well.
  * - `slug` auto-generates from the title when left blank.
  * - Byline is a fixed constant — NEVER a real-name author field
  *   (non-negotiable in docs/plans/00).
@@ -24,7 +25,7 @@ const formatSlug = (val: string): string =>
  */
 export const Posts: CollectionConfig = {
   slug: 'posts',
-  access: contentAccess,
+  access: { ...contentAccess, read: publishedOrEditor },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', '_status', 'publishedAt'],
