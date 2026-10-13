@@ -13,6 +13,7 @@ type Change = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextA
 const EMPTY = {
   // individual
   route: '',
+  nearby_airports: 'yes',
   trip_type: 'round_trip',
   dates: '',
   flexibility: '',
@@ -35,7 +36,7 @@ const TOTAL_STEPS = 4;
 /**
  * Multi-step lead-capture form (docs/plans/02) — the reusable body shared by the
  * `LeadModal` popup and the standalone `/audit` page. Two flows behind one `type`:
- *  - individual: trip (route/trip type/dates/flexibility) → travelers → points → contact
+ *  - individual: trip (route/nearby airports/trip type/dates/flexibility) → travelers → points → contact
  *  - business:   spend → team's routes → points/budget → callback
  * Posts to /api/leads (typed columns + the rest in leads.details jsonb), which
  * also emails hello@savermiles.com.
@@ -113,6 +114,7 @@ export default function LeadForm({
             email: data.email,
             whatsapp: data.whatsapp,
             details: {
+              nearby_airports: data.nearby_airports,
               trip_type: data.trip_type,
               dates: data.dates,
               flexibility: data.flexibility,
@@ -171,6 +173,14 @@ export default function LeadForm({
                 }}
               />
             </Labeled>
+            <CheckboxField
+              checked={data.nearby_airports === 'yes'}
+              onChange={(checked) =>
+                setData((d) => ({ ...d, nearby_airports: checked ? 'yes' : 'no' }))
+              }
+            >
+              I am flexible with nearby airports if there is a great deal
+            </CheckboxField>
             <TripTypeToggle value={data.trip_type} onChange={set('trip_type')} />
             <Labeled label="When? (optional)">
               <input
@@ -508,6 +518,41 @@ function Labeled({ label, children }: { label: string; children: React.ReactNode
         {label}
       </span>
       {children}
+    </label>
+  );
+}
+
+/**
+ * A single yes/no answer as a checkbox with its sentence beside it. The box is
+ * drawn from the CTA tokens rather than left to the browser: a native checkbox
+ * ignores the theme, and `--sm-cta` / `--sm-cta-text` is the one pairing already
+ * tuned to read in Light, Dark and Mono (it is what `.sm-cta` buttons use).
+ */
+function CheckboxField({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3">
+      <span className="relative mt-0.5 inline-flex h-[18px] w-[18px] shrink-0">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="peer h-full w-full cursor-pointer appearance-none rounded-[5px] border border-[color-mix(in_srgb,var(--sm-ink)_30%,transparent)] outline-none transition-colors checked:bg-cta focus-visible:ring-2 focus-visible:ring-accent"
+        />
+        <Check
+          className="pointer-events-none absolute inset-0 m-auto h-3 w-3 text-cta-text opacity-0 peer-checked:opacity-100"
+          strokeWidth={3}
+          aria-hidden
+        />
+      </span>
+      <span className="text-sm leading-snug text-ink">{children}</span>
     </label>
   );
 }
