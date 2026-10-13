@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getPayloadClient } from '@/lib/payload';
+import { STAFF_SESSION_SECONDS } from '@/lib/access';
 import type { User } from '@/payload-types';
 
 /**
@@ -16,7 +17,7 @@ import type { User } from '@/payload-types';
 
 const COOKIE_NAME = 'payload-token'; // Payload's default (cookiePrefix 'payload')
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const FALLBACK_MAX_AGE = 60 * 60 * 2; // 2h, Payload's default token expiry
+const FALLBACK_MAX_AGE = STAFF_SESSION_SECONDS; // only if Payload returns no `exp`
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   let email: string;
