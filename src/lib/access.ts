@@ -22,6 +22,15 @@ export function hasRole(user: SessionUser | null | undefined, roles: readonly Ro
   return !!user && isRole(user.role) && roles.includes(user.role);
 }
 
+/**
+ * How long a staff sign-in lasts, in seconds — one working day. Payload's default
+ * is 2h, which logged editors out mid-article. This is the lifetime of the
+ * `payload-token` JWT and its server-side session, so it is also how long the
+ * edge pre-filter in `src/proxy.ts` keeps trusting a token's role/status claims;
+ * the authoritative checks (`payload.auth`) still see changes immediately.
+ */
+export const STAFF_SESSION_SECONDS = 60 * 60 * 8;
+
 // ── Admin nav / page → roles map ───────────────────────────────────────────────
 
 export type NavItem = {

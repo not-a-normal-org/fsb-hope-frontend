@@ -1,6 +1,6 @@
 import type { Access, CollectionConfig, FieldAccess } from 'payload';
 
-import { hasRole, CMS_CONTENT_ROLES } from '../lib/access';
+import { hasRole, CMS_CONTENT_ROLES, STAFF_SESSION_SECONDS } from '../lib/access';
 
 /**
  * Auth collection — the single identity store for every internal/partner account
@@ -46,7 +46,7 @@ const adminFieldOnly: FieldAccess = ({ req: { user } }) => isAdmin(user);
 
 export const Users: CollectionConfig = {
   slug: 'users',
-  auth: true,
+  auth: { tokenExpiration: STAFF_SESSION_SECONDS },
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'role', 'status'],
