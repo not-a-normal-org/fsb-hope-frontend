@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { tierNameByPriceId } from '@/lib/tiers';
+import { planNameByPriceId } from '@/lib/plans';
 import { cancelSubscription } from './actions';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -139,7 +139,7 @@ export default async function SubscriptionsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[#1E2538]">
-                  {['Customer', 'Tier', 'Status', 'Renews', 'Cancel at end?', 'Price', ''].map((h) => (
+                  {['Customer', 'Plan', 'Status', 'Renews', 'Cancel at end?', 'Price', ''].map((h) => (
                     <th key={h} className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-widest text-[#5C6378] whitespace-nowrap">
                       {h}
                     </th>
@@ -171,8 +171,8 @@ export default async function SubscriptionsPage() {
                         </p>
                         <p className="text-xs text-[#9DA3B4] mt-0.5">{sub.customer?.email ?? '—'}</p>
                       </td>
-                      {/* Tier */}
-                      <td className="px-5 py-3.5 text-[#F5F5F0] font-medium">{tierNameByPriceId(sub.stripe_price_id)}</td>
+                      {/* Plan */}
+                      <td className="px-5 py-3.5 text-[#F5F5F0] font-medium">{planNameByPriceId(sub.stripe_price_id)}</td>
                       {/* Status */}
                       <td className="px-5 py-3.5"><StatusBadge status={sub.status} /></td>
                       {/* Renewal date */}
