@@ -114,10 +114,10 @@ export default function AboutBody() {
           <motion.div variants={entrance} {...inViewOnce}>
             <h2 className="font-display text-section font-bold text-ink">How we charge</h2>
             <p className="mt-5 text-base leading-relaxed text-ink-sub">
-              Flat fees for the work, listed in full on the pricing page. A business
-              search is $25. An individual booking is a $25 deposit plus a $99 fee, and
-              if your specialist finds nothing bookable, the deposit comes back. Ongoing
-              alerts are monthly. That’s the whole model, nothing hidden.
+              Flat fees for the work, listed in full on the pricing page. An individual
+              booking is a $25 deposit plus a $99 fee, and if your specialist finds
+              nothing bookable, the deposit comes back. Business pricing is quoted per
+              account. Ongoing alerts are monthly. That’s the whole model, nothing hidden.
             </p>
             <Link
               href="/pricing"

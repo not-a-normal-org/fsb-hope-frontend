@@ -15,7 +15,7 @@ type PostRow = { title?: string; slug?: string; excerpt?: string; category?: { n
 
 const KEY_PAGES: [string, string, string][] = [
   ['/how-it-works', 'How it works', 'How a manual, by-hand award search works, step by step.'],
-  ['/pricing', 'Pricing', 'Flat pricing. A $25 deposit is refunded in full if nothing bookable is found.'],
+  ['/pricing', 'Pricing', 'Individual search: a $25 deposit plus a $99 success fee; the deposit is refunded in full if nothing bookable is found. Business pricing is custom.'],
   ['/individual', 'For individuals', 'What your points can actually book, searched by a specialist.'],
   ['/business', 'For business', 'Account-level award search for teams that fly often.'],
   ['/alerts', 'Alerts', 'An automated weekly route scan, or a specialist checking your routes each cycle.'],

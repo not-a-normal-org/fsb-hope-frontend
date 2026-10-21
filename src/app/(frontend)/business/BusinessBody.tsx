@@ -10,8 +10,8 @@ import LeadModal from '@/components/site/LeadModal';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**
- * /business body (docs/plans/02): ROI / account-level framing, the $25-per-search
- * model explained plainly (full breakdown on /pricing), and the Human Search
+ * /business body (docs/plans/02): ROI / account-level framing, custom pricing
+ * ("let's talk" — no published price, docs/plans/03 §1), and the Human Search
  * Alert cross-sell for accounts with recurring, high-stakes travel.
  *
  * The primary CTA opens the multi-step business lead modal (LeadModal →
@@ -123,7 +123,7 @@ export default function BusinessBody() {
 
           <motion.p variants={entrance} {...inViewOnce} className="mt-6 text-sm leading-relaxed text-ink-sub">
             One invoice, the point cost per traveller, and a summary your finance team
-            can sign off — not a pile of receipts. Billed per search, never per seat.
+            can sign off — not a pile of receipts.
           </motion.p>
         </div>
       </section>
@@ -136,11 +136,12 @@ export default function BusinessBody() {
                 What it costs
               </p>
               <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="font-mono text-3xl font-medium text-ink">$25</span>
-                <span className="text-sm text-ink-sub">flat, per search</span>
+                <span className="font-mono text-3xl font-medium text-ink">Custom</span>
+                <span className="text-sm text-ink-sub">let’s talk</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                Charged once, when you submit. No subscription, no retainer. The
+                Every team flies differently, so business pricing is quoted per
+                account. Tell us what you need and we’ll come back with a quote. The
                 account-level entry point for a team that flies often.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const UPDATED = 'August 31, 2026';
+const UPDATED = 'October 22, 2026';
 const EMAIL = SITE_EMAIL;
 
 export default function TermsPage() {
@@ -68,8 +68,8 @@ export default function TermsPage() {
           cabin.
         </li>
         <li>
-          <strong>Business search.</strong> A <strong>flat $25 per search</strong>, charged once when
-          you submit the request. Invoiced per search, never per seat.
+          <strong>Business search.</strong> Priced per account. We agree the fee with you before the
+          search begins.
         </li>
         <li>
           <strong>Weekly Lookup Alert.</strong> A subscription (currently $4.99/month or the stated
@@ -85,7 +85,8 @@ export default function TermsPage() {
         authorize us (through Stripe) to charge the applicable fees, including recurring subscription
         fees until you cancel. Fees are stated in US dollars and exclude any taxes, which are your
         responsibility. We may change our fees prospectively; the fees that apply to you are those shown
-        at the time you engage a search or start or renew a subscription.
+        (or, for a business search, agreed with you) at the time you engage a search or start or renew
+        a subscription.
       </p>
 
       <h3>3.1 When the success fee is earned</h3>
