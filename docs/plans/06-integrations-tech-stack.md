@@ -108,7 +108,7 @@ Payload admin access should be restricted to Moon/Tanzil accounts only — this 
 
 | Product | Stripe object | Notes |
 |---|---|---|
-| Business Search | one-time Price, $25 | Charged on submission via `/business` flow |
+| Business Search | none | Custom, quoted per account — no fixed Stripe Price |
 | Individual Search — Deposit | one-time Price, $25 | Refund via Stripe refund API if search finds nothing |
 | Individual Search — Success Fee | one-time Price, $99 | Charged per person per direction on confirmed booking; may need quantity/multiplier logic in checkout for multi-passenger requests |
 | Weekly Lookup Alert | recurring Price, $4.99/mo | Standard Stripe subscription, cancel-anytime |
