@@ -43,27 +43,15 @@ six files.
 | `POST /api/apply` | Applicant confirmation + admin notification |
 | `POST /api/contact` | Sender confirmation + admin notification |
 | `POST /api/newsletter` | Welcome |
-| `POST /api/alerts-preferences` | User confirmation + admin notification |
-| `POST /api/research-intake` | User confirmation + admin notification |
-| `POST /api/webhooks/stripe` | Purchase follow-up (see below) |
 | `admin/applications/actions.ts` | Approval / rejection |
 
 The pattern is consistent: one email to the customer, one to `ADMIN_EMAIL`.
 
 ## Webhook follow-ups
 
-`sendResend()` in the webhook is fire-and-forget and no-ops when unconfigured
-or when `to` is null. `sendPurchaseFollowup()` branches on
-`session.metadata.product_key`:
-
-| `product_key` | Email |
-|---|---|
-| `research` | Intake link → `/research/intake?session=…` |
-| `alerts_essential` / `alerts_pro` (prefix `alerts_`) | Routes link → `/alerts/preferences?session=…` |
-| `concierge` | None |
-
-Both emails link back to `NEXT_PUBLIC_APP_URL`. If that var is wrong in
-production, customers receive mail pointing at a dead host.
+None. The Stripe webhook used to email onboarding links for the Research Report
+and Seat Alert products; both are retired, so it sends no email. See
+[stripe.md](stripe.md#metadataproduct_key).
 
 The whole function is wrapped in try/catch and swallows failures **by design**:
 a throw would 500 the webhook, and Stripe would retry the event and re-run

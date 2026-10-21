@@ -44,8 +44,6 @@ but each one is a live landmine at launch.
 | `api/checkout` `success_url` | `/dashboard?success=true&session_id=…` | Paid customer lands on a dead URL |
 | `api/checkout` `cancel_url` | `/membership` | Abandoned checkout lands on a dead URL |
 | `api/portal` `return_url` | `/dashboard` | Exiting the billing portal lands on a dead URL |
-| `api/webhooks/stripe` | `/research/intake?session=…` | Onboarding email links nowhere |
-| `api/webhooks/stripe` | `/alerts/preferences?session=…` | Onboarding email links nowhere |
 
 The admin one is the sharpest: that flow is reachable *right now* by any signed-in
 admin, and the customer paying is anonymous — so they hit the construction

@@ -63,20 +63,14 @@ input), then creates a session with:
 > no longer exist. Unreachable today (the wall 503s the public), but a launch
 > blocker — see [../README.md](../README.md#dangling-references--read-before-launch).
 
-### `metadata.product_key` drives fulfilment
+### `metadata.product_key`
 
-Something stamps a `product_key` into session metadata; the webhook reads it
-back to decide which onboarding email to send. Known values:
-
-| `product_key` | Post-purchase action |
-|---|---|
-| `research` | Emails a link to `/research/intake?session=…` |
-| `alerts_essential`, `alerts_pro` | Emails a link to `/alerts/preferences?session=…` |
-| `concierge` | No follow-up email |
-
-Drop the metadata and checkout still succeeds — the customer just never gets
-their intake link, and nobody finds out until they complain. It is an
-invisible coupling between a caller's prop and a webhook branch.
+The alert checkout (`AlertBuyBox`) stamps `product_key` (`weekly` / `human`)
+and `interval` into session metadata. The webhook does **not** act on it today:
+the only follow-up emails it sent were for the retired Research Report and Seat
+Alert products (`research`, `alerts_*`), and those branches are gone. A new
+alert purchase is recorded in the database but sends no email, to the customer
+or to `ADMIN_EMAIL`.
 
 > **This coupling is currently broken.** `CheckoutButton`, the component that
 > wrote `product_key`, was deleted with the frontend. The webhook still reads
@@ -136,26 +130,25 @@ links the Stripe customer onto that **existing** row and activates it.
 
 Without that link it would upsert a new row keyed only on
 `stripe_customer_id` — orphaning the application row and breaking the
-email-keyed profile lookup. Direct purchases (membership/concierge buttons)
-carry no metadata and take the upsert path by design.
+email-keyed profile lookup. Direct purchases (the alert checkout) carry no
+`customer_id` and take the upsert path by design.
 
-### Email failures are swallowed on purpose
+### Best-effort lookups
 
-`sendPurchaseFollowup` catches its own errors. A failed email must not 500 the
-webhook: Stripe would retry the event, re-run fulfilment, and re-send. Non-fatal
-is the correct behaviour, not an oversight.
-
-`getSessionPriceId` is likewise best-effort and returns `null` on failure.
+`getSessionPriceId` is best-effort and returns `null` on failure. If an email
+step is added back, it must stay non-fatal the same way: a failed email that
+500s the webhook makes Stripe retry the event, re-run fulfilment, and re-send.
 
 ## Price IDs
 
-Nine `NEXT_PUBLIC_STRIPE_PRICE_*` vars, read straight from `process.env` in
-`lib/constants.ts`, `membership`, `points-concierge`, `admin/orders`, and
-`admin/subscriptions`.
+Four `NEXT_PUBLIC_STRIPE_PRICE_*` vars, the alert subscriptions
+(`WEEKLY_MONTHLY`/`_ANNUAL`, `HUMAN_MONTHLY`/`_ANNUAL`), read from
+`process.env` in `alerts/weekly`, `alerts/human` and `lib/plans.ts`.
 
-The admin pages build a **reverse** map (price ID → tier label) to name a
-purchased tier. Any new pricing model must rebuild that mapping, not just
-restyle the cards. Price IDs differ between Stripe test and live mode.
+`lib/plans.ts` builds the **reverse** map (price ID → plan name) that the admin
+orders/subscriptions views use to name a purchase. A new Stripe price must be
+added there too, or the admin shows only its ID suffix. Price IDs differ between
+the sandbox (local dev) and the live account (production).
 
 ## Testing
 
