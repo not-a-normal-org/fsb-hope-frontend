@@ -31,7 +31,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'Is this a subscription?',
-    a: 'A search is a one-off: a $25 deposit, plus $99 only when we confirm a seat you can book (business searches are a flat $25). Alerts are the only monthly option, and you can cancel anytime.',
+    a: 'An individual search is a one-off: a $25 deposit, plus $99 only when we confirm a seat you can book. Business pricing is custom, so we talk it through with you first. Alerts are the only monthly option, and you can cancel anytime.',
   },
 ];
 

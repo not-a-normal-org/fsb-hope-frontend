@@ -46,7 +46,7 @@ The "middle" page representing the whole brand before someone self-identifies as
 ### `/business`
 - Tone: same visual system, copy shifts to ROI and account-level reliability
 - Hero: speaks to travel spend and points strategy at the company level
-- Pricing shown: $25 flat per search, positioned as the account-level entry point, linked to `/pricing`
+- Pricing shown: none — "Custom, let's talk", positioned as the account-level entry point, routing to the business lead form
 - Lead form: the business multi-step flow (spend → route need → points budget → callback request)
 - Cal.com booking embedded directly in the callback step (see `06-integrations-tech-stack.md`) — don't just capture contact info, let them actually book a time
 - Alerts cross-sell: Human Search Alert ($99.99) positioned here for accounts with recurring, high-stakes travel needs
@@ -58,7 +58,7 @@ Dedicated page for the two subscription alert products. See `03-products-and-pri
 Standalone version of the points-value calculator (see `05-calculator-spec.md`). Needs its own shareable URL because this is the most likely component to get shared on social/LinkedIn ("see what your points are worth"). Include an og:image / social share card.
 
 ### `/pricing`
-All five products in one place: B2B search ($25), Individual search ($25 deposit + $99 success fee), Weekly Lookup Alert ($4.99/mo), Human Search Alert ($99.99), laid out as comparable glass cards. This is the source of truth for pricing — individual/business pages should link here rather than duplicating the full breakdown.
+All five products in one place: B2B search (custom — let's talk), Individual search ($25 deposit + $99 success fee), Weekly Lookup Alert ($4.99/mo), Human Search Alert ($99.99), laid out as comparable glass cards. This is the source of truth for pricing — individual/business pages should link here rather than duplicating the full breakdown.
 
 ### `/how-it-works`
 The 3-step process (tell us the route → we search manually → you get proof), shared, linked from nav and from both audience pages.

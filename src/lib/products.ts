@@ -10,9 +10,9 @@
 export type Product = {
   id: string;
   name: string;
-  /** Headline price, e.g. "$25". */
+  /** Headline price, e.g. "$25" — or "Custom" for Business, which isn't published. */
   price: string;
-  /** Unit under the price, e.g. "flat · per search". */
+  /** Unit under the price, e.g. "deposit to start". */
   priceUnit: string;
   /** Secondary price line (Individual's success fee). */
   priceSub?: string;
@@ -21,7 +21,7 @@ export type Product = {
   features: string[];
   /** Featured trust line (Individual's refund). Rendered prominently, success-toned. */
   footnote?: string;
-  /** Neutral institutional callout (e.g. Business's "invoiced, not per seat"), so
+  /** Neutral institutional callout (e.g. Business's "we'll come back with a quote"), so
    *  a card without a success footnote isn't left with an empty gap (§5). */
   note?: string;
   /** Phantom-flight disclosure (Weekly Lookup). Required inline with the price. */
@@ -38,17 +38,17 @@ export const PRODUCTS: Record<string, Product> = {
   business: {
     id: 'business',
     name: 'Business Search',
-    price: '$25',
-    priceUnit: 'flat · per search',
+    price: 'Custom',
+    priceUnit: 'let’s talk',
     tagline: 'The account-level entry point for company travel.',
     description:
-      'Send us a route and what you need. A specialist works 30+ loyalty programs and sends back the results, with screenshots and the exact point cost. Charged once, when you submit.',
+      'Send us a route and what you need. A specialist works 30+ loyalty programs and sends back the results, with screenshots and the exact point cost.',
     features: [
       'A specialist works 30+ programs for you',
       'Screenshots and the exact point cost',
-      'Per-search billing, no subscription',
+      'Priced around your team’s travel',
     ],
-    note: 'Invoiced per search — never charged per seat.',
+    note: 'Tell us what your team needs and we’ll come back with a quote.',
     cta: { label: 'Start a business search', href: '/business' },
     group: 'search',
   },

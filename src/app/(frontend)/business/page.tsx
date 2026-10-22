@@ -8,7 +8,7 @@ import BusinessBody from './BusinessBody';
 
 /**
  * /business (docs/plans/02) — the company track. ROI / account-level framing,
- * the $25-per-search model, and the Human Search Alert cross-sell.
+ * custom ("let's talk") pricing, and the Human Search Alert cross-sell.
  *
  * The multi-step lead form and Cal.com callback booking are deferred to the
  * backend phase; the primary CTA is an interim mailto until they ship.

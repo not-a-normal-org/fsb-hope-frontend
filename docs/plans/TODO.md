@@ -114,8 +114,8 @@ The rest is below; see the `launch-readiness` memory for detail.
       future-dated post can't show early.
 
 ### Business decisions
-- [ ] Resolve **$99-vs-$25 business pricing** (homepage band implies $99 is universal;
-      business search is currently flat $25, no success fee). Then unify the wording.
+- [x] Resolve **$99-vs-$25 business pricing** — decided 2026-10-22: business is
+      **custom / let's talk**, no published price. Individual stays $25 + $99.
 - [ ] Real **Privacy / Terms** copy (currently honest placeholders; forms now link to
       them at the point of collection).
 

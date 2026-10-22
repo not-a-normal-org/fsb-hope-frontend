@@ -4,10 +4,10 @@ If any page copy conflicts with this file, this file wins. Update this file firs
 
 ## 1. Business search (B2B / Enterprise)
 
-- **Price:** $25 flat per search
+- **Price:** Custom — quoted per account. No price is published anywhere on the site; the copy says "Custom" / "let's talk". (Was $25 flat per search, charged on submission — retired 2026-10-22.)
 - **What it is:** A business submits a route/need, Saver Miles manually searches 30+ programs, delivers results with screenshots and exact point cost.
-- **Billing:** One-time per search, charged on submission.
-- **Copy rule:** Position as the account-level entry point for companies. This is the proven, unchanged model — do not alter the mechanics, only the presentation.
+- **Billing:** Agreed with the business before the search starts. No Stripe price.
+- **Copy rule:** Position as the account-level entry point for companies. The process is unchanged — only the price is no longer shown. Don't state a dollar figure or a pricing structure (per search, per seat, retainer) for business; route "let's talk" to the business lead form.
 
 ## 2. Individual search
 
@@ -39,7 +39,7 @@ Think of these as a ladder, cheapest/lightest to most involved:
 Weekly Lookup Alert ($4.99/mo)  → ongoing automated monitoring, no guarantee
 Individual Search ($25 + $99)   → one-off, human-verified, pay only on success
 Human Search Alert ($99.99/mo)  → ongoing human-verified monitoring
-Business Search ($25/search)    → account-level, human-verified, per-search billing
+Business Search (custom)        → account-level, human-verified, quoted per account
 ```
 
 Cross-sell logic: someone who does a one-off Individual Search and doesn't book should be offered the Weekly Lookup Alert as a "we'll keep watching for you" path. Someone on the Weekly Lookup Alert who wants certainty should be upsold to Human Search Alert or a one-off manual search.
