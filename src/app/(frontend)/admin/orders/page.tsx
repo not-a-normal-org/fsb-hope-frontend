@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { tierNameByPriceId } from '@/lib/tiers';
+import { planNameByPriceId } from '@/lib/plans';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -173,7 +173,7 @@ export default async function OrdersPage({
                       <p className="text-xs text-[#9DA3B4] mt-0.5">{order.customer?.email ?? '—'}</p>
                     </td>
                     {/* Product */}
-                    <td className="px-5 py-3.5 text-[#9DA3B4]">{tierNameByPriceId(order.stripe_price_id)}</td>
+                    <td className="px-5 py-3.5 text-[#9DA3B4]">{planNameByPriceId(order.stripe_price_id)}</td>
                     {/* Amount */}
                     <td className="px-5 py-3.5 font-medium text-[#F5F5F0] tabular-nums whitespace-nowrap">
                       {fmtUSD(order.amount_cents)}

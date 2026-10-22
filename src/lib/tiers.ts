@@ -3,10 +3,12 @@
  * type (the tiered Stripe customers, managed on /admin/customers).
  *
  * Tiers were renamed to cabin classes (Economy → Premium → Business → First).
- * The Stripe price *env-var names* are unchanged (EXPLORE/PLATINUM/BLACK/
- * CONCIERGE) — only the labels shown in the admin change. `LEGACY_TIER_ALIASES`
- * maps any old tier value already stored in `customers.tags` to the new label so
- * historical rows render correctly.
+ * `LEGACY_TIER_ALIASES` maps any old tier value already stored in
+ * `customers.tags` to the new label so historical rows render correctly.
+ *
+ * Tiers are an admin tag only. They used to map to the old membership Stripe
+ * prices (Explore/Platinum/Black/Concierge); those products are archived, so a
+ * tier no longer implies anything that can be bought.
  */
 
 export type CustomerTierKey = 'economy' | 'premium' | 'business' | 'first';
@@ -16,42 +18,14 @@ export interface CustomerTier {
   label: string;
   /** Low → high, for sorting/display. */
   order: number;
-  /** The Stripe price env var this tier maps to (name only, for reference). */
-  priceEnvVar: string;
-  /** Resolved Stripe price id, if the env var is set. */
-  priceId?: string;
 }
 
-/** Ordered low → high. Index maps to the existing Stripe price env vars. */
+/** Ordered low → high. */
 export const CUSTOMER_TIERS: CustomerTier[] = [
-  {
-    key: 'economy',
-    label: 'Economy',
-    order: 1,
-    priceEnvVar: 'NEXT_PUBLIC_STRIPE_PRICE_EXPLORE',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_EXPLORE,
-  },
-  {
-    key: 'premium',
-    label: 'Premium',
-    order: 2,
-    priceEnvVar: 'NEXT_PUBLIC_STRIPE_PRICE_PLATINUM',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PLATINUM,
-  },
-  {
-    key: 'business',
-    label: 'Business',
-    order: 3,
-    priceEnvVar: 'NEXT_PUBLIC_STRIPE_PRICE_BLACK',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_BLACK,
-  },
-  {
-    key: 'first',
-    label: 'First',
-    order: 4,
-    priceEnvVar: 'NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE,
-  },
+  { key: 'economy', label: 'Economy', order: 1 },
+  { key: 'premium', label: 'Premium', order: 2 },
+  { key: 'business', label: 'Business', order: 3 },
+  { key: 'first', label: 'First', order: 4 },
 ];
 
 /**
@@ -69,21 +43,6 @@ const LEGACY_TIER_ALIASES: Record<string, CustomerTierKey> = {
   business: 'business',
   first: 'first',
 };
-
-/** Look up a tier by its resolved Stripe price id. */
-export function tierByPriceId(priceId: string | null | undefined): CustomerTier | undefined {
-  if (!priceId) return undefined;
-  return CUSTOMER_TIERS.find((t) => t.priceId === priceId);
-}
-
-/**
- * Display label for a Stripe price id. Falls back to a short id suffix for
- * one-off / unknown prices so nothing ever renders blank.
- */
-export function tierNameByPriceId(priceId: string | null | undefined): string {
-  if (!priceId) return 'One-time';
-  return tierByPriceId(priceId)?.label ?? `…${priceId.slice(-6)}`;
-}
 
 /**
  * Resolve a stored tier tag (old or new value) to its display label. Returns the

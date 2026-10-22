@@ -51,17 +51,15 @@ Set in `.env` / `.env.local` (both gitignored) and in the Vercel project.
 `NEXT_PUBLIC_APP_URL` · `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` ·
 `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-Price IDs, all public:
+Price IDs, all public (the alert subscriptions):
 
-    NEXT_PUBLIC_STRIPE_PRICE_EXPLORE
-    NEXT_PUBLIC_STRIPE_PRICE_PLATINUM
-    NEXT_PUBLIC_STRIPE_PRICE_BLACK
-    NEXT_PUBLIC_STRIPE_PRICE_CONCIERGE
-    NEXT_PUBLIC_STRIPE_PRICE_RESEARCH
-    NEXT_PUBLIC_STRIPE_PRICE_ALERTS_ESSENTIAL_MONTHLY
-    NEXT_PUBLIC_STRIPE_PRICE_ALERTS_ESSENTIAL_ANNUAL
-    NEXT_PUBLIC_STRIPE_PRICE_ALERTS_PRO_MONTHLY
-    NEXT_PUBLIC_STRIPE_PRICE_ALERTS_PRO_ANNUAL
+    NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_MONTHLY
+    NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_ANNUAL
+    NEXT_PUBLIC_STRIPE_PRICE_HUMAN_MONTHLY
+    NEXT_PUBLIC_STRIPE_PRICE_HUMAN_ANNUAL
+
+The old membership (Explore/Platinum/Black/Concierge), Research Report and Seat
+Alert prices are archived in Stripe and no longer read by the code.
 
 `NEXT_PUBLIC_*` is compiled into client JS at build time. Never move a secret
 behind that prefix to "make it work" — it publishes the secret to every
@@ -84,8 +82,6 @@ the customer to a dead URL — a failure that never shows up locally.
 | `POST /api/apply` | | ✓ | ✓ |
 | `POST /api/contact` | | ✓ | ✓ |
 | `POST /api/newsletter` | | ✓ | ✓ |
-| `POST /api/alerts-preferences` | | | ✓ |
-| `POST /api/research-intake` | | | ✓ |
 | `GET /api/admin/applications-data` | | ✓ | |
 | `GET /api/admin/products-data` | | ✓ | |
 | `POST /api/admin/login` · `logout` | | | |
