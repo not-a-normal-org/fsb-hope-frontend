@@ -86,6 +86,35 @@ Search Console is the only channel.
 - Pull a post entirely: set it to Draft in `/cms` (Posts). Drafts drop out of the blog, sitemap,
   RSS and llms.txt.
 
+## Covers do not ship unless you say so
+
+**Changing `<slug>.jpg` in the repo does nothing to a live post.** A plain
+`npm run seed:articles` reuses the cover media already attached and never uploads the new file.
+Only `RESEED_COVERS=1` replaces it:
+
+```bash
+ONLY=<slug> RESEED_COVERS=1 npm run seed:articles
+```
+
+So a cover can be fixed, reviewed, merged, and still never reach the site, with the repo and
+production disagreeing and nothing anywhere complaining. **PR #64 replaced nine AI-looking covers
+with real photography in September 2026 and the reseed never ran — the rejected images stayed live
+for a month while the repo looked correct.**
+
+The other direction bites too: if a live cover is ever changed without committing the exact file
+(composed to `/tmp` and seeded from there, or uploaded in `/cms`), the next `RESEED_COVERS=1` for
+that slug silently reverts production to whatever is in the repo.
+
+Check before and after any cover work, and before a release:
+
+```bash
+node docs/blog-guide/tools/audit-cover-drift.mjs
+```
+
+It compares every committed cover against the one production serves and exits non-zero on a
+mismatch. Keep `COVER_ALT:` in step with the image at the same time — the alt is seeded from the
+markdown, so it drifts the same way.
+
 ## In-article images
 
 Body images are uploaded by the same seed run, once each, and reused on later runs (see
