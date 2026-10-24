@@ -4,7 +4,7 @@ TITLE: Travel Portal vs. Transfer Partners: How to Choose
 EXCERPT: Your card's travel portal is simple. Transferring points to an airline can be worth far more. Here is the two-minute math that tells you which one this trip needs.
 META_TITLE: Travel Portal vs. Transfer Partners: The Math
 META_DESCRIPTION: Chase Travel, Amex Travel or an airline transfer? The two-minute cents-per-point check that shows when the portal wins and when transferring pays more.
-COVER_ALT: Leather weekender bag on a stone floor where an airport corridor splits around a column into a sunlit path and a shaded one
+COVER_ALT: Travel portal vs. transfer partners: Chase, Amex and Capital One Travel beside United, Aeroplan and Virgin Atlantic
 ---BODY---
 **Book through your card's travel portal when the cash fare is low or no award seat exists; transfer to an airline partner when a premium seat prices far below its cash fare.** To choose between a travel portal and transfer partners, work out the cents per point each path gives you after cash fees, then take the higher one. It takes about two minutes.
 
