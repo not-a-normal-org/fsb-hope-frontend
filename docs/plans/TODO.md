@@ -14,7 +14,8 @@ _Last updated: 2026-08-31._
 - [x] Construction wall (`src/proxy.ts`) — admin-gated; public sees `/maintenance`
 - [x] Logo (wordmark + green arc), fonts (Zilla Slab / IBM Plex)
 - [x] PR-per-feature git workflow (`AGENTS.md`)
-- [x] Custom cursor (dot + spring ring, accent glow, hover grow) — theme-aware, fine-pointer only
+- [x] Custom cursor — removed 2026-10-24 at the owner's request; the site uses the standard
+      system cursor (hand on links and buttons)
 - [x] Button hover system — filled `.sm-cta` (shine sweep) + outline `.sm-cta-ghost` (border/wash/sweep)
 
 ## Pages — done (frontend)

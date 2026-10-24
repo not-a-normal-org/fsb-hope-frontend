@@ -5,7 +5,6 @@ import "./globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
 import ThemeScript from "@/components/system/ThemeScript";
 import ConsentBanner from "@/components/system/ConsentBanner";
-import CustomCursor from "@/components/system/CustomCursor";
 import ReferralCapture from "@/components/system/ReferralCapture";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/constants";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
@@ -122,7 +121,6 @@ try{if(localStorage.getItem('sm-consent')==='granted'){gtag('consent','update',{
         <MotionProvider>
           <ReferralCapture />
           <div className="flex-1">{children}</div>
-          <CustomCursor />
         </MotionProvider>
 
         <ConsentBanner />
