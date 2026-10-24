@@ -241,6 +241,14 @@ html {
     outline-offset: 2px;
   }
 
+  /* The standard pointer on anything clickable. Links get it from the browser;
+     Tailwind v4 resets buttons to the default arrow, which reads as "not
+     clickable". Disabled controls keep their own cursor (disabled:cursor-not-allowed). */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   /* Respect prefers-reduced-motion everywhere — not optional (spec §5).
      Framer Motion handles its own via MotionConfig reducedMotion="user"; this
      covers CSS-driven motion (shine sweep, theme crossfade, entrances). */
@@ -377,106 +385,6 @@ html {
   background: color-mix(in srgb, var(--sm-accent) 18%, transparent);
   border-color: color-mix(in srgb, var(--sm-accent) 55%, transparent);
   color: var(--sm-accent);
-}
-
-/* ---- Custom cursor ---------------------------------------------------------
-   Driven by CustomCursor (client). Colour is --sm-accent, so the cursor
-   recolours with the theme in all three modes. The dot snaps to the pointer; the
-   ring is spring-lagged and grows + fills over interactive elements. Only active
-   on fine-pointer devices (the component gates it) — then the native cursor is
-   hidden; touch / reduced-motion keep the native cursor. */
-@media (pointer: fine) {
-  [data-custom-cursor],
-  [data-custom-cursor] * {
-    cursor: none !important;
-  }
-  /* …but keep the native text caret (I-beam) over editable fields — the custom
-     ring alone gives no insertion point, which broke the calculator / lead inputs
-     (Review v3 §2). Higher specificity + later position beats the rule above. */
-  [data-custom-cursor] input,
-  [data-custom-cursor] textarea,
-  [data-custom-cursor] select,
-  [data-custom-cursor] [contenteditable="true"],
-  [data-custom-cursor] [contenteditable=""] {
-    cursor: text !important;
-  }
-  [data-custom-cursor] select {
-    cursor: pointer !important;
-  }
-}
-.sm-cursor-pos {
-  position: fixed;
-  top: 0;
-  left: 0;
-  /* Above everything, including modals/overlays — the cursor must never be
-     occluded. pointer-events: none keeps it from intercepting clicks. */
-  z-index: 2147483647;
-  pointer-events: none;
-  will-change: transform;
-}
-.sm-cursor-dot {
-  display: block;
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  border-radius: 9999px;
-  background: var(--sm-accent);
-  /* Accent glow — theme-aware. */
-  box-shadow:
-    0 0 6px 1px color-mix(in srgb, var(--sm-accent) 75%, transparent),
-    0 0 12px 2px color-mix(in srgb, var(--sm-accent) 45%, transparent);
-  transition: transform 0.12s ease;
-}
-.sm-cursor-dot[data-pressed] {
-  transform: scale(0.6);
-}
-.sm-cursor-ring {
-  display: block;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border-radius: 9999px;
-  border: 1.5px solid color-mix(in srgb, var(--sm-accent) 60%, transparent);
-  /* Soft accent halo around the ring, plus a faint inner glow. */
-  box-shadow:
-    0 0 12px 0 color-mix(in srgb, var(--sm-accent) 35%, transparent),
-    inset 0 0 8px 0 color-mix(in srgb, var(--sm-accent) 22%, transparent);
-  transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease,
-    box-shadow 0.16s ease;
-}
-.sm-cursor-ring[data-hovered] {
-  transform: scale(1.5);
-  background: color-mix(in srgb, var(--sm-accent) 12%, transparent);
-  border-color: var(--sm-accent);
-  /* Glow blooms on hover. */
-  box-shadow:
-    0 0 20px 2px color-mix(in srgb, var(--sm-accent) 50%, transparent),
-    inset 0 0 10px 0 color-mix(in srgb, var(--sm-accent) 28%, transparent);
-}
-
-/* ---- Cursor ripple (ambient background) ------------------------------------
-   Soft accent rings that expand + fade with cursor movement, behind the content.
-   Driven by CursorRipple (client); fine-pointer only, off under reduced-motion. */
-.sm-ripple {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  margin: -9px 0 0 -9px;
-  border-radius: 9999px;
-  border: 1.5px solid color-mix(in srgb, var(--sm-accent) 50%, transparent);
-  opacity: 0;
-  will-change: transform, opacity;
-  animation: sm-ripple 0.9s ease-out forwards;
-}
-@keyframes sm-ripple {
-  0% {
-    transform: scale(0.4);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(7);
-    opacity: 0;
-  }
 }
 
 /* ---- Theme crossfade -------------------------------------------------------
