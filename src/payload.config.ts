@@ -16,6 +16,7 @@ import { Posts } from './collections/Posts';
 import { DealsOfWeek } from './collections/DealsOfWeek';
 import { Testimonials } from './collections/Testimonials';
 import { resolveDatabaseUri } from './lib/database-uri';
+import { DEFAULT_LOCALE, LOCALES } from './i18n/config';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -51,6 +52,15 @@ export default buildConfig({
     api: '/cms-api',
   },
   collections: [Users, Media, Posts, Categories, DealsOfWeek, Testimonials],
+  // Content in each site language (docs/plans/02 → Languages). Fields marked
+  // `localized: true` keep one value per locale in a `*_locales` table; the rest
+  // (slugs, dates, relations, numbers) are shared. A missing German value falls
+  // back to English, so an untranslated post still renders.
+  localization: {
+    locales: LOCALES.map((code) => ({ code, label: code === 'de' ? 'Deutsch' : 'English' })),
+    defaultLocale: DEFAULT_LOCALE,
+    fallback: true,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
@@ -69,6 +79,12 @@ export default buildConfig({
     },
     // Isolate Payload's tables from the app's `public` schema.
     schemaName: 'payload',
+    // Schema changes go through migrations (src/migrations), never dev push.
+    // Dev runs against the production database, so a push there is a live
+    // schema change with no review — and a localized field moving into a
+    // `*_locales` table would be a DROP COLUMN. See docs/cms-migrations.md.
+    push: false,
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   plugins: [
     // Media -> Supabase Storage (public `media` bucket), all image sizes.
