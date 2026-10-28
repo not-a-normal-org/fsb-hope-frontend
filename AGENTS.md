@@ -111,6 +111,16 @@ The public site is English and German; staff surfaces stay English. Read
   product names stay English. The product non-negotiables apply to German too.
   Server components: `getMessages(locale)`; client components: `useI18n()`.
   `{name}` placeholders go through `fmt()`, inline links/emphasis through `rich()`.
+  German terms: [`docs/i18n/glossary-de.md`](docs/i18n/glossary-de.md).
+- **Page copy reaches client sections as props** (`<HomeHero m={m.home.hero} />`).
+  Only widgets used across many pages (lead form, newsletter, checkout, the
+  example cards) read `useI18n()` — their namespaces are listed in
+  `CLIENT_NAMESPACES` and ship on every page, so keep that list short.
+- **Never write a price into copy.** Use `{deposit}`, `{successFee}`,
+  `{weeklyMonthly}`, … — `getMessages()` fills them from `PRICES_USD`
+  (`src/lib/products.ts`) in each language's format. Numbers and dates go through
+  `formatNumber` / `formatPrice` / `formatDate` in `src/i18n/format.ts`, never a
+  hardcoded `'en-US'`.
 - **Internal links use `LocaleLink`** (`@/components/system/LocaleLink`), never
   `next/link`, on public pages: write the English path and it adds `/de`.
 - **Every public page's metadata spreads `localeMeta(locale, path)`** (`src/lib/seo.ts`)

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
+import { useI18n } from '@/i18n/LocaleProvider';
+
 /**
  * Redirects to a Stripe Checkout session for a single price. POSTs the price +
  * mode to /api/checkout (which builds the session) and follows the returned URL.
@@ -30,6 +32,7 @@ export default function CheckoutButton({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const m = useI18n().m.checkout;
 
   const disabled = loading || !priceId;
 
@@ -45,11 +48,11 @@ export default function CheckoutButton({
       });
       const json = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
       if (!res.ok || !json.url) {
-        throw new Error(json.error ?? 'Something went wrong. Please try again.');
+        throw new Error(json.error ?? m.error);
       }
       window.location.href = json.url;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : m.error);
       setLoading(false);
     }
   }
@@ -65,7 +68,7 @@ export default function CheckoutButton({
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-            Redirecting…
+            {m.redirecting}
           </>
         ) : (
           label
@@ -73,7 +76,7 @@ export default function CheckoutButton({
       </button>
       {!priceId && (
         <p className="text-center text-xs leading-snug text-ink-muted">
-          Checkout isn’t configured yet — this price is missing.
+          {m.notConfigured}
         </p>
       )}
       {error && (

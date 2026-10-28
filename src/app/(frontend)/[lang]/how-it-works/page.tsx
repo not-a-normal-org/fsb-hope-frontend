@@ -5,7 +5,7 @@ import Footer from '@/components/site/Footer';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import ShineText from '@/components/system/ShineText';
 import Steps from './Steps';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -16,12 +16,13 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'How It Works',
+    title: getMessages(locale).howItWorks.title,
     ...localeMeta(locale, '/how-it-works'),
   };
 }
 
-export default function HowItWorksPage() {
+export default async function HowItWorksPage({ params }: { params: LangParams }) {
+  const { howItWorks: m } = getMessages(await resolveLocale(params));
   return (
     <>
       <NavBar />
@@ -34,19 +35,16 @@ export default function HowItWorksPage() {
         />
         <div className="mx-auto max-w-6xl px-6 pb-12 pt-20 md:pt-24">
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
-            How it works
+            {m.eyebrow}
           </p>
           <ShineText as="h1" className="mt-4 max-w-3xl text-hero font-bold">
-            Three steps, and a specialist doing the work in the middle.
+            {m.heading}
           </ShineText>
-          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-sub">
-            No automated tool surfacing seats that vanish at checkout. You tell us
-            the plan, a specialist takes over, and you get proof you can act on.
-          </p>
+          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-sub">{m.intro}</p>
         </div>
       </section>
 
-      <Steps />
+      <Steps m={m} />
 
       <Footer />
     </>

@@ -1,19 +1,20 @@
-import { PRODUCTS } from '@/lib/products';
+import en from '@/i18n/messages/en';
 
 /**
  * Admin display label for a Stripe price id — what the orders/subscriptions
  * views show in their product column.
  *
  * Only the alert subscriptions are sold through Stripe today (docs/plans/03), so
- * those are the ids we can name. Anything else (a price added later, or one from
+ * those are the ids we can name. Staff screens are English, so the names come
+ * from the English dictionary. Anything else (a price added later, or one from
  * before the old products were archived) falls back to a short id suffix so a
  * row never renders blank.
  */
 const PLANS: [priceId: string | undefined, name: string][] = [
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_MONTHLY, `${PRODUCTS.weekly.name} · monthly`],
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_ANNUAL, `${PRODUCTS.weekly.name} · annual`],
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_HUMAN_MONTHLY, `${PRODUCTS.human.name} · monthly`],
-  [process.env.NEXT_PUBLIC_STRIPE_PRICE_HUMAN_ANNUAL, `${PRODUCTS.human.name} · annual`],
+  [process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_MONTHLY, `${en.products.weekly.name} · monthly`],
+  [process.env.NEXT_PUBLIC_STRIPE_PRICE_WEEKLY_ANNUAL, `${en.products.weekly.name} · annual`],
+  [process.env.NEXT_PUBLIC_STRIPE_PRICE_HUMAN_MONTHLY, `${en.products.human.name} · monthly`],
+  [process.env.NEXT_PUBLIC_STRIPE_PRICE_HUMAN_ANNUAL, `${en.products.human.name} · annual`],
 ];
 
 const PLAN_BY_PRICE_ID = new Map<string, string>();

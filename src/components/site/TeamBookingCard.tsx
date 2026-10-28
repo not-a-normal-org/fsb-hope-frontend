@@ -1,12 +1,14 @@
 import { Check, Users } from 'lucide-react';
 
+import type { Messages } from '@/i18n/messages/en';
+
 /**
  * Business-hero artifact (Review v3 §4) — a team booking summary, so the Business
  * page shows an institutional deliverable (multi-seat, invoiced) rather than the
  * individual report card. Illustrative, not a real client (no fabricated proof);
  * the amber cue is --sm-proof, hueless in Mono.
  */
-export default function TeamBookingCard() {
+export default function TeamBookingCard({ m }: { m: Messages['teamBooking'] }) {
   return (
     <div
       className="relative overflow-hidden rounded-2xl p-5 sm:p-6"
@@ -26,7 +28,7 @@ export default function TeamBookingCard() {
         <div className="flex items-start justify-between gap-3">
           <span className="inline-flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.16em] text-ink-muted">
             <Users className="h-3.5 w-3.5" aria-hidden />
-            Team booking · example
+            {m.label}
           </span>
           <span
             className="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.08em]"
@@ -37,7 +39,7 @@ export default function TeamBookingCard() {
             }}
           >
             <Check className="h-3 w-3" aria-hidden strokeWidth={3} />
-            Confirmed
+            {m.confirmed}
           </span>
         </div>
 
@@ -46,21 +48,21 @@ export default function TeamBookingCard() {
           <span className="h-px flex-1 border-t border-dashed" style={{ borderColor: 'var(--sm-glass-border)' }} />
           <span className="font-display text-3xl font-bold text-ink">LHR</span>
         </div>
-        <p className="mt-2 text-sm text-ink-sub">4 travelers · Business · Mar 3–10</p>
+        <p className="mt-2 text-sm text-ink-sub">{m.details}</p>
 
         <div className="mt-5 space-y-1.5">
           <p className="font-mono text-xl font-semibold text-ink">
-            320,000 pts <span className="text-ink-muted">·</span> 4 seats
+            {m.points} <span className="text-ink-muted">·</span> {m.seats}
           </p>
           <p className="font-mono text-base font-medium text-ink-sub">
-            Retail <span className="text-ink line-through decoration-2">$34,800</span>
-            <span className="text-ink-muted"> · booked on points</span>
+            {m.retail} <span className="text-ink line-through decoration-2">{m.retailValue}</span>
+            <span className="text-ink-muted">{m.bookedOnPoints}</span>
           </p>
         </div>
 
         <p className="mt-5 flex items-center gap-1.5 border-t pt-4 text-xs text-ink-sub" style={{ borderColor: 'var(--sm-glass-border)' }}>
           <Check className="h-3.5 w-3.5" style={{ color: 'var(--sm-proof)' }} aria-hidden strokeWidth={3} />
-          Point cost per traveller, screenshots, one invoice.
+          {m.footer}
         </p>
       </div>
     </div>

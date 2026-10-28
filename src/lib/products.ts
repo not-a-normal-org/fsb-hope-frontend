@@ -1,14 +1,35 @@
 /**
- * Product display data — mirrors docs/plans/03-products-and-pricing.md, which is
- * the SOURCE OF TRUTH. If copy conflicts, update that doc first, then here.
+ * Products — mirrors docs/plans/03-products-and-pricing.md, which is the SOURCE
+ * OF TRUTH. If copy conflicts, update that doc first, then here.
  *
- * Copy rules enforced (doc 03 §7): no unqualified "guarantee"; the phantom-risk
- * product discloses the risk in the same view as its price; no fake urgency.
- * Stripe price IDs are intentionally absent — payments are a later phase.
+ * This file holds what is the same in every language: ids, prices, links, and
+ * how each product is sold. The words (names, taglines, features, disclosures)
+ * live in the message dictionaries under `products`, and reach the page through
+ * `withCopy()`. Copy rules (doc 03 §7) apply to every language: no unqualified
+ * "guarantee"; the phantom-risk product discloses the risk in the same view as
+ * its price; no fake urgency.
  */
 
-export type Product = {
-  id: string;
+/**
+ * Every published price, in USD. Copy never writes a price out: it uses
+ * `{deposit}`, `{successFee}`, … placeholders that `getMessages()` fills from
+ * this table in the reader's number format. Stripe charges by price id
+ * (NEXT_PUBLIC_STRIPE_PRICE_*), so a change here must match the Stripe price.
+ */
+export const PRICES_USD = {
+  deposit: 25,
+  successFee: 99,
+  weeklyMonthly: 4.99,
+  weeklyAnnual: 49.9,
+  humanMonthly: 99.99,
+  humanAnnual: 999.9,
+  zero: 0,
+} as const;
+
+export type ProductId = 'business' | 'individual' | 'weekly' | 'human';
+
+/** One product's words, as the dictionaries hold them (`messages.products.<id>`). */
+export type ProductCopy = {
   name: string;
   /** Headline price, e.g. "$25" — or "Custom" for Business, which isn't published. */
   price: string;
@@ -16,6 +37,8 @@ export type Product = {
   priceUnit: string;
   /** Secondary price line (Individual's success fee). */
   priceSub?: string;
+  /** Annual price display, for the alert buy pages' monthly/annual toggle. */
+  priceAnnual?: string;
   tagline: string;
   description: string;
   features: string[];
@@ -26,95 +49,35 @@ export type Product = {
   note?: string;
   /** Phantom-flight disclosure (Weekly Lookup). Required inline with the price. */
   disclosure?: string;
-  cta: { label: string; href: string };
+  /** CTA label. */
+  cta: string;
+};
+
+type ProductBase = {
+  id: ProductId;
+  /** Where the CTA goes. */
+  href: string;
   group: 'search' | 'alert';
   /** Recurring vs one-off — set on the alert products that go through Stripe. */
   mode?: 'subscription' | 'payment';
-  /** Annual price display, for the alert buy pages' monthly/annual toggle. */
-  priceAnnual?: string;
 };
 
-export const PRODUCTS: Record<string, Product> = {
-  business: {
-    id: 'business',
-    name: 'Business Search',
-    price: 'Custom',
-    priceUnit: 'let’s talk',
-    tagline: 'The account-level entry point for company travel.',
-    description:
-      'Send us a route and what you need. A specialist works 30+ loyalty programs and sends back the results, with screenshots and the exact point cost.',
-    features: [
-      'A specialist works 30+ programs for you',
-      'Screenshots and the exact point cost',
-      'Priced around your team’s travel',
-    ],
-    note: 'Tell us what your team needs and we’ll come back with a quote.',
-    cta: { label: 'Start a business search', href: '/business' },
-    group: 'search',
-  },
+export type Product = ProductBase & ProductCopy;
 
-  individual: {
-    id: 'individual',
-    name: 'Individual Search',
-    price: '$25',
-    priceUnit: 'deposit to start',
-    priceSub: '+ $99 per person, per direction, charged only once we confirm a seat you can book.',
-    tagline: 'Pay the fee only if your specialist finds a real seat.',
-    description:
-      'A specialist works the points you already hold across every program that fits. The $99 fee is flat, the same for economy, business, or first.',
-    features: [
-      '$99 flat success fee, any cabin',
-      'Verified by your specialist before you owe the fee',
-      'Only pay the fee on a confirmed, bookable seat',
-    ],
-    footnote: 'Find nothing bookable? Your $25 deposit comes back in full.',
-    cta: { label: 'Start an individual search', href: '/individual' },
-    group: 'search',
-  },
-
-  weekly: {
-    id: 'weekly',
-    name: 'Weekly Lookup Alert',
-    price: '$4.99',
-    priceUnit: '/ month',
-    priceAnnual: '$49.90',
-    mode: 'subscription',
-    tagline: 'An early signal on routes you’re watching casually.',
-    description:
-      'Every Monday for 12 months, a scan of your routes: which airlines show award space, which card programs transfer in, the dates, and the points. Cheap enough to set and forget — a heads-up, not a booking.',
-    features: [
-      'Delivered every Monday, for 12 months',
-      'Airlines, transfer partners, dates, points',
-      'Cancel anytime',
-    ],
-    disclosure:
-      'Automated scan — shows availability, not a confirmed seat, and some space may be phantom. For a booking you can rely on, use the Human Search Alert or a one-off search.',
-    cta: { label: 'Get weekly alerts', href: '/alerts/weekly' },
-    group: 'alert',
-  },
-
-  human: {
-    id: 'human',
-    name: 'Human Search Alert',
-    price: '$99.99',
-    priceUnit: '/ month',
-    priceAnnual: '$999.90',
-    mode: 'subscription',
-    tagline: 'A specialist confirms the seat before you hear from us.',
-    description:
-      'The same rigor as our one-off search, run as an ongoing service. A specialist checks your routes each cycle and sends verified results, the opposite of an automated scan.',
-    features: [
-      'Specialist-run search, every cycle',
-      'Verified bookable space, not raw feed data',
-      'Monthly, cancel anytime',
-    ],
-    cta: { label: 'Get human alerts', href: '/alerts/human' },
-    group: 'alert',
-  },
+const BASE: Record<ProductId, ProductBase> = {
+  business: { id: 'business', href: '/business', group: 'search' },
+  individual: { id: 'individual', href: '/individual', group: 'search' },
+  weekly: { id: 'weekly', href: '/alerts/weekly', group: 'alert', mode: 'subscription' },
+  human: { id: 'human', href: '/alerts/human', group: 'alert', mode: 'subscription' },
 };
+
+/** A product with its copy in one language. */
+export function withCopy(id: ProductId, copy: Record<ProductId, ProductCopy>): Product {
+  return { ...BASE[id], ...copy[id] };
+}
 
 /** Ordered for the pricing page: one-off searches, then ongoing alerts. */
 // Individual first — the nav, hero, and homepage all lead with individuals, so
 // the pricing cards should too (Review v3 §5).
-export const SEARCH_PRODUCTS = [PRODUCTS.individual, PRODUCTS.business];
-export const ALERT_PRODUCTS = [PRODUCTS.weekly, PRODUCTS.human];
+export const SEARCH_PRODUCT_IDS: ProductId[] = ['individual', 'business'];
+export const ALERT_PRODUCT_IDS: ProductId[] = ['weekly', 'human'];

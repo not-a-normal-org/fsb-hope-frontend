@@ -5,6 +5,8 @@ import { motion, useInView, useMotionValue, useReducedMotion, useTransform } fro
 import { Check, Plane } from 'lucide-react';
 
 import type { FlightReport } from '@/lib/reports';
+import { fmt, formatDayMonth, formatNumber, formatPrice, plural } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
 
 /**
  * The hero's proof artifact — an illustrative "Search Report", styled like a
@@ -16,13 +18,12 @@ import type { FlightReport } from '@/lib/reports';
  * RegionalReports wrapper.
  */
 
-function cabinCode(cabin: string): string {
-  const c = cabin.toLowerCase();
-  if (c.startsWith('first')) return 'F';
-  if (c.startsWith('business')) return 'J';
-  if (c.startsWith('premium')) return 'W';
-  return 'Y';
-}
+const CABIN_CODES: Record<FlightReport['cabin'], string> = {
+  first: 'F',
+  business: 'J',
+  premium: 'W',
+  economy: 'Y',
+};
 
 /**
  * Gold EMV chip (hueless in Mono — proof resolves to a neutral there). The
@@ -99,6 +100,9 @@ function FlightPath({ replayKey }: { replayKey: string }) {
 }
 
 export default function SearchReportCard({ report }: { report: FlightReport }) {
+  const { locale, m } = useI18n();
+  const t = m.report;
+  const cabin = m.common.cabins[report.cabin];
   const reduce = useReducedMotion();
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -146,7 +150,7 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
             <div>
               <Chip />
               <span className="mt-3 block font-mono text-[0.6rem] uppercase tracking-[0.16em] text-ink-muted">
-                Example report · #{report.id}
+                {fmt(t.example, { id: report.id })}
               </span>
             </div>
             <span
@@ -158,7 +162,7 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
               }}
             >
               <Check className="h-3 w-3" aria-hidden strokeWidth={3} />
-              Confirmed
+              {t.confirmed}
             </span>
           </div>
 
@@ -169,26 +173,30 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
             <span className="font-display text-3xl font-bold text-ink">{report.to}</span>
           </div>
           <p className="mt-2 text-sm text-ink-sub">
-            {report.airline} · {report.cabin} · {report.date}
+            {report.airline} · {cabin} · {formatDayMonth(locale, report.date)}
           </p>
 
           {/* Cost — points vs. the struck retail fare IS the whole argument, so
               the retail anchor is set as loud as the points/taxes line (Review v3 §3). */}
           <div className="mt-5 space-y-1.5">
             <p className="font-mono text-xl font-semibold text-ink">
-              {report.points} pts <span className="text-ink-muted">+</span> {report.taxes} taxes
+              {fmt(m.common.points, { points: formatNumber(locale, report.points) })}{' '}
+              <span className="text-ink-muted">+</span>{' '}
+              {fmt(t.taxes, { taxes: formatPrice(locale, report.taxesUsd) })}
             </p>
             <p className="font-mono text-base font-medium text-ink-sub">
-              Retail fare{' '}
-              <span className="text-ink line-through decoration-2">{report.retailUSD}</span>
-              <span className="text-ink-muted"> · you pay points</span>
+              {t.retailFare}{' '}
+              <span className="text-ink line-through decoration-2">
+                {formatPrice(locale, report.retailUsd)}
+              </span>
+              <span className="text-ink-muted">{t.youPayPoints}</span>
             </p>
           </div>
 
           {/* Transfer + evidence */}
           <div className="mt-5 space-y-3 border-t pt-4" style={{ borderColor: 'var(--sm-glass-border)' }}>
             <p className="text-xs text-ink-sub">
-              Transfer from <span className="text-ink">{report.transfer}</span>
+              {t.transferFrom} <span className="text-ink">{report.transfer}</span>
             </p>
             <div
               className="rounded-lg px-3 py-2 font-mono text-[0.62rem] leading-relaxed text-ink-muted"
@@ -196,11 +204,11 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
               aria-hidden
             >
               <span className="block">
-                {report.airline} · {report.from}–{report.to} · {cabinCode(report.cabin)}
+                {report.airline} · {report.from}–{report.to} · {CABIN_CODES[report.cabin]}
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: 'var(--sm-success)' }} />
-                {report.seatNote}
+                {plural(locale, report.seats, t.seats)}
               </span>
             </div>
           </div>
@@ -208,7 +216,7 @@ export default function SearchReportCard({ report }: { report: FlightReport }) {
           {/* Footer — the single most important line in the card. */}
           <p className="mt-4 flex items-center gap-1.5 text-xs font-medium text-ink-sub">
             <Check className="h-3.5 w-3.5" style={{ color: 'var(--sm-proof)' }} aria-hidden strokeWidth={3} />
-            Verified by hand
+            {t.verified}
           </p>
         </div>
       </motion.div>

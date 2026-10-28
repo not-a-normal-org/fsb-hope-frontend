@@ -6,24 +6,30 @@ import CaseStudyCard from './CaseStudyCard';
 import Link from '@/components/system/LocaleLink';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 import type { CaseStudy } from '@/lib/case-studies';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Home proof section — up to three confirmed redemptions in a filled, centered
  * row (no lone card stranded in a full-width section) + a link to /results.
  * A base-surface section; the page's one glow is the hero.
  */
-export default function CaseStudyTeaserView({ studies }: { studies: CaseStudy[] }) {
+export default function CaseStudyTeaserView({
+  studies,
+  m,
+}: {
+  studies: CaseStudy[];
+  m: Messages['home']['caseStudies'];
+}) {
   return (
     <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Proof</p>
+          <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">{m.eyebrow}</p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            A specialist found these seats.
+            {m.title}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-            Not an algorithm’s guess. Real bookings a specialist confirmed and shared with the
-            traveler’s permission.
+            {m.body}
           </p>
         </motion.div>
 
@@ -44,7 +50,7 @@ export default function CaseStudyTeaserView({ studies }: { studies: CaseStudy[] 
             href="/results"
             className="text-sm text-ink-sub underline underline-offset-4 transition-colors hover:text-ink"
           >
-            See more results →
+            {m.more}
           </Link>
         </motion.div>
       </div>

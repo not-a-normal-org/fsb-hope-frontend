@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 
 
 import { REGIONS } from '@/lib/reports';
 import { EASE_OUT } from '@/lib/animations';
+import { useI18n } from '@/i18n/LocaleProvider';
 import SearchReportCard from './SearchReportCard';
 
 const AUTO_MS = 5000; // auto-advance cadence
@@ -30,6 +31,7 @@ export default function RegionalReports() {
   const controls = useAnimationControls();
   const delayRef = useRef(AUTO_MS);
   const region = REGIONS[active];
+  const t = useI18n().m.report;
 
   // Manual pick: change now, pop, and hold longer before the next auto-advance.
   function pick(i: number) {
@@ -68,7 +70,7 @@ export default function RegionalReports() {
       {/* Vertical side bookmarks */}
       <div
         role="tablist"
-        aria-label="Example award bookings by region"
+        aria-label={t.regionsLabel}
         aria-orientation="vertical"
         className="relative flex flex-col items-stretch gap-1.5 pt-10"
       >
@@ -112,7 +114,7 @@ export default function RegionalReports() {
                     }
               }
             >
-              {r.label}
+              {t.regions[r.key]}
               {/* Countdown bar — remounts on each change and on un-pause (key), so
                   it always tracks the freshly-armed timer; frozen while paused. */}
               {on && !reduce && (

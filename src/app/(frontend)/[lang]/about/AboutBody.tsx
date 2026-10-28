@@ -7,6 +7,8 @@ import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
 import StatStrip from '@/components/site/StatStrip';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * /about body (docs/plans/02): mission, the manual-search differentiator, and
@@ -17,25 +19,11 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  * Client component so StatStrip (framer-motion) and the section entrances work;
  * the page shell + hero stay server-rendered.
  */
-const HOW = [
-  {
-    title: 'A specialist, not a feed',
-    body: 'Award space changes by the minute and cached data lies. Your specialist works 30+ programs and transfer partners, including the routings automated tools skip.',
-  },
-  {
-    title: 'Verified before you commit',
-    body: 'Your specialist opens the booking and confirms the seat is really there, at the price we quoted, before you spend a point or a dollar.',
-  },
-  {
-    title: 'Delivered as proof',
-    body: 'You get a screenshot and the exact point cost, something you can book, not a lead or a maybe.',
-  },
-];
-
 const ctaBase =
   'inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors';
 
-export default function AboutBody() {
+export default function AboutBody({ m }: { m: Messages['about'] }) {
+  const { common } = useI18n().m;
   return (
     <>
       <section className="relative">
@@ -45,17 +33,14 @@ export default function AboutBody() {
             {...inViewOnce}
             className="font-display text-section font-bold leading-snug text-ink"
           >
-            Most people are sitting on points they can’t turn into anything good.
+            {m.lead}
           </motion.p>
           <motion.p
             variants={entrance}
             {...inViewOnce}
             className="mt-5 text-base leading-relaxed text-ink-sub"
           >
-            The tools that are supposed to help are quick, cheap, and full of seats that
-            vanish the moment you try to book them. We built Saver Miles to fix that:
-            assign you a specialist, get the most out of what you already hold, verify
-            before you pay, and hand you a seat you can actually book.
+            {m.story}
           </motion.p>
         </div>
       </section>
@@ -71,14 +56,14 @@ export default function AboutBody() {
             {...inViewOnce}
             className="max-w-2xl font-display text-section font-bold text-ink"
           >
-            How we actually work
+            {m.howTitle}
           </motion.h2>
           <motion.div
             variants={staggerParent}
             {...inViewOnce}
             className="mt-10 grid gap-6 md:grid-cols-3"
           >
-            {HOW.map((h) => (
+            {m.how.map((h) => (
               <motion.div key={h.title} variants={entrance}>
                 <GlassPanel as="div" className="h-full">
                   <h3 className="font-display text-card font-bold text-ink">{h.title}</h3>
@@ -97,7 +82,7 @@ export default function AboutBody() {
             {...inViewOnce}
             className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent"
           >
-            The numbers behind it
+            {m.numbers}
           </motion.p>
           <div className="mt-6">
             <StatStrip />
@@ -112,18 +97,13 @@ export default function AboutBody() {
         <AmbientBackground variant="section" />
         <div className="mx-auto max-w-3xl px-6 py-16 md:py-20">
           <motion.div variants={entrance} {...inViewOnce}>
-            <h2 className="font-display text-section font-bold text-ink">How we charge</h2>
-            <p className="mt-5 text-base leading-relaxed text-ink-sub">
-              Flat fees for the work, listed in full on the pricing page. An individual
-              booking is a $25 deposit plus a $99 fee, and if your specialist finds
-              nothing bookable, the deposit comes back. Business pricing is quoted per
-              account. Ongoing alerts are monthly. That’s the whole model, nothing hidden.
-            </p>
+            <h2 className="font-display text-section font-bold text-ink">{m.chargeTitle}</h2>
+            <p className="mt-5 text-base leading-relaxed text-ink-sub">{m.charge}</p>
             <Link
               href="/pricing"
               className={`mt-7 ${ctaBase} sm-cta-ghost`}
             >
-              See full pricing
+              {common.seeFullPricing}
             </Link>
           </motion.div>
         </div>
@@ -136,7 +116,7 @@ export default function AboutBody() {
             {...inViewOnce}
             className="font-display text-section font-bold text-ink"
           >
-            Put a specialist on your points.
+            {m.closing}
           </motion.h2>
           <motion.div
             variants={entrance}
@@ -147,13 +127,13 @@ export default function AboutBody() {
               href="/individual"
               className={`${ctaBase} sm-cta`}
             >
-              Check your route
+              {m.checkRoute}
             </Link>
             <Link
               href="/how-it-works"
               className={`${ctaBase} sm-cta-ghost`}
             >
-              See how it works
+              {m.seeHow}
             </Link>
           </motion.div>
         </div>

@@ -6,6 +6,7 @@ import Link from '@/components/system/LocaleLink';
 import GlassPanel from '@/components/system/GlassPanel';
 import { entrance, DURATION } from '@/lib/animations';
 import type { Product } from '@/lib/products';
+import { useI18n } from '@/i18n/LocaleProvider';
 
 /**
  * One pricing card (docs/plans/04 — this covers AlertProductCard's role too).
@@ -19,7 +20,8 @@ import type { Product } from '@/lib/products';
  * their fixed --sm-* tokens via color-mix so they hold across all three modes.
  */
 export default function PriceCard({ product }: { product: Product }) {
-  const isExternal = !product.cta.href.startsWith('/');
+  const { common } = useI18n().m;
+  const isExternal = !product.href.startsWith('/');
   const ctaClass =
     'inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition-colors sm-cta';
 
@@ -90,7 +92,7 @@ export default function PriceCard({ product }: { product: Product }) {
               className="font-mono text-[0.62rem] uppercase tracking-[0.12em]"
               style={{ color: 'var(--sm-warning)' }}
             >
-              Automated — read this
+              {common.automatedLabel}
             </p>
             <p className="mt-1.5 text-xs leading-relaxed text-ink-sub">{product.disclosure}</p>
           </div>
@@ -98,12 +100,12 @@ export default function PriceCard({ product }: { product: Product }) {
 
         <div className="mt-auto pt-7">
           {isExternal ? (
-            <a href={product.cta.href} className={ctaClass}>
-              {product.cta.label}
+            <a href={product.href} className={ctaClass}>
+              {product.cta}
             </a>
           ) : (
-            <Link href={product.cta.href} className={ctaClass}>
-              {product.cta.label}
+            <Link href={product.href} className={ctaClass}>
+              {product.cta}
             </Link>
           )}
         </div>

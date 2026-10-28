@@ -1,6 +1,8 @@
 import { ChevronDown } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
+import { rich } from '@/i18n/rich';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * FAQ (Review v3 §8) — answers the top objections the site was silent on:
@@ -10,42 +12,15 @@ import Link from '@/components/system/LocaleLink';
  * transactional emails' "within 5 business days", and the "we hand you a seat you
  * can book" model) — nothing invented.
  */
-const FAQS: { q: string; a: string }[] = [
-  {
-    q: 'What if you find nothing?',
-    a: 'We tell you straight — no upsell, no “maybe”. On an individual search your $25 deposit comes back in full, to your original payment method.',
-  },
-  {
-    q: 'How long does a search take?',
-    a: 'Most searches come back within five business days, often sooner. Anything time-sensitive we flag the moment we find it.',
-  },
-  {
-    q: 'Do you need my airline or credit-card logins?',
-    a: 'No. Your points and your accounts stay yours. A specialist finds and confirms the space, then hands you the exact steps to book it yourself — we never ask for your passwords.',
-  },
-  {
-    q: 'Who books the ticket — you or me?',
-    a: 'You do. We do the finding and the verifying; you keep control and place the booking with the step-by-step we send. Prefer we handle more of it? Ask, and we’ll tell you what’s possible.',
-  },
-  {
-    q: 'What if the seat disappears before I book it?',
-    a: 'Award space can move. We flag anything time-sensitive, and if a seat we confirmed is gone before you book it, you don’t owe the $99 — we keep looking.',
-  },
-  {
-    q: 'Is this a subscription?',
-    a: 'An individual search is a one-off: a $25 deposit, plus $99 only when we confirm a seat you can book. Business pricing is custom, so we talk it through with you first. Alerts are the only monthly option, and you can cancel anytime.',
-  },
-];
-
-export default function FAQ() {
+export default function FAQ({ m }: { m: Messages['home']['faq'] }) {
   return (
     <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <div className="mx-auto max-w-3xl px-6 py-20 md:py-24">
-        <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Questions</p>
-        <h2 className="mt-3 font-display text-section font-bold text-ink">Answered before you ask.</h2>
+        <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">{m.eyebrow}</p>
+        <h2 className="mt-3 font-display text-section font-bold text-ink">{m.title}</h2>
 
         <div className="mt-8">
-          {FAQS.map((item) => (
+          {m.items.map((item) => (
             <details
               key={item.q}
               className="group border-t py-4 last:border-b"
@@ -64,11 +39,13 @@ export default function FAQ() {
         </div>
 
         <p className="mt-8 text-sm text-ink-sub">
-          Still unsure?{' '}
-          <Link href="/contact" className="text-accent underline underline-offset-4 hover:text-ink">
-            Ask us directly
-          </Link>
-          .
+          {rich(m.stillUnsure, {
+            link: (c) => (
+              <Link href="/contact" className="text-accent underline underline-offset-4 hover:text-ink">
+                {c}
+              </Link>
+            ),
+          })}
         </p>
       </div>
     </section>
