@@ -70,6 +70,20 @@ _Last updated: 2026-08-31._
 - [ ] **Unify admin login** onto per-account (retire the shared `ADMIN_SECRET`)
 - [ ] **Customer-side referral view** once a public apply/customer flow exists
 
+## Languages — English + German (started 2026-10-28)
+
+German at `/de`, auto-shown to visitors in DE/AT/CH, with a switcher. Ships dark
+behind `NEXT_PUBLIC_I18N_DE_LIVE`; rules in `AGENTS.md` → "Languages".
+
+- [~] Routing, `[lang]` layouts, proxy detection, switcher, hreflang/sitemap, nav/footer/consent copy (`feat/i18n-routing`)
+- [ ] Marketing pages + components translated; prices formatted per language (`feat/i18n-pages-de`)
+- [ ] German Terms / Privacy / Cookies + `sm-locale` in the cookie policy (`feat/i18n-legal-de`)
+- [ ] Forms, API error codes, German welcome email, Stripe Checkout locale (`feat/i18n-forms-email`)
+- [ ] Payload localization + migrations (no more dev push) (`feat/cms-localization`)
+- [ ] German blog posts + case studies (`feat/blog-de`)
+- [ ] Go live: `NEXT_PUBLIC_I18N_DE_LIVE=on` in Vercel
+- [ ] Open question for counsel: Impressum for German visitors vs. the no-founder-names rule
+
 ## Pre-launch gates
 
 - [ ] **Light-mode logo variant.** The current logo (`public/savermiles-logo.png`)

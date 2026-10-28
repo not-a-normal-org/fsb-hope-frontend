@@ -127,7 +127,7 @@ Body images are uploaded by the same seed run, once each, and reused on later ru
   `ONLY=<slug> npm run seed:articles` puts it back.
 
 ## Known debt
-- `src/app/(frontend)/blog/page.tsx` has an open TODO: no `publishedAt <= now` filter on the index,
+- `src/app/(frontend)/[lang]/blog/page.tsx` has an open TODO: no `publishedAt <= now` filter on the index,
   so a future-dated post would show early. Don't schedule posts until that lands.
 - Several older posts have META_TITLE over 46 characters or META_DESCRIPTION over 155 (the dry run
   flags them). Tidy them at each post's next real refresh, not in a bulk reseed.

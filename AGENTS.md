@@ -27,12 +27,14 @@ it first; it is the source of truth.** This file is how to work in the repo.
 
 | Path | What |
 |---|---|
-| `src/app/` | Routes (App Router). `page.tsx` is the home page. |
-| `src/components/system/` | Design-system primitives: `GlassPanel`, `AmbientBackground`, `ShineText`, `ModeToggle`, `ThemeScript`. |
+| `src/app/(frontend)/[lang]/` | Public pages (App Router), one tree for every language. `page.tsx` is the home page; `layout.tsx` is the public root layout. |
+| `src/app/(staff)/` | Admin, `/login`, `/portal`, `/maintenance` — English-only, with their own root layout. |
+| `src/i18n/` | Languages: `config.ts` (locales, URL helpers, the `DE_LIVE` flag), `messages/en.ts` + `de.ts` (UI copy), `get-messages.ts` (server), `LocaleProvider.tsx` (client). |
+| `src/components/system/` | Design-system primitives: `GlassPanel`, `AmbientBackground`, `ShineText`, `ModeToggle`, `ThemeScript`, `DocumentShell` (the shared `<html>`), `LocaleLink`, `LanguageSwitcher`. |
 | `src/components/site/` | Marketing components: `NavBar`, `Footer`, `Logo`, `HomeHero`, `AudienceFork`, etc. |
 | `src/lib/` | `stripe.ts`, `supabase/*`, `maintenance.ts` (the wall's flag/helpers), `animations.ts` (motion tokens), `constants.ts` (site name/url). |
-| `src/proxy.ts` | The construction wall + admin auth gate. |
-| `src/app/admin/`, `src/app/api/` | Admin portal + API routes (Stripe/Supabase/Resend). Kept from the prior build — leave untouched unless the task is about them. |
+| `src/proxy.ts` | The construction wall + admin auth gate + language routing. |
+| `src/app/(staff)/admin/`, `src/app/api/` | Admin portal + API routes (Stripe/Supabase/Resend). Kept from the prior build — leave untouched unless the task is about them. |
 | `docs/plans/` | The build spec (design system, products, pages, phases). Source of truth. |
 | `docs/blog-guide/` | Blog playbook: writing rules, SEO/GEO, keyword research, cover images, and publishing (seed with `ONLY=`, never a full reseed). |
 | `archive/frontend-v1/` | Snapshot of the original frontend. Reference only; never import from it. |
@@ -89,6 +91,34 @@ governs `/admin` (roles decide which sections — see `src/lib/access.ts`), the
 in the `/admin` layout (`src/lib/auth.ts`). `MAINTENANCE_MODE=off` drops the wall
 entirely for local work. The wall comes down at launch.
 
+## Languages (English + German)
+
+The public site is English and German; staff surfaces stay English. Read
+`src/i18n/config.ts` first.
+
+- **URLs:** English is unprefixed (`/pricing`), German mirrors it under `/de` with
+  the same slugs (`/de/pricing`). Every public page lives in
+  `src/app/(frontend)/[lang]/`; `src/proxy.ts` rewrites unprefixed URLs to
+  `/en/...` and 308s `/en/...` back to the unprefixed URL.
+- **Detection:** a visitor in DE/AT/CH (`x-vercel-ip-country`) on an English URL is
+  307'd to `/de/...`, unless they chose a language in the switcher (`sm-locale`
+  cookie, which always wins) or are a crawler. Nothing else sets the cookie.
+- **`NEXT_PUBLIC_I18N_DE_LIVE=on` makes German public.** Until then `/de/*` renders
+  but is noindex, and there is no geo redirect, switcher, or German hreflang.
+- **Copy never goes straight into JSX.** Add English to
+  `src/i18n/messages/en.ts` and German to `de.ts` in the same change — `de.ts` is
+  typed against `en.ts`, so a missing key fails `tsc`. Formal *Sie*. Brand and
+  product names stay English. The product non-negotiables apply to German too.
+  Server components: `getMessages(locale)`; client components: `useI18n()`.
+  `{name}` placeholders go through `fmt()`, inline links/emphasis through `rich()`.
+- **Internal links use `LocaleLink`** (`@/components/system/LocaleLink`), never
+  `next/link`, on public pages: write the English path and it adds `/de`.
+- **Every public page's metadata spreads `localeMeta(locale, path)`** (`src/lib/seo.ts`)
+  for the canonical, hreflang, and noindex-until-live. Pages get the locale with
+  `resolveLocale(params)`.
+- A new public route needs nothing in the proxy. A new **unlocalized** prefix
+  (another staff area, a new API root) goes in `UNLOCALIZED_PREFIXES`.
+
 ## Product non-negotiables (from `docs/plans/00-context.md`)
 
 - **No founder names, no Upwork, no prior company name** anywhere public-facing.
@@ -139,6 +169,10 @@ manual**, and all of it is expected before calling a change done:
 6. **Theme changes:** exercise all three modes (Light / Dark / Mono); confirm the
    crossfade works and no blue leaks into Mono.
 7. **Reduced-motion:** confirm animations degrade when the OS setting is on.
+8. **Languages:** load the affected page as `/x` and `/de/x`. With
+   `NEXT_PUBLIC_I18N_DE_LIVE=on`, `curl -H 'x-vercel-ip-country: DE'` an English URL
+   and expect a 307 to `/de/...`. German copy is longer: check the nav at `md` and
+   the layout at 320px.
 
 **No browser driver is available in this environment** — pixel-level / visual
 correctness can't be screenshot-verified here and needs a human's eyes. Verify
