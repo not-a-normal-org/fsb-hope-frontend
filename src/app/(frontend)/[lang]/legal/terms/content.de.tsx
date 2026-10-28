@@ -1,7 +1,11 @@
 import type { LegalContent } from '@/components/site/LegalDoc';
 import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
+import { formatPrice } from '@/i18n/format';
+import { PRICES_USD } from '@/lib/products';
 
 const EMAIL = SITE_EMAIL;
+// Prices come from the one table (src/lib/products.ts), never typed out.
+const price = (key: keyof typeof PRICES_USD) => formatPrice('de', PRICES_USD[key]);
 
 // German translation of content.en.tsx. The English version governs (see the
 // notice at the top); keep the two in step when either changes.
@@ -53,8 +57,8 @@ function Body() {
       <p>Unsere aktuellen Gebühren sind auf unserer Preisseite aufgeführt und hier zusammengefasst:</p>
       <ul>
         <li>
-          <strong>Suche für Privatpersonen.</strong> Eine <strong>Anzahlung von 25 $</strong> zum Start
-          sowie eine <strong>Erfolgsgebühr von 99 $</strong> pro Person und Richtung, die nur berechnet
+          <strong>Suche für Privatpersonen.</strong> Eine <strong>Anzahlung von {price('deposit')}</strong> zum Start
+          sowie eine <strong>Erfolgsgebühr von {price('successFee')}</strong> pro Person und Richtung, die nur berechnet
           wird, wenn wir einen für Sie buchbaren Platz bestätigen, der den von Ihnen angegebenen Kriterien
           entspricht. Die Erfolgsgebühr ist für jede Kabinenklasse gleich.
         </li>
@@ -63,11 +67,11 @@ function Body() {
           vereinbaren die Gebühr mit Ihnen, bevor die Suche beginnt.
         </li>
         <li>
-          <strong>Weekly Lookup Alert.</strong> Ein Abonnement (derzeit 4,99 $/Monat oder der angegebene
+          <strong>Weekly Lookup Alert.</strong> Ein Abonnement (derzeit {price('weeklyMonthly')}/Monat oder der angegebene
           Jahrespreis), das einen automatisierten wöchentlichen Scan Ihrer Strecken liefert.
         </li>
         <li>
-          <strong>Human Search Alert.</strong> Ein Abonnement (derzeit 99,99 $/Monat oder der angegebene
+          <strong>Human Search Alert.</strong> Ein Abonnement (derzeit {price('humanMonthly')}/Monat oder der angegebene
           Jahrespreis), bei dem ein Spezialist Ihre Strecken in jedem Zyklus prüft.
         </li>
       </ul>
@@ -99,7 +103,7 @@ function Body() {
         <li>
           <strong>Die Anzahlung für Privatpersonen wird erstattet, wenn wir nichts Buchbares
           finden.</strong> Wenn wir keine Prämienoption finden, die Ihren Kriterien entspricht, wird Ihre{' '}
-          <strong>Anzahlung von 25 $ vollständig erstattet</strong>. Sobald wir ein qualifizierendes
+          <strong>Anzahlung von {price('deposit')} vollständig erstattet</strong>. Sobald wir ein qualifizierendes
           buchbares Ergebnis geliefert haben, ist die Sucharbeit abgeschlossen, und die Anzahlung wird auf
           Ihre Suche angerechnet statt erstattet.
         </li>

@@ -1,7 +1,11 @@
 import type { LegalContent } from '@/components/site/LegalDoc';
 import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
+import { formatPrice } from '@/i18n/format';
+import { PRICES_USD } from '@/lib/products';
 
 const EMAIL = SITE_EMAIL;
+// Prices come from the one table (src/lib/products.ts), never typed out.
+const price = (key: keyof typeof PRICES_USD) => formatPrice('en', PRICES_USD[key]);
 
 function Body() {
   return (
@@ -43,8 +47,8 @@ function Body() {
       <p>Our current fees are set out on our pricing page and summarized here:</p>
       <ul>
         <li>
-          <strong>Individual search.</strong> A <strong>$25 deposit</strong> to begin, plus a{' '}
-          <strong>$99 success fee</strong> per person, per direction, charged only when we confirm a
+          <strong>Individual search.</strong> A <strong>{price('deposit')} deposit</strong> to begin, plus a{' '}
+          <strong>{price('successFee')} success fee</strong> per person, per direction, charged only when we confirm a
           seat you can book that meets the criteria you gave us. The success fee is the same for any
           cabin.
         </li>
@@ -53,11 +57,11 @@ function Body() {
           search begins.
         </li>
         <li>
-          <strong>Weekly Lookup Alert.</strong> A subscription (currently $4.99/month or the stated
+          <strong>Weekly Lookup Alert.</strong> A subscription (currently {price('weeklyMonthly')}/month or the stated
           annual rate) delivering an automated weekly scan of your routes.
         </li>
         <li>
-          <strong>Human Search Alert.</strong> A subscription (currently $99.99/month or the stated
+          <strong>Human Search Alert.</strong> A subscription (currently {price('humanMonthly')}/month or the stated
           annual rate) in which a specialist checks your routes each cycle.
         </li>
       </ul>
@@ -86,7 +90,7 @@ function Body() {
       <ul>
         <li>
           <strong>The individual deposit is refundable if we find nothing bookable.</strong> If we
-          cannot find an award option that meets your criteria, your <strong>$25 deposit is refunded in
+          cannot find an award option that meets your criteria, your <strong>{price('deposit')} deposit is refunded in
           full</strong>. Once we have delivered a qualifying bookable result, the search work is
           complete and the deposit is applied to your search rather than refunded.
         </li>
