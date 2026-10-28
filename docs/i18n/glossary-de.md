@@ -8,8 +8,11 @@ for adding copy are in `AGENTS.md` → "Languages".
 
 - **Formal *Sie*** everywhere, including buttons ("Suche starten", not "Starte").
 - Short sentences, no hype, same quietly premium tone as the English.
-- Typography: German quotes „…“, en dash with spaces ( – ) for a break,
-  `z. B.` with a thin space, `…` with a space before it in placeholders.
+- Typography: German quotes „…“, en dash with spaces ( – ) for a break in UI
+  copy, `z. B.` with a thin space, `…` with a space before it in placeholders.
+  **Blog posts are the exception:** the writing guide's no-dash rule applies, so no
+  em dash and no spaced en dash as punctuation (commas, colons, parentheses
+  instead); an en dash only in ranges ("2–4").
 - No German-language service promise. The team answers in English unless told
   otherwise; the newsletter blurbs say "Der Newsletter erscheint auf Englisch."
 
