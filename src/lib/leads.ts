@@ -50,6 +50,12 @@ export const TRIP_TYPE_OPTIONS: LeadOption[] = [
   { value: 'one_way', label: 'One-way' },
 ];
 
+/** The site language the lead was sent in. Set by the API from the page, never typed. */
+export const LANGUAGE_OPTIONS: LeadOption[] = [
+  { value: 'en', label: 'English' },
+  { value: 'de', label: 'German' },
+];
+
 // ── Questionnaire fields (leads.details) ──────────────────────────────────────
 
 export type LeadDetailField = {
@@ -72,6 +78,9 @@ export const LEAD_DETAIL_FIELDS: LeadDetailField[] = [
   // Legacy key: accepted by the API before the form stopped asking it.
   { key: 'preferences', label: 'Preferences', section: 'notes', area: true },
   { key: 'notes', label: 'Notes / preferences', section: 'notes', area: true },
+  // Which language the visitor used. The team answers in English unless the
+  // lead says otherwise, so a German lead is flagged ([DE] in the email subject).
+  { key: 'locale', label: 'Site language', section: 'notes', options: LANGUAGE_OPTIONS },
 ];
 
 export const LEAD_DETAIL_KEYS = LEAD_DETAIL_FIELDS.map((f) => f.key);
