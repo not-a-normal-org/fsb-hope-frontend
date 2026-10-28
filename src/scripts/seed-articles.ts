@@ -14,6 +14,11 @@
  *  - `SEED_DRY_RUN=1`    validate + print a preflight report, then exit WITHOUT
  *    connecting to the database.
  *  - `RESEED_COVERS=1`   re-upload covers from <slug>.jpg and delete the old media.
+ *  - `LOCALE=de`         publish the GERMAN version of existing posts from
+ *    `src/scripts/assets/blog/de/<slug>.md`. Writes only the localized fields
+ *    (title, excerpt, body, meta) and German alt text on the post's existing
+ *    images; never creates a post, never uploads, never touches slug, category,
+ *    cover or date. Publish the English post first. Combine with ONLY= as always.
  *
  * Source of truth is the markdown in `src/scripts/assets/blog/<slug>.md`
  * (front-matter header + restricted-markdown body) and the matching
@@ -31,6 +36,7 @@ import { getPayload } from 'payload';
 import config from '@payload-config';
 
 import { extractFaq, wordCount } from '@/lib/blog';
+import { DEFAULT_LOCALE, hasLocale, type Locale } from '@/i18n/config';
 
 /* ── Minimal Lexical builders (identical shapes to seed-foundation-post.ts) ── */
 type Node = { [k: string]: unknown; type: string; version: number };
@@ -246,6 +252,17 @@ const ORDER = [
 
 const ASSETS = path.resolve('src/scripts/assets/blog');
 const CATEGORY_NAME: Record<string, string> = { guides: 'Guides', deals: 'Deals' };
+/** Category names per translation, matching the site's nav labels (messages `links`). */
+const CATEGORY_NAME_DE: Record<string, string> = { guides: 'Ratgeber', deals: 'Deals' };
+
+/** Which language this run publishes. Images and the English post are shared. */
+const LOCALE: Locale = (() => {
+  const value = process.env.LOCALE ?? DEFAULT_LOCALE;
+  if (!hasLocale(value)) throw new Error(`LOCALE must be one of en, de (got "${value}")`);
+  return value;
+})();
+/** Where this run's markdown lives: the English files, or a per-language folder. */
+const ARTICLES = LOCALE === DEFAULT_LOCALE ? ASSETS : path.join(ASSETS, LOCALE);
 
 async function categoryId(payload: Awaited<ReturnType<typeof getPayload>>, slug: string): Promise<number> {
   const found = await payload.find({ collection: 'categories', where: { slug: { equals: slug } }, limit: 1, depth: 0 });
@@ -294,7 +311,7 @@ function loadAndValidate(): Selected[] {
   const problems: string[] = [];
   const selected: Selected[] = [];
   for (const { slug, idx } of selectSlugs()) {
-    const mdPath = path.join(ASSETS, `${slug}.md`);
+    const mdPath = path.join(ARTICLES, `${slug}.md`);
     if (!existsSync(mdPath)) {
       problems.push(`"${slug}": missing ${mdPath}`);
       continue;
@@ -461,14 +478,21 @@ async function main() {
   const scope = process.env.ONLY ? `ONLY ${selected.map((p) => p.slug).join(', ')}` : `all ${selected.length} posts`;
 
   if (process.env.SEED_DRY_RUN === '1' || process.env.SEED_DRY_RUN === 'true') {
-    console.log(`SEED_DRY_RUN: ${scope}. Nothing is written; the database is not contacted.`);
+    console.log(`SEED_DRY_RUN (${LOCALE}): ${scope}. Nothing is written; the database is not contacted.`);
     for (const post of selected) await report(post);
     return;
   }
 
-  console.log(`Seeding ${scope} → PRODUCTION database.`);
+  console.log(`Seeding ${scope} (${LOCALE}) → PRODUCTION database.`);
   const payload = await getPayload({ config });
   const now = Date.now();
+
+  if (LOCALE !== DEFAULT_LOCALE) {
+    if (process.env.RESEED_COVERS) throw new Error('RESEED_COVERS is English-only: images are shared by every language.');
+    for (const post of selected) await seedTranslation(payload, post);
+    console.log('\nTranslation seed complete.');
+    return;
+  }
 
   for (const { slug, idx, article, imgPath, content, images } of selected) {
     const catId = await categoryId(payload, article.category);
@@ -554,6 +578,59 @@ async function main() {
   }
 
   console.log('\nArticles seed complete.');
+}
+
+/**
+ * The LOCALE version of one existing post: localized fields only. Body images
+ * must be the same files as in the English post (matched by node id) — their
+ * media is reused and gets this language's alt text; so does the cover.
+ */
+async function seedTranslation(payload: PayloadClient, post: Selected): Promise<void> {
+  const { slug, article, content, images } = post;
+  const found = await payload.find({
+    collection: 'posts',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 0,
+    locale: DEFAULT_LOCALE,
+  });
+  const english = found.docs[0] as
+    | { id: number; coverImage?: number | null; category?: number | null; content?: unknown }
+    | undefined;
+  if (!english) throw new Error(`"${slug}": no English post to translate. Publish the English version first.`);
+
+  const englishUploads = existingUploads(english.content);
+  for (const image of images) {
+    const mediaId = englishUploads.get(image.nodeId);
+    if (!mediaId) {
+      throw new Error(`"${slug}": body image ${image.file} is not in the English post; translations reuse its images.`);
+    }
+    await payload.update({ collection: 'media', id: mediaId, locale: LOCALE, data: { alt: image.alt } });
+    for (const node of content.root.children as Record<string, unknown>[]) {
+      if (node.type === 'upload' && node.id === image.nodeId) node.value = mediaId;
+    }
+  }
+  if (english.coverImage && article.coverAlt) {
+    await payload.update({ collection: 'media', id: english.coverImage, locale: LOCALE, data: { alt: article.coverAlt } });
+  }
+  const categoryName = LOCALE === 'de' ? CATEGORY_NAME_DE[article.category] : undefined;
+  if (english.category && categoryName) {
+    await payload.update({ collection: 'categories', id: english.category, locale: LOCALE, data: { name: categoryName } });
+  }
+
+  await payload.update({
+    collection: 'posts',
+    id: english.id,
+    locale: LOCALE,
+    data: {
+      title: article.title,
+      excerpt: article.excerpt,
+      content,
+      meta: { title: article.metaTitle, description: article.metaDescription },
+      _status: 'published',
+    },
+  });
+  console.log(`✓ ${LOCALE} version of "${slug}"`);
 }
 
 /** Drain stdout/stderr before process.exit, or piped output is lost. */

@@ -20,6 +20,13 @@ sitemap `lastmod`. Google says it stops trusting `lastmod` when it changes witho
 | `ONLY=slug[,slug]` | Seed only these posts. Unknown slugs fail before any write. |
 | `SEED_DRY_RUN=1` | Validate and print a preflight report, then exit. **Never contacts the database.** |
 | `RESEED_COVERS=1` | Re-upload every image the post owns (cover **and** body images) from source and delete the superseded media. Combine with `ONLY=`. |
+| `LOCALE=de` | Publish the **German** version of existing posts from `src/scripts/assets/blog/de/<slug>.md`. Writes only the translated fields (title, excerpt, body, meta) plus German alt text on the post's existing images and the German category name. Never creates a post, uploads, or changes slug, category, cover or date: publish the English post first. Body images must be the same files as in English. Combine with `ONLY=` and dry-run first, like any seed. |
+
+**German versions.** A German file uses the same header and body format as the English one, with the
+same `SLUG` and `CATEGORY`. Until a post has a German title **and** body, `/de/blog/<slug>` shows the
+English post with a "nur auf Englisch" note and canonical to the English URL; once both exist it is a
+German page with its own hreflang and sitemap entry. Terms: [`../i18n/glossary-de.md`](../i18n/glossary-de.md).
+A German publish bumps the post's `updatedAt` (and so its sitemap `lastmod`) like any edit.
 
 The seed refuses to run when a slug isn't in `ORDER`, a file is missing, `CATEGORY` isn't `guides`
 or `deals` (an unknown value would create a new public category), `SLUG` doesn't match the file,
