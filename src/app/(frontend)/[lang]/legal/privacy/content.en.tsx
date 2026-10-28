@@ -47,7 +47,9 @@ function Body() {
       <p>
         When you visit the website, our hosting and infrastructure providers automatically process
         technical data such as your IP address, browser and device type, pages viewed, and timestamps,
-        as part of delivering and securing the site. We also use a small number of cookies and
+        as part of delivering and securing the site. Our hosting provider also derives your approximate
+        country from your IP address; we use it only to choose which language to show you first, and we
+        do not store it. We also use a small number of cookies and
         browser-storage items, described in our{' '}
         <Link href="/legal/cookies">Cookie Policy</Link>.
       </p>

@@ -58,7 +58,10 @@ function Body() {
       <p>
         Wenn Sie die Website besuchen, verarbeiten unsere Hosting- und Infrastrukturanbieter automatisch
         technische Daten wie Ihre IP-Adresse, Ihren Browser- und Gerätetyp, die aufgerufenen Seiten und
-        Zeitstempel, um die Website bereitzustellen und abzusichern. Außerdem verwenden wir eine kleine
+        Zeitstempel, um die Website bereitzustellen und abzusichern. Unser Hosting-Anbieter leitet aus
+        Ihrer IP-Adresse außerdem Ihr ungefähres Land ab; wir nutzen es ausschließlich, um zu entscheiden,
+        in welcher Sprache wir Ihnen die Website zuerst anzeigen, und speichern es nicht. Außerdem
+        verwenden wir eine kleine
         Anzahl von Cookies und Einträgen im Browser-Speicher, die in unserer{' '}
         <Link href="/legal/cookies">Cookie-Richtlinie</Link> beschrieben sind.
       </p>

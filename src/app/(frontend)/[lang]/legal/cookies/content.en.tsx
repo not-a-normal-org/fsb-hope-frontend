@@ -45,6 +45,11 @@ function Body() {
           (<code>SameSite=Lax</code>).
         </li>
         <li>
+          <strong>Cookie choice</strong> (local storage <code>sm-consent</code>) &mdash;{' '}
+          <em>strictly necessary.</em> Remembers whether you accepted or declined analytics in the cookie
+          banner, so we respect that choice and do not ask again on every page.
+        </li>
+        <li>
           <strong>Newsletter prompt</strong> (local/session storage <code>sm-nl-dismissed</code>,
           <code> sm-nl-done</code>, <code>sm-nl-seen</code>) &mdash; <em>functional.</em> Remembers that
           you dismissed or completed the newsletter prompt so we do not show it again.

@@ -53,6 +53,11 @@ function Body() {
           Es handelt sich um ein Erstanbieter-Cookie (<code>SameSite=Lax</code>).
         </li>
         <li>
+          <strong>Cookie-Auswahl</strong> (Local Storage <code>sm-consent</code>) –{' '}
+          <em>unbedingt erforderlich.</em> Speichert, ob Sie Analysen im Cookie-Banner akzeptiert oder
+          abgelehnt haben, damit wir diese Wahl beachten und Sie nicht auf jeder Seite erneut fragen.
+        </li>
+        <li>
           <strong>Newsletter-Hinweis</strong> (Local/Session Storage <code>sm-nl-dismissed</code>,
           <code> sm-nl-done</code>, <code>sm-nl-seen</code>) – <em>funktional.</em> Speichert, dass Sie
           den Newsletter-Hinweis geschlossen oder ausgefüllt haben, damit wir ihn nicht erneut anzeigen.
