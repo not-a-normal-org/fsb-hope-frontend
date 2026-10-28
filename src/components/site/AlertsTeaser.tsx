@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import Link from '@/components/system/LocaleLink';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 
 /**

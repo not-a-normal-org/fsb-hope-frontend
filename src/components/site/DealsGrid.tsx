@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
 import { DEALS, dealHref, formatPoints, type Deal } from '@/lib/deals';
 import { entrance, inViewOnce, staggerParent } from '@/lib/animations';
 

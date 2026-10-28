@@ -21,6 +21,15 @@
 
 That's the full page count for launch. Do not add a `/membership` or `/audit` page — those products don't exist yet per `00-context.md`.
 
+### Languages
+
+Every page above exists in English and German. English keeps the URLs above;
+German mirrors them under `/de` with the same slugs (`/de/pricing`,
+`/de/blog/<slug>`). Visitors in Germany, Austria, and Switzerland land on German
+automatically; a language switch (nav from `lg`, mobile menu, footer) overrides
+that and is remembered. Staff surfaces (`/admin`, `/login`, `/portal`) stay
+English. Mechanics and rules: `AGENTS.md` → "Languages".
+
 ## Page-by-page spec
 
 ### `/` — Home
@@ -77,6 +86,6 @@ General fallback contact form (not the primary conversion path — that's the in
 
 ## Navigation
 
-Primary nav (all modes): Home · Individual · Business · Alerts · Pricing · How It Works · Blog · Contact, plus the 3-way mode switch (Light / Dark / Mono) and a primary CTA button ("Check My Route").
+Primary nav (all modes): Home · Individual · Business · Alerts · Pricing · How It Works · Blog · Contact, plus the 3-way mode switch (Light / Dark / Mono), the EN/DE language switch, and a primary CTA button ("Check My Route").
 
-Footer: sitemap links, newsletter signup, legal links, mode switch repeated.
+Footer: sitemap links, newsletter signup, legal links, mode switch and language switch repeated.

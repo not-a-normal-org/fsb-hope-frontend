@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, Loader2, ChevronDown } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
 import { TRIP_TYPE_OPTIONS, hasContactNumber } from '@/lib/leads';
 
 export type LeadType = 'individual' | 'business';
@@ -474,9 +474,9 @@ export default function LeadForm({
           {step === TOTAL_STEPS - 1 && (
             <p className="mt-3 text-xs text-ink-muted">
               By submitting you agree to our{' '}
-              <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+              <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
                 Privacy Policy
-              </a>
+              </Link>
               .
             </p>
           )}

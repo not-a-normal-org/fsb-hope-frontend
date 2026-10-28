@@ -1,13 +1,15 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
 
 import Logo from './Logo';
 import LeadModal from './LeadModal';
 import MobileMenu from './MobileMenu';
+import LanguageSwitcher from '@/components/system/LanguageSwitcher';
+import Link from '@/components/system/LocaleLink';
 import ModeCycle from '@/components/system/ModeCycle';
+import { useI18n } from '@/i18n/LocaleProvider';
 import { PRIMARY_NAV } from '@/lib/nav';
 
 /**
@@ -26,8 +28,12 @@ import { PRIMARY_NAV } from '@/lib/nav';
  * The link row is desktop-only. Below `md` a menu button opens {@link MobileMenu},
  * which carries the full public sitemap plus the theme control — before it existed
  * the footer was the only way to reach a second page on a phone.
+ *
+ * The language switch joins the cluster only from `lg`: at `md` the seven-link
+ * row already uses the width, so between md and lg it lives in the footer.
  */
 export default function NavBar() {
+  const { m } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
@@ -54,7 +60,7 @@ export default function NavBar() {
       }
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
-        <Link href="/" aria-label="Saver Miles home" className="shrink-0">
+        <Link href="/" aria-label={m.nav.home} className="shrink-0">
           <Logo className="text-lg" label="" />
         </Link>
 
@@ -65,7 +71,7 @@ export default function NavBar() {
                 href={item.href}
                 className="text-sm text-ink-sub transition-colors hover:text-ink"
               >
-                {item.label}
+                {m.links[item.key]}
               </Link>
             </li>
           ))}
@@ -74,6 +80,7 @@ export default function NavBar() {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Below md the theme control lives in the mobile menu instead, which
               keeps the bar from crowding on a narrow phone. */}
+          <LanguageSwitcher variant="compact" className="hidden lg:inline-flex" />
           <ModeCycle className="hidden md:inline-flex" />
           {/* Kept to two words: a longer label plus the menu button overflows a
               320px bar. */}
@@ -83,12 +90,12 @@ export default function NavBar() {
             aria-haspopup="dialog"
             className="shrink-0 cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 sm-cta"
           >
-            Get started
+            {m.nav.getStarted}
           </button>
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            aria-label="Menu"
+            aria-label={m.nav.menu}
             aria-expanded={menuOpen}
             aria-controls="site-menu"
             className="sm-icon-btn inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full md:hidden"

@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link from '@/components/system/LocaleLink';
+import { useI18n } from '@/i18n/LocaleProvider';
+import { rich } from '@/i18n/rich';
 
 /**
  * Cookie-consent banner, wired to Google Consent Mode v2. Analytics start denied
@@ -26,6 +28,7 @@ declare global {
 }
 
 export default function ConsentBanner() {
+  const { m } = useI18n();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ export default function ConsentBanner() {
     <div
       role="dialog"
       aria-modal="false"
-      aria-label="Cookie consent"
+      aria-label={m.consent.dialog}
       className="fixed inset-x-0 bottom-0 z-[70] flex justify-center p-4 sm:p-6"
     >
       <div
@@ -79,15 +82,16 @@ export default function ConsentBanner() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-md">
             <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-              Cookies
+              {m.consent.eyebrow}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-ink-sub">
-              We use essential cookies to run the site and Google Analytics to measure aggregate
-              traffic so we can improve it. No advertising, ever. See our{' '}
-              <Link href="/legal/cookies" className="text-accent transition-colors hover:text-ink">
-                Cookie Policy
-              </Link>
-              .
+              {rich(m.consent.body, {
+                link: (chunks) => (
+                  <Link href="/legal/cookies" className="text-accent transition-colors hover:text-ink">
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
@@ -96,14 +100,14 @@ export default function ConsentBanner() {
               onClick={() => decide(false)}
               className="sm-cta-ghost rounded-full px-5 py-2.5 text-sm font-semibold"
             >
-              Decline
+              {m.consent.decline}
             </button>
             <button
               type="button"
               onClick={() => decide(true)}
               className="sm-cta rounded-full px-5 py-2.5 text-sm font-semibold"
             >
-              Accept
+              {m.consent.accept}
             </button>
           </div>
         </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
+import Link from '@/components/system/LocaleLink';
 import GlassPanel from '@/components/system/GlassPanel';
 import LeadCta from './LeadCta';
 import {

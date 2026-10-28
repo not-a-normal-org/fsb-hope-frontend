@@ -72,8 +72,8 @@ you are not signing in constantly.
 |---|---|
 | [`src/lib/maintenance.ts`](../src/lib/maintenance.ts) | The `MAINTENANCE_ENABLED` flag only |
 | [`src/lib/session-edge.ts`](../src/lib/session-edge.ts) | Edge JWT verify (staff session) |
-| [`src/app/(frontend)/maintenance/page.tsx`](../src/app/(frontend)/maintenance/page.tsx) | The notice |
-| [`src/app/(frontend)/maintenance/AdminUnlockForm.tsx`](../src/app/(frontend)/maintenance/AdminUnlockForm.tsx) | Staff unlock form |
+| [`src/app/(staff)/maintenance/page.tsx`](../src/app/(staff)/maintenance/page.tsx) | The notice |
+| [`src/app/(staff)/maintenance/AdminUnlockForm.tsx`](../src/app/(staff)/maintenance/AdminUnlockForm.tsx) | Staff unlock form |
 | [`src/proxy.ts`](../src/proxy.ts) | The wall + the session-based admin gate |
 
 `src/lib/maintenance.ts` is imported by `src/proxy.ts`, which runs in the edge
@@ -96,13 +96,16 @@ and a version that matched only the latter leaked customer PII from
 
 ## Removal checklist (at launch)
 
-1. Delete `src/lib/maintenance.ts` and `src/app/(frontend)/maintenance/`.
+1. Delete `src/lib/maintenance.ts` and `src/app/(staff)/maintenance/`. Also drop
+   `/maintenance` from `UNLOCALIZED_PREFIXES` in `src/i18n/config.ts`.
 2. In `src/proxy.ts`: drop the maintenance branch and the `MAINTENANCE_ENABLED`
    import, and remove `/maintenance` from `PUBLIC_PATHS`. **Keep** `ALWAYS_OPEN`
    and the session-based admin gate (the `/admin` role auth is permanent, not part
    of the wall).
-3. Restore the matcher to `['/admin/:path*', '/api/admin/:path*']` — the wall
-   is the only reason it runs site-wide.
+3. **Keep the site-wide matcher.** It used to be narrowable to
+   `['/admin/:path*', '/api/admin/:path*']` once the wall came down, but the proxy
+   now also routes languages (`/pricing` → `/en/pricing`, the German geo redirect),
+   which needs every public page. Narrowing it would 404 the whole English site.
 4. Remove `MAINTENANCE_MODE` from all environments.
 5. Drop `robots: "noindex, nofollow"` from `src/app/layout.tsx` and add the real
    routes to `src/app/sitemap.ts` — both are currently set for a site that

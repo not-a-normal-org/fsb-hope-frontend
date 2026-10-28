@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
@@ -8,7 +7,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 import Logo from './Logo';
+import LanguageSwitcher from '@/components/system/LanguageSwitcher';
+import Link from '@/components/system/LocaleLink';
 import ModeToggle from '@/components/system/ModeToggle';
+import { DE_LIVE, stripLocale } from '@/i18n/config';
+import { useI18n } from '@/i18n/LocaleProvider';
 import { DURATION, EASE_OUT } from '@/lib/animations';
 import { useOverlayChrome } from '@/lib/use-overlay-chrome';
 import { MOBILE_NAV_GROUPS } from '@/lib/nav';
@@ -24,6 +27,9 @@ import { MOBILE_NAV_GROUPS } from '@/lib/nav';
  * useOverlayChrome, same as LeadModal. The panel is `--sm-bg-elevated` over a
  * scrim rather than a GlassPanel: glass only reads as glass over something
  * blurred, and a scrim is not that.
+ *
+ * Link hrefs are the English paths; matching the active one runs on the pathname
+ * with its locale prefix stripped, so `/de/pricing` highlights Pricing too.
  */
 
 /** Never-changing subscription for the mount gate — the store value is constant. */
@@ -55,6 +61,7 @@ export default function MobileMenu({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { m } = useI18n();
   const pathname = usePathname() ?? '';
   const lastPath = useRef(pathname);
 
@@ -95,7 +102,7 @@ export default function MobileMenu({
   const mounted = useSyncExternalStore(subscribeNoop, () => true, () => false);
   if (!mounted) return null;
 
-  const current = activeHref(pathname);
+  const current = activeHref(stripLocale(pathname));
 
   return createPortal(
     <AnimatePresence>
@@ -123,7 +130,7 @@ export default function MobileMenu({
             id="site-menu"
             role="dialog"
             aria-modal="true"
-            aria-label="Site menu"
+            aria-label={m.nav.siteMenu}
             className="absolute inset-y-0 right-0 flex w-[min(88vw,22rem)] flex-col"
             style={{
               background: 'var(--sm-bg-elevated)',
@@ -139,14 +146,14 @@ export default function MobileMenu({
               className="flex shrink-0 items-center justify-between px-6 py-4"
               style={{ borderBottom: '1px solid var(--sm-glass-border)' }}
             >
-              <Link href="/" onClick={close} aria-label="Saver Miles home">
+              <Link href="/" onClick={close} aria-label={m.nav.home}>
                 <Logo className="text-base" label="" />
               </Link>
               <button
                 ref={closeRef}
                 type="button"
                 onClick={close}
-                aria-label="Close menu"
+                aria-label={m.nav.closeMenu}
                 className="sm-icon-btn inline-flex h-9 w-9 items-center justify-center rounded-full"
               >
                 <X className="h-[18px] w-[18px]" aria-hidden />
@@ -155,9 +162,9 @@ export default function MobileMenu({
 
             <div className="flex-1 overflow-y-auto px-6 py-6">
               {MOBILE_NAV_GROUPS.map((group) => (
-                <nav key={group.heading} aria-label={group.heading} className="mb-7 last:mb-0">
+                <nav key={group.heading} aria-label={m.navGroups[group.heading]} className="mb-7 last:mb-0">
                   <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-                    {group.heading}
+                    {m.navGroups[group.heading]}
                   </p>
                   <ul className="mt-2">
                     {group.links.map((link) => {
@@ -179,7 +186,7 @@ export default function MobileMenu({
                                 : 'border-transparent text-ink-sub hover:text-ink'
                             }`}
                           >
-                            {link.label}
+                            {m.links[link.key]}
                           </Link>
                         </li>
                       );
@@ -203,14 +210,22 @@ export default function MobileMenu({
                 aria-haspopup="dialog"
                 className="sm-cta block w-full cursor-pointer rounded-full px-4 py-3 text-center text-sm font-medium"
               >
-                Get started
+                {m.nav.getStarted}
               </button>
               <div className="mt-4 flex items-center justify-between">
                 <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-                  Theme
+                  {m.nav.theme}
                 </p>
                 <ModeToggle />
               </div>
+              {DE_LIVE && (
+                <div className="mt-3 flex items-center justify-between">
+                  <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
+                    {m.language.label}
+                  </p>
+                  <LanguageSwitcher />
+                </div>
+              )}
             </div>
           </motion.div>
         </motion.div>

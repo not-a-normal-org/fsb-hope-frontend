@@ -17,50 +17,59 @@
  * and the two sets disagree (the footer has no Guides/Deals; the bar has no
  * Calculator/How It Works/About/Results/Contact). Folding the footer into this
  * file is a separate change — it alters a shipped layout, this one does not.
+ *
+ * Labels are message keys, not text: each surface looks them up in the current
+ * language (`m.links[key]`, `m.navGroups[heading]`, src/i18n/messages). Hrefs are
+ * the English paths; LocaleLink adds the `/de` prefix on German pages.
  */
-export type NavLink = { label: string; href: string };
-export type NavGroup = { heading: string; links: NavLink[] };
+import type { Messages } from '@/i18n/messages/en';
+
+export type LinkKey = keyof Messages['links'];
+export type NavGroupKey = keyof Messages['navGroups'];
+
+export type NavLink = { key: LinkKey; href: string };
+export type NavGroup = { heading: NavGroupKey; links: NavLink[] };
 
 /** The desktop bar. Order is deliberate: products first, then the blog. */
 export const PRIMARY_NAV: NavLink[] = [
-  { label: 'Individual', href: '/individual' },
-  { label: 'Business', href: '/business' },
-  { label: 'Alerts', href: '/alerts' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Blog', href: '/blog' },
+  { key: 'individual', href: '/individual' },
+  { key: 'business', href: '/business' },
+  { key: 'alerts', href: '/alerts' },
+  { key: 'pricing', href: '/pricing' },
+  { key: 'blog', href: '/blog' },
   // Blog categories render a graceful empty state rather than 404-ing when the
   // CMS has no matching category, so these are safe even before seeding.
-  { label: 'Guides', href: '/blog/category/guides' },
-  { label: 'Deals', href: '/blog/category/deals' },
+  { key: 'guides', href: '/blog/category/guides' },
+  { key: 'deals', href: '/blog/category/deals' },
 ];
 
 /** The mobile menu. Headings mirror the footer's column language. */
 export const MOBILE_NAV_GROUPS: NavGroup[] = [
   {
-    heading: 'Product',
+    heading: 'product',
     links: [
-      { label: 'Individual', href: '/individual' },
-      { label: 'Business', href: '/business' },
-      { label: 'Alerts', href: '/alerts' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'Calculator', href: '/calculator' },
+      { key: 'individual', href: '/individual' },
+      { key: 'business', href: '/business' },
+      { key: 'alerts', href: '/alerts' },
+      { key: 'pricing', href: '/pricing' },
+      { key: 'calculator', href: '/calculator' },
     ],
   },
   {
-    heading: 'Read',
+    heading: 'read',
     links: [
-      { label: 'Blog', href: '/blog' },
-      { label: 'Guides', href: '/blog/category/guides' },
-      { label: 'Deals', href: '/blog/category/deals' },
+      { key: 'blog', href: '/blog' },
+      { key: 'guides', href: '/blog/category/guides' },
+      { key: 'deals', href: '/blog/category/deals' },
     ],
   },
   {
-    heading: 'Company',
+    heading: 'company',
     links: [
-      { label: 'How It Works', href: '/how-it-works' },
-      { label: 'About', href: '/about' },
-      { label: 'Results', href: '/results' },
-      { label: 'Contact', href: '/contact' },
+      { key: 'howItWorks', href: '/how-it-works' },
+      { key: 'about', href: '/about' },
+      { key: 'results', href: '/results' },
+      { key: 'contact', href: '/contact' },
     ],
   },
 ];

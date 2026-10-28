@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+import Link from '@/components/system/LocaleLink';
 import GlassPanel from '@/components/system/GlassPanel';
 import { entrance, staggerParent, inViewOnce, hoverGlass } from '@/lib/animations';
 

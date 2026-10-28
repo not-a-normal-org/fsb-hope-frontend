@@ -50,7 +50,7 @@ their own, real sources, and honest dates.
 
 ### 2.2 Titles, meta descriptions, slugs
 
-- **Done in code.** The layout's title template is `%s | Saver Miles` (`src/app/(frontend)/layout.tsx`). The post page (`src/app/(frontend)/blog/[slug]/page.tsx`) uses `meta.title`, falling back to `title`, and sets a canonical `www` URL, Open Graph `article` tags and a Twitter large-image card. The seed writes `META_TITLE` and `META_DESCRIPTION` into the SEO plugin fields.
+- **Done in code.** The layout's title template is `%s | Saver Miles` (`src/components/system/DocumentShell.tsx`). The post page (`src/app/(frontend)/[lang]/blog/[slug]/page.tsx`) uses `meta.title`, falling back to `title`, and sets a canonical `www` URL, Open Graph `article` tags and a Twitter large-image card. The seed writes `META_TITLE` and `META_DESCRIPTION` into the SEO plugin fields.
 - **Author rule.** Titles should be descriptive and concise, without keyword stuffing or boilerplate. Google sets no character limit but truncates to the device width, and it may rewrite a title using the H1 and other text [S4]. "About 60 characters" is an industry rule of thumb, not a Google figure. Keep `TITLE` (the H1) and `META_TITLE` saying the same thing.
 - **Author rule.** Meta descriptions also have no limit and are truncated to fit. Google builds most snippets from the page itself [S5]. Make each one unique and specific. Bing warns that missing, duplicate or overly short titles and descriptions can reduce eligibility for citations [S24].
 - **Author rule.** Use meaningful words in the URL [S6], and keep URLs stable [S24].
@@ -70,7 +70,7 @@ their own, real sources, and honest dates.
 ### 2.4 Structured data
 
 - **Done in code.** `BlogPosting` (`articleJsonLd` in `src/lib/seo.ts`) carries headline, description, image, `datePublished`, `dateModified`, `wordCount`, `articleSection` and `inLanguage`. Author and publisher are the `Organization`, with its name, homepage and logo. Google accepts an organization as author when it has a name and homepage [S13], so the team byline needs no invented person.
-- **Done in code.** `BreadcrumbList` (Home › Blog › Category › Post) [S14], plus site-wide `Organization` and `WebSite` in `src/app/(frontend)/layout.tsx`. Breadcrumbs have shown only on desktop since January 2025 [S17].
+- **Done in code.** `BreadcrumbList` (Home › Blog › Category › Post) [S14], plus site-wide `Organization` and `WebSite` in `src/components/system/DocumentShell.tsx`. Breadcrumbs have shown only on desktop since January 2025 [S17].
 - **Done in code.** `FAQPage` is built from the visible FAQ by `extractFaq` (`src/lib/blog.ts`). The H2 matching /frequently asked question/i starts it; each H3 is a question, and the paragraphs up to the next heading are its answer.
   - **What it no longer does.** FAQ rich results were limited to government and health sites in 2023 [S16] and removed from Google entirely on 2026-05-07 [S17].
   - **What it still does.** Unused markup "does not cause problems for Search" [S16]. Bing says structured data "may support clearer grounding but does not guarantee visibility" [S24]. We found no primary source saying any AI engine favors FAQPage when choosing citations.
@@ -118,7 +118,7 @@ their own, real sources, and honest dates.
 
 ### 2.9 Measurement
 
-- **Done in code.** GA4 with Consent Mode v2 (`src/app/(frontend)/layout.tsx`). Analytics stays off until a visitor accepts, so GA4 undercounts.
+- **Done in code.** GA4 with Consent Mode v2 (`src/components/system/DocumentShell.tsx`). Analytics stays off until a visitor accepts, so GA4 undercounts.
 - **Author rule.** Search Console is the source of truth for Google. AI Overviews and AI Mode are counted in the Performance report's "Web" search type [S18]. The Generative AI performance report (open to all sites since 2026-08-31) breaks impressions down by page, country, device and date [S21].
 - **Author rule.** In Bing Webmaster Tools, AI Performance shows which pages Copilot cites, and the grounding queries behind them [S25].
 - **Author rule.** ChatGPT referrals arrive tagged `utm_source=chatgpt.com` [S28]; segment on that in GA4.

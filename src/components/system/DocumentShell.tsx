@@ -1,0 +1,172 @@
+import type { Metadata } from "next";
+import Script from "next/script";
+import { Zilla_Slab, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import "@/app/globals.css";
+import MotionProvider from "@/components/site/MotionProvider";
+import ThemeScript from "@/components/system/ThemeScript";
+import ConsentBanner from "@/components/system/ConsentBanner";
+import ReferralCapture from "@/components/system/ReferralCapture";
+import { DE_LIVE, OG_LOCALES, localizePath, type Locale } from "@/i18n/config";
+import { getClientMessages, getMessages } from "@/i18n/get-messages";
+import LocaleProvider from "@/i18n/LocaleProvider";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { absoluteUrl, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+
+/**
+ * The <html> document shared by the app's two root layouts:
+ * `app/(frontend)/[lang]/layout.tsx` (the public site, in its language) and
+ * `app/(staff)/layout.tsx` (admin, login, portal, maintenance — always English).
+ * They are separate root layouts because <html lang> has to come from the
+ * `[lang]` segment, and staff routes don't have one.
+ */
+
+/* ========== FONTS (docs/plans/01-brand-design-system.md §3) ========== */
+
+// Display — headlines, section titles. Carries the shine-sweep on hero text.
+// The latin subset covers German (ä ö ü ß).
+const zilla = Zilla_Slab({
+  variable: "--font-zilla",
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Zilla Slab", "Georgia", "serif"],
+});
+
+// Body / UI — copy, buttons, nav, labels.
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+});
+
+// Utility / data — eyebrows, stat numbers, point counts, dates. Monospace is
+// intentional: it signals "a precise number," reinforcing the brand's positioning.
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["ui-monospace", "monospace"],
+});
+
+/* ========== SEO METADATA ========== */
+// Minimal on purpose; richer metadata belongs with the pages it describes.
+// No global robots directive: the launched marketing site should index. While the
+// construction wall is up it 503s + no-stores anonymous traffic, and the
+// /maintenance notice sets its own noindex — so the wall handles crawlers without
+// this needing to suppress the real pages. The one exception: German pages stay
+// noindex until German goes live (DE_LIVE).
+export function siteMetadata(locale: Locale): Metadata {
+  const { tagline } = getMessages(locale).meta;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: `${SITE_NAME} — ${tagline}`,
+      template: `%s | ${SITE_NAME}`,
+    },
+    description: tagline,
+    ...(locale !== "en" && !DE_LIVE ? { robots: { index: false, follow: true } } : {}),
+    // Link-preview card (X/LinkedIn/Slack/WhatsApp) — the brand lockup on the dark
+    // base. Matching social exports live in public/img/ (square avatar, nav icon).
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      locale: OG_LOCALES[locale],
+      title: `${SITE_NAME} — ${tagline}`,
+      description: tagline,
+      url: absoluteUrl(localizePath(locale, "/")),
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${SITE_NAME} — ${tagline}`,
+      description: tagline,
+      images: ["/twitter-image.png"],
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+      ],
+      apple: "/apple-touch-icon.png",
+    },
+  };
+}
+
+/* ========== ROOT DOCUMENT ========== */
+// data-theme="dark" is the SSR default; ThemeScript corrects it pre-paint for
+// visitors who chose light/mono. suppressHydrationWarning covers that one
+// attribute React would otherwise flag as a server/client mismatch.
+export default function DocumentShell({
+  locale,
+  children,
+}: Readonly<{
+  locale: Locale;
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang={locale}
+      data-theme="dark"
+      suppressHydrationWarning
+      className={`${zilla.variable} ${plexSans.variable} ${plexMono.variable} h-full`}
+    >
+      {/* These two lint rules exempt only files named `layout`; this component is
+          rendered solely by the root layouts, so <head> and a beforeInteractive
+          script are where they belong. */}
+      {/* eslint-disable-next-line @next/next/no-head-element */}
+      <head>
+        <ThemeScript />
+        {/* Google Consent Mode v2 — deny analytics by default (privacy-first), before
+            gtag.js loads. Re-grants immediately for a returning visitor who accepted;
+            the ConsentBanner flips it on the visitor's choice. */}
+        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
+        <Script id="ga-consent-default" strategy="beforeInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+try{if(localStorage.getItem('sm-consent')==='granted'){gtag('consent','update',{analytics_storage:'granted'});}}catch(e){}`}
+        </Script>
+        <meta name="theme-color" content="#060B14" />
+        <link rel="manifest" href="/site.webmanifest" />
+        {/* Site-wide entity graph — helps search + AI resolve who Saver Miles is. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd(locale)) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd(locale)) }}
+        />
+      </head>
+
+      <body className="flex min-h-screen flex-col bg-bg-base font-body text-ink">
+        <LocaleProvider locale={locale} messages={getClientMessages(locale)}>
+          <MotionProvider>
+            <ReferralCapture />
+            <div className="flex-1">{children}</div>
+          </MotionProvider>
+
+          <ConsentBanner />
+        </LocaleProvider>
+
+        {/* Google Analytics 4 (gtag.js). Loaded after the page is interactive so it
+            never blocks paint. Consent Mode (set in <head>) gates it: it sends only
+            cookieless signals until the visitor accepts. Injected via next/script
+            because a raw inline <script> in App Router JSX would not execute. */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-50ZT6S22C6"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-50ZT6S22C6');`}
+        </Script>
+      </body>
+    </html>
+  );
+}

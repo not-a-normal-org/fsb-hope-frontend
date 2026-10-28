@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
 import GlassPanel from '@/components/system/GlassPanel';
 import { cabinLabel, formatPoints, type CaseStudy } from '@/lib/case-studies';
 
