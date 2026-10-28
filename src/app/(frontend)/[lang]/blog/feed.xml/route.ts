@@ -7,8 +7,9 @@ import { SITE_NAME } from '@/lib/constants';
 /**
  * Served at /blog/feed.xml — an RSS 2.0 feed of published posts, for feed readers
  * and as another structured signal for AI/answer engines. Dynamic; walled until
- * launch like the sitemap. One feed per language (`/de/blog/feed.xml`); item links
- * stay on the English post URLs while post bodies are English-only.
+ * launch like the sitemap. One feed per language (`/de/blog/feed.xml`): titles
+ * and excerpts in that language (English where a post isn't translated yet), and
+ * links to that language's post URLs.
  */
 export const dynamic = 'force-dynamic';
 
@@ -37,6 +38,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ lang: s
       sort: '-publishedAt',
       limit: 100,
       depth: 1,
+      locale: lang, // untranslated posts fall back to English
     });
     posts = res.docs as PostRow[];
   } catch {
@@ -47,7 +49,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ lang: s
   const items = posts
     .filter((p) => p.slug && p.title)
     .map((p) => {
-      const link = absoluteUrl(`/blog/${p.slug}`);
+      const link = absoluteUrl(localizePath(lang, `/blog/${p.slug}`));
       const date = new Date(p.publishedAt ?? p.updatedAt ?? Date.now()).toUTCString();
       const cat = p.category?.name ? `\n      <category>${esc(p.category.name)}</category>` : '';
       return `    <item>

@@ -784,6 +784,7 @@ const de: Messages = {
       intro:
         'Wir zeigen Ihnen lieber nichts als etwas Erfundenes. Bestätigte Buchungen und Kundengeschichten erscheinen hier, sobald sie echt sind und wir sie teilen dürfen.',
     },
+    englishOnly: 'Dieses Fallbeispiel ist bisher nur auf Englisch verfügbar.',
     empty: {
       heading: 'Die ersten Ergebnisse kommen',
       body: 'Wir sind eine neue Marke, und jedes Ergebnis hier hat ein Spezialist tatsächlich geliefert. Schauen Sie bald wieder vorbei – oder finden Sie heraus, was Ihre eigenen Punkte buchen können.',
@@ -824,6 +825,7 @@ const de: Messages = {
       previous: 'Vorheriger',
       next: 'Nächster',
       notFound: 'Nicht gefunden',
+      englishOnly: 'Dieser Beitrag ist bisher nur auf Englisch verfügbar.',
     },
     category: {
       filedUnder: 'Alles, was wir unter {name} abgelegt haben.',

@@ -55,7 +55,8 @@ function inlineText(n?: FaqNode | null): string {
 
 /**
  * Pull Q&A pairs out of a post's `## Frequently asked questions` section — an H2
- * whose text matches /frequently asked question/i, then each following H3
+ * whose text matches the FAQ heading in English or German ("Häufig gestellte
+ * Fragen"), then each following H3
  * (question) with the paragraph(s) beneath it (answer), until the next H2 or the
  * end. Drives the FAQPage JSON-LD. Returns [] when there's no FAQ section.
  */
@@ -63,7 +64,10 @@ export function extractFaq(content: unknown): { question: string; answer: string
   const kids = (content as { root?: FaqNode })?.root?.children;
   if (!Array.isArray(kids)) return [];
   let i = kids.findIndex(
-    (n) => n.type === 'heading' && n.tag === 'h2' && /frequently asked question/i.test(inlineText(n)),
+    (n) =>
+      n.type === 'heading' &&
+      n.tag === 'h2' &&
+      /frequently asked question|häufig gestellte fragen/i.test(inlineText(n)),
   );
   if (i === -1) return [];
   const faqs: { question: string; answer: string }[] = [];

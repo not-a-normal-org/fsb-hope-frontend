@@ -1,6 +1,8 @@
 import 'server-only';
 
+import type { Locale } from '@/i18n/config';
 import { getPayloadClient } from './payload';
+import { hasTranslation } from './cms-locale.server';
 import type { Cabin, CaseStudy, CaseStudyDetail } from './case-studies';
 
 /**
@@ -8,6 +10,7 @@ import type { Cabin, CaseStudy, CaseStudyDetail } from './case-studies';
  * surfaced as "Case Studies"). `publishConsent: true` is enforced in the query,
  * not just the UI — an un-consented story can never leak (docs/plans/00).
  * try/catch so a DB-less build/render degrades to the honest empty state.
+ * Read in the page's language; untranslated stories fall back to English.
  */
 
 function toCaseStudy(doc: Record<string, unknown>): CaseStudy {
@@ -45,7 +48,7 @@ function guardSamplesInProd(studies: CaseStudy[]): CaseStudy[] {
   return clean;
 }
 
-export async function getPublishedCaseStudies(limit = 24): Promise<CaseStudy[]> {
+export async function getPublishedCaseStudies(locale: Locale, limit = 24): Promise<CaseStudy[]> {
   try {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
@@ -54,6 +57,7 @@ export async function getPublishedCaseStudies(limit = 24): Promise<CaseStudy[]> 
       sort: '-createdAt',
       limit,
       depth: 0,
+      locale,
     });
     return guardSamplesInProd(
       docs.map((doc) => toCaseStudy(doc as unknown as Record<string, unknown>)),
@@ -63,20 +67,35 @@ export async function getPublishedCaseStudies(limit = 24): Promise<CaseStudy[]> 
   }
 }
 
-export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyDetail | null> {
+/**
+ * One case study in the page's language — or the whole English story when it
+ * has no translation yet (`shown` says which), so a German title never sits over
+ * an English write-up. `hasGerman` drives the hreflang.
+ */
+export async function getCaseStudyBySlug(
+  slug: string,
+  locale: Locale,
+): Promise<(CaseStudyDetail & { shown: Locale; hasGerman: boolean }) | null> {
   try {
     const payload = await getPayloadClient();
-    const { docs } = await payload.find({
-      collection: 'testimonials',
-      where: { and: [{ publishConsent: { equals: true } }, { slug: { equals: slug } }] },
-      limit: 1,
-      depth: 0,
-    });
-    const doc = docs[0] as unknown as Record<string, unknown> | undefined;
+    const read = async (l: Locale) =>
+      (
+        await payload.find({
+          collection: 'testimonials',
+          where: { and: [{ publishConsent: { equals: true } }, { slug: { equals: slug } }] },
+          limit: 1,
+          depth: 0,
+          locale: l,
+        })
+      ).docs[0] as unknown as Record<string, unknown> | undefined;
+    let doc = await read(locale);
     if (!doc) return null;
+    const hasGerman = await hasTranslation('testimonials', String(doc.id), 'de');
+    const shown: Locale = locale === 'en' || hasGerman ? locale : 'en';
+    if (shown !== locale) doc = (await read('en')) ?? doc;
     const study = toCaseStudy(doc);
     if (process.env.NODE_ENV === 'production' && isSample(study)) return null;
-    return { ...study, body: doc.body ?? null };
+    return { ...study, body: doc.body ?? null, shown, hasGerman };
   } catch {
     return null;
   }

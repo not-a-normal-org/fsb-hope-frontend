@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
 }
 
 export default async function ResultsPage({ params }: { params: LangParams }) {
-  const [locale, studies] = await Promise.all([resolveLocale(params), getPublishedCaseStudies()]);
+  const locale = await resolveLocale(params);
+  const studies = await getPublishedCaseStudies(locale);
   const { results: m } = getMessages(locale);
 
   return (

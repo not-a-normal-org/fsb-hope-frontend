@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { RichText } from '@payloadcms/richtext-lexical/react';
@@ -21,22 +22,30 @@ export const dynamic = 'force-dynamic';
 
 type Params = { params: Promise<{ lang: string; slug: string }> };
 
+// One lookup per request, shared by generateMetadata and the page.
+const getStudy = cache(getCaseStudyBySlug);
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const study = await getCaseStudyBySlug(slug);
+  const study = await getStudy(slug, locale);
+  const path = `/results/${slug}`;
+  // An untranslated German URL shows the English story, so its canonical is the
+  // English URL; German hreflang appears once a German version exists.
   return {
     title: study ? study.title : getMessages(locale).caseStudy.fallbackTitle,
-    // Case-study bodies are English-only until the CMS stores German.
-    ...localeMeta(locale, `/results/${slug}`, { de: false }),
+    alternates: localeMeta(study?.shown ?? locale, path, { de: study?.hasGerman ?? false }).alternates,
+    ...(localeMeta(locale, path).robots ? { robots: localeMeta(locale, path).robots } : {}),
   };
 }
 
 export default async function CaseStudyDetailPage({ params }: Params) {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const study = await getCaseStudyBySlug(slug);
+  const study = await getStudy(slug, locale);
   if (!study) notFound();
+  // The story's own language; the page chrome stays in the URL's language.
+  const storyLang = study.shown !== locale ? study.shown : undefined;
 
-  const { caseStudy: m, common } = getMessages(locale);
+  const { caseStudy: m, common, results } = getMessages(locale);
   const facts: { label: string; value: string }[] = [
     { label: m.from, value: study.from },
     { label: m.to, value: study.to },
@@ -60,6 +69,15 @@ export default async function CaseStudyDetailPage({ params }: Params) {
             {m.allResults}
           </Link>
 
+          {storyLang && (
+            <p
+              className="mt-8 rounded-lg px-3.5 py-2.5 text-sm text-ink-sub"
+              style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
+            >
+              {results.englishOnly}
+            </p>
+          )}
+
           <header className="mt-8">
             <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
               {m.eyebrow}
@@ -69,7 +87,9 @@ export default async function CaseStudyDetailPage({ params }: Params) {
               <ArrowRight className="h-7 w-7 shrink-0 text-accent md:h-8 md:w-8" aria-hidden />
               <span>{study.to}</span>
             </div>
-            <h1 className="mt-3 font-display text-xl font-medium text-ink-sub">{study.title}</h1>
+            <h1 lang={storyLang} className="mt-3 font-display text-xl font-medium text-ink-sub">
+              {study.title}
+            </h1>
           </header>
 
           <dl
@@ -88,6 +108,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {study.quote && (
             <blockquote
+              lang={storyLang}
               className="mt-8 border-l-2 pl-5 font-display text-lg italic leading-snug text-ink"
               style={{ borderColor: 'var(--sm-accent)' }}
             >
@@ -101,7 +122,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
           )}
 
           {study.body ? (
-            <div className="sm-prose mt-10 text-ink-sub">
+            <div lang={storyLang} className="sm-prose mt-10 text-ink-sub">
               <RichText data={study.body as SerializedEditorState} />
             </div>
           ) : (

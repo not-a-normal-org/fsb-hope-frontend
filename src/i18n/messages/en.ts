@@ -823,6 +823,8 @@ const en = {
       intro:
         'We’d rather show you nothing than show you something made up. Verified bookings and client stories land here once they’re real and we have permission to share them.',
     },
+    /** Shown above an English case study on a German URL until it is translated. */
+    englishOnly: 'This case study is only available in English for now.',
     empty: {
       heading: 'Results are coming in',
       body: 'We’re a new brand, and every result here is one a specialist actually delivered. Check back soon, or find out what your own points can book.',
@@ -864,6 +866,8 @@ const en = {
       previous: 'Previous',
       next: 'Next',
       notFound: 'Not found',
+      /** Shown above an English post on a German URL until it is translated. */
+      englishOnly: 'This post is only available in English for now.',
     },
     /** Tailored hero copy for the categories the nav links to; others use their name. */
     category: {
