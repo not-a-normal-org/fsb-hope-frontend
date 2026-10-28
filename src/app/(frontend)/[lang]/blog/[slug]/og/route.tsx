@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
 
+import { hasLocale } from '@/i18n/config';
+import { getMessages } from '@/i18n/get-messages';
 import { getPayloadClient } from '@/lib/payload';
 
 /**
@@ -11,8 +13,12 @@ import { getPayloadClient } from '@/lib/payload';
 export const dynamic = 'force-dynamic';
 const SIZE = { width: 1200, height: 630 };
 
-export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ lang: string; slug: string }> },
+) {
+  const { lang, slug } = await params;
+  const { tagline } = getMessages(hasLocale(lang) ? lang : 'en').blog.og;
 
   let title = 'Saver Miles';
   try {
@@ -53,7 +59,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
         </div>
 
         <div style={{ display: 'flex', fontSize: 26, color: '#6FA8DC', letterSpacing: '0.04em' }}>
-          Award search, by hand · savermiles.com
+          {tagline}
         </div>
       </div>
     ),

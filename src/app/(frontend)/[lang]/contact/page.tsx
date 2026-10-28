@@ -4,7 +4,7 @@ import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import NoticeSection from '@/components/site/NoticeSection';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -17,22 +17,19 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'Contact',
+    title: getMessages(locale).contact.title,
     ...localeMeta(locale, '/contact'),
   };
 }
 
-export default function ContactPage() {
+export default async function ContactPage({ params }: { params: LangParams }) {
+  const { contact: m } = getMessages(await resolveLocale(params));
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="Contact"
-        title="Talk to a specialist."
-        intro="Press, partnerships, or a question that doesn’t fit a search request: reach us directly. If you’re ready to get the most from your points, the individual and business pages are the faster path."
-      />
+      <PageHero {...m.hero} />
       <NoticeSection
-        heading="Email us"
+        heading={m.heading}
         body={
           <>
             <a
@@ -41,13 +38,10 @@ export default function ContactPage() {
             >
               hello@savermiles.com
             </a>
-            <p className="mt-3 text-ink-muted">
-              A booking calendar is on the way. For now, email is the fastest way to
-              reach a specialist.
-            </p>
+            <p className="mt-3 text-ink-muted">{m.calendar}</p>
           </>
         }
-        cta={{ label: 'See how it works', href: '/how-it-works' }}
+        cta={{ label: m.cta, href: '/how-it-works' }}
       />
       <Footer />
     </>

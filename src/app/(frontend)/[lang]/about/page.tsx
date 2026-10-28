@@ -4,7 +4,7 @@ import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import AboutBody from './AboutBody';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -16,21 +16,18 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'About',
+    title: getMessages(locale).about.title,
     ...localeMeta(locale, '/about'),
   };
 }
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: { params: LangParams }) {
+  const { about: m } = getMessages(await resolveLocale(params));
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="About"
-        title="The system was broken. We’re here to fix it."
-        intro="Award tools are fast, cheap, and full of seats that aren’t really there. Saver Miles is the opposite: a specialist assigned to you who sorts through the mess, verifies the seat, and hands you one you can actually book."
-      />
-      <AboutBody />
+      <PageHero {...m.hero} />
+      <AboutBody m={m} />
       <Footer />
     </>
   );

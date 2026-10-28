@@ -21,8 +21,9 @@ import {
   type PostSeo,
 } from '@/lib/seo';
 import { SITE_URL } from '@/lib/constants';
-import { OG_LOCALES } from '@/i18n/config';
-import { resolveLocale } from '@/i18n/get-messages';
+import { OG_LOCALES, localizePath } from '@/i18n/config';
+import { getMessages, resolveLocale } from '@/i18n/get-messages';
+import { fmt, formatDate } from '@/i18n/format';
 
 /**
  * /blog/[slug] — a single PUBLISHED post from Payload (drafts stay private).
@@ -91,7 +92,7 @@ function postContext(pool: BlogCard[], slug: string, catSlug?: string) {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const post = await getPost(slug);
-  if (!post) return { title: 'Not found', robots: 'noindex' };
+  if (!post) return { title: getMessages(locale).blog.post.notFound, robots: 'noindex' };
 
   // Post bodies are English-only until the CMS stores German, so the canonical
   // stays on the English URL in every language and no German hreflang is emitted.
@@ -126,16 +127,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Params) {
-  const { slug } = await params;
+  const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const [post, pool] = await Promise.all([getPost(slug), getPostPool()]);
   if (!post) notFound();
 
+  const { blog } = getMessages(locale);
+  const m = blog.post;
   const date = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+    ? formatDate(locale, post.publishedAt, { year: 'numeric', month: 'long', day: 'numeric' })
     : null;
 
   const cover = typeof post.coverImage === 'object' && post.coverImage ? post.coverImage : null;
@@ -144,12 +143,13 @@ export default async function BlogPostPage({ params }: Params) {
   const { related, prev, next } = postContext(pool, String(post.slug), catSlug);
 
   const reading = readingMinutes(post.content);
+  const labels = { locale, m, minutes: blog.index.minutes };
   const faqs = extractFaq(post.content);
   const crumbs = [
-    { name: 'Home', url: SITE_URL },
-    { name: 'Blog', url: absoluteUrl('/blog') },
+    { name: blog.home, url: locale === 'en' ? SITE_URL : absoluteUrl(localizePath(locale, '/')) },
+    { name: blog.title, url: absoluteUrl(localizePath(locale, '/blog')) },
     ...(category?.name && catSlug
-      ? [{ name: category.name, url: absoluteUrl(`/blog/category/${catSlug}`) }]
+      ? [{ name: category.name, url: absoluteUrl(localizePath(locale, `/blog/category/${catSlug}`)) }]
       : []),
     { name: post.title, url: absoluteUrl(`/blog/${post.slug}`) },
   ];
@@ -176,7 +176,7 @@ export default async function BlogPostPage({ params }: Params) {
 
       <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-16 md:pt-20">
         <Link href="/blog" className="text-sm text-ink-sub transition-colors hover:text-ink">
-          ← All posts
+          {m.allPosts}
         </Link>
 
         <div
@@ -190,7 +190,7 @@ export default async function BlogPostPage({ params }: Params) {
                 {category?.name ? `${category.name} · ` : ''}
                 {post.author || 'Saver Miles Team'}
                 {date ? ` · ${date}` : ''}
-                {` · ${reading} min read`}
+                {` · ${fmt(m.minutesRead, { n: reading })}`}
               </p>
               <h1 className="mt-4 font-display text-hero font-bold text-ink">{post.title}</h1>
               {post.excerpt && (
@@ -216,11 +216,11 @@ export default async function BlogPostPage({ params }: Params) {
               </div>
             )}
 
-            <PostNav prev={prev} next={next} />
-            <RelatedInline posts={related} />
+            <PostNav prev={prev} next={next} m={m} />
+            <RelatedInline posts={related} labels={labels} />
           </article>
 
-          <RelatedSidebar posts={related} />
+          <RelatedSidebar posts={related} labels={labels} />
         </div>
       </div>
 

@@ -7,7 +7,7 @@ import NoticeSection from '@/components/site/NoticeSection';
 import CaseStudyWall from '@/components/site/CaseStudyWall';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import { getPublishedCaseStudies } from '@/lib/case-studies.server';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -22,28 +22,25 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'Results',
+    title: getMessages(locale).results.title,
     ...localeMeta(locale, '/results'),
   };
 }
 
-export default async function ResultsPage() {
-  const studies = await getPublishedCaseStudies();
+export default async function ResultsPage({ params }: { params: LangParams }) {
+  const [locale, studies] = await Promise.all([resolveLocale(params), getPublishedCaseStudies()]);
+  const { results: m } = getMessages(locale);
 
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="Results"
-        title="Real results, as they come in."
-        intro="We’d rather show you nothing than show you something made up. Verified bookings and client stories land here once they’re real and we have permission to share them."
-      />
+      <PageHero {...m.hero} />
 
       {studies.length === 0 ? (
         <NoticeSection
-          heading="Results are coming in"
-          body="We’re a new brand, and every result here is one a specialist actually delivered. Check back soon, or find out what your own points can book."
-          cta={{ label: 'Check your route', href: '/individual' }}
+          heading={m.empty.heading}
+          body={m.empty.body}
+          cta={{ label: m.empty.cta, href: '/individual' }}
         />
       ) : (
         <section className="relative overflow-hidden border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>

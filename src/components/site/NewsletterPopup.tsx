@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 import NewsletterForm from './NewsletterForm';
+import { useI18n } from '@/i18n/LocaleProvider';
 
 /**
  * Newsletter popup (Review v3 §9b). Trigger rules matter more than the design:
@@ -38,6 +39,7 @@ export default function NewsletterPopup() {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
   const shownRef = useRef(false);
+  const m = useI18n().m.newsletter.popup;
 
   useEffect(() => {
     if (!eligible()) return;
@@ -108,7 +110,7 @@ export default function NewsletterPopup() {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Newsletter signup"
+            aria-label={m.dialog}
             onClick={(e) => e.stopPropagation()}
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -124,23 +126,22 @@ export default function NewsletterPopup() {
             <button
               type="button"
               onClick={dismiss}
-              aria-label="Dismiss"
+              aria-label={m.dismiss}
               className="sm-icon-btn absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full"
             >
               <X className="h-4 w-4" aria-hidden />
             </button>
 
-            <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Emailed every Monday</p>
+            <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">{m.eyebrow}</p>
             <h2 className="mt-2 max-w-xs font-display text-2xl font-bold leading-tight text-ink">
-              Watching a route? We’ll watch it too.
+              {m.title}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-sub">
-              Give us your home airport and we’ll email where your points can actually go from it —
-              verified space, once a week.
+              {m.body}
             </p>
 
             <div className="mt-5">
-              <NewsletterForm source="home-exit-popup" compact buttonLabel="Notify me" onSuccess={markDone} />
+              <NewsletterForm source="home-exit-popup" compact buttonLabel={m.button} onSuccess={markDone} />
             </div>
           </motion.div>
         </motion.div>

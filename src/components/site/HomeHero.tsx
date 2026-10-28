@@ -10,6 +10,8 @@ import LeadCta from './LeadCta';
 import StatStrip from './StatStrip';
 import RegionalReports from './RegionalReports';
 import { entrance, staggerParent } from '@/lib/animations';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Home hero — docs/plans/02 (Home). Two columns: the thesis on the left, the
@@ -18,7 +20,8 @@ import { entrance, staggerParent } from '@/lib/animations';
  * strip below. Manual-first positioning — a real person searches, no AI claim
  * (docs/plans/00-context.md).
  */
-export default function HomeHero() {
+export default function HomeHero({ m }: { m: Messages['home']['hero'] }) {
+  const { common } = useI18n().m;
   return (
     <section className="relative overflow-hidden">
       <AmbientBackground variant="hero" />
@@ -35,34 +38,32 @@ export default function HomeHero() {
           {/* Left — thesis */}
           <motion.div variants={entrance}>
             <p className="font-mono text-eyebrow font-medium uppercase text-accent">
-              Your Own Points Specialist
+              {m.eyebrow}
             </p>
             <ShineText
               as="h1"
               className="mt-4 font-display font-bold"
               style={{ fontSize: 'clamp(2.6rem, 6vw, 4.5rem)', lineHeight: 1.04, letterSpacing: '-0.02em' }}
             >
-              The award system is broken. Your specialist makes it work.
+              {m.title}
             </ShineText>
             <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-ink-sub">
-              A real specialist works every major loyalty program with the points
-              you already hold — and hands back a seat worth flying, with the exact
-              cost to book it.
+              {m.body}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <LeadCta className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors">
-                Start your flight request
+                {common.startFlightRequest}
               </LeadCta>
               <Link
                 href="/how-it-works"
                 className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"
               >
-                See How It Works
+                {m.secondary}
               </Link>
             </div>
             <p className="mt-4 flex items-center gap-2 text-[13px] text-ink-muted">
               <Check className="h-3.5 w-3.5" aria-hidden strokeWidth={2.5} />
-              No card, no commitment.
+              {m.noCard}
             </p>
           </motion.div>
 

@@ -1,18 +1,14 @@
 import { Check } from 'lucide-react';
 
+import type { Messages } from '@/i18n/messages/en';
+
 /**
  * Pricing-hero artifact (Review v3 §4) — a receipt that makes the charge flow
  * concrete: $25 deposit → $99 on confirmation → $0 if nothing's found. Static,
  * token-based, mode-safe (the amber cue is --sm-proof, hueless in Mono). No
  * fabricated proof: it's an illustration of the model, not a real transaction.
  */
-const ROWS = [
-  { amount: '$25', label: 'Deposit to start', sub: 'Refundable — held, not spent.' },
-  { amount: '$99', label: 'When a seat is confirmed', sub: 'Per person, per direction. Any cabin.' },
-  { amount: '$0', label: 'If nothing’s bookable', sub: 'Your deposit comes back in full.' },
-];
-
-export default function ReceiptCard() {
+export default function ReceiptCard({ m }: { m: Messages['receipt'] }) {
   return (
     <div
       className="relative overflow-hidden rounded-2xl p-5 sm:p-6"
@@ -31,7 +27,7 @@ export default function ReceiptCard() {
       <div className="relative">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[0.6rem] uppercase tracking-[0.16em] text-ink-muted">
-            How you’re charged
+            {m.heading}
           </span>
           <span
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.08em]"
@@ -42,12 +38,12 @@ export default function ReceiptCard() {
             }}
           >
             <Check className="h-3 w-3" aria-hidden strokeWidth={3} />
-            Only if you fly
+            {m.badge}
           </span>
         </div>
 
         <div className="mt-5 space-y-4">
-          {ROWS.map((r, i) => (
+          {m.rows.map((r, i) => (
             <div key={r.amount} className={i > 0 ? 'border-t pt-4' : ''} style={i > 0 ? { borderColor: 'var(--sm-glass-border)' } : undefined}>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="text-sm text-ink-sub">{r.label}</span>

@@ -4,6 +4,7 @@ import { motion, type Variants } from 'framer-motion';
 import { Check, X } from 'lucide-react';
 
 import { entrance, inViewOnce } from '@/lib/animations';
+import type { Messages } from '@/i18n/messages/en';
 
 // Scroll reveal (Review v3 §10.5): the ghost column staggers in, then the real
 // column follows — the argument lands in sequence instead of all at once.
@@ -27,19 +28,6 @@ const revealOnce = {
  * Warning tone = --sm-warning, confirmed tone = --sm-success (both hold across
  * modes; green stays confined to its semantic success role).
  */
-const GHOST = [
-  'Cached availability that may not book',
-  'Phantom seats that vanish at checkout',
-  'One program at a time, on the dates you thought to try',
-  'A screenshot of a search, not a seat',
-];
-
-const REAL = [
-  'A specialist opens the booking and confirms your seat is really there',
-  'Proof in hand: the exact seat and the point cost',
-  '30+ programs and transfer partners, worked through for you',
-  'Real availability on your dates, or an honest no',
-];
 
 function Row({ text, tone }: { text: string; tone: 'warning' | 'success' }) {
   const color = tone === 'success' ? 'var(--sm-success)' : 'var(--sm-warning)';
@@ -52,7 +40,7 @@ function Row({ text, tone }: { text: string; tone: 'warning' | 'success' }) {
   );
 }
 
-export default function GhostVsRealCompare() {
+export default function GhostVsRealCompare({ m }: { m: Messages['home']['compare'] }) {
   return (
     <section className="relative" style={{ background: 'var(--sm-surface-invert)' }}>
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
@@ -61,10 +49,10 @@ export default function GhostVsRealCompare() {
             className="font-mono text-sm font-semibold uppercase tracking-[0.14em]"
             style={{ color: 'var(--sm-accent-invert)' }}
           >
-            Automated vs. by hand
+            {m.eyebrow}
           </p>
           <h2 className="mt-4 font-display text-section font-bold" style={{ color: 'var(--sm-ink-invert)' }}>
-            The tools show you availability. Your specialist hands you a seat you can book.
+            {m.title}
           </h2>
         </motion.div>
 
@@ -79,10 +67,10 @@ export default function GhostVsRealCompare() {
             {/* Automated */}
             <div className="p-6 sm:p-8">
               <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert-sub)' }}>
-                What automated tools show
+                {m.ghostHeading}
               </p>
               <motion.ul className="mt-5 space-y-3.5" variants={colStagger(0)} {...revealOnce}>
-                {GHOST.map((t) => (
+                {m.ghost.map((t) => (
                   <Row key={t} text={t} tone="warning" />
                 ))}
               </motion.ul>
@@ -94,10 +82,10 @@ export default function GhostVsRealCompare() {
               style={{ borderColor: 'var(--sm-invert-border)' }}
             >
               <p className="font-mono text-eyebrow uppercase tracking-[0.14em]" style={{ color: 'var(--sm-ink-invert)' }}>
-                What a specialist delivers
+                {m.realHeading}
               </p>
               <motion.ul className="mt-5 space-y-3.5" variants={colStagger(0.45)} {...revealOnce}>
-                {REAL.map((t) => (
+                {m.real.map((t) => (
                   <Row key={t} text={t} tone="success" />
                 ))}
               </motion.ul>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 
 import { entrance } from '@/lib/animations';
+import { useI18n } from '@/i18n/LocaleProvider';
 
 /**
  * The experience stat strip — docs/plans/04-components-spec.md. Promoted to a
@@ -13,17 +14,14 @@ import { entrance } from '@/lib/animations';
  * sample is the ex-Upwork placeholder — vague/unverifiable — so it is dropped
  * here. Ships as 3 real stats until a verifiable 4th exists. Also flagged for
  * launch: the "14+ yrs / 23,000+" provenance vs. the "from-scratch, no prior
- * company" rule — confirm attribution before going public.
+ * company" rule — confirm attribution before going public. The stats themselves
+ * live in the message dictionaries (`stats`).
  */
-const DEFAULT_STATS = [
-  { value: '14+', label: 'Years of experience' },
-  { value: '23,000+', label: 'Searches run by hand' },
-  { value: '30+', label: 'Loyalty programs' },
-];
-
 type Stat = { value: string; label: string };
 
-export default function StatStrip({ stats = DEFAULT_STATS }: { stats?: Stat[] }) {
+export default function StatStrip({ stats: statsProp }: { stats?: Stat[] }) {
+  const { m } = useI18n();
+  const stats = statsProp ?? m.stats;
   return (
     <motion.dl
       variants={entrance}

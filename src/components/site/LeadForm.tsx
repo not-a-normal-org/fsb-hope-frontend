@@ -4,6 +4,9 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Loader2, ChevronDown } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
+import { fmt } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import { rich } from '@/i18n/rich';
 import { TRIP_TYPE_OPTIONS, hasContactNumber } from '@/lib/leads';
 
 export type LeadType = 'individual' | 'business';
@@ -32,6 +35,13 @@ const EMPTY = {
 };
 
 const TOTAL_STEPS = 4;
+
+// Option values are stored in leads.details and read by staff, so they stay
+// stable English; the visible labels come from the message dictionaries.
+const PASSENGERS = ['1', '2', '3', '4', '5', '6+'] as const;
+const CABINS = ['economy', 'premium', 'business', 'first', 'any'] as const;
+const FLEXIBILITY = ['flexible', 'fixed', 'unsure'] as const;
+const YEARLY_SPEND = ['Under $50k', '$50k–$150k', '$150k–$500k', '$500k+', 'Not sure'] as const;
 
 /**
  * Multi-step lead-capture form (docs/plans/02) — the reusable body shared by the
@@ -68,6 +78,9 @@ export default function LeadForm({
   const generatedId = useId();
   const titleId = titleIdProp ?? generatedId;
   const business = type === 'business';
+  const m = useI18n().m.lead;
+  const mi = m.individual;
+  const mb = m.business;
 
   const [step, setStep] = useState(0);
   const [status, setStatus] = useState<Status>('form');
@@ -91,11 +104,11 @@ export default function LeadForm({
 
   const submit = async () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
-      setError('Please enter a valid email address.');
+      setError(m.errors.email);
       return;
     }
     if (!business && !hasContactNumber(data.whatsapp)) {
-      setError('Please add a WhatsApp or phone number so we can reach you.');
+      setError(m.errors.contact);
       return;
     }
     setStatus('submitting');
@@ -134,11 +147,11 @@ export default function LeadForm({
       });
       if (!res.ok) {
         const detail = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(detail.error || 'Something went wrong. Please try again.');
+        throw new Error(detail.error || m.errors.generic);
       }
       setStatus('success');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : m.errors.generic);
       setStatus('form');
     }
   };
@@ -147,7 +160,7 @@ export default function LeadForm({
 
   const goNext = () => {
     if (!canAdvance) {
-      setError('Please tell us where you want to go.');
+      setError(m.errors.route);
       return;
     }
     setError(null);
@@ -162,14 +175,14 @@ export default function LeadForm({
     switch (s) {
       case 0:
         return (
-          <Step titleId={titleId} title="Where & when?" hint="Your destination and rough timing, exact dates optional.">
-            <Labeled label="Where to?">
+          <Step titleId={titleId} title={mi.trip.title} hint={mi.trip.hint}>
+            <Labeled label={mi.trip.where}>
               <input
                 data-autofocus
                 type="text"
                 value={data.route}
                 onChange={set('route')}
-                placeholder="e.g. New York → Tokyo, or JFK–NRT"
+                placeholder={mi.trip.wherePlaceholder}
                 className={inputClass}
                 style={inputStyle}
                 onKeyDown={(e) => {
@@ -183,101 +196,105 @@ export default function LeadForm({
                 setData((d) => ({ ...d, nearby_airports: checked ? 'yes' : 'no' }))
               }
             >
-              I am flexible with nearby airports if there is a great deal
+              {mi.trip.nearby}
             </CheckboxField>
-            <TripTypeToggle value={data.trip_type} onChange={set('trip_type')} />
-            <Labeled label="When? (optional)">
+            <TripTypeToggle
+              value={data.trip_type}
+              onChange={set('trip_type')}
+              legend={mi.trip.tripType}
+              labels={mi.tripTypes}
+            />
+            <Labeled label={mi.trip.when}>
               <input
                 type="text"
                 value={data.dates}
                 onChange={set('dates')}
                 placeholder={
-                  data.trip_type === 'one_way'
-                    ? 'e.g. mid-March, or an exact date'
-                    : 'e.g. mid-March, ~7 nights, or exact dates'
+                  data.trip_type === 'one_way' ? mi.trip.whenOneWay : mi.trip.whenRoundTrip
                 }
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
-            <Labeled label="How flexible are your dates?">
+            <Labeled label={mi.trip.flexibility}>
               <Select value={data.flexibility} onChange={set('flexibility')}>
-                <option value="">Choose one…</option>
-                <option value="flexible">Flexible — find me the best value</option>
-                <option value="fixed">Fixed — these exact dates</option>
-                <option value="unsure">Not sure yet</option>
+                <option value="">{m.chooseOne}</option>
+                {FLEXIBILITY.map((v) => (
+                  <option key={v} value={v}>
+                    {mi.flexibility[v]}
+                  </option>
+                ))}
               </Select>
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       case 1:
         return (
-          <Step titleId={titleId} title="Who’s flying?" hint="Headcount and the cabin you’re after.">
-            <Labeled label="How many travelers?">
+          <Step titleId={titleId} title={mi.travelers.title} hint={mi.travelers.hint}>
+            <Labeled label={mi.travelers.count}>
               <Select value={data.passengers} onChange={set('passengers')} autoFocus>
-                <option value="">Choose…</option>
-                <option value="1">1 traveler</option>
-                <option value="2">2 travelers</option>
-                <option value="3">3 travelers</option>
-                <option value="4">4 travelers</option>
-                <option value="5">5 travelers</option>
-                <option value="6+">6+ travelers</option>
+                <option value="">{m.choose}</option>
+                {PASSENGERS.map((v) => (
+                  <option key={v} value={v}>
+                    {mi.travelerOptions[v]}
+                  </option>
+                ))}
               </Select>
             </Labeled>
-            <Labeled label="Which cabin?">
+            <Labeled label={mi.travelers.cabin}>
               <Select value={data.cabin} onChange={set('cabin')}>
-                <option value="">Choose…</option>
-                <option value="economy">Economy</option>
-                <option value="premium">Premium economy</option>
-                <option value="business">Business</option>
-                <option value="first">First</option>
-                <option value="any">Any / best value</option>
+                <option value="">{m.choose}</option>
+                {CABINS.map((v) => (
+                  <option key={v} value={v}>
+                    {mi.cabinOptions[v]}
+                  </option>
+                ))}
               </Select>
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       case 2:
         return (
-          <Step titleId={titleId} title="Which points do you have?" hint="Rough is fine. Not sure? Just say so, it helps your specialist find the best value.">
-            <Labeled label="Points & miles (optional)">
+          <Step titleId={titleId} title={mi.points.title} hint={mi.points.hint}>
+            <Labeled label={mi.points.label}>
               <input
                 data-autofocus
                 type="text"
                 value={data.points_held}
                 onChange={set('points_held')}
-                placeholder="e.g. ~120k Amex MR, 80k Chase UR — or “not sure”"
+                placeholder={mi.points.placeholder}
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       default:
         return (
-          <Step titleId={titleId} title="Where should we send your results?" hint="We’ll email a screenshot and the exact point cost, and message you if something needs a quick answer.">
-            <Labeled label="Email">
+          <Step titleId={titleId} title={mi.contact.title} hint={mi.contact.hint}>
+            <Labeled label={mi.contact.email}>
               <input
                 data-autofocus
                 type="email"
                 value={data.email}
                 onChange={set('email')}
-                placeholder="you@email.com"
+                placeholder={m.emailPlaceholder}
                 autoComplete="email"
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
-            <Labeled label="WhatsApp or phone">
+            <Labeled label={mi.contact.phone}>
               <input
                 type="tel"
                 required
                 aria-required
                 value={data.whatsapp}
                 onChange={set('whatsapp')}
-                placeholder="+1 555 000 0000"
+                placeholder={m.phonePlaceholder}
                 autoComplete="tel"
                 className={inputClass}
                 style={inputStyle}
@@ -292,85 +309,82 @@ export default function LeadForm({
     switch (s) {
       case 0:
         return (
-          <Step titleId={titleId} title="Your team’s travel" hint="Rough numbers are fine — this helps a specialist scope the account.">
-            <Labeled label="Roughly, annual flight spend?">
+          <Step titleId={titleId} title={mb.spend.title} hint={mb.spend.hint}>
+            <Labeled label={mb.spend.label}>
               <Select value={data.yearly_spend} onChange={set('yearly_spend')} autoFocus>
-                <option value="">Choose…</option>
-                <option value="Under $50k">Under $50k</option>
-                <option value="$50k–$150k">$50k–$150k</option>
-                <option value="$150k–$500k">$150k–$500k</option>
-                <option value="$500k+">$500k+</option>
-                <option value="Not sure">Not sure</option>
+                <option value="">{m.choose}</option>
+                {YEARLY_SPEND.map((v) => (
+                  <option key={v} value={v}>
+                    {mb.spendOptions[v]}
+                  </option>
+                ))}
               </Select>
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       case 1:
         return (
-          <Step titleId={titleId} title="What does your team fly?" hint="Routes, cabins, and how often — as much or as little as you know.">
-            <Labeled label="Routes & cabins">
+          <Step titleId={titleId} title={mb.routes.title} hint={mb.routes.hint}>
+            <Labeled label={mb.routes.label}>
               <textarea
                 data-autofocus
                 value={data.flight_need}
                 onChange={set('flight_need')}
                 rows={3}
-                placeholder="e.g. SFO/JFK → London & Singapore, business class, ~monthly"
+                placeholder={mb.routes.placeholder}
                 className={`${inputClass} resize-none`}
                 style={inputStyle}
               />
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       case 2:
         return (
-          <Step titleId={titleId} title="Points, miles, or budget on hand?" hint="Any points pooled for travel, or a cash budget. Optional.">
-            <Labeled label="Points / budget (optional)">
+          <Step titleId={titleId} title={mb.budget.title} hint={mb.budget.hint}>
+            <Labeled label={mb.budget.label}>
               <input
                 data-autofocus
                 type="text"
                 value={data.points_budget}
                 onChange={set('points_budget')}
-                placeholder="e.g. 2M Amex Business MR, or ~$8k budget"
+                placeholder={mb.budget.placeholder}
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
-            <NotesField value={data.notes} onChange={set('notes')} />
+            <NotesField value={data.notes} onChange={set('notes')} m={m.notes} />
           </Step>
         );
       default:
         return (
-          <Step titleId={titleId} title="Let’s set up a call" hint="A specialist will reach out to scope your account.">
-            <Labeled label="Work email">
+          <Step titleId={titleId} title={mb.call.title} hint={mb.call.hint}>
+            <Labeled label={mb.call.email}>
               <input
                 data-autofocus
                 type="email"
                 value={data.email}
                 onChange={set('email')}
-                placeholder="you@company.com"
+                placeholder={mb.call.emailPlaceholder}
                 autoComplete="email"
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
-            <Labeled label="Phone (optional)">
+            <Labeled label={mb.call.phone}>
               <input
                 type="tel"
                 value={data.phone}
                 onChange={set('phone')}
-                placeholder="+1 555 000 0000"
+                placeholder={m.phonePlaceholder}
                 autoComplete="tel"
                 className={inputClass}
                 style={inputStyle}
               />
             </Labeled>
             {/* Cal.com booking embed goes here once the account exists. */}
-            <p className="text-xs leading-relaxed text-ink-muted">
-              Prefer to pick a time? Calendar booking is coming soon — for now a specialist will
-              email you to schedule.
-            </p>
+            <p className="text-xs leading-relaxed text-ink-muted">{mb.call.calendar}</p>
           </Step>
         );
     }
@@ -387,12 +401,10 @@ export default function LeadForm({
             <Check className="h-6 w-6 text-accent" aria-hidden />
           </div>
           <h2 id={titleId} className="mt-5 font-display text-card font-bold text-ink">
-            {business ? 'Thanks — we’ll be in touch.' : 'We’re on it.'}
+            {business ? mb.successTitle : mi.successTitle}
           </h2>
           <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-ink-sub">
-            {business
-              ? 'A specialist will reach out to scope your account and set up a call, usually within a day.'
-              : 'A specialist is being assigned to your route and will email you the results, usually within a day. No account, and nothing to pay to look.'}
+            {business ? mb.successBody : mi.successBody}
           </p>
           {onDone ? (
             <button
@@ -401,7 +413,7 @@ export default function LeadForm({
               data-autofocus
               className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
             >
-              Done
+              {m.done}
             </button>
           ) : (
             <Link
@@ -409,14 +421,14 @@ export default function LeadForm({
               data-autofocus
               className="sm-cta mt-7 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors"
             >
-              Back to home
+              {m.home}
             </Link>
           )}
         </div>
       ) : (
         <>
           <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent">
-            Step {step + 1} of {TOTAL_STEPS}
+            {fmt(m.step, { n: step + 1, total: TOTAL_STEPS })}
           </p>
 
           {business ? businessStep(step) : individualStep(step)}
@@ -435,7 +447,7 @@ export default function LeadForm({
                 className="sm-cta-ghost inline-flex items-center gap-1.5 rounded-full px-4 py-3 text-sm font-medium transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden />
-                Back
+                {m.back}
               </button>
             ) : (
               <span />
@@ -447,7 +459,7 @@ export default function LeadForm({
                 onClick={goNext}
                 className="sm-cta inline-flex items-center justify-center gap-1.5 rounded-full px-6 py-3 text-sm font-medium transition-colors"
               >
-                Next
+                {m.next}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </button>
             ) : (
@@ -460,12 +472,12 @@ export default function LeadForm({
                 {status === 'submitting' ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                    Sending
+                    {m.sending}
                   </>
                 ) : business ? (
-                  'Request a callback'
+                  mb.submit
                 ) : (
-                  'Send my flight request'
+                  mi.submit
                 )}
               </button>
             )}
@@ -473,11 +485,13 @@ export default function LeadForm({
 
           {step === TOTAL_STEPS - 1 && (
             <p className="mt-3 text-xs text-ink-muted">
-              By submitting you agree to our{' '}
-              <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
-                Privacy Policy
-              </Link>
-              .
+              {rich(m.consent, {
+                link: (c) => (
+                  <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+                    {c}
+                  </Link>
+                ),
+              })}
             </p>
           )}
         </>
@@ -566,12 +580,22 @@ function CheckboxField({
  * group can't live inside a single <label>), so arrow keys and screen readers get
  * real radio semantics; the pill styling hangs off `:checked` / `:focus-visible`.
  */
-function TripTypeToggle({ value, onChange }: { value: string; onChange: (e: Change) => void }) {
+function TripTypeToggle({
+  value,
+  onChange,
+  legend,
+  labels,
+}: {
+  value: string;
+  onChange: (e: Change) => void;
+  legend: string;
+  labels: Record<string, string>;
+}) {
   const name = useId();
   return (
     <fieldset>
       <legend className="mb-1.5 block font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink-muted">
-        Trip type
+        {legend}
       </legend>
       <div className="inline-flex rounded-full p-1" style={inputStyle}>
         {TRIP_TYPE_OPTIONS.map((o) => (
@@ -587,7 +611,7 @@ function TripTypeToggle({ value, onChange }: { value: string; onChange: (e: Chan
               onChange={onChange}
               className="sr-only"
             />
-            {o.label}
+            {labels[o.value] ?? o.label}
           </label>
         ))}
       </div>
@@ -625,14 +649,22 @@ function Select({
   );
 }
 
-function NotesField({ value, onChange }: { value: string; onChange: (e: Change) => void }) {
+function NotesField({
+  value,
+  onChange,
+  m,
+}: {
+  value: string;
+  onChange: (e: Change) => void;
+  m: { label: string; placeholder: string };
+}) {
   return (
-    <Labeled label="Notes / preferences (optional)">
+    <Labeled label={m.label}>
       <textarea
         value={value}
         onChange={onChange}
         rows={2}
-        placeholder="Anything else — airlines to avoid, occasion, layover limits…"
+        placeholder={m.placeholder}
         className={`${inputClass} resize-none`}
         style={inputStyle}
       />

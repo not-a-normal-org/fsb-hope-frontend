@@ -4,7 +4,9 @@ import PageHero from '@/components/site/PageHero';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import GlassPanel from '@/components/system/GlassPanel';
 import AlertBuyBox from '@/components/site/AlertBuyBox';
-import type { Product } from '@/lib/products';
+import { withCopy, type ProductId } from '@/lib/products';
+import { getMessages } from '@/i18n/get-messages';
+import type { Locale } from '@/i18n/config';
 
 /**
  * Shared body for the two alert purchase pages (/alerts/weekly, /alerts/human):
@@ -12,18 +14,22 @@ import type { Product } from '@/lib/products';
  * the monthly/annual price IDs from NEXT_PUBLIC_STRIPE_PRICE_* and hand them in.
  */
 export default function AlertPurchase({
-  product,
+  locale,
+  productId,
   eyebrow,
   monthlyPriceId,
   annualPriceId,
   cancelPath,
 }: {
-  product: Product;
+  locale: Locale;
+  productId: ProductId;
   eyebrow: string;
   monthlyPriceId?: string;
   annualPriceId?: string;
   cancelPath: string;
 }) {
+  const m = getMessages(locale);
+  const product = withCopy(productId, m.products);
   return (
     <>
       <NavBar />
@@ -62,7 +68,7 @@ export default function AlertPurchase({
                   className="font-mono text-[0.62rem] uppercase tracking-[0.12em]"
                   style={{ color: 'var(--sm-warning)' }}
                 >
-                  Automated — read this
+                  {m.common.automatedLabel}
                 </p>
                 <p className="mt-1.5 text-xs leading-relaxed text-ink-sub">{product.disclosure}</p>
               </div>

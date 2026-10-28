@@ -4,7 +4,7 @@ import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import PointsCalculator from '@/components/site/PointsCalculator';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -16,23 +16,20 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'Points Calculator',
+    title: getMessages(locale).calculator.title,
     ...localeMeta(locale, '/calculator'),
   };
 }
 
-export default function CalculatorPage() {
+export default async function CalculatorPage({ params }: { params: LangParams }) {
+  const { calculator: m } = getMessages(await resolveLocale(params));
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="Calculator"
-        title="What are your points actually worth?"
-        intro="A quick estimate of what your balance could be worth in travel, and what it could realistically book. It’s a starting point, not a live search. The real answer comes from a specialist checking your dates."
-      />
+      <PageHero {...m.hero} />
       <section className="relative">
         <div className="mx-auto max-w-6xl px-6 pb-20">
-          <PointsCalculator variant="full" />
+          <PointsCalculator variant="full" m={m.widget} />
         </div>
       </section>
       <Footer />

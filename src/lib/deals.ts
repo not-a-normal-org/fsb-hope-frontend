@@ -8,8 +8,12 @@
  *
  * The cash figure is the comparison that gives the points number meaning; the
  * transfer partner is revealed on hover so the tile stays clean at rest.
+ *
+ * Words (city names, cabin labels) come from `home.deals` and `common.cabins` in
+ * the message dictionaries; numbers are formatted for the reader's locale.
  */
-export type Cabin = 'Economy' | 'Premium' | 'Business' | 'First';
+export type Cabin = 'economy' | 'premium' | 'business' | 'first';
+export type City = 'tokyo' | 'paris' | 'sydney' | 'london' | 'lisbon';
 
 export type Deal = {
   /** Origin IATA. */
@@ -17,12 +21,12 @@ export type Deal = {
   /** Destination IATA. */
   to: string;
   /** Destination city — the visual anchor of the tile. */
-  city: string;
+  city: City;
   cabin: Cabin;
   /** "from" this many points. */
   points: number;
-  /** Typical retail cash fare, pre-formatted (e.g. "$6,200"). */
-  retail: string;
+  /** Typical retail cash fare, in USD. */
+  retailUsd: number;
   /** Transfer route revealed on hover, e.g. "Amex MR → ANA · 1:1". */
   transfer: string;
   /** The one wide feature tile (spans two columns). */
@@ -33,55 +37,50 @@ export const DEALS: Deal[] = [
   {
     from: 'JFK',
     to: 'NRT',
-    city: 'Tokyo',
-    cabin: 'Business',
+    city: 'tokyo',
+    cabin: 'business',
     points: 75000,
-    retail: '$6,200',
+    retailUsd: 6200,
     transfer: 'Amex MR → ANA · 1:1',
     featured: true,
   },
   {
     from: 'JFK',
     to: 'CDG',
-    city: 'Paris',
-    cabin: 'Business',
+    city: 'paris',
+    cabin: 'business',
     points: 55000,
-    retail: '$3,800',
+    retailUsd: 3800,
     transfer: 'Amex MR → Flying Blue · 1:1',
   },
   {
     from: 'LAX',
     to: 'SYD',
-    city: 'Sydney',
-    cabin: 'Business',
+    city: 'sydney',
+    cabin: 'business',
     points: 108000,
-    retail: '$8,100',
+    retailUsd: 8100,
     transfer: 'Capital One → Qantas · 1:1',
   },
   {
     from: 'JFK',
     to: 'LHR',
-    city: 'London',
-    cabin: 'First',
+    city: 'london',
+    cabin: 'first',
     points: 85000,
-    retail: '$9,400',
+    retailUsd: 9400,
     transfer: 'Chase UR → British Airways · 1:1',
   },
   {
     from: 'EWR',
     to: 'LIS',
-    city: 'Lisbon',
-    cabin: 'Economy',
+    city: 'lisbon',
+    cabin: 'economy',
     points: 30000,
-    retail: '$1,150',
+    retailUsd: 1150,
     transfer: 'Amex MR → TAP Miles&Go · 1:1',
   },
 ];
-
-/** Points with thousands separators (e.g. 75000 → "75,000"). */
-export function formatPoints(n: number): string {
-  return n.toLocaleString('en-US');
-}
 
 /** The individual lead form with the route pre-filled, so a tile hands off intent. */
 export function dealHref(deal: Deal): string {

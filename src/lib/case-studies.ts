@@ -1,7 +1,8 @@
 /**
- * Case-study types + presentational helpers. Client-SAFE (no server-only, no DB
- * import) so cards/teasers can use it in the client bundle. The Payload queries
- * live in `case-studies.server.ts`.
+ * Case-study types. Client-SAFE (no server-only, no DB import) so cards/teasers
+ * can use it in the client bundle. The Payload queries live in
+ * `case-studies.server.ts`; labels (cabins, "pts") come from the message
+ * dictionaries (`common`, `caseStudy`).
  */
 
 export type Cabin = 'economy' | 'premium' | 'business' | 'first';
@@ -22,17 +23,3 @@ export type CaseStudy = {
 
 /** A case study plus its full write-up, for the /results/[slug] detail page. */
 export type CaseStudyDetail = CaseStudy & { body: unknown };
-
-const CABIN_LABELS: Record<Cabin, string> = {
-  economy: 'Economy',
-  premium: 'Premium Economy',
-  business: 'Business',
-  first: 'First',
-};
-
-export const cabinLabel = (cabin: Cabin | null): string | null =>
-  cabin ? CABIN_LABELS[cabin] : null;
-
-/** "95,000 pts", or an em dash when unknown. */
-export const formatPoints = (points: number | null): string =>
-  points ? `${points.toLocaleString('en-US')} pts` : '—';

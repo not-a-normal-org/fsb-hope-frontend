@@ -6,7 +6,7 @@ import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
 import { absoluteUrl, breadcrumbJsonLd, localeMeta } from '@/lib/seo';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { OG_LOCALES, localizePath } from '@/i18n/config';
 import { SITE_NAME } from '@/lib/constants';
 import BlogIndex from './BlogIndex';
@@ -22,15 +22,13 @@ import BlogIndex from './BlogIndex';
  */
 export const dynamic = 'force-dynamic';
 
-const BLOG_DESC =
-  'Guides to booking flights with points and miles, checked by a real specialist — not an algorithm.';
-
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const { title, description } = getMessages(locale).blog;
   const { alternates, robots } = localeMeta(locale, '/blog', { robots: { index: true, follow: true } });
   return {
-    title: 'Blog',
-    description: BLOG_DESC,
+    title,
+    description,
     alternates: {
       ...alternates,
       types: { 'application/rss+xml': absoluteUrl(localizePath(locale, '/blog/feed.xml')) },
@@ -39,8 +37,8 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
       type: 'website',
       url: absoluteUrl(localizePath(locale, '/blog')),
       locale: OG_LOCALES[locale],
-      title: `Blog | ${SITE_NAME}`,
-      description: BLOG_DESC,
+      title: `${title} | ${SITE_NAME}`,
+      description,
     },
     robots,
   };
@@ -64,15 +62,16 @@ async function getPosts(): Promise<BlogCard[]> {
   }
 }
 
-export default async function BlogIndexPage() {
-  const posts = await getPosts();
+export default async function BlogIndexPage({ params }: { params: LangParams }) {
+  const [locale, posts] = await Promise.all([resolveLocale(params), getPosts()]);
+  const m = getMessages(locale).blog;
 
   const blogJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: `${SITE_NAME} — Blog`,
-    url: absoluteUrl('/blog'),
-    description: BLOG_DESC,
+    url: absoluteUrl(localizePath(locale, '/blog')),
+    description: m.description,
     blogPost: posts.map((p) => ({
       '@type': 'BlogPosting',
       headline: p.title,
@@ -81,8 +80,8 @@ export default async function BlogIndexPage() {
     })),
   };
   const crumbs = [
-    { name: 'Home', url: absoluteUrl('/') },
-    { name: 'Blog', url: absoluteUrl('/blog') },
+    { name: m.home, url: absoluteUrl(localizePath(locale, '/')) },
+    { name: m.title, url: absoluteUrl(localizePath(locale, '/blog')) },
   ];
 
   return (
@@ -90,13 +89,8 @@ export default async function BlogIndexPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(crumbs)) }} />
       <NavBar />
-      <PageHero
-        compact
-        eyebrow="Blog"
-        title="Notes on points, seats, and doing it by hand."
-        intro="Field notes from working award space the slow, correct way: what the tools miss, and how to actually use the points you have."
-      />
-      <BlogIndex posts={posts} />
+      <PageHero compact {...m.hero} />
+      <BlogIndex posts={posts} m={m.index} />
       <Footer />
     </>
   );
