@@ -886,6 +886,34 @@ const en = {
       tagline: 'Award search, by hand · savermiles.com',
     },
   },
+
+  /* ───────────── Emails (server only; rendered in src/lib/*-email.ts) ───────────── */
+
+  emails: {
+    /** Sent by /api/newsletter on signup, in the language of the page it came from. */
+    welcome: {
+      subject: 'Welcome to Saver Miles ✈',
+      title: 'Welcome to Saver Miles',
+      greeting: 'Welcome aboard, {name}.',
+      greetingNoName: 'Welcome aboard, there.',
+      intro:
+        "You're on the list. Saver Miles is a points-and-miles concierge: a real specialist searches award availability by hand, so you can fly premium cabins on the points you already hold. No algorithm, no guesswork — a person who does this all day.",
+      listIntro: "Here's what we'll send your way:",
+      items: [
+        'Practical tips on earning and redeeming points',
+        'Business- and first-class sweet spots most travelers miss',
+        'How transfer partners and award charts actually work',
+        'The occasional standout award we spot worth flying for',
+      ],
+      headStart:
+        'Want a head start? Read our <link>points guides</link> or see exactly how a search works.',
+      cta: 'See how it works →',
+      /** Shown under the CTA when non-empty. */
+      languageNote: '',
+      footer:
+        "You're receiving this because you signed up at savermiles.com. If this was a mistake, you can safely ignore this email.",
+    },
+  },
 };
 
 export default en;

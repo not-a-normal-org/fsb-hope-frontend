@@ -5,6 +5,7 @@ import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
 import { LEAD_DETAIL_KEYS, describeLead, hasContactNumber, leadSummary } from '@/lib/leads';
 import { leadEmailHtml } from '@/lib/lead-email';
+import { DEFAULT_LOCALE, hasLocale } from '@/i18n/config';
 
 /**
  * POST /api/leads — persist a lead from the individual/business search flows into
@@ -15,6 +16,11 @@ import { leadEmailHtml } from '@/lib/lead-email';
  * are accepted with just an email. The DB write is the source of truth (so
  * no lead is lost); a best-effort email notification then reaches the team at
  * hello@savermiles.com — its failure never fails the request.
+ *
+ * Errors come back as codes, not sentences, so the form can show them in the
+ * visitor's language: `invalid_request`, `invalid_email`, `missing_route`,
+ * `missing_contact`, `server_error`. The page's language is stored in
+ * details.locale, and a German lead's email subject starts with [DE].
  */
 export const dynamic = 'force-dynamic';
 
@@ -33,6 +39,7 @@ interface LeadBody {
   email?: string;
   whatsapp?: string;
   phone?: string;
+  locale?: string;
   details?: Record<string, unknown>;
 }
 
@@ -49,7 +56,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     body = (await req.json()) as LeadBody;
   } catch {
-    return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
   }
 
   const type =
@@ -57,20 +64,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const email = clip(body.email, 320);
   if (!email || !EMAIL_REGEX.test(email)) {
-    return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
+    return NextResponse.json({ error: 'invalid_email' }, { status: 400 });
   }
 
   const route = clip(body.route);
   if (type === 'individual' && !route) {
-    return NextResponse.json({ error: 'Please tell us where you want to go.' }, { status: 400 });
+    return NextResponse.json({ error: 'missing_route' }, { status: 400 });
   }
 
   const whatsapp = clip(body.whatsapp, 40);
   if (type === 'individual' && !hasContactNumber(whatsapp)) {
-    return NextResponse.json(
-      { error: 'Please add a WhatsApp or phone number so we can reach you.' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'missing_contact' }, { status: 400 });
   }
 
   // Take only known detail keys, clipped — never store arbitrary client JSON.
@@ -81,6 +85,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const value = clip(rawDetails[key]);
     if (value) details[key] = value;
   }
+  // The language comes from the validated top-level field, never from details.
+  details.locale = hasLocale(body.locale) ? body.locale : DEFAULT_LOCALE;
 
   // Attribution: the affiliate's code, captured into the sm_ref cookie on landing.
   const referralCode = sanitizeRefCode(req.cookies.get(REF_COOKIE)?.value);
@@ -96,7 +102,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     whatsapp,
     phone: clip(body.phone, 40),
     referral_code: referralCode,
-    details: Object.keys(details).length ? details : null,
+    details,
   };
 
   const { data: saved, error } = await supabaseAdmin
@@ -107,7 +113,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   if (error) {
     console.error('[api/leads] insert error:', error.message);
-    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
+    return NextResponse.json({ error: 'server_error' }, { status: 500 });
   }
 
   await notifyTeam({ ...record, status: 'new', created_at: saved?.created_at ?? new Date().toISOString() });
@@ -139,11 +145,12 @@ async function notifyTeam(record: {
 }): Promise<void> {
   const heading = record.route ?? record.flight_need ?? record.email;
   const summary = leadSummary(record);
+  const tag = record.details?.locale === 'de' ? '[DE] ' : '';
 
   await sendEmail({
     to: TEAM_INBOX,
     replyTo: record.email,
-    subject: `New ${record.type} lead — ${heading}${summary ? ` · ${summary}` : ''}`,
+    subject: `${tag}New ${record.type} lead — ${heading}${summary ? ` · ${summary}` : ''}`,
     html: leadEmailHtml(record.type, heading, describeLead(record, { includeContact: true })),
   });
 }

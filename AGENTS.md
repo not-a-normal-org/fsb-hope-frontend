@@ -121,6 +121,11 @@ The public site is English and German; staff surfaces stay English. Read
   (`src/lib/products.ts`) in each language's format. Numbers and dates go through
   `formatNumber` / `formatPrice` / `formatDate` in `src/i18n/format.ts`, never a
   hardcoded `'en-US'`.
+- **Public APIs answer with error codes, not sentences** (`{ error: 'invalid_email' }`),
+  and send-side forms pass `locale`; the form maps the code to its own message.
+  Emails pick their language from that `locale` (`src/lib/welcome-email.ts`);
+  a lead's language is kept in `leads.details.locale` and German leads are
+  tagged `[DE]` for the team.
 - **Internal links use `LocaleLink`** (`@/components/system/LocaleLink`), never
   `next/link`, on public pages: write the English path and it adds `/de`.
 - **Every public page's metadata spreads `localeMeta(locale, path)`** (`src/lib/seo.ts`)

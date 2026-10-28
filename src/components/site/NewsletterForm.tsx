@@ -38,7 +38,8 @@ export default function NewsletterForm({
   const [homeAirport, setHomeAirport] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
-  const m = useI18n().m.newsletter;
+  const { locale, m: messages } = useI18n();
+  const m = messages.newsletter;
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -59,7 +60,7 @@ export default function NewsletterForm({
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), home_airport: homeAirport.trim(), source }),
+        body: JSON.stringify({ email: email.trim(), home_airport: homeAirport.trim(), source, locale }),
       });
       if (res.ok) {
         setStatus('success');
@@ -74,14 +75,11 @@ export default function NewsletterForm({
         return;
       }
       const detail = (await res.json().catch(() => ({}))) as { error?: string };
-      throw new Error(
-        detail.error === 'Invalid email address'
-          ? m.errors.email
-          : detail.error || m.errors.generic,
-      );
+      throw new Error(detail.error === 'invalid_email' ? m.errors.email : m.errors.generic);
     } catch (err) {
       setStatus('error');
-      setMessage(err instanceof Error ? err.message : m.errors.generic);
+      // A TypeError is the browser's own network failure (in its language, not ours).
+      setMessage(err instanceof Error && !(err instanceof TypeError) ? err.message : m.errors.generic);
     }
   }
 

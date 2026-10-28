@@ -28,7 +28,8 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const emailRef = useRef<HTMLInputElement>(null);
-  const { newsletter } = useI18n().m;
+  const { locale, m: messages } = useI18n();
+  const { newsletter } = messages;
   const m = newsletter.inline;
 
   function toEmailStep(e: FormEvent) {
@@ -58,7 +59,7 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), home_airport: airport.trim(), source }),
+        body: JSON.stringify({ email: email.trim(), home_airport: airport.trim(), source, locale }),
       });
       if (res.ok || res.status === 409) {
         setStatus('success');
@@ -66,10 +67,11 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
         return;
       }
       const detail = (await res.json().catch(() => ({}))) as { error?: string };
-      throw new Error(detail.error === 'Invalid email address' ? m.errors.email : detail.error || m.errors.generic);
+      throw new Error(detail.error === 'invalid_email' ? m.errors.email : m.errors.generic);
     } catch (err) {
       setStatus('error');
-      setMessage(err instanceof Error ? err.message : m.errors.generic);
+      // A TypeError is the browser's own network failure (in its language, not ours).
+      setMessage(err instanceof Error && !(err instanceof TypeError) ? err.message : m.errors.generic);
     }
   }
 

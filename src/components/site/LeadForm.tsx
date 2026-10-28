@@ -43,6 +43,13 @@ const CABINS = ['economy', 'premium', 'business', 'first', 'any'] as const;
 const FLEXIBILITY = ['flexible', 'fixed', 'unsure'] as const;
 const YEARLY_SPEND = ['Under $50k', '$50k–$150k', '$150k–$500k', '$500k+', 'Not sure'] as const;
 
+/** /api/leads error codes → the message to show; anything else is generic. */
+const API_ERRORS = {
+  invalid_email: 'email',
+  missing_route: 'route',
+  missing_contact: 'contact',
+} as const;
+
 /**
  * Multi-step lead-capture form (docs/plans/02) — the reusable body shared by the
  * `LeadModal` popup and the standalone `/audit` page. Two flows behind one `type`:
@@ -78,7 +85,8 @@ export default function LeadForm({
   const generatedId = useId();
   const titleId = titleIdProp ?? generatedId;
   const business = type === 'business';
-  const m = useI18n().m.lead;
+  const { locale, m: messages } = useI18n();
+  const m = messages.lead;
   const mi = m.individual;
   const mb = m.business;
 
@@ -143,15 +151,17 @@ export default function LeadForm({
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, locale }),
       });
       if (!res.ok) {
         const detail = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(detail.error || m.errors.generic);
+        const key = API_ERRORS[detail.error as keyof typeof API_ERRORS] ?? 'generic';
+        throw new Error(m.errors[key]);
       }
       setStatus('success');
     } catch (err) {
-      setError(err instanceof Error ? err.message : m.errors.generic);
+      // A TypeError is the browser's own network failure (in its language, not ours).
+      setError(err instanceof Error && !(err instanceof TypeError) ? err.message : m.errors.generic);
       setStatus('form');
     }
   };

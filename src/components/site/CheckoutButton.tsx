@@ -32,7 +32,8 @@ export default function CheckoutButton({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const m = useI18n().m.checkout;
+  const { locale, m: messages } = useI18n();
+  const m = messages.checkout;
 
   const disabled = loading || !priceId;
 
@@ -44,15 +45,18 @@ export default function CheckoutButton({
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, mode, customerEmail, metadata, successPath, cancelPath }),
+        body: JSON.stringify({ priceId, mode, customerEmail, metadata, successPath, cancelPath, locale }),
       });
       const json = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
       if (!res.ok || !json.url) {
-        throw new Error(json.error ?? m.error);
+        // The API answers with a code (see /api/checkout); the visitor sees one
+        // plain message in their language either way.
+        if (json.error) console.error('[checkout]', json.error);
+        throw new Error(m.error);
       }
       window.location.href = json.url;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : m.error);
+    } catch {
+      setError(m.error);
       setLoading(false);
     }
   }
