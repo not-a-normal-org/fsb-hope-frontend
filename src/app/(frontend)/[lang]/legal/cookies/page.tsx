@@ -5,6 +5,7 @@ import type { Locale } from '@/i18n/config';
 import { resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 import en from './content.en';
+import de from './content.de';
 
 /**
  * /legal/cookies — Cookie Policy. Lists the exact cookies/storage the site sets
@@ -12,10 +13,10 @@ import en from './content.en';
  * Analytics 4 for aggregate traffic measurement, and how to opt out. No
  * advertising cookies. NOTE: structure-reviewed, not legal advice.
  *
- * The text is in content.<locale>.tsx.
+ * The text is in content.<locale>.tsx. The German version is a convenience
+ * translation; the English version governs, and both say so.
  */
-// Until the German text lands, /de serves the English.
-const CONTENT: Record<Locale, LegalContent> = { en, de: en };
+const CONTENT: Record<Locale, LegalContent> = { en, de };
 
 // Shared by both languages: the translation tracks the English text.
 const UPDATED = '2026-10-28';
