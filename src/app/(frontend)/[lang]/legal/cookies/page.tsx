@@ -8,9 +8,9 @@ import en from './content.en';
 
 /**
  * /legal/cookies — Cookie Policy. Lists the exact cookies/storage the site sets
- * today (referral, session, theme, newsletter-popup) plus Google Analytics 4 for
- * aggregate traffic measurement, and how to opt out. No advertising cookies.
- * NOTE: structure-reviewed, not legal advice.
+ * today (referral, session, theme, language, newsletter-popup) plus Google
+ * Analytics 4 for aggregate traffic measurement, and how to opt out. No
+ * advertising cookies. NOTE: structure-reviewed, not legal advice.
  *
  * The text is in content.<locale>.tsx.
  */
@@ -18,7 +18,7 @@ import en from './content.en';
 const CONTENT: Record<Locale, LegalContent> = { en, de: en };
 
 // Shared by both languages: the translation tracks the English text.
-const UPDATED = '2026-08-31';
+const UPDATED = '2026-10-28';
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);

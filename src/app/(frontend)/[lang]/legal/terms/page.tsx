@@ -19,7 +19,7 @@ import en from './content.en';
 const CONTENT: Record<Locale, LegalContent> = { en, de: en };
 
 // Shared by both languages: the translation tracks the English text.
-const UPDATED = '2026-10-22';
+const UPDATED = '2026-10-28';
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);

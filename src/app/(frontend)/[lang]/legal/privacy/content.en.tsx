@@ -11,7 +11,8 @@ function Body() {
         <strong>Saver Miles LLC</strong>, a Wyoming limited liability company (&ldquo;Saver Miles,&rdquo;
         &ldquo;we,&rdquo; &ldquo;us&rdquo;), is the controller of the personal information described in
         this policy. It applies to savermiles.com and the services we provide (the &ldquo;Services&rdquo;).
-        By using the Services you agree to this policy.
+        By using the Services you agree to this policy. Any translation of this policy is provided for
+        convenience only; if it differs from this English version, the English version governs.
       </p>
 
       <h2>1. Information we collect</h2>

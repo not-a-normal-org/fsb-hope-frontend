@@ -12,7 +12,9 @@ function Body() {
         &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), governing your access to and use of the
         website at savermiles.com and the services we provide (together, the &ldquo;Services&rdquo;). By
         using the Services, requesting a search, subscribing to an alert, or making a payment, you agree
-        to these Terms. If you do not agree, do not use the Services.
+        to these Terms. If you do not agree, do not use the Services. Any translation of these Terms is
+        provided for convenience only; if it differs from this English version, the English version
+        governs.
       </p>
 
       <h2>1. Who we are, and what the Services are</h2>

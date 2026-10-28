@@ -11,7 +11,8 @@ function Body() {
         This Cookie Policy describes how <strong>Saver Miles LLC</strong> (&ldquo;Saver Miles,&rdquo;
         &ldquo;we,&rdquo; &ldquo;us&rdquo;) uses cookies and similar browser-storage technologies on
         savermiles.com. It should be read together with our{' '}
-        <Link href="/legal/privacy">Privacy Policy</Link>.
+        <Link href="/legal/privacy">Privacy Policy</Link>. Any translation of this policy is provided for
+        convenience only; if it differs from this English version, the English version governs.
       </p>
 
       <h2>1. What cookies and browser storage are</h2>
@@ -35,6 +36,13 @@ function Body() {
         <li>
           <strong>Theme preference</strong> (local storage <code>sm-theme</code>) &mdash;{' '}
           <em>functional.</em> Remembers whether you chose the light, dark, or mono theme.
+        </li>
+        <li>
+          <strong>Language preference</strong> (cookie <code>sm-locale</code>, 1 year) &mdash;{' '}
+          <em>functional.</em> Set only when you choose a language in the language switcher. It
+          remembers that choice (English or German) so we show the site in that language rather than the
+          one we would otherwise pick from your approximate location. It is a first-party cookie
+          (<code>SameSite=Lax</code>).
         </li>
         <li>
           <strong>Newsletter prompt</strong> (local/session storage <code>sm-nl-dismissed</code>,
@@ -97,8 +105,8 @@ function Body() {
       <p>
         You can control or delete cookies through your browser settings, and clear local and session
         storage the same way. Because the items above are strictly necessary or functional, blocking them
-        will not stop you browsing the site, but some features (such as remembering your theme, keeping
-        you signed in, or crediting a referral) may not work as intended.
+        will not stop you browsing the site, but some features (such as remembering your theme or
+        language, keeping you signed in, or crediting a referral) may not work as intended.
       </p>
 
       <h2>6. Changes to this policy</h2>
