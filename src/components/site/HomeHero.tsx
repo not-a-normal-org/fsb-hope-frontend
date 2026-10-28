@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import ShineText from '@/components/system/ShineText';
 import LeadCta from './LeadCta';

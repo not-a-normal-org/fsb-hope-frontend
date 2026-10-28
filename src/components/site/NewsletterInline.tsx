@@ -3,6 +3,8 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Check, Loader2 } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
+
 /**
  * In-flow newsletter capture below the deals grid (Review v3 §9b). One field in
  * flow: the visitor has just spent attention on the grid, so we ask the low-
@@ -127,7 +129,7 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
           {step === 'email' && status !== 'success' && (
             <p className="mt-2 text-xs text-ink-muted">
               Watching {airport.trim().toUpperCase()} — where should we send it? By confirming you agree to our{' '}
-              <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">Privacy Policy</a>.
+              <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">Privacy Policy</Link>.
             </p>
           )}
         </div>

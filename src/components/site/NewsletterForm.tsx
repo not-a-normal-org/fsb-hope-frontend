@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from 'react';
 import { Loader2, Check } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
+
 /**
  * Email-capture form → POST /api/newsletter → `newsletter_subscribers`
  * (docs/plans/06). Captures the subscriber's home airport (so the newsletter can
@@ -129,9 +131,9 @@ export default function NewsletterForm({
       </button>
       <p className={`mt-2 text-ink-muted ${compact ? 'text-[11px]' : 'text-xs'}`}>
         By subscribing you agree to our{' '}
-        <a href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+        <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
       {status === 'error' && (

@@ -1,7 +1,7 @@
 /**
  * TEMPORARY — holds the site behind an under-construction notice until launch.
  *
- * Delete this file, `src/app/(frontend)/maintenance/`, and the maintenance branch
+ * Delete this file, `src/app/(staff)/maintenance/`, and the maintenance branch
  * in `src/proxy.ts` at launch. See `docs/maintenance-mode.md`.
  *
  * Only a plain constant lives here: `src/proxy.ts` runs in the edge runtime and

@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import CaseStudyCard from './CaseStudyCard';
+import Link from '@/components/system/LocaleLink';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
 import type { CaseStudy } from '@/lib/case-studies';
 

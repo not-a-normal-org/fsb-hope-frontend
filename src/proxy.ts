@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import {
+  DE_LIVE,
+  GERMAN_COUNTRIES,
+  LOCALE_COOKIE,
+  hasLocale,
+  isLocalizable,
+  localeOf,
+  localizePath,
+  stripLocale,
+  type Locale,
+} from '@/i18n/config';
 import { MAINTENANCE_ENABLED } from '@/lib/maintenance';
 import { verifyStaffToken, isActiveStaff } from '@/lib/session-edge';
 
@@ -28,17 +39,38 @@ const ALWAYS_OPEN = new Set(['/api/webhooks/stripe']);
 // "whole site is down, stop crawling" signal — but must not receive the HTML notice.
 const TEXT_PATHS = new Set(['/robots.txt', '/sitemap.xml']);
 
+// Crawlers and link-preview fetchers are never geo-redirected: they must see the
+// URL they asked for, and hreflang is how they find the German pages. A visitor
+// whose browser matches this by accident just gets English and the switcher.
+const BOT_UA =
+  /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora link preview|whatsapp|telegram|discord|slack|lighthouse|google-inspectiontool|headless/i;
+
+/**
+ * The language for a visitor on an unprefixed (English) URL. An explicit choice
+ * (the switcher's `sm-locale` cookie) wins; otherwise a visitor located in DE, AT,
+ * or CH gets German. Both only while German is live.
+ */
+function preferredLocale(req: NextRequest): Locale {
+  if (!DE_LIVE) return 'en';
+  const chosen = req.cookies.get(LOCALE_COOKIE)?.value;
+  if (chosen && hasLocale(chosen)) return chosen;
+  const country = req.headers.get('x-vercel-ip-country')?.toUpperCase();
+  const ua = req.headers.get('user-agent') ?? '';
+  return country && GERMAN_COUNTRIES.has(country) && !BOT_UA.test(ua) ? 'de' : 'en';
+}
+
 export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
 
   // Pass the request through, forwarding the authoritative pathname so the /admin
   // server layout can read it (per-role page gate + "auth screens render bare").
   // Overwritten unconditionally, so a client can't spoof x-pathname.
-  const pass = () => {
+  const forwarded = () => {
     const headers = new Headers(req.headers);
     headers.set('x-pathname', pathname);
-    return NextResponse.next({ request: { headers } });
+    return headers;
   };
+  const pass = () => NextResponse.next({ request: { headers: forwarded() } });
 
   // Let the auth endpoints and the webhook through unconditionally.
   if (ALWAYS_OPEN.has(pathname) || PUBLIC_PATHS.has(pathname)) {
@@ -103,7 +135,33 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
     });
   }
 
-  return pass();
+  // ── Language (src/i18n/config.ts) ───────────────────────────────────────────
+  // Public pages live under app/(frontend)/[lang]. English is served unprefixed
+  // (`/pricing` is rewritten to `/en/pricing`, the address bar unchanged); German
+  // is `/de/...` and routes as-is.
+  if (!isLocalizable(stripLocale(pathname))) {
+    return pass();
+  }
+  const prefix = localeOf(pathname);
+  if (prefix === 'de') {
+    return pass();
+  }
+  if (prefix === 'en') {
+    // One canonical English URL: /en/pricing → /pricing.
+    const url = req.nextUrl.clone();
+    url.pathname = stripLocale(pathname);
+    return NextResponse.redirect(url, 308);
+  }
+  if (preferredLocale(req) === 'de') {
+    // Temporary (307): the answer depends on the visitor, not the URL. The query
+    // string rides along, so ?ref= attribution and UTMs survive the hop.
+    const url = req.nextUrl.clone();
+    url.pathname = localizePath('de', pathname);
+    return NextResponse.redirect(url, 307);
+  }
+  const url = req.nextUrl.clone();
+  url.pathname = pathname === '/' ? '/en' : `/en${pathname}`;
+  return NextResponse.rewrite(url, { request: { headers: forwarded() } });
 }
 
 export const config = {

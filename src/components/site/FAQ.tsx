@@ -1,5 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 
+import Link from '@/components/system/LocaleLink';
+
 /**
  * FAQ (Review v3 §8) — answers the top objections the site was silent on:
  * turnaround, whether we need your logins, who books, refunds, and what happens
@@ -63,9 +65,9 @@ export default function FAQ() {
 
         <p className="mt-8 text-sm text-ink-sub">
           Still unsure?{' '}
-          <a href="/contact" className="text-accent underline underline-offset-4 hover:text-ink">
+          <Link href="/contact" className="text-accent underline underline-offset-4 hover:text-ink">
             Ask us directly
-          </a>
+          </Link>
           .
         </p>
       </div>

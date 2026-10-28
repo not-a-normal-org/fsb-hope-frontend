@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import LeadCta from './LeadCta';
+import Link from '@/components/system/LocaleLink';
 import { entrance, inViewOnce } from '@/lib/animations';
 
 /**
