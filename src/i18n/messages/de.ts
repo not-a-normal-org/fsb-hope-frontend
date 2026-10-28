@@ -845,6 +845,30 @@ const de: Messages = {
       tagline: 'Prämiensuche von Hand · savermiles.com',
     },
   },
+
+  emails: {
+    welcome: {
+      subject: 'Willkommen bei Saver Miles ✈',
+      title: 'Willkommen bei Saver Miles',
+      greeting: 'Willkommen an Bord, {name}.',
+      greetingNoName: 'Willkommen an Bord.',
+      intro:
+        'Sie stehen auf der Liste. Saver Miles ist ein Concierge-Service für Punkte und Meilen: Ein echter Spezialist durchsucht die Prämienverfügbarkeit von Hand, damit Sie mit den Punkten, die Sie bereits haben, in Premium-Kabinen fliegen können. Kein Algorithmus, kein Rätselraten – ein Mensch, der das jeden Tag macht.',
+      listIntro: 'Das schicken wir Ihnen:',
+      items: [
+        'Praktische Tipps zum Sammeln und Einlösen von Punkten',
+        'Sweet Spots in Business und First, die die meisten Reisenden übersehen',
+        'Wie Transferpartner und Prämientabellen wirklich funktionieren',
+        'Ab und zu einen herausragenden Prämienplatz, für den sich der Flug lohnt',
+      ],
+      headStart:
+        'Sie möchten direkt loslegen? Lesen Sie unsere <link>Punkte-Ratgeber</link> oder sehen Sie sich an, wie eine Suche genau abläuft.',
+      cta: 'So funktioniert’s →',
+      languageNote: 'Der Newsletter selbst erscheint auf Englisch.',
+      footer:
+        'Sie erhalten diese E-Mail, weil Sie sich auf savermiles.com angemeldet haben. Falls das ein Versehen war, können Sie diese E-Mail einfach ignorieren.',
+    },
+  },
 };
 
 export default de;

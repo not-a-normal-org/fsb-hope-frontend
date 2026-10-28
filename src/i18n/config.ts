@@ -44,8 +44,9 @@ export const DE_LIVE = process.env.NEXT_PUBLIC_I18N_DE_LIVE === 'on';
 /** Locales a visitor can currently be served or switch to. */
 export const LIVE_LOCALES: readonly Locale[] = DE_LIVE ? LOCALES : [DEFAULT_LOCALE];
 
-export function hasLocale(value: string): value is Locale {
-  return (LOCALES as readonly string[]).includes(value);
+/** Takes `unknown` so API routes can check a request body's field directly. */
+export function hasLocale(value: unknown): value is Locale {
+  return typeof value === 'string' && (LOCALES as readonly string[]).includes(value);
 }
 
 /**
