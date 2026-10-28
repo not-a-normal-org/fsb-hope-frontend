@@ -79,7 +79,7 @@ behind `NEXT_PUBLIC_I18N_DE_LIVE`; rules in `AGENTS.md` → "Languages".
 - [x] Marketing pages + components translated; prices formatted per language (`feat/i18n-pages-de`) — terms in `docs/i18n/glossary-de.md`
 - [x] German Terms / Privacy / Cookies + `sm-locale` in the cookie policy (`feat/i18n-legal-de`, #90) — machine translation, English governs; have counsel review both
 - [x] Forms, API error codes, German welcome email, Stripe Checkout locale (`feat/i18n-forms-email`) — lead language in `leads.details`, no DB column
-- [ ] Payload localization + migrations (no more dev push) (`feat/cms-localization`)
+- [~] Payload localization + migrations (no more dev push) (`feat/cms-localization`) — built and proven on a local copy; production run per `docs/cms-migrations.md` before merge
 - [ ] German blog posts + case studies (`feat/blog-de`)
 - [ ] Go live: `NEXT_PUBLIC_I18N_DE_LIVE=on` in Vercel
 - [ ] Open question for counsel: Impressum for German visitors vs. the no-founder-names rule

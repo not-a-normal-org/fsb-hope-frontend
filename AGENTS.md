@@ -134,6 +134,19 @@ The public site is English and German; staff surfaces stay English. Read
 - A new public route needs nothing in the proxy. A new **unlocalized** prefix
   (another staff area, a new API root) goes in `UNLOCALIZED_PREFIXES`.
 
+## CMS schema (Payload)
+
+- **No dev push.** `push: false` in `src/payload.config.ts`: dev uses the production
+  database, so a schema change is a migration in `src/migrations/`, generated against
+  a throwaway local Postgres and run on production on purpose. Process and the
+  production checklist: [`docs/cms-migrations.md`](docs/cms-migrations.md).
+- **Read every generated migration.** The generator only creates and drops; if it
+  drops a column whose data must survive, add the copy step.
+- **Content is localized** (en + de, German falls back to English). List pages read
+  with `locale`; a single post/case study uses `hasTranslation()`
+  (`src/lib/cms-locale.server.ts`) so an untranslated German URL shows the whole
+  English document, canonical to English.
+
 ## Product non-negotiables (from `docs/plans/00-context.md`)
 
 - **No founder names, no Upwork, no prior company name** anywhere public-facing.
