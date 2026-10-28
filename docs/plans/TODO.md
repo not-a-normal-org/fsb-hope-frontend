@@ -75,8 +75,8 @@ _Last updated: 2026-08-31._
 German at `/de`, auto-shown to visitors in DE/AT/CH, with a switcher. Ships dark
 behind `NEXT_PUBLIC_I18N_DE_LIVE`; rules in `AGENTS.md` → "Languages".
 
-- [~] Routing, `[lang]` layouts, proxy detection, switcher, hreflang/sitemap, nav/footer/consent copy (`feat/i18n-routing`)
-- [ ] Marketing pages + components translated; prices formatted per language (`feat/i18n-pages-de`)
+- [x] Routing, `[lang]` layouts, proxy detection, switcher, hreflang/sitemap, nav/footer/consent copy (`feat/i18n-routing`, #89)
+- [x] Marketing pages + components translated; prices formatted per language (`feat/i18n-pages-de`) — terms in `docs/i18n/glossary-de.md`
 - [ ] German Terms / Privacy / Cookies + `sm-locale` in the cookie policy (`feat/i18n-legal-de`)
 - [ ] Forms, API error codes, German welcome email, Stripe Checkout locale (`feat/i18n-forms-email`)
 - [ ] Payload localization + migrations (no more dev push) (`feat/cms-localization`)
