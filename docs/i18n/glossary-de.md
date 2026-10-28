@@ -41,7 +41,7 @@ for adding copy are in `AGENTS.md` → "Languages".
 | retail / cash fare | Barpreis |
 | taxes (on an award ticket) | Gebühren (short form on cards) |
 | deposit | Anzahlung |
-| success fee | Erfolgshonorar ("das Honorar") |
+| success fee | Erfolgshonorar ("das Honorar"); legal pages: Erfolgsgebühr |
 | per person, per direction | pro Person und Richtung |
 | cabin | Reiseklasse |
 | bookable | buchbar |
