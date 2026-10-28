@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Sun, Moon, Contrast } from 'lucide-react';
 
+import { fmt } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
 import { applyThemeMode, nextThemeMode, readThemeMode, type ThemeMode } from '@/lib/theme';
 
 /**
@@ -13,9 +15,9 @@ import { applyThemeMode, nextThemeMode, readThemeMode, type ThemeMode } from '@/
  * stored `mono` preference from before it was held.
  */
 const ICON: Record<ThemeMode, typeof Sun> = { light: Sun, dark: Moon, mono: Contrast };
-const LABEL: Record<ThemeMode, string> = { light: 'Light', dark: 'Dark', mono: 'Mono' };
 
 export default function ModeCycle({ className = '' }: { className?: string }) {
+  const { m } = useI18n();
   // SSR default matches the dark default; corrected post-hydration from the live
   // attribute ThemeScript already resolved pre-paint (no flash, no mismatch).
   const [mode, setMode] = useState<ThemeMode>('dark');
@@ -32,8 +34,8 @@ export default function ModeCycle({ className = '' }: { className?: string }) {
   return (
     <button
       type="button"
-      aria-label={`Theme: ${LABEL[mode]} — switch to ${LABEL[next]}`}
-      title={`Theme: ${LABEL[mode]}`}
+      aria-label={fmt(m.theme.cycle, { current: m.theme[mode], next: m.theme[next] })}
+      title={fmt(m.theme.current, { current: m.theme[mode] })}
       onClick={() => {
         setMode(next);
         applyThemeMode(next);

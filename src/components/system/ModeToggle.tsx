@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useI18n } from '@/i18n/LocaleProvider';
 import { applyThemeMode, SELECTABLE_MODES, type ThemeMode } from '@/lib/theme';
 
 /**
@@ -13,12 +14,10 @@ import { applyThemeMode, SELECTABLE_MODES, type ThemeMode } from '@/lib/theme';
  * icon). Glass segmented pill: radiogroup semantics, fully keyboard-operable,
  * stamps the ~320ms crossfade via applyThemeMode.
  */
-const LABELS: Record<ThemeMode, string> = { light: 'Light', dark: 'Dark', mono: 'Mono' };
-const MODES = SELECTABLE_MODES.map((value) => ({ value, label: LABELS[value] }));
-
 type Mode = ThemeMode;
 
 export default function ModeToggle({ className = '' }: { className?: string }) {
+  const { m } = useI18n();
   // Default matches SSR (dark); corrected on mount from the live attribute the
   // pre-paint ThemeScript already resolved, so there is no flash and no mismatch.
   const [mode, setMode] = useState<Mode>('dark');
@@ -43,7 +42,7 @@ export default function ModeToggle({ className = '' }: { className?: string }) {
   return (
     <div
       role="radiogroup"
-      aria-label="Color mode"
+      aria-label={m.theme.colorMode}
       className={`inline-flex overflow-hidden rounded-full border p-0.5 ${className}`}
       style={{
         borderColor: 'var(--sm-glass-border)',
@@ -52,15 +51,15 @@ export default function ModeToggle({ className = '' }: { className?: string }) {
         WebkitBackdropFilter: 'blur(12px)',
       }}
     >
-      {MODES.map((m) => {
-        const active = m.value === mode;
+      {SELECTABLE_MODES.map((value) => {
+        const active = value === mode;
         return (
           <button
-            key={m.value}
+            key={value}
             type="button"
             role="radio"
             aria-checked={active}
-            onClick={() => select(m.value)}
+            onClick={() => select(value)}
             className="rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors"
             style={{
               color: 'var(--sm-ink)',
@@ -68,7 +67,7 @@ export default function ModeToggle({ className = '' }: { className?: string }) {
               background: active ? 'var(--sm-glass-border)' : 'transparent',
             }}
           >
-            {m.label}
+            {m.theme[value]}
           </button>
         );
       })}

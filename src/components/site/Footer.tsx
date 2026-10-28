@@ -1,9 +1,14 @@
-import Link from 'next/link';
+'use client';
 
 import Logo from './Logo';
 import NewsletterForm from './NewsletterForm';
-import ModeToggle from '@/components/system/ModeToggle';
 import CookiePreferencesButton from '@/components/system/CookiePreferencesButton';
+import LanguageSwitcher from '@/components/system/LanguageSwitcher';
+import Link from '@/components/system/LocaleLink';
+import ModeToggle from '@/components/system/ModeToggle';
+import { fmt } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { NavGroup } from '@/lib/nav';
 
 /**
  * Footer — docs/plans/02-site-structure.md. Sitemap links, legal, a compact
@@ -12,39 +17,44 @@ import CookiePreferencesButton from '@/components/system/CookiePreferencesButton
  * No founder names, no prior company, no region/legal-entity line (non-
  * negotiables in docs/plans/00-context.md). Blog byline elsewhere is always
  * "Saver Miles Team."
+ *
+ * A client component only so it can read the page's language from LocaleProvider
+ * (every page renders it, and a server footer would need the locale threaded
+ * through each one). It holds no state.
  */
-const COLUMNS = [
+const COLUMNS: NavGroup[] = [
   {
-    heading: 'Product',
+    heading: 'product',
     links: [
-      { label: 'Individual', href: '/individual' },
-      { label: 'Business', href: '/business' },
-      { label: 'Alerts', href: '/alerts' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'Calculator', href: '/calculator' },
+      { key: 'individual', href: '/individual' },
+      { key: 'business', href: '/business' },
+      { key: 'alerts', href: '/alerts' },
+      { key: 'pricing', href: '/pricing' },
+      { key: 'calculator', href: '/calculator' },
     ],
   },
   {
-    heading: 'Company',
+    heading: 'company',
     links: [
-      { label: 'How It Works', href: '/how-it-works' },
-      { label: 'About', href: '/about' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Results', href: '/results' },
-      { label: 'Contact', href: '/contact' },
+      { key: 'howItWorks', href: '/how-it-works' },
+      { key: 'about', href: '/about' },
+      { key: 'blog', href: '/blog' },
+      { key: 'results', href: '/results' },
+      { key: 'contact', href: '/contact' },
     ],
   },
   {
-    heading: 'Legal',
+    heading: 'legal',
     links: [
-      { label: 'Privacy', href: '/legal/privacy' },
-      { label: 'Terms', href: '/legal/terms' },
-      { label: 'Cookies', href: '/legal/cookies' },
+      { key: 'privacy', href: '/legal/privacy' },
+      { key: 'terms', href: '/legal/terms' },
+      { key: 'cookies', href: '/legal/cookies' },
     ],
   },
 ];
 
 export default function Footer() {
+  const { m } = useI18n();
   return (
     <footer style={{ borderTop: '1px solid var(--sm-glass-border)' }}>
       <div className="mx-auto max-w-6xl px-6 py-14">
@@ -52,27 +62,27 @@ export default function Footer() {
           <div className="max-w-xs">
             <Logo className="text-xl" />
             <p className="mt-5 text-sm leading-relaxed text-ink-sub">
-              Award travel is broken. We assign you a specialist who fixes it,
-              working 30+ loyalty programs to get you a seat worth flying.
+              {m.footer.blurb}
             </p>
             <div className="mt-6">
               <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-                Points intel, occasionally
+                {m.footer.newsletterHeading}
               </p>
               <div className="mt-3">
-                <NewsletterForm source="footer" buttonLabel="Join" compact />
+                <NewsletterForm source="footer" buttonLabel={m.footer.newsletterButton} compact />
               </div>
             </div>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap items-center gap-3">
               <ModeToggle />
+              <LanguageSwitcher />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
             {COLUMNS.map((col) => (
-              <nav key={col.heading} aria-label={col.heading}>
+              <nav key={col.heading} aria-label={m.navGroups[col.heading]}>
                 <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-                  {col.heading}
+                  {m.navGroups[col.heading]}
                 </p>
                 <ul className="mt-4 space-y-2.5">
                   {col.links.map((link) => (
@@ -81,7 +91,7 @@ export default function Footer() {
                         href={link.href}
                         className="text-sm text-ink-sub transition-colors hover:text-ink"
                       >
-                        {link.label}
+                        {m.links[link.key]}
                       </Link>
                     </li>
                   ))}
@@ -93,7 +103,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-            © {new Date().getFullYear()} Saver Miles
+            {fmt(m.footer.copyright, { year: new Date().getFullYear() })}
           </p>
           <CookiePreferencesButton />
         </div>
