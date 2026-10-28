@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import LeadCta from './LeadCta';
 import Link from '@/components/system/LocaleLink';
 import { entrance, inViewOnce } from '@/lib/animations';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Pricing band — replaces the duplicate mid-page newsletter (the footer keeps
@@ -13,7 +15,8 @@ import { entrance, inViewOnce } from '@/lib/animations';
  * per direction, all cabins, charged only on a confirmed booking — with the
  * refundable $25 deposit stated plainly (never buried), per the copy rule.
  */
-export default function PricingBand() {
+export default function PricingBand({ m }: { m: Messages['home']['pricingBand'] }) {
+  const { common } = useI18n().m;
   return (
     <section className="relative border-y bg-surface-accent" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <motion.div
@@ -22,28 +25,27 @@ export default function PricingBand() {
         className="mx-auto max-w-4xl px-6 py-20 text-center md:py-24"
       >
         <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
-          Straightforward pricing
+          {m.eyebrow}
         </p>
         <h2
           className="mt-4 font-display font-bold text-ink"
           style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)', lineHeight: 1.1, letterSpacing: '-0.01em' }}
         >
-          $99 per person, per direction. All cabins.{' '}
-          <span className="text-accent">Only if you fly.</span>
+          {m.title}{' '}
+          <span className="text-accent">{m.titleAccent}</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-sub">
-          A $25 deposit starts your search — refunded in full if we find nothing bookable. The $99
-          success fee is charged only once your seat is confirmed.
+          {m.body}
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
           <LeadCta className="sm-cta rounded-full px-6 py-3 text-[14.5px] font-medium transition-colors">
-            Start your flight request
+            {common.startFlightRequest}
           </LeadCta>
           <Link
             href="/pricing"
             className="sm-cta-ghost rounded-full px-6 py-3 text-[14.5px] font-medium"
           >
-            See full pricing
+            {common.seeFullPricing}
           </Link>
         </div>
       </motion.div>

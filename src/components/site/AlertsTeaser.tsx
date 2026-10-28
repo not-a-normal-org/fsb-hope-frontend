@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 
 import Link from '@/components/system/LocaleLink';
 import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
+import { rich } from '@/i18n/rich';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Home alerts teaser (docs/plans/02). The two tiers are NOT visual equals: the
@@ -14,7 +16,13 @@ import { entrance, staggerParent, inViewOnce } from '@/lib/animations';
  * the seat" — not an invented precision stat (Review v3 §6). On a raised surface;
  * the page's one glow is the hero.
  */
-export default function AlertsTeaser() {
+export default function AlertsTeaser({
+  m,
+  products,
+}: {
+  m: Messages['home']['alertsTeaser'];
+  products: Messages['products'];
+}) {
   return (
     <section
       className="relative border-t"
@@ -22,9 +30,9 @@ export default function AlertsTeaser() {
     >
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
-          <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">Alerts</p>
+          <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">{m.eyebrow}</p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            Not ready to book yet? We’ll keep watch on your routes for you.
+            {m.title}
           </h2>
         </motion.div>
 
@@ -40,15 +48,14 @@ export default function AlertsTeaser() {
               style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
             >
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-display text-card font-bold text-ink">Weekly Lookup Alert</h3>
-                <span className="shrink-0 font-mono text-sm text-ink-sub">$4.99/mo</span>
+                <h3 className="font-display text-card font-bold text-ink">{products.weekly.name}</h3>
+                <span className="shrink-0 font-mono text-sm text-ink-sub">{m.weeklyPrice}</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                An automated weekly scan of your routes — broad and low cost.
+                {m.weeklyBody}
               </p>
               <p className="mt-3 text-xs leading-relaxed text-ink-muted">
-                Automated scan: some listed space may be phantom and not hold at booking.
-                It can’t confirm a seat or hand you a booking-ready result.
+                {m.weeklyNote}
               </p>
             </div>
           </motion.div>
@@ -71,16 +78,16 @@ export default function AlertsTeaser() {
                   border: '1px solid color-mix(in srgb, var(--sm-proof) 45%, transparent)',
                 }}
               >
-                Most accurate
+                {m.badge}
               </span>
               <div className="mt-1 flex items-baseline justify-between gap-4">
-                <h3 className="font-display text-card font-bold text-ink">Human Search Alert</h3>
-                <span className="shrink-0 font-mono text-sm text-ink">$99.99/mo</span>
+                <h3 className="font-display text-card font-bold text-ink">{products.human.name}</h3>
+                <span className="shrink-0 font-mono text-sm text-ink">{m.humanPrice}</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-sub">
-                A specialist checks your routes every cycle — the opposite of an automated
-                feed. <span className="font-medium text-ink">They open the booking and
-                confirm the seat before you hear from us.</span>
+                {rich(m.humanBody, {
+                  strong: (c) => <span className="font-medium text-ink">{c}</span>,
+                })}
               </p>
             </div>
           </motion.div>
@@ -88,7 +95,7 @@ export default function AlertsTeaser() {
 
         <motion.div variants={entrance} {...inViewOnce} className="mt-8">
           <Link href="/alerts" className="text-sm text-ink-sub underline underline-offset-4 transition-colors hover:text-ink">
-            Compare the alert plans →
+            {m.compare}
           </Link>
         </motion.div>
       </div>

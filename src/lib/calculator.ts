@@ -7,23 +7,36 @@
  * with Saver Miles' real search history before the calculator goes to public
  * traffic — a wrong estimate undermines the "real numbers, not guesses" promise.
  * The non-collapsible disclaimer must always render with the output.
+ *
+ * Labels, the flight-equivalent wording, and the disclaimer live in the message
+ * dictionaries (`calculator.widget`); this file keeps only the numbers.
  */
+import { formatPrice } from '@/i18n/format';
+import type { Locale } from '@/i18n/config';
 
 export type ProgramKey = 'flexible' | 'airline' | 'mixed';
 
-export const PROGRAMS: { key: ProgramKey; label: string; low: number; high: number }[] = [
-  { key: 'flexible', label: 'Flexible / transferable (Amex, Chase, Citi, Cap One)', low: 1.3, high: 2.2 },
-  { key: 'airline', label: 'A US airline program directly', low: 1.0, high: 1.8 },
-  { key: 'mixed', label: 'Not sure / mixed', low: 1.2, high: 2.0 },
+/** Cents-per-point ranges by program category. */
+export const PROGRAMS: { key: ProgramKey; low: number; high: number }[] = [
+  { key: 'flexible', low: 1.3, high: 2.2 },
+  { key: 'airline', low: 1.0, high: 1.8 },
+  { key: 'mixed', low: 1.2, high: 2.0 },
 ];
 
+export type FlightTier =
+  | 'domesticEconomy'
+  | 'domesticBusiness'
+  | 'intlBusinessOneWay'
+  | 'intlBusinessRoundTrip'
+  | 'intlFirstOneWay';
+
 /** Rough, industry-typical thresholds. Placeholder — see file header. */
-const FLIGHT_TIERS: { min: number; label: string }[] = [
-  { min: 15000, label: 'a round-trip domestic economy ticket' },
-  { min: 50000, label: 'a round-trip domestic business seat, or a one-way international economy ticket' },
-  { min: 80000, label: 'a one-way international business-class seat' },
-  { min: 150000, label: 'a round-trip international business-class trip' },
-  { min: 250000, label: 'a one-way international first-class seat' },
+const FLIGHT_TIERS: { min: number; tier: FlightTier }[] = [
+  { min: 15000, tier: 'domesticEconomy' },
+  { min: 50000, tier: 'domesticBusiness' },
+  { min: 80000, tier: 'intlBusinessOneWay' },
+  { min: 150000, tier: 'intlBusinessRoundTrip' },
+  { min: 250000, tier: 'intlFirstOneWay' },
 ];
 
 /** Parse a user-typed balance ("185,000", "185000") to a number, or 0. */
@@ -32,32 +45,22 @@ export function parsePoints(input: string): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-const usd = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  maximumFractionDigits: 0,
-});
-
 /** Dollar-value range for a balance in a program category, as a "$low – $high" string. */
-export function valueRange(points: number, program: ProgramKey): string {
+export function valueRange(points: number, program: ProgramKey, locale: Locale): string {
   const p = PROGRAMS.find((x) => x.key === program) ?? PROGRAMS[2];
   const low = Math.round((points * p.low) / 100);
   const high = Math.round((points * p.high) / 100);
-  return `${usd.format(low)} – ${usd.format(high)}`;
+  return `${formatPrice(locale, low)} – ${formatPrice(locale, high)}`;
 }
 
 /**
  * Up to two illustrative flight equivalents: the highest tier the balance clears,
  * plus the one below it. Empty if the balance clears nothing.
  */
-export function flightEquivalents(points: number): string[] {
+export function flightEquivalents(points: number): FlightTier[] {
   const cleared = FLIGHT_TIERS.filter((t) => points >= t.min);
   if (cleared.length === 0) return [];
   const top = cleared[cleared.length - 1];
   const below = cleared.length >= 2 ? cleared[cleared.length - 2] : null;
-  return below ? [top.label, below.label] : [top.label];
+  return below ? [top.tier, below.tier] : [top.tier];
 }
-
-/** The exact, non-collapsible disclaimer required by the spec. */
-export const CALCULATOR_DISCLAIMER =
-  'These are estimates based on typical redemption values, not a live search. Actual value depends on real award availability on your dates. Run a free search to see what’s actually bookable.';

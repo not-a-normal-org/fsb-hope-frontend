@@ -4,8 +4,11 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
-import { DEALS, dealHref, formatPoints, type Deal } from '@/lib/deals';
+import { DEALS, dealHref, type Deal } from '@/lib/deals';
 import { entrance, inViewOnce, staggerParent } from '@/lib/animations';
+import { fmt, formatNumber, formatPrice } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Deals grid (Review v3 §9) — the first section that gives a visitor something to
@@ -19,15 +22,12 @@ import { entrance, inViewOnce, staggerParent } from '@/lib/animations';
  * of the page argues against. Each tile hands its route to the lead form.
  */
 
-const CABIN_LABEL: Record<Deal['cabin'], string> = {
-  Economy: 'Economy',
-  Premium: 'Premium',
-  Business: 'Business',
-  First: 'First',
-};
-
-function Tile({ deal }: { deal: Deal }) {
+function Tile({ deal, m }: { deal: Deal; m: Messages['home']['deals'] }) {
+  const { locale, m: shared } = useI18n();
   const featured = !!deal.featured;
+  const city = m.cities[deal.city];
+  const cabin = shared.common.cabins[deal.cabin];
+  const points = formatNumber(locale, deal.points);
   return (
     <motion.div
       variants={entrance}
@@ -37,7 +37,7 @@ function Tile({ deal }: { deal: Deal }) {
     >
       <Link
         href={dealHref(deal)}
-        aria-label={`${deal.city}: ${deal.from} to ${deal.to}, ${CABIN_LABEL[deal.cabin]}, from ${formatPoints(deal.points)} points — start a flight request`}
+        aria-label={fmt(m.tileLabel, { city, from: deal.from, to: deal.to, cabin, points })}
         className="group relative flex h-full flex-col overflow-hidden rounded-2xl p-5"
         style={{
           background:
@@ -57,7 +57,7 @@ function Tile({ deal }: { deal: Deal }) {
             className="shrink-0 rounded-full px-2 py-0.5 font-mono text-[0.55rem] font-semibold uppercase tracking-[0.1em] text-ink-sub"
             style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
           >
-            {CABIN_LABEL[deal.cabin]}
+            {cabin}
           </span>
         </div>
 
@@ -65,19 +65,20 @@ function Tile({ deal }: { deal: Deal }) {
         <div className={featured ? 'mt-4 flex flex-1 flex-wrap items-end justify-between gap-x-8 gap-y-4' : 'mt-4 flex flex-1 flex-col'}>
           <div>
             <h3 className={`font-display font-bold leading-none text-ink ${featured ? 'text-4xl' : 'text-2xl'}`}>
-              {deal.city}
+              {city}
             </h3>
             <p className="mt-2 text-xs text-ink-muted">
-              retail <span className="text-ink-sub line-through">{deal.retail}</span> · typical{' '}
-              {CABIN_LABEL[deal.cabin].toLowerCase()} rate
+              {m.retail}{' '}
+              <span className="text-ink-sub line-through">{formatPrice(locale, deal.retailUsd)}</span> ·{' '}
+              {m.typicalRate[deal.cabin]}
             </p>
           </div>
 
           <div className={featured ? 'text-right' : 'mt-4'}>
             <p className="font-mono font-semibold text-ink">
-              <span className="text-xs font-normal text-ink-muted">from </span>
-              <span className={featured ? 'text-3xl' : 'text-2xl'}>{formatPoints(deal.points)}</span>
-              <span className="text-sm"> pts</span>
+              <span className="text-xs font-normal text-ink-muted">{m.from} </span>
+              <span className={featured ? 'text-3xl' : 'text-2xl'}>{points}</span>
+              <span className="text-sm"> {m.pts}</span>
             </p>
             {/* Transfer partner — clean at rest, revealed on hover / keyboard focus. */}
             <p
@@ -93,21 +94,19 @@ function Tile({ deal }: { deal: Deal }) {
   );
 }
 
-export default function DealsGrid() {
+export default function DealsGrid({ m }: { m: Messages['home']['deals'] }) {
   return (
     <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
         <motion.div variants={entrance} {...inViewOnce} className="max-w-2xl">
           <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
-            Where your points go
+            {m.eyebrow}
           </p>
           <h2 className="mt-3 font-display text-section font-bold text-ink">
-            What your points are actually worth.
+            {m.title}
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-ink-sub">
-            Typical business- and first-class award prices a specialist finds on these routes —
-            with the cash fare you’d otherwise pay. Your dates and balance decide the real number;
-            a search is where we find it.
+            {m.body}
           </p>
         </motion.div>
 
@@ -117,13 +116,12 @@ export default function DealsGrid() {
           className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {DEALS.map((deal) => (
-            <Tile key={`${deal.from}-${deal.to}`} deal={deal} />
+            <Tile key={`${deal.from}-${deal.to}`} deal={deal} m={m} />
           ))}
         </motion.div>
 
         <p className="mt-6 text-xs text-ink-muted">
-          Illustrative typical award prices, not a live availability feed. A real person confirms
-          the seat before you book.
+          {m.footnote}
         </p>
       </div>
     </section>

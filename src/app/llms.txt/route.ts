@@ -1,4 +1,7 @@
+import { DE_LIVE } from '@/i18n/config';
+import { formatPrice } from '@/i18n/format';
 import { getPayloadClient } from '@/lib/payload';
+import { PRICES_USD } from '@/lib/products';
 import { absoluteUrl } from '@/lib/seo';
 import { SITE_NAME } from '@/lib/constants';
 
@@ -15,7 +18,7 @@ type PostRow = { title?: string; slug?: string; excerpt?: string; category?: { n
 
 const KEY_PAGES: [string, string, string][] = [
   ['/how-it-works', 'How it works', 'How a manual, by-hand award search works, step by step.'],
-  ['/pricing', 'Pricing', 'Individual search: a $25 deposit plus a $99 success fee; the deposit is refunded in full if nothing bookable is found. Business pricing is custom.'],
+  ['/pricing', 'Pricing', `Individual search: a ${formatPrice('en', PRICES_USD.deposit)} deposit plus a ${formatPrice('en', PRICES_USD.successFee)} success fee; the deposit is refunded in full if nothing bookable is found. Business pricing is custom.`],
   ['/individual', 'For individuals', 'What your points can actually book, searched by a specialist.'],
   ['/business', 'For business', 'Account-level award search for teams that fly often.'],
   ['/alerts', 'Alerts', 'An automated weekly route scan, or a specialist checking your routes each cycle.'],
@@ -58,7 +61,10 @@ export async function GET() {
   for (const [path, name, desc] of KEY_PAGES) {
     lines.push(`- [${name}](${absoluteUrl(path)}): ${desc}`);
   }
-  lines.push('', `## About`, '', 'Blog index: ' + absoluteUrl('/blog'), 'RSS feed: ' + absoluteUrl('/blog/feed.xml'), '');
+  lines.push('', `## About`, '', 'Blog index: ' + absoluteUrl('/blog'), 'RSS feed: ' + absoluteUrl('/blog/feed.xml'));
+  // The site's German edition mirrors these paths under /de.
+  if (DE_LIVE) lines.push('German edition: ' + absoluteUrl('/de'));
+  lines.push('');
 
   return new Response(lines.join('\n'), {
     headers: {

@@ -84,15 +84,6 @@ export function extractFaq(content: unknown): { question: string; answer: string
   return faqs;
 }
 
-export function formatDate(value?: string | null): string | null {
-  if (!value) return null;
-  return new Date(value).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 /** What the client grid renders — kept small so we don't ship full content. */
 export type BlogCard = {
   id: string;

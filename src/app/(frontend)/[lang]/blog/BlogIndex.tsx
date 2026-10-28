@@ -8,7 +8,12 @@ import { Search, Clock, ArrowUpRight } from 'lucide-react';
 import Link from '@/components/system/LocaleLink';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import { entrance } from '@/lib/animations';
-import { formatDate, type BlogCard } from '@/lib/blog';
+import type { BlogCard } from '@/lib/blog';
+import { fmt, formatDate, plural } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
+
+type IndexMessages = Messages['blog']['index'];
 
 /**
  * Client blog grid — modern searchable card layout over the glass system.
@@ -18,12 +23,15 @@ import { formatDate, type BlogCard } from '@/lib/blog';
  */
 export default function BlogIndex({
   posts,
+  m,
   hideFilters = false,
 }: {
   posts: BlogCard[];
+  m: IndexMessages;
   /** Hide the category pills — used on category pages, where the set is fixed. */
   hideFilters?: boolean;
 }) {
+  const { locale } = useI18n();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<string | null>(null);
 
@@ -64,27 +72,28 @@ export default function BlogIndex({
             className="flex flex-col gap-4 border-b pb-6 md:flex-row md:items-center md:justify-between"
             style={{ borderColor: 'var(--sm-glass-border)' }}
           >
-            <SearchBar value={query} onChange={setQuery} />
+            <SearchBar value={query} onChange={setQuery} m={m} />
             {!hideFilters && categories.length > 0 && (
-              <CategoryPills categories={categories} active={category} onSelect={setCategory} />
+              <CategoryPills categories={categories} active={category} onSelect={setCategory} all={m.all} />
             )}
           </div>
         )}
 
         {posts.length === 0 ? (
-          <Empty message="We’re just getting started. The first posts are on the way, so check back soon." />
+          <Empty message={m.empty} />
         ) : filtered.length === 0 ? (
           <Empty
-            message={query.trim() ? `No posts match “${query.trim()}”.` : 'No posts in this category yet.'}
+            message={query.trim() ? fmt(m.noMatch, { query: query.trim() }) : m.noneInCategory}
             onClear={clear}
+            clearLabel={m.clear}
           />
         ) : (
           <>
-            {featured && <FeaturedCard post={featured} />}
+            {featured && <FeaturedCard post={featured} m={m} />}
 
             {isFiltering && (
               <p className="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-ink-muted">
-                {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+                {plural(locale, filtered.length, m.results)}
               </p>
             )}
 
@@ -97,7 +106,7 @@ export default function BlogIndex({
               }`}
             >
               {gridPosts.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard key={post.id} post={post} m={m} />
               ))}
             </motion.div>
           </>
@@ -107,7 +116,15 @@ export default function BlogIndex({
   );
 }
 
-function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function SearchBar({
+  value,
+  onChange,
+  m,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  m: IndexMessages;
+}) {
   return (
     <div className="relative w-full md:max-w-xs">
       <Search
@@ -118,8 +135,8 @@ function SearchBar({ value, onChange }: { value: string; onChange: (v: string) =
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search posts…"
-        aria-label="Search posts"
+        placeholder={m.searchPlaceholder}
+        aria-label={m.searchLabel}
         className="w-full rounded-full py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition placeholder:text-ink-muted focus:ring-2 focus:ring-accent"
         style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
       />
@@ -131,12 +148,14 @@ function CategoryPills({
   categories,
   active,
   onSelect,
+  all,
 }: {
   categories: { slug: string; name: string }[];
   active: string | null;
   onSelect: (slug: string | null) => void;
+  all: string;
 }) {
-  const pills: { slug: string | null; name: string }[] = [{ slug: null, name: 'All' }, ...categories];
+  const pills: { slug: string | null; name: string }[] = [{ slug: null, name: all }, ...categories];
   return (
     <div className="flex flex-wrap gap-2">
       {pills.map((pill) => {
@@ -179,21 +198,22 @@ function CoverPlaceholder({ label }: { label?: string }) {
   );
 }
 
-function Meta({ post, longform = false }: { post: BlogCard; longform?: boolean }) {
-  const date = formatDate(post.publishedAt);
+function Meta({ post, m, longform = false }: { post: BlogCard; m: IndexMessages; longform?: boolean }) {
+  const { locale } = useI18n();
+  const date = post.publishedAt ? formatDate(locale, post.publishedAt) : null;
   return (
     <div className="flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.1em] text-ink-muted">
       {date && <span>{date}</span>}
       {date && <span aria-hidden>·</span>}
       <span className="inline-flex items-center gap-1">
         <Clock className="h-3 w-3" aria-hidden />
-        {post.readingMinutes} min{longform ? ' read' : ''}
+        {fmt(longform ? m.minutesRead : m.minutes, { n: post.readingMinutes })}
       </span>
     </div>
   );
 }
 
-function FeaturedCard({ post }: { post: BlogCard }) {
+function FeaturedCard({ post, m }: { post: BlogCard; m: IndexMessages }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group mt-8 block focus:outline-none">
       <article
@@ -222,7 +242,7 @@ function FeaturedCard({ post }: { post: BlogCard }) {
             <span
               className="rounded-full px-2.5 py-1 sm-cta"
             >
-              Latest
+              {m.latest}
             </span>
             {post.category && <span className="text-accent">{post.category.name}</span>}
           </div>
@@ -232,9 +252,9 @@ function FeaturedCard({ post }: { post: BlogCard }) {
           {post.excerpt && (
             <p className="line-clamp-3 text-[15px] leading-relaxed text-ink-sub">{post.excerpt}</p>
           )}
-          <Meta post={post} longform />
+          <Meta post={post} m={m} longform />
           <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-accent">
-            Read the post
+            {m.readPost}
             <ArrowUpRight
               className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               aria-hidden
@@ -246,7 +266,7 @@ function FeaturedCard({ post }: { post: BlogCard }) {
   );
 }
 
-function PostCard({ post }: { post: BlogCard }) {
+function PostCard({ post, m }: { post: BlogCard; m: IndexMessages }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block h-full focus:outline-none">
       <article
@@ -290,7 +310,7 @@ function PostCard({ post }: { post: BlogCard }) {
             <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-sub">{post.excerpt}</p>
           )}
           <div className="mt-auto pt-4">
-            <Meta post={post} />
+            <Meta post={post} m={m} />
           </div>
         </div>
       </article>
@@ -298,7 +318,15 @@ function PostCard({ post }: { post: BlogCard }) {
   );
 }
 
-function Empty({ message, onClear }: { message: string; onClear?: () => void }) {
+function Empty({
+  message,
+  onClear,
+  clearLabel,
+}: {
+  message: string;
+  onClear?: () => void;
+  clearLabel?: string;
+}) {
   return (
     <div
       className="mt-10 flex flex-col items-center gap-4 rounded-2xl px-6 py-16 text-center"
@@ -311,7 +339,7 @@ function Empty({ message, onClear }: { message: string; onClear?: () => void }) 
           onClick={onClear}
           className="text-sm font-medium text-accent underline-offset-4 hover:underline"
         >
-          Clear filters
+          {clearLabel}
         </button>
       )}
     </div>

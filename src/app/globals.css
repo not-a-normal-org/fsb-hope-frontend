@@ -249,6 +249,13 @@ html {
     cursor: pointer;
   }
 
+  /* German compounds are long. Let headings break inside a word (with a
+     hyphen, from the html lang) instead of overflowing a narrow column. */
+  :lang(de) :is(h1, h2, h3, h4) {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
   /* Respect prefers-reduced-motion everywhere — not optional (spec §5).
      Framer Motion handles its own via MotionConfig reducedMotion="user"; this
      covers CSS-driven motion (shine sweep, theme crossfade, entrances). */

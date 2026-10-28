@@ -6,8 +6,8 @@ import PageHero from '@/components/site/PageHero';
 import ReceiptCard from '@/components/site/ReceiptCard';
 import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
-import { SEARCH_PRODUCTS, ALERT_PRODUCTS } from '@/lib/products';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { SEARCH_PRODUCT_IDS, ALERT_PRODUCT_IDS, withCopy } from '@/lib/products';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -23,7 +23,7 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'Pricing',
+    title: getMessages(locale).pricing.title,
     ...localeMeta(locale, '/pricing'),
   };
 }
@@ -38,28 +38,21 @@ function GroupHeading({ label, title, sub }: { label: string; title: string; sub
   );
 }
 
-export default function PricingPage() {
+export default async function PricingPage({ params }: { params: LangParams }) {
+  const all = getMessages(await resolveLocale(params));
+  const m = all.pricing;
   return (
     <>
       <NavBar />
 
-      <PageHero
-        eyebrow="Pricing"
-        title="Put a specialist on your points."
-        intro="Two ways to search, once or ongoing, plus alerts that keep watch on your routes. Prices are flat and stated up front (business is quoted per account), and the one automated product says so plainly, right on its card."
-        aside={<ReceiptCard />}
-      />
+      <PageHero {...m.hero} aside={<ReceiptCard m={all.receipt} />} />
 
       <section className="relative">
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-16">
-          <GroupHeading
-            label="One-off searches"
-            title="Pay per search. A specialist does the work."
-            sub="No subscription. Tell us what you need, a specialist works 30+ programs, then sends you the proof."
-          />
+          <GroupHeading {...m.search} />
           <StaggerGroup className="grid gap-6 md:grid-cols-2">
-            {SEARCH_PRODUCTS.map((p) => (
-              <PriceCard key={p.id} product={p} />
+            {SEARCH_PRODUCT_IDS.map((id) => (
+              <PriceCard key={id} product={withCopy(id, all.products)} />
             ))}
           </StaggerGroup>
         </div>
@@ -67,14 +60,10 @@ export default function PricingPage() {
 
       <section className="relative" style={{ borderTop: '1px solid var(--sm-glass-border)' }}>
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-16">
-          <GroupHeading
-            label="Ongoing alerts"
-            title="Two ways to keep watch on your routes: one automated, one specialist."
-            sub="The difference is the whole point, so it's on the cards: a low-cost automated scan that can surface phantom space, or a specialist checking your routes for real."
-          />
+          <GroupHeading {...m.alerts} />
           <StaggerGroup className="grid gap-6 md:grid-cols-2">
-            {ALERT_PRODUCTS.map((p) => (
-              <PriceCard key={p.id} product={p} />
+            {ALERT_PRODUCT_IDS.map((id) => (
+              <PriceCard key={id} product={withCopy(id, all.products)} />
             ))}
           </StaggerGroup>
         </div>
@@ -82,11 +71,8 @@ export default function PricingPage() {
 
       <section className="relative" style={{ borderTop: '1px solid var(--sm-glass-border)' }}>
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
-          <p className="text-sm leading-relaxed text-ink-sub">
-            No countdown timers, no fake deadlines. If we can’t find something
-            bookable, we tell you straight, and on an individual search, your
-            deposit comes back.
-          </p>
+          <p className="text-sm leading-relaxed text-ink-sub">{m.closing}</p>
+          {m.currencyNote && <p className="mt-3 text-xs text-ink-muted">{m.currencyNote}</p>}
         </div>
       </section>
 

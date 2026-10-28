@@ -8,8 +8,8 @@ import Link from '@/components/system/LocaleLink';
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getCaseStudyBySlug } from '@/lib/case-studies.server';
-import { cabinLabel, formatPoints } from '@/lib/case-studies';
-import { resolveLocale } from '@/i18n/get-messages';
+import { fmt, formatNumber } from '@/i18n/format';
+import { getMessages, resolveLocale } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -25,23 +25,29 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const study = await getCaseStudyBySlug(slug);
   return {
-    title: study ? study.title : 'Case study',
+    title: study ? study.title : getMessages(locale).caseStudy.fallbackTitle,
     // Case-study bodies are English-only until the CMS stores German.
     ...localeMeta(locale, `/results/${slug}`, { de: false }),
   };
 }
 
 export default async function CaseStudyDetailPage({ params }: Params) {
-  const { slug } = await params;
+  const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const study = await getCaseStudyBySlug(slug);
   if (!study) notFound();
 
+  const { caseStudy: m, common } = getMessages(locale);
   const facts: { label: string; value: string }[] = [
-    { label: 'From', value: study.from },
-    { label: 'To', value: study.to },
-    { label: 'Cabin', value: cabinLabel(study.cabin) ?? '—' },
-    { label: 'Points used', value: formatPoints(study.pointsUsed) },
-    { label: 'Program', value: study.program ?? '—' },
+    { label: m.from, value: study.from },
+    { label: m.to, value: study.to },
+    { label: m.cabin, value: study.cabin ? common.cabins[study.cabin] : '—' },
+    {
+      label: m.pointsUsed,
+      value: study.pointsUsed
+        ? fmt(common.points, { points: formatNumber(locale, study.pointsUsed) })
+        : '—',
+    },
+    { label: m.program, value: study.program ?? '—' },
   ];
 
   return (
@@ -51,12 +57,12 @@ export default async function CaseStudyDetailPage({ params }: Params) {
       <article className="relative">
         <div className="mx-auto max-w-2xl px-6 pb-24 pt-16 md:pt-20">
           <Link href="/results" className="text-sm text-ink-sub transition-colors hover:text-ink">
-            ← All results
+            {m.allResults}
           </Link>
 
           <header className="mt-8">
             <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
-              Case study
+              {m.eyebrow}
             </p>
             <div className="mt-4 flex items-center gap-3 font-display text-hero font-bold text-ink">
               <span>{study.from}</span>
@@ -100,7 +106,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
             </div>
           ) : (
             <p className="mt-10 text-sm leading-relaxed text-ink-muted">
-              The full write-up for this redemption is on the way.
+              {m.bodyPending}
             </p>
           )}
         </div>

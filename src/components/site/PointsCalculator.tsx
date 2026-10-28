@@ -5,14 +5,10 @@ import { useState } from 'react';
 import Link from '@/components/system/LocaleLink';
 import GlassPanel from '@/components/system/GlassPanel';
 import LeadCta from './LeadCta';
-import {
-  PROGRAMS,
-  type ProgramKey,
-  parsePoints,
-  valueRange,
-  flightEquivalents,
-  CALCULATOR_DISCLAIMER,
-} from '@/lib/calculator';
+import { PROGRAMS, type ProgramKey, parsePoints, valueRange, flightEquivalents } from '@/lib/calculator';
+import { fmt } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Points-value calculator (docs/plans/05). Live-updating, no submit. A lead-gen
@@ -26,16 +22,23 @@ import {
  * Numbers are placeholder (see src/lib/calculator.ts) — the disclaimer is
  * mandatory and non-collapsible; do not ship without it.
  */
-export default function PointsCalculator({ variant = 'full' }: { variant?: 'compact' | 'full' }) {
+export default function PointsCalculator({
+  variant = 'full',
+  m,
+}: {
+  variant?: 'compact' | 'full';
+  m: Messages['calculator']['widget'];
+}) {
+  const { locale, m: shared } = useI18n();
   // Seed a live default so the result reads as a working example, not a broken
   // em dash. Matches the input placeholder; the user can clear/replace it.
-  const [raw, setRaw] = useState('185,000');
+  const [raw, setRaw] = useState(m.example);
   const [program, setProgram] = useState<ProgramKey>('flexible');
 
   const points = parsePoints(raw);
   const hasValue = points > 0;
-  const range = hasValue ? valueRange(points, program) : null;
-  const flights = hasValue ? flightEquivalents(points) : [];
+  const range = hasValue ? valueRange(points, program, locale) : null;
+  const flights = hasValue ? flightEquivalents(points).map((tier) => m.tiers[tier]) : [];
 
   const inputEl = (
     <div>
@@ -43,14 +46,14 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
         htmlFor="points-balance"
         className="mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted"
       >
-        Points balance
+        {m.balance}
       </label>
       <input
         id="points-balance"
         inputMode="numeric"
         value={raw}
         onChange={(e) => setRaw(e.target.value)}
-        placeholder="185,000"
+        placeholder={m.example}
         className="w-full rounded-lg px-4 py-3 font-mono text-lg text-ink transition-colors placeholder:text-ink-muted focus:outline-none"
         style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
       />
@@ -63,12 +66,12 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
         {inputEl}
         <div className="mt-5" aria-live="polite">
           <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-            Roughly worth
+            {m.roughly}
           </p>
           <p className="mt-1 font-display text-2xl font-bold text-ink">
             {range ?? <span className="text-ink-muted">—</span>}
           </p>
-          <p className="mt-1 text-xs text-ink-muted">in travel value · estimate only</p>
+          <p className="mt-1 text-xs text-ink-muted">{m.travelValue}</p>
           {flights.length > 0 && (
             // Tie the estimate to a concrete example (Review v3 §10.3): the two
             // best interactive elements finally point at each other. The example
@@ -78,7 +81,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
               href="/individual"
               className="mt-3 inline-block text-xs text-ink-sub transition-colors hover:text-ink"
             >
-              ≈ {flights[0]} — start that search →
+              {fmt(m.startThat, { flight: flights[0] })}
             </Link>
           )}
         </div>
@@ -86,7 +89,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
           href="/calculator"
           className="mt-5 inline-block text-sm text-accent transition-colors hover:text-ink"
         >
-          Open the full calculator →
+          {m.openFull}
         </Link>
       </GlassPanel>
     );
@@ -101,7 +104,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
             htmlFor="points-program"
             className="mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted"
           >
-            Program
+            {m.program}
           </label>
           <select
             id="points-program"
@@ -112,7 +115,7 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
           >
             {PROGRAMS.map((p) => (
               <option key={p.key} value={p.key} style={{ color: '#111' }}>
-                {p.label}
+                {m.programs[p.key]}
               </option>
             ))}
           </select>
@@ -121,16 +124,16 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
 
       <div className="mt-7 border-t pt-6" style={{ borderColor: 'var(--sm-glass-border)' }} aria-live="polite">
         <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-          Estimated travel value
+          {m.estimated}
         </p>
         <p className="mt-1 font-display text-3xl font-bold text-ink">
-          {range ?? <span className="text-ink-muted">Enter a balance</span>}
+          {range ?? <span className="text-ink-muted">{m.enterBalance}</span>}
         </p>
 
         {flights.length > 0 && (
           <div className="mt-6">
             <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-ink-muted">
-              That’s roughly enough for
+              {m.enoughFor}
             </p>
             <ul className="mt-3 space-y-2">
               {flights.map((f) => (
@@ -148,10 +151,10 @@ export default function PointsCalculator({ variant = 'full' }: { variant?: 'comp
         )}
       </div>
 
-      <p className="mt-6 text-xs leading-relaxed text-ink-muted">{CALCULATOR_DISCLAIMER}</p>
+      <p className="mt-6 text-xs leading-relaxed text-ink-muted">{m.disclaimer}</p>
 
       <LeadCta className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors sm-cta">
-        Start your flight request
+        {shared.common.startFlightRequest}
       </LeadCta>
     </GlassPanel>
   );

@@ -4,6 +4,8 @@ import { useState, type FormEvent } from 'react';
 import { Loader2, Check } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
+import { useI18n } from '@/i18n/LocaleProvider';
+import { rich } from '@/i18n/rich';
 
 /**
  * Email-capture form → POST /api/newsletter → `newsletter_subscribers`
@@ -21,7 +23,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function NewsletterForm({
   source,
-  buttonLabel = 'Subscribe',
+  buttonLabel,
   compact = false,
   onSuccess,
 }: {
@@ -36,18 +38,19 @@ export default function NewsletterForm({
   const [homeAirport, setHomeAirport] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const m = useI18n().m.newsletter;
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (status === 'submitting') return;
     if (!homeAirport.trim()) {
       setStatus('error');
-      setMessage('Please add your home airport.');
+      setMessage(m.errors.airport);
       return;
     }
     if (!EMAIL_RE.test(email.trim())) {
       setStatus('error');
-      setMessage('Please enter a valid email.');
+      setMessage(m.errors.email);
       return;
     }
     setStatus('submitting');
@@ -60,25 +63,25 @@ export default function NewsletterForm({
       });
       if (res.ok) {
         setStatus('success');
-        setMessage('You’re in — check your inbox.');
+        setMessage(m.success);
         onSuccess?.();
         return;
       }
       if (res.status === 409) {
         setStatus('success');
-        setMessage('You’re already on the list.');
+        setMessage(m.already);
         onSuccess?.();
         return;
       }
       const detail = (await res.json().catch(() => ({}))) as { error?: string };
       throw new Error(
         detail.error === 'Invalid email address'
-          ? 'Please enter a valid email.'
-          : detail.error || 'Something went wrong. Please try again.',
+          ? m.errors.email
+          : detail.error || m.errors.generic,
       );
     } catch (err) {
       setStatus('error');
-      setMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setMessage(err instanceof Error ? err.message : m.errors.generic);
     }
   }
 
@@ -104,8 +107,8 @@ export default function NewsletterForm({
           required
           value={homeAirport}
           onChange={(e) => setHomeAirport(e.target.value)}
-          placeholder="Home airport (e.g. JFK)"
-          aria-label="Home airport"
+          placeholder={m.airportPlaceholder}
+          aria-label={m.airportLabel}
           autoComplete="off"
           className={`${inputBase} ${inputPad} ${compact ? 'w-full' : 'w-full sm:w-44'}`}
           style={inputStyle}
@@ -115,8 +118,8 @@ export default function NewsletterForm({
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@email.com"
-          aria-label="Email address"
+          placeholder={m.emailPlaceholder}
+          aria-label={m.emailLabel}
           autoComplete="email"
           className={`${inputBase} ${inputPad} w-full ${compact ? '' : 'sm:flex-1'}`}
           style={inputStyle}
@@ -127,14 +130,20 @@ export default function NewsletterForm({
         disabled={status === 'submitting'}
         className={`sm-cta mt-2 inline-flex w-full items-center justify-center rounded-full ${btnPad} text-sm font-medium transition-colors disabled:cursor-not-allowed`}
       >
-        {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : buttonLabel}
+        {status === 'submitting' ? (
+          <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+        ) : (
+          (buttonLabel ?? m.subscribe)
+        )}
       </button>
       <p className={`mt-2 text-ink-muted ${compact ? 'text-[11px]' : 'text-xs'}`}>
-        By subscribing you agree to our{' '}
-        <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
-          Privacy Policy
-        </Link>
-        .
+        {rich(m.consent, {
+          link: (c) => (
+            <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+              {c}
+            </Link>
+          ),
+        })}
       </p>
       {status === 'error' && (
         <p className="mt-2 text-sm" style={{ color: 'var(--sm-error)' }} role="alert">

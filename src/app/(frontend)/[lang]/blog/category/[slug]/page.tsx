@@ -7,7 +7,9 @@ import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
 import { absoluteUrl, breadcrumbJsonLd, localeMeta } from '@/lib/seo';
-import { resolveLocale } from '@/i18n/get-messages';
+import { getMessages, resolveLocale } from '@/i18n/get-messages';
+import { fmt } from '@/i18n/format';
+import type { Locale } from '@/i18n/config';
 import { OG_LOCALES, localizePath } from '@/i18n/config';
 import { SITE_URL } from '@/lib/constants';
 import BlogIndex from '../../BlogIndex';
@@ -18,25 +20,22 @@ import BlogIndex from '../../BlogIndex';
  * "Guides" and "Deals" are the two surfaced in the nav. Dynamic so the build
  * doesn't need the database.
  *
- * The nav links here must never dead-end: a slug we have tailored COPY for
+ * The nav links here must never dead-end: a slug we have tailored copy for
  * (guides/deals) renders its hero + a graceful empty state even when the CMS has
- * no such category yet. Only a slug with neither a category doc nor COPY 404s.
+ * no such category yet. Only a slug with neither a category doc nor tailored copy 404s.
  */
 export const dynamic = 'force-dynamic';
 
-/** Tailored hero copy for the marquee categories; others fall back to the name. */
-const COPY: Record<string, { title: string; intro: string }> = {
-  guides: {
-    title: 'Guides',
-    intro:
-      'How award travel actually works — step-by-step playbooks from real, by-hand searches, not an algorithm’s guess.',
-  },
-  deals: {
-    title: 'Deals',
-    intro:
-      'Standout award space and fare finds our team turned up by hand. Time-sensitive by nature — move while they last.',
-  },
-};
+/** Tailored hero copy (`blog.category` in the dictionaries) for the marquee
+ *  categories; others fall back to the CMS name. */
+const TAILORED = ['guides', 'deals'] as const;
+
+function tailoredCopy(locale: Locale, slug: string): { title: string; intro: string } | undefined {
+  const m = getMessages(locale).blog.category;
+  return (TAILORED as readonly string[]).includes(slug)
+    ? m[slug as (typeof TAILORED)[number]]
+    : undefined;
+}
 
 type CategoryDoc = { id: string | number; name: string; slug: string };
 
@@ -80,9 +79,11 @@ type Params = { params: Promise<{ lang: string; slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const category = await getCategory(slug);
-  const title = COPY[slug]?.title ?? category?.name ?? 'Blog';
+  const { blog } = getMessages(locale);
+  const copy = tailoredCopy(locale, slug);
+  const title = copy?.title ?? category?.name ?? blog.title;
   const description =
-    COPY[slug]?.intro ?? (category ? `Everything we’ve filed under ${category.name}.` : undefined);
+    copy?.intro ?? (category ? fmt(blog.category.filedUnder, { name: category.name }) : undefined);
   const path = `/blog/category/${slug}`;
   return {
     title,
@@ -99,20 +100,24 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params }: Params) {
-  const { slug } = await params;
+  const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
   const category = await getCategory(slug);
-  const copy = COPY[slug];
+  const { blog } = getMessages(locale);
+  const copy = tailoredCopy(locale, slug);
 
   // Only a slug with neither a real category nor tailored copy is a true 404.
-  // Guides/Deals (COPY) always render, empty state and all, so the nav links live.
+  // Guides/Deals (tailored copy) always render, empty state and all, so the nav links live.
   if (!category && !copy) notFound();
 
   const posts = category ? await getPosts(category.id) : [];
 
   const crumbs = [
-    { name: 'Home', url: SITE_URL },
-    { name: 'Blog', url: absoluteUrl('/blog') },
-    { name: copy?.title ?? category?.name ?? slug, url: absoluteUrl(`/blog/category/${slug}`) },
+    { name: blog.home, url: locale === 'en' ? SITE_URL : absoluteUrl(localizePath(locale, '/')) },
+    { name: blog.title, url: absoluteUrl(localizePath(locale, '/blog')) },
+    {
+      name: copy?.title ?? category?.name ?? slug,
+      url: absoluteUrl(localizePath(locale, `/blog/category/${slug}`)),
+    },
   ];
 
   return (
@@ -124,14 +129,13 @@ export default async function CategoryPage({ params }: Params) {
       <NavBar />
       <PageHero
         compact
-        eyebrow="Blog"
+        eyebrow={blog.hero.eyebrow}
         title={copy?.title ?? category?.name ?? slug}
         intro={
-          copy?.intro ??
-          (category ? `Everything we’ve filed under ${category.name}.` : '')
+          copy?.intro ?? (category ? fmt(blog.category.filedUnder, { name: category.name }) : '')
         }
       />
-      <BlogIndex posts={posts} hideFilters />
+      <BlogIndex posts={posts} m={blog.index} hideFilters />
       <Footer />
     </>
   );

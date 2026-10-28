@@ -1,4 +1,5 @@
 import { LOCALE_TAGS, hasLocale, localizePath } from '@/i18n/config';
+import { getMessages } from '@/i18n/get-messages';
 import { getPayloadClient } from '@/lib/payload';
 import { absoluteUrl } from '@/lib/seo';
 import { SITE_NAME } from '@/lib/constants';
@@ -64,7 +65,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ lang: s
   <channel>
     <title>${esc(SITE_NAME)} — Blog</title>
     <link>${absoluteUrl(localizePath(lang, '/blog'))}</link>
-    <description>Guides to booking flights with points and miles, checked by a real specialist.</description>
+    <description>${esc(getMessages(lang).blog.feed.description)}</description>
     <language>${LOCALE_TAGS[lang].toLowerCase()}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${self}" rel="self" type="application/rss+xml" />

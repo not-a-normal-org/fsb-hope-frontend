@@ -5,7 +5,7 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import TeamBookingCard from '@/components/site/TeamBookingCard';
 import BusinessBody from './BusinessBody';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -18,22 +18,19 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'For Business',
+    title: getMessages(locale).business.title,
     ...localeMeta(locale, '/business'),
   };
 }
 
-export default function BusinessPage() {
+export default async function BusinessPage({ params }: { params: LangParams }) {
+  const all = getMessages(await resolveLocale(params));
+  const m = all.business;
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="For business"
-        title="Turn company travel spend into premium seats."
-        intro="For teams that fly often. A specialist runs account-level award searches across 30+ programs and delivers the proof, so your travel budget reaches further without adding to anyone’s workload."
-        aside={<TeamBookingCard />}
-      />
-      <BusinessBody />
+      <PageHero {...m.hero} aside={<TeamBookingCard m={all.teamBooking} />} />
+      <BusinessBody m={m} />
       <Footer />
     </>
   );

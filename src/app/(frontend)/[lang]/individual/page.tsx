@@ -6,7 +6,7 @@ import PageHero from '@/components/site/PageHero';
 import SearchReportCard from '@/components/site/SearchReportCard';
 import { REGIONS } from '@/lib/reports';
 import IndividualBody from './IndividualBody';
-import { resolveLocale, type LangParams } from '@/i18n/get-messages';
+import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
 import { localeMeta } from '@/lib/seo';
 
 /**
@@ -20,22 +20,18 @@ import { localeMeta } from '@/lib/seo';
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
   return {
-    title: 'For Individuals',
+    title: getMessages(locale).individual.title,
     ...localeMeta(locale, '/individual'),
   };
 }
 
-export default function IndividualPage() {
+export default async function IndividualPage({ params }: { params: LangParams }) {
+  const { individual: m } = getMessages(await resolveLocale(params));
   return (
     <>
       <NavBar />
-      <PageHero
-        eyebrow="For individuals"
-        title="200,000 points, and no idea what they’re worth."
-        intro="You earned them. We assign a specialist who gets the most out of them, finds the seat they can actually book, and hands you the exact point cost. You just tell us where you want to go."
-        aside={<SearchReportCard report={REGIONS[0].report} />}
-      />
-      <IndividualBody />
+      <PageHero {...m.hero} aside={<SearchReportCard report={REGIONS[0].report} />} />
+      <IndividualBody m={m} />
       <Footer />
     </>
   );

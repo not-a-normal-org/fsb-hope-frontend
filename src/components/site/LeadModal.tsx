@@ -7,15 +7,13 @@ import { X } from 'lucide-react';
 
 import { DURATION, EASE_OUT } from '@/lib/animations';
 import { useOverlayChrome } from '@/lib/use-overlay-chrome';
+import { useI18n } from '@/i18n/LocaleProvider';
 import LeadForm, { type LeadType } from './LeadForm';
 
 /** Never-changing subscription for the mount gate — the store value is constant. */
 const subscribeNoop = () => () => {};
 
-const AUDIENCES: { type: LeadType; label: string; hint: string }[] = [
-  { type: 'individual', label: 'I’m an individual', hint: 'Booking for myself' },
-  { type: 'business', label: 'I’m a business', hint: 'Managing company travel' },
-];
+const AUDIENCES: LeadType[] = ['individual', 'business'];
 
 /**
  * The question a "Get started" button opens on: which of the two flows fits.
@@ -23,6 +21,7 @@ const AUDIENCES: { type: LeadType; label: string; hint: string }[] = [
  */
 function AudienceQuestion({ titleId, onChoose }: { titleId: string; onChoose: (type: LeadType) => void }) {
   const firstRef = useRef<HTMLButtonElement>(null);
+  const m = useI18n().m.lead.audience;
 
   // The form focuses its own first field; this step has to do the same, or the
   // dialog opens with focus still on the page behind it.
@@ -33,26 +32,24 @@ function AudienceQuestion({ titleId, onChoose }: { titleId: string; onChoose: (t
   return (
     <>
       <p className="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent">
-        Get started
+        {m.eyebrow}
       </p>
       <div className="mt-3">
         <h2 id={titleId} className="font-display text-card font-bold leading-snug text-ink">
-          Are you an individual or a business?
+          {m.title}
         </h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-ink-sub">
-          Pick one and we’ll ask the few questions that fit.
-        </p>
+        <p className="mt-1.5 text-sm leading-relaxed text-ink-sub">{m.hint}</p>
         <div className="mt-6 grid gap-3">
-          {AUDIENCES.map((a, i) => (
+          {AUDIENCES.map((type, i) => (
             <button
-              key={a.type}
+              key={type}
               ref={i === 0 ? firstRef : undefined}
               type="button"
-              onClick={() => onChoose(a.type)}
+              onClick={() => onChoose(type)}
               className="sm-cta-ghost cursor-pointer rounded-2xl px-5 py-4 text-left"
             >
-              <span className="block text-sm font-medium">{a.label}</span>
-              <span className="mt-0.5 block text-xs text-ink-sub">{a.hint}</span>
+              <span className="block text-sm font-medium">{m[type].label}</span>
+              <span className="mt-0.5 block text-xs text-ink-sub">{m[type].hint}</span>
             </button>
           ))}
         </div>
@@ -118,6 +115,7 @@ export default function LeadModal({
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const { lead } = useI18n().m;
 
   // Client-mount gate for the portal — false during SSR (no document), true once
   // hydrated. useSyncExternalStore avoids a setState-in-effect.
@@ -164,7 +162,7 @@ export default function LeadModal({
             <button
               type="button"
               onClick={close}
-              aria-label="Close"
+              aria-label={lead.close}
               className="sm-icon-btn absolute right-4 top-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full"
             >
               <X className="h-[18px] w-[18px]" aria-hidden />

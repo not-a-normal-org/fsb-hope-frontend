@@ -4,6 +4,9 @@ import { useRef, useState, type FormEvent } from 'react';
 import { ArrowRight, Check, Loader2 } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
+import { fmt } from '@/i18n/format';
+import { useI18n } from '@/i18n/LocaleProvider';
+import { rich } from '@/i18n/rich';
 
 /**
  * In-flow newsletter capture below the deals grid (Review v3 §9b). One field in
@@ -25,12 +28,14 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const emailRef = useRef<HTMLInputElement>(null);
+  const { newsletter } = useI18n().m;
+  const m = newsletter.inline;
 
   function toEmailStep(e: FormEvent) {
     e.preventDefault();
     if (!airport.trim()) {
       setStatus('error');
-      setMessage('Add your home airport first.');
+      setMessage(m.errors.airport);
       return;
     }
     setStatus('idle');
@@ -44,7 +49,7 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
     if (status === 'submitting') return;
     if (!EMAIL_RE.test(email.trim())) {
       setStatus('error');
-      setMessage('Enter a valid email.');
+      setMessage(m.errors.email);
       return;
     }
     setStatus('submitting');
@@ -57,14 +62,14 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
       });
       if (res.ok || res.status === 409) {
         setStatus('success');
-        setMessage(res.status === 409 ? 'You’re already on the list.' : 'You’re in — award space, every Monday.');
+        setMessage(res.status === 409 ? newsletter.already : m.success);
         return;
       }
       const detail = (await res.json().catch(() => ({}))) as { error?: string };
-      throw new Error(detail.error === 'Invalid email address' ? 'Enter a valid email.' : detail.error || 'Something went wrong.');
+      throw new Error(detail.error === 'Invalid email address' ? m.errors.email : detail.error || m.errors.generic);
     } catch (err) {
       setStatus('error');
-      setMessage(err instanceof Error ? err.message : 'Something went wrong.');
+      setMessage(err instanceof Error ? err.message : m.errors.generic);
     }
   }
 
@@ -72,8 +77,8 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
     <section className="relative border-t" style={{ borderColor: 'var(--sm-glass-border)' }}>
       <div className="mx-auto flex max-w-4xl flex-col items-start gap-5 px-6 py-12 md:flex-row md:items-center md:justify-between md:py-14">
         <div className="max-w-md">
-          <h2 className="font-display text-card font-bold text-ink">Award space on your routes, emailed Monday.</h2>
-          <p className="mt-1.5 text-sm text-ink-sub">Tell us your home airport — we’ll show you where your points can go from it.</p>
+          <h2 className="font-display text-card font-bold text-ink">{m.title}</h2>
+          <p className="mt-1.5 text-sm text-ink-sub">{m.body}</p>
         </div>
 
         <div className="w-full md:max-w-sm">
@@ -88,14 +93,14 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
                 type="text"
                 value={airport}
                 onChange={(e) => setAirport(e.target.value)}
-                placeholder="Home airport (e.g. JFK)"
-                aria-label="Home airport"
+                placeholder={newsletter.airportPlaceholder}
+                aria-label={newsletter.airportLabel}
                 autoComplete="off"
                 className={inputBase}
                 style={inputStyle}
               />
               <button type="submit" className="sm-cta inline-flex shrink-0 items-center gap-1.5 rounded-full px-5 py-3 text-sm font-medium transition-colors">
-                Notify me
+                {m.notify}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </button>
             </form>
@@ -106,8 +111,8 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@email.com"
-                aria-label="Email address"
+                placeholder={newsletter.emailPlaceholder}
+                aria-label={newsletter.emailLabel}
                 autoComplete="email"
                 className={inputBase}
                 style={inputStyle}
@@ -117,7 +122,7 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
                 disabled={status === 'submitting'}
                 className="sm-cta inline-flex shrink-0 items-center justify-center rounded-full px-5 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-55"
               >
-                {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : 'Confirm'}
+                {status === 'submitting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : m.confirm}
               </button>
             </form>
           )}
@@ -128,8 +133,14 @@ export default function NewsletterInline({ source = 'home-deals' }: { source?: s
           )}
           {step === 'email' && status !== 'success' && (
             <p className="mt-2 text-xs text-ink-muted">
-              Watching {airport.trim().toUpperCase()} — where should we send it? By confirming you agree to our{' '}
-              <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">Privacy Policy</Link>.
+              {/* Angle brackets stripped so typed input can't open a rich() tag. */}
+              {rich(fmt(m.watching, { airport: airport.trim().toUpperCase().replace(/[<>]/g, '') }), {
+                link: (c) => (
+                  <Link href="/legal/privacy" className="underline underline-offset-2 hover:text-ink">
+                    {c}
+                  </Link>
+                ),
+              })}
             </p>
           )}
         </div>
