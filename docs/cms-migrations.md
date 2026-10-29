@@ -52,9 +52,16 @@ every post's title and body.
 ## Production run
 
 Tell the team first. Nobody saves in `/cms`, and everyone stops local
-`npm run dev`, until the last step is done. The construction wall keeps the
-public out. Between the migration and the deploy, staff see errors on the blog
-and in `/cms` for a few minutes.
+`npm run dev`, until the last step is done. **Between the migration and the
+deploy, the live code reads columns that no longer exist**, so every visitor to
+the blog, results pages and `/cms` gets errors for those few minutes (the
+localization migration, 2026-10-29, ran with the site already public: about
+three minutes). Run at low traffic, and have the PR ready to merge the moment
+the migration finishes.
+
+*Done once already:* `localize_content` ran on production on 2026-10-29
+(rehearsed on a restored backup first; English content verified identical
+before/after). The steps stay here for the next migration.
 
 You need two connection strings from Supabase → Settings → Database →
 Connection string:
@@ -97,7 +104,8 @@ psql "$PROD_URI" -c "begin;
 commit;"
 ```
 
-**4. Migrate**, from a checkout of the migration's PR branch:
+**4. Migrate**, from a checkout of the migration's PR branch. Run it plainly, not
+through a pseudo-terminal wrapper (one silently exited before connecting):
 
 ```sh
 DATABASE_URI="$PROD_URI" npx payload migrate
