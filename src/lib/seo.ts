@@ -60,10 +60,10 @@ export type PostSeo = {
  * Social image for a post: the author's manual override (SEO plugin `meta.image`)
  * if set, otherwise the auto-generated branded image at /blog/<slug>/og.
  */
-export function ogImageUrl(post: PostSeo): string {
+export function ogImageUrl(post: PostSeo, locale: Locale = 'en'): string {
   const img = post.meta?.image;
   if (img && typeof img === 'object' && img.url) return absoluteUrl(img.url);
-  return absoluteUrl(`/blog/${post.slug}/og`);
+  return absoluteUrl(localizePath(locale, `/blog/${post.slug}/og`));
 }
 
 const ORG = {
@@ -78,13 +78,13 @@ export function articleJsonLd(
   post: PostSeo,
   opts?: { wordCount?: number; section?: string; keywords?: string[]; locale?: Locale },
 ): Record<string, unknown> {
-  const url = absoluteUrl(`/blog/${post.slug}`);
+  const url = absoluteUrl(localizePath(opts?.locale ?? 'en', `/blog/${post.slug}`));
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.meta?.title || post.title,
     description: post.meta?.description || post.excerpt || undefined,
-    image: ogImageUrl(post),
+    image: ogImageUrl(post, opts?.locale),
     datePublished: post.publishedAt || undefined,
     dateModified: post.updatedAt || post.publishedAt || undefined,
     inLanguage: LOCALE_TAGS[opts?.locale ?? 'en'],

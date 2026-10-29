@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cache } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { RichText } from '@payloadcms/richtext-lexical/react';
@@ -8,6 +9,7 @@ import Link from '@/components/system/LocaleLink';
 import NavBar from '@/components/site/NavBar';
 import Footer from '@/components/site/Footer';
 import { getPayloadClient } from '@/lib/payload';
+import { hasTranslation } from '@/lib/cms-locale.server';
 import { mediaPublicUrl, readingMinutes, wordCount, extractFaq, toBlogCard, type BlogCard } from '@/lib/blog';
 import { RelatedSidebar, RelatedInline, PostNav } from './post-parts';
 import { articleConverters } from './rich-text';
@@ -21,7 +23,7 @@ import {
   type PostSeo,
 } from '@/lib/seo';
 import { SITE_URL } from '@/lib/constants';
-import { OG_LOCALES, localizePath } from '@/i18n/config';
+import { OG_LOCALES, localizePath, type Locale } from '@/i18n/config';
 import { getMessages, resolveLocale } from '@/i18n/get-messages';
 import { fmt, formatDate } from '@/i18n/format';
 
@@ -30,32 +32,51 @@ import { fmt, formatDate } from '@/i18n/format';
  * Byline is always "Saver Miles Team" (collection default; never a real name —
  * docs/plans/00). Full SEO: canonical, Open Graph (article), Twitter card, and
  * a BlogPosting JSON-LD block.
+ *
+ * Languages: /de/blog/<slug> shows the German post once it has a German title
+ * and body. Until then it shows the whole English post (never a German title
+ * over an English body), marked lang="en" with a note, and its canonical is the
+ * English URL so search engines don't index an English page as German.
  */
 export const dynamic = 'force-dynamic';
 
 type Params = { params: Promise<{ lang: string; slug: string }> };
 
-// On a DB error, treat the post as not found (404) rather than throwing a 500.
-async function getPost(slug: string) {
+/**
+ * The post in the page's language, or in English when it has no translation
+ * yet. `shown` is the language actually on the page; `hasGerman` drives the
+ * hreflang. On a DB error, treat the post as not found (404) rather than a 500.
+ * cache(): generateMetadata and the page share one lookup per request.
+ */
+const getPost = cache(async (slug: string, locale: Locale) => {
   try {
     const payload = await getPayloadClient();
-    const { docs } = await payload.find({
-      collection: 'posts',
-      where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
-      limit: 1,
-      depth: 1, // populate coverImage + category + meta.image
-    });
-    return docs[0] ?? null;
+    const read = async (l: Locale) =>
+      (
+        await payload.find({
+          collection: 'posts',
+          where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
+          limit: 1,
+          depth: 1, // populate coverImage + category + meta.image
+          locale: l,
+        })
+      ).docs[0] ?? null;
+    const post = await read(locale);
+    if (!post) return null;
+    const hasGerman = await hasTranslation('posts', post.id, 'de');
+    if (locale === 'en' || hasGerman) return { post, shown: locale, hasGerman };
+    const english = await read('en');
+    return english ? { post: english, shown: 'en' as Locale, hasGerman } : null;
   } catch {
     return null;
   }
-}
+});
 
 /**
  * The published-post pool (newest first) used to compute related posts and the
  * prev/next pager. Degrades to [] on any DB error so the article still renders.
  */
-async function getPostPool(): Promise<BlogCard[]> {
+async function getPostPool(locale: Locale): Promise<BlogCard[]> {
   try {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
@@ -64,6 +85,7 @@ async function getPostPool(): Promise<BlogCard[]> {
       sort: '-publishedAt',
       limit: 100,
       depth: 1, // populate coverImage + category
+      locale, // untranslated posts fall back to English
     });
     return docs.map(toBlogCard);
   } catch {
@@ -91,28 +113,30 @@ function postContext(pool: BlogCard[], slug: string, catSlug?: string) {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const post = await getPost(slug);
-  if (!post) return { title: getMessages(locale).blog.post.notFound, robots: 'noindex' };
+  const loaded = await getPost(slug, locale);
+  if (!loaded) return { title: getMessages(locale).blog.post.notFound, robots: 'noindex' };
+  const { post, shown, hasGerman } = loaded;
 
-  // Post bodies are English-only until the CMS stores German, so the canonical
-  // stays on the English URL in every language and no German hreflang is emitted.
-  const url = absoluteUrl(`/blog/${post.slug}`);
-  const { robots } = localeMeta(locale, `/blog/${post.slug}`, {
-    de: false,
-    robots: { index: true, follow: true },
-  });
+  // Canonical and hreflang follow the language actually shown: an untranslated
+  // German URL points at the English post, and German hreflang appears only once
+  // a German version exists. robots still follows the URL's own language (noindex
+  // until German is live).
+  const path = `/blog/${post.slug}`;
+  const { alternates } = localeMeta(shown, path, { de: hasGerman });
+  const { robots } = localeMeta(locale, path, { robots: { index: true, follow: true } });
+  const url = absoluteUrl(localizePath(shown, path));
   const title = post.meta?.title || post.title;
   const description = post.meta?.description || post.excerpt || undefined;
-  const image = ogImageUrl(post as unknown as PostSeo);
+  const image = ogImageUrl(post as unknown as PostSeo, shown);
 
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates,
     openGraph: {
       type: 'article',
       url,
-      locale: OG_LOCALES.en,
+      locale: OG_LOCALES[shown],
       title,
       description,
       publishedTime: post.publishedAt ?? undefined,
@@ -128,8 +152,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Params) {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const [post, pool] = await Promise.all([getPost(slug), getPostPool()]);
-  if (!post) notFound();
+  const [loaded, pool] = await Promise.all([getPost(slug, locale), getPostPool(locale)]);
+  if (!loaded) notFound();
+  const { post, shown } = loaded;
+  // The article's own language; the page chrome stays in the URL's language.
+  const articleLang = shown !== locale ? shown : undefined;
 
   const { blog } = getMessages(locale);
   const m = blog.post;
@@ -151,13 +178,14 @@ export default async function BlogPostPage({ params }: Params) {
     ...(category?.name && catSlug
       ? [{ name: category.name, url: absoluteUrl(localizePath(locale, `/blog/category/${catSlug}`)) }]
       : []),
-    { name: post.title, url: absoluteUrl(`/blog/${post.slug}`) },
+    { name: post.title, url: absoluteUrl(localizePath(shown, `/blog/${post.slug}`)) },
   ];
 
   const jsonLd: Record<string, unknown>[] = [
     articleJsonLd(post as unknown as PostSeo, {
       wordCount: wordCount(post.content),
       section: category?.name || undefined,
+      locale: shown,
     }),
     breadcrumbJsonLd(crumbs),
     ...(faqs.length ? [faqJsonLd(faqs)] : []),
@@ -184,9 +212,21 @@ export default async function BlogPostPage({ params }: Params) {
             related.length > 0 ? 'lg:grid lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-14' : 'mx-auto max-w-2xl'
           }`}
         >
-          <article className="min-w-0 max-w-2xl">
+          <article className="min-w-0 max-w-2xl" lang={articleLang}>
+            {articleLang && (
+              <p
+                lang={locale}
+                className="mb-6 rounded-lg px-3.5 py-2.5 text-sm text-ink-sub"
+                style={{ background: 'var(--sm-glass-bg)', border: '1px solid var(--sm-glass-border)' }}
+              >
+                {m.englishOnly}
+              </p>
+            )}
             <header>
-              <p className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent">
+              <p
+                lang={articleLang ? locale : undefined}
+                className="font-mono text-eyebrow uppercase tracking-[0.14em] text-accent"
+              >
                 {category?.name ? `${category.name} · ` : ''}
                 {post.author || 'Saver Miles Team'}
                 {date ? ` · ${date}` : ''}
@@ -216,8 +256,10 @@ export default async function BlogPostPage({ params }: Params) {
               </div>
             )}
 
-            <PostNav prev={prev} next={next} m={m} />
-            <RelatedInline posts={related} labels={labels} />
+            <div lang={articleLang ? locale : undefined}>
+              <PostNav prev={prev} next={next} m={m} />
+              <RelatedInline posts={related} labels={labels} />
+            </div>
           </article>
 
           <RelatedSidebar posts={related} labels={labels} />

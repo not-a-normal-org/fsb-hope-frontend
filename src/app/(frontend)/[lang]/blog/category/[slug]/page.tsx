@@ -9,8 +9,7 @@ import { toBlogCard, type BlogCard } from '@/lib/blog';
 import { absoluteUrl, breadcrumbJsonLd, localeMeta } from '@/lib/seo';
 import { getMessages, resolveLocale } from '@/i18n/get-messages';
 import { fmt } from '@/i18n/format';
-import type { Locale } from '@/i18n/config';
-import { OG_LOCALES, localizePath } from '@/i18n/config';
+import { OG_LOCALES, localizePath, type Locale } from '@/i18n/config';
 import { SITE_URL } from '@/lib/constants';
 import BlogIndex from '../../BlogIndex';
 
@@ -41,7 +40,7 @@ type CategoryDoc = { id: string | number; name: string; slug: string };
 
 // A DB hiccup or an unmigrated table degrades to "no such category" rather than
 // throwing a 500 — the page then decides 404 (unknown slug) vs empty state.
-async function getCategory(slug: string): Promise<CategoryDoc | null> {
+async function getCategory(slug: string, locale: Locale): Promise<CategoryDoc | null> {
   try {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
@@ -49,6 +48,7 @@ async function getCategory(slug: string): Promise<CategoryDoc | null> {
       where: { slug: { equals: slug } },
       limit: 1,
       depth: 0,
+      locale,
     });
     return (docs[0] as CategoryDoc | undefined) ?? null;
   } catch {
@@ -56,7 +56,7 @@ async function getCategory(slug: string): Promise<CategoryDoc | null> {
   }
 }
 
-async function getPosts(categoryId: string | number): Promise<BlogCard[]> {
+async function getPosts(categoryId: string | number, locale: Locale): Promise<BlogCard[]> {
   try {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
@@ -67,6 +67,7 @@ async function getPosts(categoryId: string | number): Promise<BlogCard[]> {
       sort: '-publishedAt',
       limit: 100,
       depth: 1,
+      locale, // untranslated posts fall back to English
     });
     return docs.map(toBlogCard);
   } catch {
@@ -78,7 +79,7 @@ type Params = { params: Promise<{ lang: string; slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const category = await getCategory(slug);
+  const category = await getCategory(slug, locale);
   const { blog } = getMessages(locale);
   const copy = tailoredCopy(locale, slug);
   const title = copy?.title ?? category?.name ?? blog.title;
@@ -101,7 +102,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function CategoryPage({ params }: Params) {
   const [locale, { slug }] = await Promise.all([resolveLocale(params), params]);
-  const category = await getCategory(slug);
+  const category = await getCategory(slug, locale);
   const { blog } = getMessages(locale);
   const copy = tailoredCopy(locale, slug);
 
@@ -109,7 +110,7 @@ export default async function CategoryPage({ params }: Params) {
   // Guides/Deals (tailored copy) always render, empty state and all, so the nav links live.
   if (!category && !copy) notFound();
 
-  const posts = category ? await getPosts(category.id) : [];
+  const posts = category ? await getPosts(category.id, locale) : [];
 
   const crumbs = [
     { name: blog.home, url: locale === 'en' ? SITE_URL : absoluteUrl(localizePath(locale, '/')) },

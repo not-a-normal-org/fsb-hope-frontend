@@ -35,7 +35,7 @@ export const Posts: CollectionConfig = {
     maxPerDoc: 20,
   },
   fields: [
-    { name: 'title', type: 'text', required: true },
+    { name: 'title', type: 'text', required: true, localized: true },
     {
       name: 'slug',
       type: 'text',
@@ -54,9 +54,10 @@ export const Posts: CollectionConfig = {
     {
       name: 'excerpt',
       type: 'textarea',
+      localized: true,
       admin: { description: 'Short summary — used for previews and the meta description.' },
     },
-    { name: 'content', type: 'richText' },
+    { name: 'content', type: 'richText', localized: true },
     { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
     {
       name: 'coverImage',

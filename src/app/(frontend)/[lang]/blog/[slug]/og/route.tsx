@@ -28,6 +28,7 @@ export async function GET(
       where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
       limit: 1,
       depth: 0,
+      locale: hasLocale(lang) ? lang : 'en', // falls back to the English title
     });
     if (docs[0]?.title) title = String(docs[0].title);
   } catch {

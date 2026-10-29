@@ -7,7 +7,7 @@ import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
 import { absoluteUrl, breadcrumbJsonLd, localeMeta } from '@/lib/seo';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { OG_LOCALES, localizePath } from '@/i18n/config';
+import { OG_LOCALES, localizePath, type Locale } from '@/i18n/config';
 import { SITE_NAME } from '@/lib/constants';
 import BlogIndex from './BlogIndex';
 
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
 
 // A DB hiccup or an unmigrated `posts` table degrades to an empty grid (the
 // grid's own "just getting started" empty state) instead of a 500.
-async function getPosts(): Promise<BlogCard[]> {
+async function getPosts(locale: Locale): Promise<BlogCard[]> {
   try {
     const payload = await getPayloadClient();
     const { docs } = await payload.find({
@@ -55,6 +55,7 @@ async function getPosts(): Promise<BlogCard[]> {
       sort: '-publishedAt',
       limit: 100,
       depth: 1, // populate coverImage + category
+      locale, // untranslated posts fall back to English
     });
     return docs.map(toBlogCard);
   } catch {
@@ -63,7 +64,8 @@ async function getPosts(): Promise<BlogCard[]> {
 }
 
 export default async function BlogIndexPage({ params }: { params: LangParams }) {
-  const [locale, posts] = await Promise.all([resolveLocale(params), getPosts()]);
+  const locale = await resolveLocale(params);
+  const posts = await getPosts(locale);
   const m = getMessages(locale).blog;
 
   const blogJsonLd = {

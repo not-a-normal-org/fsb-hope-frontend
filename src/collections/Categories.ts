@@ -7,7 +7,7 @@ export const Categories: CollectionConfig = {
   access: contentAccess,
   admin: { useAsTitle: 'name' },
   fields: [
-    { name: 'name', type: 'text', required: true },
+    { name: 'name', type: 'text', required: true, localized: true },
     { name: 'slug', type: 'text', required: true, unique: true },
   ],
 };

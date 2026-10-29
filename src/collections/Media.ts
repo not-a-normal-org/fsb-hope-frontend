@@ -28,5 +28,5 @@ export const Media: CollectionConfig = {
       { name: 'og', width: 1200, height: 630, position: 'centre' },
     ],
   },
-  fields: [{ name: 'alt', type: 'text', required: true }],
+  fields: [{ name: 'alt', type: 'text', required: true, localized: true }],
 };

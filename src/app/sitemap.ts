@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { DE_LIVE, localizePath } from '@/i18n/config';
 import { getPayloadClient } from '@/lib/payload';
+import { translatedPostSlugs } from '@/lib/cms-locale.server';
 import { absoluteUrl } from '@/lib/seo';
 
 /**
@@ -9,8 +10,8 @@ import { absoluteUrl } from '@/lib/seo';
  * no database still emits the static routes.
  *
  * Once German is live (DE_LIVE), every page with a German version is listed in
- * both languages, each entry carrying hreflang alternates to the other. Blog
- * posts stay English-only until the CMS stores German bodies.
+ * both languages, each entry carrying hreflang alternates to the other. A blog
+ * post gets its German entry only once it has a German title and body.
  */
 export const dynamic = 'force-dynamic';
 
@@ -57,13 +58,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const payload = await getPayloadClient();
-    const { docs } = await payload.find({
-      collection: 'posts',
-      where: { _status: { equals: 'published' } },
-      sort: '-publishedAt',
-      limit: 1000,
-      depth: 0,
-    });
+    const [{ docs }, german] = await Promise.all([
+      payload.find({
+        collection: 'posts',
+        where: { _status: { equals: 'published' } },
+        sort: '-publishedAt',
+        limit: 1000,
+        depth: 0,
+      }),
+      DE_LIVE ? translatedPostSlugs('de') : Promise.resolve(new Set<string>()),
+    ]);
     for (const post of docs) {
       entries.push(
         ...localized(
@@ -73,7 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 0.6,
           },
-          false,
+          german.has(String(post.slug)),
         ),
       );
     }

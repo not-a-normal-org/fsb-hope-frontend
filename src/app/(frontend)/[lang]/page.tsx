@@ -42,7 +42,8 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
 }
 
 export default async function Home({ params }: { params: LangParams }) {
-  const m = getMessages(await resolveLocale(params));
+  const locale = await resolveLocale(params);
+  const m = getMessages(locale);
   return (
     <>
       <NavBar />
@@ -53,7 +54,7 @@ export default async function Home({ params }: { params: LangParams }) {
       <GhostVsRealCompare m={m.home.compare} />
       <DealsGrid m={m.home.deals} />
       <NewsletterInline />
-      <CaseStudyTeaser m={m.home.caseStudies} />
+      <CaseStudyTeaser m={m.home.caseStudies} locale={locale} />
       <CalculatorTeaser m={m.home.calculator} widget={m.calculator.widget} />
       <FAQ m={m.home.faq} />
       <Footer />

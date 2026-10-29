@@ -35,6 +35,7 @@ export const Testimonials: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
       admin: { description: 'e.g. “Two business seats to Tokyo”.' },
     },
     {
@@ -97,9 +98,9 @@ export const Testimonials: CollectionConfig = {
         },
       ],
     },
-    { name: 'body', label: 'Full write-up (the plan)', type: 'richText' },
-    { name: 'quote', label: 'Client quote (optional)', type: 'textarea' },
-    { name: 'attribution', type: 'text' },
+    { name: 'body', label: 'Full write-up (the plan)', type: 'richText', localized: true },
+    { name: 'quote', label: 'Client quote (optional)', type: 'textarea', localized: true },
+    { name: 'attribution', type: 'text', localized: true },
     // Legacy free-text route from the original testimonials schema. Superseded by
     // the structured From/To fields; kept (hidden) so the DB column isn't dropped
     // — which would make Payload's push prompt whether new columns are renames.
