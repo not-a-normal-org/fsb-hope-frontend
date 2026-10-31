@@ -10,7 +10,13 @@ import { SITE_EMAIL, SITE_NAME } from '@/lib/constants';
  * Served at /llms.txt — the emerging convention that hands LLMs / answer engines
  * a clean, linkable map of the site so they can find and cite our content without
  * scraping rendered HTML. Site summary + every published post + the key pages.
- * Dynamic so new posts appear without a rebuild.
+ *
+ * Prebuilt and regenerated hourly (ISR), never rendered per request. A cold
+ * render boots Payload and took 4–5 s, and agents give up sooner: Lighthouse's
+ * llms.txt audit allows 2 s, and a deploy empties the CDN cache, so the first
+ * fetch after every deploy was a cold one. This makes it the one route that reads
+ * the CMS at build time (lib/payload.ts); a new post appears within the hour. If
+ * the database can't be reached, the file still lists the key pages.
  *
  * Once German is live it ends with a German section: the same key pages under
  * /de with their German descriptions (from the dictionaries), and every post that
@@ -18,7 +24,8 @@ import { SITE_EMAIL, SITE_NAME } from '@/lib/constants';
  * German pages. One file for both languages, as the convention has no per-language
  * variant.
  */
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 type PostRow = {
   title?: string;
@@ -131,10 +138,8 @@ export async function GET() {
     lines.push('', 'Blog: ' + url('/blog'), 'RSS: ' + url('/blog/feed.xml'), '');
   }
 
+  // No Cache-Control here: `revalidate` sets it.
   return new Response(lines.join('\n'), {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-    },
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
 }

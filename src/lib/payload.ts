@@ -10,5 +10,7 @@ import config from '@payload-config';
  *
  * Pages that use this must be dynamic (`export const dynamic = 'force-dynamic'`)
  * so they query at request time, not at build — the build stays DB-independent.
+ * One exception: /llms.txt is prebuilt (see its route), and it degrades to its
+ * static key pages if the build can't reach the database.
  */
 export const getPayloadClient = () => getPayload({ config });
