@@ -48,6 +48,8 @@ So the same seat, on the same plane, on the same day, from the same Citi balance
 
 On a no-fee Citi card the gap widens rather than closes. Skywards at 1:0.56 wants about 171,000 ThankYou points for that seat; Copa at 1,000:700 wants about 114,000.
 
+![Dubai skyline at dusk seen across the water, city lights coming on beneath an amber sky](citi-copa-connectmiles-emirates-business-class-dubai.jpg "The destination both doors reach. Which program you book through decides what it costs in cash.")
+
 ## Why Copa is so cheap in cash
 
 Nothing about Copa is generous here. It simply declines to collect a fee that Emirates would happily pass on.
@@ -78,6 +80,8 @@ An open jaw means your itinerary does not have to close neatly. You can fly into
 Put together, a round trip becomes a multi-city trip. You can fly into one European capital, make your own way overland, fly home from a different one, and break the return in Panama for two weeks on the way through. Copa's own stopover program allows up to 15 days in Panama at no additional airfare. Priced as separate awards, that itinerary would cost two or three times as much.
 
 Rules like this used to be ordinary and are now rare, which is exactly why a chart-based program is worth keeping on the shortlist even when the headline rate is not the lowest available.
+
+![Panama City skyline at dusk, lit towers standing against a deep blue sky above the waterfront](citi-copa-connectmiles-emirates-business-class-panama.jpg "ConnectMiles allows a stopover of up to 15 days in Panama on a round trip, at no extra airfare.")
 
 ## Before you move a single point
 

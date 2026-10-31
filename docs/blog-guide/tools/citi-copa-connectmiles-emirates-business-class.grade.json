@@ -1,0 +1,9 @@
+{
+  "_note": "Body images for citi-copa-connectmiles-emirates-business-class. Sources are free-licence Pexels photos (ids 11370462, 15487954); see image-prompts.md.",
+  "dubai":  { "in": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/11370462.jpg", "out": "src/scripts/assets/blog/citi-copa-connectmiles-emirates-business-class-dubai.jpg",
+              "saturation": 0.9, "contrast": 1.05, "warmth": 0.14,
+              "shadowNavy": 0.2, "vignette": 0.3, "sharpen": true, "quality": 86 },
+  "panama": { "in": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/15487954.jpg", "out": "src/scripts/assets/blog/citi-copa-connectmiles-emirates-business-class-panama.jpg",
+              "saturation": 0.92, "brightness": 1.42, "contrast": 1.04, "warmth": 0.12,
+              "shadowNavy": 0.12, "vignette": 0.22, "sharpen": true, "quality": 84 }
+}

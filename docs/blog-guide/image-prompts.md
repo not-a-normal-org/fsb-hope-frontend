@@ -24,6 +24,26 @@ from memory.
 
 ---
 
+### citi-copa-connectmiles-emirates-business-class (2026-11-01)
+- **No generation: the image account is at 0 credits on the free plan.** Cover and body images were
+  sourced without it, which is the first post done this way.
+- Cover: explanatory split composed with `tools/compose-split-cover.mjs` (config
+  `tools/citi-copa-connectmiles-emirates-business-class.cover.json`) from two images already in the
+  repo. Halves sit under the 2.2 blur and navy scrim and carry no subject of their own, so the
+  typography does the work. `focusX` 0.78 on the left slides off a stuffed toy in the source frame.
+- Body images: free-licence **Pexels** photos, graded with the new `tools/grade-photo.mjs`
+  (config `tools/citi-copa-connectmiles-emirates-business-class.grade.json`):
+  - Dubai skyline at dusk, Pexels id 11370462 — the destination both doors reach.
+  - Panama City skyline at dusk, Pexels id 15487954 — the stopover. Needed brightness 1.42; the
+    source is underexposed and went muddy at the default grade.
+- Rejected at selection: every free "business class" cabin result is actually **economy**, and the
+  one genuine business seat was a Cathay Pacific frame, i.e. an identifiable livery. Rather than
+  mislabel a cabin, both body images became places (destination and stopover), which the article
+  genuinely discusses.
+- Stock sourcing: search with the Parallel Search MCP, then `curl` the `images.pexels.com` URL.
+  Direct scraping of pexels.com/unsplash.com search pages is blocked (403/307), and parallel
+  backgrounded curls silently return nothing; fetch sequentially.
+
 ### citi-thankyou-japan-airlines-transfer-partner — promo banner (2026-09-26)
 - No generation, no credits: the "+30% TRANSFER BONUS" pill was stamped onto the finished cover with
   `tools/stamp-cover-promo.mjs` (config `tools/citi-thankyou-japan-airlines-transfer-partner.promo.json`).

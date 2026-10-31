@@ -48,6 +48,8 @@ Also derselbe Platz, im selben Flugzeug, am selben Tag, aus demselben Citi-Gutha
 
 Bei einer Citi-Karte ohne Jahresgebühr wird der Abstand größer statt kleiner. Skywards verlangt bei 1:0,56 rund 171.000 ThankYou-Punkte für diesen Platz, Copa bei 1.000:700 rund 114.000.
 
+![Skyline von Dubai in der Dämmerung über dem Wasser, die Lichter der Stadt gehen unter bernsteinfarbenem Himmel an](citi-copa-connectmiles-emirates-business-class-dubai.jpg "Das Ziel, zu dem beide Wege führen. Über welches Programm Sie buchen, entscheidet über die Barkosten.")
+
 ## Warum Copa in bar so günstig ist
 
 Großzügig ist daran nichts. Copa verzichtet schlicht darauf, eine Gebühr zu erheben, die Emirates bereitwillig weitergeben würde.
@@ -78,6 +80,8 @@ Ein Open Jaw bedeutet, dass Ihre Reise nicht sauber aufgehen muss. Sie können i
 Zusammen wird daraus eine Rundreise. Sie fliegen in eine europäische Hauptstadt, reisen auf eigene Faust über Land weiter, fliegen aus einer anderen zurück und unterbrechen den Rückweg für zwei Wochen in Panama. Copas eigenes Stopover-Programm erlaubt bis zu 15 Tage in Panama ohne Aufpreis auf den Flugpreis. Als getrennte Prämien gebucht würde dieselbe Reise zwei- bis dreimal so viel kosten.
 
 Solche Regeln waren früher üblich und sind heute selten, und genau deshalb gehört ein Programm mit fester Tabelle auf die engere Liste, auch wenn der Grundpreis nicht der niedrigste am Markt ist.
+
+![Skyline von Panama-Stadt in der Dämmerung, beleuchtete Hochhäuser vor tiefblauem Himmel über der Uferpromenade](citi-copa-connectmiles-emirates-business-class-panama.jpg "ConnectMiles erlaubt bei einem Hin- und Rückflug einen Stopover von bis zu 15 Tagen in Panama, ohne Aufpreis.")
 
 ## Bevor Sie einen einzigen Punkt bewegen
 
