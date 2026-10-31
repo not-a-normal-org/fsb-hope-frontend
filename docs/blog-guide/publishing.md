@@ -65,6 +65,25 @@ or `TITLE` or `EXCERPT` is empty.
 Make a genuine improvement, run the dry run, then `ONLY=<slug> npm run seed:articles`. Its
 `lastmod` moves because the content changed; nothing else moves.
 
+## IndexNow (automatic)
+
+Every published save of a post (seed or `/cms`) pings IndexNow with its English and
+German URLs, so Bing (and through it ChatGPT search and Copilot), Yandex, Naver,
+Seznam and Yep recrawl it within minutes. Deleting a published post pings too.
+Nothing to run. A failed ping is logged as `[indexnow] … not submitted` and never
+fails the publish. Google doesn't take part; it reads the sitemap.
+
+For pages that aren't posts (after a deploy that changed them), or to start over:
+
+```sh
+INDEXNOW_DRY_RUN=1 npm run indexnow     # list what would be sent
+npm run indexnow                        # every URL in the live sitemap
+URLS=https://www.savermiles.com/pricing,https://www.savermiles.com/de/pricing npm run indexnow
+```
+
+Don't resubmit the whole sitemap when nothing changed; engines count submitted URLs
+against the site's crawl budget. Received URLs show in Bing Webmaster Tools → IndexNow.
+
 ## Verify (production)
 
 ```bash
