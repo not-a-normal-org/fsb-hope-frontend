@@ -1,0 +1,30 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "out": "src/scripts/assets/blog/citi-copa-connectmiles-emirates-business-class.jpg",
+  "badge": "VS",
+  "blur": 2.2,
+  "left": {
+    "image": "src/scripts/assets/blog/book-premium-seats-for-family-with-points.jpg",
+    "focusX": 0.78,
+    "eyebrow": "Emirates Skywards",
+    "title": "120,000 points",
+    "items": [
+      "Citi transfers at 1:0.8",
+      "Surcharges passed on",
+      "About $835 in cash"
+    ],
+    "note": "The door most people already had"
+  },
+  "right": {
+    "image": "src/scripts/assets/blog/phantom-award-space-why-seats-vanish.jpg",
+    "focusX": 0.42,
+    "eyebrow": "Copa ConnectMiles",
+    "title": "80,000 points",
+    "items": [
+      "Citi transfers at 1:1",
+      "No fuel surcharges",
+      "About $40 in cash"
+    ],
+    "note": "The door Citi just opened"
+  }
+}
