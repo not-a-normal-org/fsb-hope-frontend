@@ -14,10 +14,16 @@ import Image from 'next/image';
  * Sizing stays font-driven: height is set in `em`, so `<Logo className="text-lg" />`
  * scales with that type size. The hidden variant is `display:none`, so it is not
  * announced by screen readers and (being lazy) is not downloaded until shown.
+ *
+ * `width`/`height` are the artwork's, for the aspect ratio; `SIZES` is what it is
+ * drawn at, so the browser picks a small rendition instead of the 640–1920px ones
+ * (the nav and footer logos are ~70–80px wide; the largest, text-3xl on the staff
+ * login, ~116px). Raise it if the logo is ever drawn wider.
  */
 const DARK = { src: '/savermiles-logo.png', w: 640, h: 198 };
 const LIGHT = { src: '/savermiles-logo-light.png', w: 640, h: 213 };
 const HEIGHT = '1.2em';
+const SIZES = '120px';
 
 type LogoProps = {
   className?: string;
@@ -33,7 +39,8 @@ export default function Logo({ className = '', label = 'Saver Miles' }: LogoProp
         alt={label}
         width={DARK.w}
         height={DARK.h}
-        priority
+        sizes={SIZES}
+        loading="eager"
         draggable={false}
         className={`sm-logo-dark ${className}`}
         style={{ height: HEIGHT, width: 'auto' }}
@@ -43,6 +50,7 @@ export default function Logo({ className = '', label = 'Saver Miles' }: LogoProp
         alt={label}
         width={LIGHT.w}
         height={LIGHT.h}
+        sizes={SIZES}
         draggable={false}
         className={`sm-logo-light ${className}`}
         style={{ height: HEIGHT, width: 'auto' }}
