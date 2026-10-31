@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
+import { notifyIndexNow } from '@/lib/indexnow';
+
 import { contentAccess } from './access';
 
 /** Slugify a title: lowercase, strip punctuation, hyphenate. */
@@ -29,6 +31,26 @@ export const Testimonials: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'program', 'pointsUsed', 'publishConsent'],
+  },
+  // A consented case study is public at /results/<slug>: tell IndexNow engines
+  // when it appears, changes, or is withdrawn (src/lib/indexnow.ts).
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        if ((doc.publishConsent || previousDoc?.publishConsent) && doc.slug) {
+          await notifyIndexNow([`/results/${doc.slug}`, '/results'], `case study ${doc.slug}`);
+        }
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc }) => {
+        if (doc.publishConsent && doc.slug) {
+          await notifyIndexNow([`/results/${doc.slug}`, '/results'], `deleted case study ${doc.slug}`);
+        }
+        return doc;
+      },
+    ],
   },
   fields: [
     {

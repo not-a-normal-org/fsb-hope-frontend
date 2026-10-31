@@ -14,7 +14,8 @@
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
     "seed:articles": "payload run src/scripts/seed-articles.ts",
-    "seed:staff": "payload run src/scripts/seed-staff.ts"
+    "seed:staff": "payload run src/scripts/seed-staff.ts",
+    "indexnow": "payload run src/scripts/indexnow.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.86.0",

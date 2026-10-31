@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
+import { notifyIndexNow } from '@/lib/indexnow';
+
 import { contentAccess, publishedOrEditor } from './access';
 
 /** Slugify a title: lowercase, strip punctuation, hyphenate. */
@@ -33,6 +35,30 @@ export const Posts: CollectionConfig = {
   versions: {
     drafts: { autosave: true },
     maxPerDoc: 20,
+  },
+  // Tell IndexNow engines (Bing → ChatGPT search, Copilot) the moment a post goes
+  // live or changes, in every language (src/lib/indexnow.ts). Draft autosaves
+  // don't touch the public page, so only published saves ping; a renamed slug
+  // pings the old URL too, so engines drop it.
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        if (doc._status === 'published' && doc.slug) {
+          const paths = [`/blog/${doc.slug}`];
+          if (previousDoc?.slug && previousDoc.slug !== doc.slug) paths.push(`/blog/${previousDoc.slug}`);
+          await notifyIndexNow(paths, `post ${doc.slug}`);
+        }
+        return doc;
+      },
+    ],
+    afterDelete: [
+      async ({ doc }) => {
+        if (doc._status === 'published' && doc.slug) {
+          await notifyIndexNow([`/blog/${doc.slug}`], `deleted post ${doc.slug}`);
+        }
+        return doc;
+      },
+    ],
   },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
