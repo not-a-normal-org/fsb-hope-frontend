@@ -14,7 +14,7 @@ import NewsletterPopup from '@/components/site/NewsletterPopup';
 import FAQ from '@/components/site/FAQ';
 import Footer from '@/components/site/Footer';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { faqJsonLd, localeMeta } from '@/lib/seo';
 
 /**
  * Home — section order from docs/plans/02-site-structure.md.
@@ -44,8 +44,11 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
 export default async function Home({ params }: { params: LangParams }) {
   const locale = await resolveLocale(params);
   const m = getMessages(locale);
+  const faq = m.home.faq.items.map((item) => ({ question: item.q, answer: item.a }));
   return (
     <>
+      {/* The visible FAQ below, machine-readable for search and answer engines. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faq)) }} />
       <NavBar />
       <HomeHero m={m.home.hero} />
       <AudienceFork m={m.home.fork} />

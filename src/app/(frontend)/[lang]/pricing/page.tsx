@@ -8,7 +8,7 @@ import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
 import { SEARCH_PRODUCT_IDS, ALERT_PRODUCT_IDS, withCopy } from '@/lib/products';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { localeMeta, serviceJsonLd } from '@/lib/seo';
 
 /**
  * /pricing — every product in one place (docs/plans/02, 03). This page is the
@@ -39,10 +39,16 @@ function GroupHeading({ label, title, sub }: { label: string; title: string; sub
 }
 
 export default async function PricingPage({ params }: { params: LangParams }) {
-  const all = getMessages(await resolveLocale(params));
+  const locale = await resolveLocale(params);
+  const all = getMessages(locale);
   const m = all.pricing;
   return (
     <>
+      {/* The offer and its prices, machine-readable (what this page shows). */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd(locale)) }}
+      />
       <NavBar />
 
       <PageHero {...m.hero} aside={<ReceiptCard m={all.receipt} />} />

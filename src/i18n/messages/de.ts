@@ -89,6 +89,10 @@ const de: Messages = {
     home: 'Zur Startseite',
   },
 
+  seo: {
+    serviceType: 'Prämienflugsuche durch einen menschlichen Spezialisten',
+  },
+
   common: {
     automatedLabel: 'Automatisiert – bitte lesen',
     cabins: { economy: 'Economy', premium: 'Premium Economy', business: 'Business', first: 'First' },

@@ -99,6 +99,11 @@ const en = {
     home: 'Back to the home page',
   },
 
+  /** Structured data (JSON-LD) wording; never shown on the page. */
+  seo: {
+    serviceType: 'Award flight search by a human specialist',
+  },
+
   /* ───────────── Shared widgets (client namespaces) ───────────── */
 
   /** Small pieces several components share. */
