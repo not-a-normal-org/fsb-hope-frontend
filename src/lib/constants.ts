@@ -18,3 +18,11 @@ export const SITE_LEGAL_NAME = "Saver Miles LLC";
 export const SITE_EMAIL = "hello@savermiles.com";
 export const SITE_ADDRESS_LINES = ["30 N Gould St Ste N", "Sheridan, Wyoming 82801"];
 export const SITE_ADDRESS_INLINE = "30 N Gould St Ste N, Sheridan, WY 82801";
+/** The same address, split into fields for structured data (schema.org PostalAddress). */
+export const SITE_ADDRESS = {
+  street: "30 N Gould St Ste N",
+  locality: "Sheridan",
+  region: "WY",
+  postalCode: "82801",
+  country: "US",
+} as const;

@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 
 import { DE_LIVE, LIVE_LOCALES, LOCALE_TAGS, localizePath, type Locale } from '@/i18n/config';
 import { getMessages } from '@/i18n/get-messages';
-import { SITE_URL, SITE_NAME } from './constants';
+import { SITE_URL, SITE_NAME, SITE_LEGAL_NAME, SITE_EMAIL, SITE_ADDRESS } from './constants';
+import { PRICES_USD, withCopy } from './products';
 
 /** Absolute URL for a site path. */
 export const absoluteUrl = (path: string): string => new URL(path, SITE_URL).toString();
@@ -125,12 +126,90 @@ export function faqJsonLd(faqs: { question: string; answer: string }[]): Record<
   };
 }
 
-/** Site-wide Organization entity — helps search + AI resolve who we are. */
+/**
+ * Site-wide Organization entity — helps search + AI resolve who we are. Every
+ * field is something the site already states (legal pages, footer, contact).
+ * Support is listed in English only: the team doesn't promise German replies.
+ */
 export function organizationJsonLd(locale: Locale): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     ...ORG,
+    legalName: SITE_LEGAL_NAME,
     description: getMessages(locale).meta.organization,
+    email: SITE_EMAIL,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: SITE_ADDRESS.street,
+      addressLocality: SITE_ADDRESS.locality,
+      addressRegion: SITE_ADDRESS.region,
+      postalCode: SITE_ADDRESS.postalCode,
+      addressCountry: SITE_ADDRESS.country,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: SITE_EMAIL,
+      availableLanguage: ['English'],
+    },
+  };
+}
+
+/**
+ * The service and every published price, as /pricing shows them — so search and
+ * answer engines can state what Saver Miles sells and what it costs without
+ * guessing. Names and descriptions come from the product copy, amounts from
+ * PRICES_USD, so this can't drift from the page. Business is quoted per account
+ * and has no price.
+ */
+export function serviceJsonLd(locale: Locale): Record<string, unknown> {
+  const m = getMessages(locale);
+  const url = absoluteUrl(localizePath(locale, '/pricing'));
+  const usd = (price: number, name: string, unitCode?: 'MON' | 'ANN') => ({
+    '@type': 'UnitPriceSpecification',
+    price,
+    priceCurrency: 'USD',
+    name,
+    ...(unitCode ? { referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode } } : {}),
+  });
+  const offer = (id: 'individual' | 'business' | 'weekly' | 'human', priceSpecification?: unknown[]) => {
+    const p = withCopy(id, m.products);
+    return {
+      '@type': 'Offer',
+      name: p.name,
+      description: p.description,
+      url: absoluteUrl(localizePath(locale, p.href)),
+      ...(priceSpecification ? { priceSpecification } : {}),
+    };
+  };
+  const individual = m.products.individual;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: SITE_NAME,
+    serviceType: m.seo.serviceType,
+    description: m.meta.organization,
+    url,
+    provider: ORG,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: m.pricing.title,
+      itemListElement: [
+        offer('individual', [
+          usd(PRICES_USD.deposit, individual.priceUnit),
+          usd(PRICES_USD.successFee, individual.priceSub.replace(/^\+\s*/, '')),
+        ]),
+        offer('business'),
+        offer('weekly', [
+          usd(PRICES_USD.weeklyMonthly, m.checkout.monthly, 'MON'),
+          usd(PRICES_USD.weeklyAnnual, m.checkout.annual, 'ANN'),
+        ]),
+        offer('human', [
+          usd(PRICES_USD.humanMonthly, m.checkout.monthly, 'MON'),
+          usd(PRICES_USD.humanAnnual, m.checkout.annual, 'ANN'),
+        ]),
+      ],
+    },
   };
 }
 
