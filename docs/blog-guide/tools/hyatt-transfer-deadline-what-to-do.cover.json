@@ -1,0 +1,5 @@
+{ "fontsDir": "/tmp/blog-fonts", "out": "src/scripts/assets/blog/hyatt-transfer-deadline-what-to-do.jpg", "badge": "TO", "blur": 2.2,
+  "left":  { "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/20021123.jpg", "focusX": 0.5, "eyebrow": "Until December 31",
+             "title": "1:1", "items": ["1,000 Bilt points", "1,000 Hyatt points"], "note": "The ratio you have today" },
+  "right": { "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/35601510.jpg", "focusX": 0.5, "eyebrow": "From January 1",
+             "title": "4:3", "items": ["1,000 Bilt points", "750 Hyatt points"], "note": "No card or tier excepted" } }

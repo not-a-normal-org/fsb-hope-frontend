@@ -21,11 +21,15 @@ import { faqJsonLd, localeMeta } from '@/lib/seo';
  *
  * The proof teaser (CaseStudyTeaser) reads the Payload `testimonials` collection
  * and renders nothing until a real, consented story exists. Deal of the Week
- * (Payload) and the newsletter band (Supabase) are still deferred. Dynamic so
- * CMS content appears without a rebuild. The public does not see this yet —
- * src/proxy.ts rewrites anonymous requests to /maintenance (503).
+ * (Payload) and the newsletter band (Supabase) are still deferred.
+ *
+ * Prebuilt and regenerated every five minutes (ISR), like the static pages, so it
+ * is served from the CDN instead of rendered per visit (TTFB ~0.2 s, was ~0.55–0.85 s);
+ * a newly consented case study shows up within five minutes. The teaser is the
+ * only CMS read, at build and on each regeneration; if the database can't be
+ * reached it renders nothing, as before.
  */
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 // Home-page title override (absolute, so it bypasses the "%s | Saver Miles"
 // template). The site-wide tagline still serves as the meta description; only the

@@ -234,6 +234,8 @@ function parseArticle(md: string): Article {
 
 /* ── Run order (newest first). Flagship leads. ─────────────────────────────── */
 const ORDER = [
+  'hyatt-transfer-deadline-what-to-do',
+  'atmos-rewards-what-changed',
   'air-france-la-premiere-with-points',
   'citi-copa-connectmiles-emirates-business-class',
   'citi-thankyou-japan-airlines-transfer-partner',
