@@ -1,0 +1,5 @@
+{ "fontsDir": "/tmp/blog-fonts", "out": "src/scripts/assets/blog/air-france-la-premiere-with-points.jpg", "badge": "VS", "blur": 2.2,
+  "left":  { "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/4061487.jpg", "focusX": 0.5, "eyebrow": "What arrives",
+             "title": "Boston, Nov 19", "items": ["Newark, Feb 1", "Four seats, one row"], "note": "First class on the route" },
+  "right": { "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/35635379.jpg", "focusX": 0.5, "eyebrow": "Who may book it",
+             "title": "Platinum only", "items": ["One award seat a flight", "No partner access"], "note": "Miles alone are not enough" } }

@@ -428,6 +428,36 @@ html {
   animation: sm-shine 6s linear infinite;
 }
 
+/* ---- Above-the-fold entrance -----------------------------------------------
+   The `entrance` fade + 8px rise from lib/animations.ts, in CSS. Framer Motion's
+   `initial="hidden"` server-renders the element at opacity 0 and only reveals it
+   once the JS bundle has loaded and hydrated, which on a throttled phone made the
+   home hero the LCP 2–3 s after first paint. CSS starts at first paint. Use it
+   for what is visible on load; below the fold, `inViewOnce` is fine. Stagger by
+   setting --sm-rise-step (0, 1, 2 …: 90ms apart, as staggerParent). */
+@keyframes sm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.sm-rise {
+  animation: sm-rise 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--sm-rise-step, 0) * 90ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sm-rise {
+    animation: none;
+  }
+}
+
+/* ---- Consent banner, already answered --------------------------------------
+   The banner is in the server HTML; ConsentScript sets data-consent before first
+   paint for a visitor who has chosen, so it never flashes (ConsentBanner.tsx). */
+html[data-consent] .sm-consent {
+  display: none;
+}
+
 /* ---- Logo theme swap -------------------------------------------------------
    The Logo component renders both lockups; this shows the one for the active
    theme by the [data-theme] attribute ThemeScript sets pre-paint, so there is no
