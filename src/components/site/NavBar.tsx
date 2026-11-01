@@ -60,8 +60,10 @@ export default function NavBar() {
       }
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
-        <Link href="/" aria-label={m.nav.home} className="shrink-0">
-          <Logo className="text-lg" label="" />
+        {/* The logo's alt names the link ("Saver Miles home"), rather than an
+            aria-label over an empty alt that audits report as a missing alt. */}
+        <Link href="/" className="shrink-0">
+          <Logo className="text-lg" label={m.nav.home} />
         </Link>
 
         <ul className="hidden items-center gap-5 lg:gap-6 md:flex">

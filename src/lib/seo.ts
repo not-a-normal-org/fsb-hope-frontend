@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { DE_LIVE, LIVE_LOCALES, LOCALE_TAGS, localizePath, type Locale } from '@/i18n/config';
+import { DE_LIVE, LIVE_LOCALES, LOCALE_TAGS, OG_LOCALES, localizePath, type Locale } from '@/i18n/config';
 import { getMessages } from '@/i18n/get-messages';
 import { SITE_URL, SITE_NAME, SITE_LEGAL_NAME, SITE_EMAIL, SITE_ADDRESS } from './constants';
 import { PRICES_USD, withCopy } from './products';
@@ -43,6 +43,48 @@ export function localeMeta(
   const hidden = !LIVE_LOCALES.includes(locale);
   const robots = hidden ? { index: false, follow: true } : opts.robots;
   return { alternates: localeAlternates(locale, path, opts), ...(robots ? { robots } : {}) };
+}
+
+/** The site's link-preview card (public/og-image.png, public/twitter-image.png). */
+export const OG_IMAGE = { url: '/og-image.png', width: 1200, height: 630, alt: SITE_NAME };
+export const TWITTER_IMAGE = '/twitter-image.png';
+
+/**
+ * A public page's whole metadata from its title and description: <title>, meta
+ * description, the Open Graph and Twitter cards, canonical + hreflang, robots.
+ *
+ * Next replaces a parent's `openGraph`/`twitter` instead of merging into it. A
+ * page that set only its title inherited the layout's card, with the home page's
+ * og:title and og:url; a page that set its own og:title lost the preview image.
+ * So every page gets a complete card here. `title` goes through the layout's
+ * "%s | Saver Miles" template unless `absoluteTitle` is set (the home page).
+ */
+export function pageMeta(
+  locale: Locale,
+  path: string,
+  {
+    title,
+    description,
+    absoluteTitle = false,
+    robots,
+  }: { title: string; description?: string; absoluteTitle?: boolean; robots?: Metadata['robots'] },
+): Metadata {
+  const cardTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`;
+  return {
+    title: absoluteTitle ? { absolute: title } : title,
+    description,
+    openGraph: {
+      type: 'website',
+      siteName: SITE_NAME,
+      locale: OG_LOCALES[locale],
+      url: absoluteUrl(localizePath(locale, path)),
+      title: cardTitle,
+      description,
+      images: [OG_IMAGE],
+    },
+    twitter: { card: 'summary_large_image', title: cardTitle, description, images: [TWITTER_IMAGE] },
+    ...localeMeta(locale, path, { robots }),
+  };
 }
 
 type MediaLike = { url?: string | null } | string | null | undefined;

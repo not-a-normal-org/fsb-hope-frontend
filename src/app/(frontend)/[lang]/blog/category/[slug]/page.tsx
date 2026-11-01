@@ -6,10 +6,10 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import { getPayloadClient } from '@/lib/payload';
 import { toBlogCard, type BlogCard } from '@/lib/blog';
-import { absoluteUrl, breadcrumbJsonLd, localeMeta } from '@/lib/seo';
+import { absoluteUrl, breadcrumbJsonLd, pageMeta } from '@/lib/seo';
 import { getMessages, resolveLocale } from '@/i18n/get-messages';
 import { fmt } from '@/i18n/format';
-import { OG_LOCALES, localizePath, type Locale } from '@/i18n/config';
+import { localizePath, type Locale } from '@/i18n/config';
 import { SITE_URL } from '@/lib/constants';
 import BlogIndex from '../../BlogIndex';
 
@@ -86,18 +86,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const description =
     copy?.intro ?? (category ? fmt(blog.category.filedUnder, { name: category.name }) : undefined);
   const path = `/blog/category/${slug}`;
-  return {
-    title,
-    description,
-    openGraph: {
-      type: 'website',
-      url: absoluteUrl(localizePath(locale, path)),
-      locale: OG_LOCALES[locale],
-      title,
-      description,
-    },
-    ...localeMeta(locale, path, { robots: { index: true, follow: true } }),
-  };
+  return pageMeta(locale, path, { title, description, robots: { index: true, follow: true } });
 }
 
 export default async function CategoryPage({ params }: Params) {

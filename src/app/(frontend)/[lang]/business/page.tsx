@@ -6,7 +6,7 @@ import PageHero from '@/components/site/PageHero';
 import TeamBookingCard from '@/components/site/TeamBookingCard';
 import BusinessBody from './BusinessBody';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /business (docs/plans/02) — the company track. ROI / account-level framing,
@@ -17,10 +17,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).business.title,
-    ...localeMeta(locale, '/business'),
-  };
+  const { title, description } = getMessages(locale).business;
+  return pageMeta(locale, '/business', { title, description });
 }
 
 export default async function BusinessPage({ params }: { params: LangParams }) {

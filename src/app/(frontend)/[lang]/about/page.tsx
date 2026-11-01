@@ -5,7 +5,7 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import AboutBody from './AboutBody';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /about (docs/plans/02) — company story, mission, the manual-search
@@ -15,10 +15,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).about.title,
-    ...localeMeta(locale, '/about'),
-  };
+  const { title, description } = getMessages(locale).about;
+  return pageMeta(locale, '/about', { title, description });
 }
 
 export default async function AboutPage({ params }: { params: LangParams }) {

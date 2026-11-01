@@ -8,7 +8,7 @@ import CaseStudyWall from '@/components/site/CaseStudyWall';
 import AmbientBackground from '@/components/system/AmbientBackground';
 import { getPublishedCaseStudies } from '@/lib/case-studies.server';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /results (docs/plans/02) — the case-study wall, driven by the Payload
@@ -21,10 +21,8 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).results.title,
-    ...localeMeta(locale, '/results'),
-  };
+  const { title, description } = getMessages(locale).results;
+  return pageMeta(locale, '/results', { title, description });
 }
 
 export default async function ResultsPage({ params }: { params: LangParams }) {

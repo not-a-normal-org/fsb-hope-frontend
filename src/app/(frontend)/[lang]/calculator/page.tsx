@@ -5,7 +5,7 @@ import Footer from '@/components/site/Footer';
 import PageHero from '@/components/site/PageHero';
 import PointsCalculator from '@/components/site/PointsCalculator';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /calculator (docs/plans/05) — the standalone points-value calculator. Its own
@@ -15,10 +15,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).calculator.title,
-    ...localeMeta(locale, '/calculator'),
-  };
+  const { title, description } = getMessages(locale).calculator;
+  return pageMeta(locale, '/calculator', { title, description });
 }
 
 export default async function CalculatorPage({ params }: { params: LangParams }) {

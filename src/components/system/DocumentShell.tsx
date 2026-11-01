@@ -11,7 +11,7 @@ import { DE_LIVE, OG_LOCALES, localizePath, type Locale } from "@/i18n/config";
 import { getClientMessages, getMessages } from "@/i18n/get-messages";
 import LocaleProvider from "@/i18n/LocaleProvider";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
-import { absoluteUrl, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { OG_IMAGE, TWITTER_IMAGE, absoluteUrl, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 /**
  * The <html> document shared by the app's two root layouts:
@@ -78,13 +78,13 @@ export function siteMetadata(locale: Locale): Metadata {
       title: `${SITE_NAME} — ${tagline}`,
       description: tagline,
       url: absoluteUrl(localizePath(locale, "/")),
-      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
+      images: [OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: `${SITE_NAME} — ${tagline}`,
       description: tagline,
-      images: ["/twitter-image.png"],
+      images: [TWITTER_IMAGE],
     },
     icons: {
       icon: [

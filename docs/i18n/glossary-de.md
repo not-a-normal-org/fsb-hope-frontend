@@ -25,7 +25,7 @@ for adding copy are in `AGENTS.md` → "Languages".
 | Economy, Premium Economy, Business, First | Cabin names Germans use as-is ("Business Class") |
 | Alerts | Product family and nav label |
 | Airline names, program names (Amex MR, Chase UR, Flying Blue, Miles & More), airport codes | Proper names |
-| Screenshot, Feed, Routing, Upselling, Checkout | Established loanwords |
+| Screenshot, Feed, Routing, Upselling, Checkout, Sweet Spot | Established loanwords |
 
 ## Terms
 

@@ -30,18 +30,21 @@ export const articleConverters: JSXConvertersFunction = ({ defaultConverters }) 
     if (doc?.mimeType && !doc.mimeType.startsWith('image')) return null;
 
     const caption = (node.fields as { caption?: unknown } | undefined)?.caption;
+    const captionText = typeof caption === 'string' ? caption.trim() : '';
 
     return (
       <figure>
         <Image
           src={src}
-          alt={doc?.alt ?? ''}
+          // Media alt is required in the CMS; the caption covers a blank one, so a
+          // body image never ships with an empty alt.
+          alt={doc?.alt?.trim() || captionText}
           width={doc?.width ?? 1600}
           height={doc?.height ?? 900}
           sizes="(min-width: 720px) 672px, 100vw"
           className="h-auto w-full"
         />
-        {typeof caption === 'string' && caption.trim() ? <figcaption>{caption}</figcaption> : null}
+        {captionText ? <figcaption>{captionText}</figcaption> : null}
       </figure>
     );
   },

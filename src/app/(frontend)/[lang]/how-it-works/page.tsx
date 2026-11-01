@@ -6,7 +6,7 @@ import AmbientBackground from '@/components/system/AmbientBackground';
 import ShineText from '@/components/system/ShineText';
 import Steps from './Steps';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /how-it-works — the shared 3-step explainer (docs/plans/02), linked from the
@@ -15,10 +15,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).howItWorks.title,
-    ...localeMeta(locale, '/how-it-works'),
-  };
+  const { title, description } = getMessages(locale).howItWorks;
+  return pageMeta(locale, '/how-it-works', { title, description });
 }
 
 export default async function HowItWorksPage({ params }: { params: LangParams }) {
