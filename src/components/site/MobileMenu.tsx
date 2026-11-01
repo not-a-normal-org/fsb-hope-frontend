@@ -146,8 +146,8 @@ export default function MobileMenu({
               className="flex shrink-0 items-center justify-between px-6 py-4"
               style={{ borderBottom: '1px solid var(--sm-glass-border)' }}
             >
-              <Link href="/" onClick={close} aria-label={m.nav.home}>
-                <Logo className="text-base" label="" />
+              <Link href="/" onClick={close}>
+                <Logo className="text-base" label={m.nav.home} />
               </Link>
               <button
                 ref={closeRef}
