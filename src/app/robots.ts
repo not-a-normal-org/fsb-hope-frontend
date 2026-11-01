@@ -7,7 +7,13 @@ import { SITE_URL } from '@/lib/constants';
 // AI crawlers are explicitly welcomed (the content is meant to be scraped and
 // cited by LLMs) — listing them by name, each with the same allow/disallow as
 // `*`, is the clear signal, since some default to conservative behaviour without
-// an explicit rule. `/llms.txt` is advertised alongside the sitemap.
+// an explicit rule. (`/llms.txt` has no robots.txt directive; agents look for it
+// at that path.)
+//
+// No `host`: Next would print `Host: https://www…`, a Yandex-only directive
+// (retired in 2018) that takes a bare hostname, not a URL. Validators such as
+// Semrush flagged the file as invalid syntax because of it. The www canonical is
+// set by the apex → www redirect and each page's canonical link instead.
 //
 // While the construction wall is up this is unreachable anyway: the proxy
 // returns 503 for it, which tells crawlers to stop and retry later.
@@ -41,6 +47,5 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: AI_AGENTS, allow: '/', disallow: DISALLOW },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }
