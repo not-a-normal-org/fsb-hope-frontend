@@ -10,8 +10,8 @@ import config from '@payload-config';
  *
  * Pages that use this must be dynamic (`export const dynamic = 'force-dynamic'`)
  * so they query at request time, not at build — the build stays DB-independent.
- * Two exceptions, both prebuilt with ISR and both safe without a database: /llms.txt
- * (falls back to its static key pages) and the home page (its case-study teaser
- * renders nothing).
+ * Exceptions, prebuilt with ISR and safe without a database: /llms.txt and
+ * /sitemap.xml (both fall back to their static entries) and the home page (its
+ * case-study teaser renders nothing).
  */
 export const getPayloadClient = () => getPayload({ config });
