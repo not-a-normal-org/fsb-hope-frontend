@@ -238,6 +238,7 @@ const ORDER = [
   'atmos-rewards-what-changed',
   'air-france-la-premiere-with-points',
   'are-transfer-bonuses-worth-it',
+  'when-a-partner-stops-selling-awards',
   'citi-copa-connectmiles-emirates-business-class',
   'citi-thankyou-japan-airlines-transfer-partner',
   'travel-portal-vs-transfer-partners',
