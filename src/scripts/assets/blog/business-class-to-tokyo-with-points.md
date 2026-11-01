@@ -42,7 +42,9 @@ JAL sits in the **oneworld** alliance, and two programs stand out.
 
 **American AAdvantage.** JAL business from the US to Tokyo has historically priced around **60,000 AAdvantage miles one-way with very low taxes**, on the order of a few dollars, because American does not pass through JAL's fuel surcharges. That mix of a fair rate and near-zero fees makes it one of the cleanest redemptions on the route. American has been nudging some connecting itineraries toward 80,000 miles, so the nonstop, single-segment rate is the one to target.
 
-**Alaska Mileage Plan (now Atmos Rewards).** Alaska has long published a low JAL business rate, in the **55,000–60,000 range one-way** with modest fees. The trade-off is that its JAL award space is thin and hard to surface, and the program's transfer-partner landscape has shifted. It rewards patience more than most.
+**Alaska Mileage Plan (now Atmos Rewards).** Atmos prices every partner from one Asia Pacific chart, banded by distance, and the 5,000 mile band edge runs straight through the US map. Seattle to Tokyo starts at **60,000 points** in business. San Francisco, Los Angeles and every East Coast gateway sit one band up at **75,000**, because they all clear 5,000 miles. Add the $20 nonrefundable partner award fee, per person each way, waived only for Summit cardholders.
+
+Two caveats matter more here than the numbers. The published figures are starting rates quoted for non-stop itineraries, and Alaska's own terms warn that some city pairs may not be available at the lowest level even inside the same band. That warning is doing real work: one award-search tool taking daily snapshots across a year of dates through October 2026 did not see US to Tokyo business at the chart price once, and the cheapest it observed was 130,000. Atmos also opens partner awards at 330 days, behind JAL's own 360 and American's 331, so it is structurally last in the queue. Treat the chart as a best case, not a quote.
 
 ## What the numbers actually look like
 
@@ -51,7 +53,7 @@ Rough, evergreen ranges for **one-way US–Tokyo business class** at the time of
 - **ANA via Virgin Atlantic:** ~52,500–60,000 points, plus fuel surcharges
 - **ANA via ANA Mileage Club:** low fixed-chart pricing, plus fuel surcharges, often round-trip framed
 - **JAL via American AAdvantage:** ~60,000 miles, minimal taxes
-- **JAL via Alaska/Atmos:** ~55,000–60,000 miles, modest fees, scarce space
+- **JAL via Alaska/Atmos:** from 60,000 miles Seattle to Tokyo, 75,000 from California and the East Coast, plus $20 each way; the chart price is rarely available
 
 Treat these as reference points, not live quotes. Pricing, ratios, and surcharges move, and transfer bonuses (Amex to Virgin has run 30%) can shift the math further, so confirm the rate before you transfer, because **transfers are one-way and usually irreversible**.
 
@@ -91,7 +93,7 @@ That is the work we do by hand. A real specialist searches award space across 30
 
 ### How many points for business class to Tokyo?
 
-At the time of writing, plan on roughly 52,500–60,000 points one-way for ANA business through Virgin Atlantic, depending on your gateway, or about 60,000 miles one-way for JAL business through American AAdvantage. ANA's own program and Alaska/Atmos land in similar ranges with different trade-offs. These figures move, so confirm the live rate before you transfer.
+At the time of writing, plan on roughly 52,500–60,000 points one-way for ANA business through Virgin Atlantic, depending on your gateway, or about 60,000 miles one-way for JAL business through American AAdvantage. ANA's own program lands in a similar range. Atmos Rewards publishes less for JAL business, from 60,000 points Seattle to Tokyo and 75,000 from California and the East Coast, but those are starting rates quoted for non-stop itineraries, and the chart price has been very hard to find in practice. These figures move, so confirm the live rate before you transfer.
 
 ### Is ANA or JAL better on points?
 
