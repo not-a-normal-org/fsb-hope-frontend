@@ -1,0 +1,28 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "out": "src/scripts/assets/blog/atmos-rewards-what-changed.jpg",
+  "badge": "TO",
+  "blur": 2.2,
+  "left": {
+    "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/32649171.jpg",
+    "focusX": 0.5,
+    "eyebrow": "What the rebrand did",
+    "title": "Renamed",
+    "items": [
+      "Miles became points",
+      "1:1, no expiry"
+    ],
+    "note": "Charts unchanged"
+  },
+  "right": {
+    "image": "src/scripts/assets/blog/no-award-space-what-a-specialist-does.jpg",
+    "focusX": 0.72,
+    "eyebrow": "What January 1 does",
+    "title": "You choose",
+    "items": [
+      "Distance, price, segments",
+      "New members get price"
+    ],
+    "note": "Change it once a year"
+  }
+}
