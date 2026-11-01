@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import type { CSSProperties } from 'react';
 import { Check } from 'lucide-react';
 
 import Link from '@/components/system/LocaleLink';
@@ -9,7 +9,6 @@ import ShineText from '@/components/system/ShineText';
 import LeadCta from './LeadCta';
 import StatStrip from './StatStrip';
 import RegionalReports from './RegionalReports';
-import { entrance, staggerParent } from '@/lib/animations';
 import { useI18n } from '@/i18n/LocaleProvider';
 import type { Messages } from '@/i18n/messages/en';
 
@@ -28,15 +27,12 @@ export default function HomeHero({ m }: { m: Messages['home']['hero'] }) {
       {/* Radial-gradient wash behind the blobs — the one glow on the page. */}
       <div className="pointer-events-none absolute inset-0 -z-20" style={{ background: 'var(--sm-bg-gradient)' }} />
 
-      <motion.div
-        variants={staggerParent}
-        initial="hidden"
-        animate="visible"
-        className="mx-auto max-w-6xl px-6 pb-14 pt-24 md:pt-28"
-      >
+      {/* The entrance is CSS (.sm-rise), not Framer Motion, so the hero — the
+          page's LCP — is painted with the HTML instead of after hydration. */}
+      <div className="mx-auto max-w-6xl px-6 pb-14 pt-24 md:pt-28">
         <div className="grid items-center gap-10 md:grid-cols-[53fr_47fr] md:gap-12">
           {/* Left — thesis */}
-          <motion.div variants={entrance}>
+          <div className="sm-rise">
             <p className="font-mono text-eyebrow font-medium uppercase text-accent">
               {m.eyebrow}
             </p>
@@ -65,14 +61,14 @@ export default function HomeHero({ m }: { m: Messages['home']['hero'] }) {
               <Check className="h-3.5 w-3.5" aria-hidden strokeWidth={2.5} />
               {m.noCard}
             </p>
-          </motion.div>
+          </div>
 
           {/* Right — the deliverable, by region */}
-          <motion.div variants={entrance} className="w-full">
+          <div className="sm-rise w-full" style={{ '--sm-rise-step': 1 } as CSSProperties}>
             <RegionalReports />
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Full-bleed stats strip — the track record, promoted to real authority.
           One of two deliberate blue bands on the page (Review v3 §1): the accent

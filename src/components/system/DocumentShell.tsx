@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import MotionProvider from "@/components/site/MotionProvider";
 import ThemeScript from "@/components/system/ThemeScript";
 import ConsentBanner from "@/components/system/ConsentBanner";
+import ConsentScript from "@/components/system/ConsentScript";
 import ReferralCapture from "@/components/system/ReferralCapture";
 import { DE_LIVE, OG_LOCALES, localizePath, type Locale } from "@/i18n/config";
 import { getClientMessages, getMessages } from "@/i18n/get-messages";
@@ -119,6 +120,7 @@ export default function DocumentShell({
       {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <ThemeScript />
+        <ConsentScript />
         {/* Google Consent Mode v2 — deny analytics by default (privacy-first), before
             gtag.js loads. Re-grants immediately for a returning visitor who accepted;
             the ConsentBanner flips it on the visitor's choice. */}
