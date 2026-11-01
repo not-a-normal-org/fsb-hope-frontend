@@ -11,9 +11,13 @@ const MEDIA_PUBLIC_BASE =
  * straight to the public bucket instead of Payload's `/cms-api/media/...`
  * route (which the construction wall gates), so `next/image` can fetch them
  * server-side both behind the wall and after launch.
+ *
+ * The filename is percent-encoded: CMS uploads keep their original names, spaces
+ * included ("Premium Airplane Suite by the Window.png"), and a raw space makes
+ * the URL invalid wherever it is used verbatim (JSON-LD, og:image).
  */
 export function mediaPublicUrl(filename?: string | null): string | null {
-  return filename ? MEDIA_PUBLIC_BASE + filename : null;
+  return filename ? MEDIA_PUBLIC_BASE + encodeURIComponent(filename) : null;
 }
 
 type LexicalNode = { text?: string; children?: LexicalNode[]; root?: LexicalNode };
