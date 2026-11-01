@@ -32,6 +32,8 @@ const STATIC_PATHS = [
   '/how-it-works',
   '/pricing',
   '/alerts',
+  '/alerts/weekly',
+  '/alerts/human',
   '/calculator',
   '/individual',
   '/business',

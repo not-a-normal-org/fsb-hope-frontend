@@ -616,6 +616,13 @@ const en = {
     title: 'Alerts',
     description:
       'Award space comes and goes. Saver Miles alerts watch your routes: an automated weekly scan for {weeklyMonthly} a month, or a specialist checking every cycle.',
+    // Meta descriptions of the two product pages (/alerts/weekly, /alerts/human).
+    productDescriptions: {
+      weekly:
+        'Weekly Lookup Alert: every Monday, an automated scan of your routes shows which airlines have award space and which card points transfer in. {weeklyMonthly} a month.',
+      human:
+        'Human Search Alert: a specialist checks your routes every cycle and sends verified award space, not the phantom seats automated scans show. {humanMonthly} a month.',
+    },
     hero: {
       eyebrow: 'Alerts',
       title: 'Keep watch on your routes: automated, or a specialist.',
