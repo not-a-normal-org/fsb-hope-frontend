@@ -236,6 +236,7 @@ function parseArticle(md: string): Article {
 const ORDER = [
   'hyatt-transfer-deadline-what-to-do',
   'atmos-rewards-what-changed',
+  'air-france-la-premiere-with-points',
   'citi-copa-connectmiles-emirates-business-class',
   'citi-thankyou-japan-airlines-transfer-partner',
   'travel-portal-vs-transfer-partners',
