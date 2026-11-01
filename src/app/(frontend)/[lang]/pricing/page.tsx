@@ -8,7 +8,7 @@ import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
 import { SEARCH_PRODUCT_IDS, ALERT_PRODUCT_IDS, withCopy } from '@/lib/products';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta, serviceJsonLd } from '@/lib/seo';
+import { pageMeta, serviceJsonLd } from '@/lib/seo';
 
 /**
  * /pricing — every product in one place (docs/plans/02, 03). This page is the
@@ -22,10 +22,8 @@ import { localeMeta, serviceJsonLd } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).pricing.title,
-    ...localeMeta(locale, '/pricing'),
-  };
+  const { title, description } = getMessages(locale).pricing;
+  return pageMeta(locale, '/pricing', { title, description });
 }
 
 function GroupHeading({ label, title, sub }: { label: string; title: string; sub: string }) {

@@ -8,7 +8,7 @@ import StaggerGroup from '@/components/site/StaggerGroup';
 import PriceCard from '@/components/site/PriceCard';
 import { ALERT_PRODUCT_IDS, withCopy } from '@/lib/products';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /alerts — the two subscription alert products, side by side (docs/plans/02).
@@ -17,10 +17,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).alerts.title,
-    ...localeMeta(locale, '/alerts'),
-  };
+  const { title, description } = getMessages(locale).alerts;
+  return pageMeta(locale, '/alerts', { title, description });
 }
 
 export default async function AlertsPage({

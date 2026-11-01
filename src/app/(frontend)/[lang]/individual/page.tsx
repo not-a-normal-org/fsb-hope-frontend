@@ -7,7 +7,7 @@ import SearchReportCard from '@/components/site/SearchReportCard';
 import { REGIONS } from '@/lib/reports';
 import IndividualBody from './IndividualBody';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /individual (docs/plans/02) — the personal-points track. Pain-first hero,
@@ -19,10 +19,8 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  return {
-    title: getMessages(locale).individual.title,
-    ...localeMeta(locale, '/individual'),
-  };
+  const { title, description } = getMessages(locale).individual;
+  return pageMeta(locale, '/individual', { title, description });
 }
 
 export default async function IndividualPage({ params }: { params: LangParams }) {

@@ -14,7 +14,7 @@ import NewsletterPopup from '@/components/site/NewsletterPopup';
 import FAQ from '@/components/site/FAQ';
 import Footer from '@/components/site/Footer';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { faqJsonLd, localeMeta } from '@/lib/seo';
+import { faqJsonLd, pageMeta } from '@/lib/seo';
 
 /**
  * Home — section order from docs/plans/02-site-structure.md.
@@ -31,18 +31,11 @@ import { faqJsonLd, localeMeta } from '@/lib/seo';
  */
 export const revalidate = 300;
 
-// Home-page title override (absolute, so it bypasses the "%s | Saver Miles"
-// template). The site-wide tagline still serves as the meta description; only the
-// <title> and social titles change here.
+// Home-page title is absolute, so it bypasses the "%s | Saver Miles" template.
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const { title } = getMessages(locale).home;
-  return {
-    title: { absolute: title },
-    openGraph: { title },
-    twitter: { title },
-    ...localeMeta(locale, '/'),
-  };
+  const { title, description } = getMessages(locale).home;
+  return pageMeta(locale, '/', { title, description, absoluteTitle: true });
 }
 
 export default async function Home({ params }: { params: LangParams }) {

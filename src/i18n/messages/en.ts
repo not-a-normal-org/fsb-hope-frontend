@@ -425,6 +425,9 @@ const en = {
 
   home: {
     title: 'Saver Miles - Done for You Award Concierge Service',
+    // Meta description (search snippet, link previews): ~140–160 characters.
+    description:
+      'Saver Miles is a done-for-you award concierge. A real specialist searches 30+ loyalty programs by hand and finds a bookable seat with the exact point cost.',
     hero: {
       eyebrow: 'Your Own Points Specialist',
       title: 'The award system is broken. Your specialist makes it work.',
@@ -585,6 +588,8 @@ const en = {
 
   pricing: {
     title: 'Pricing',
+    description:
+      'Saver Miles pricing: a {deposit} deposit, plus {successFee} per person, per direction once we confirm a bookable seat. Nothing found? The deposit comes back in full.',
     hero: {
       eyebrow: 'Pricing',
       title: 'Put a specialist on your points.',
@@ -609,6 +614,8 @@ const en = {
 
   alerts: {
     title: 'Alerts',
+    description:
+      'Award space comes and goes. Saver Miles alerts watch your routes: an automated weekly scan for {weeklyMonthly} a month, or a specialist checking every cycle.',
     hero: {
       eyebrow: 'Alerts',
       title: 'Keep watch on your routes: automated, or a specialist.',
@@ -622,6 +629,8 @@ const en = {
 
   individual: {
     title: 'For Individuals',
+    description:
+      'Sitting on points with no idea what they’re worth? A Saver Miles specialist finds the award seat they can actually book and gives you the exact point cost.',
     hero: {
       eyebrow: 'For individuals',
       title: '200,000 points, and no idea what they’re worth.',
@@ -658,6 +667,8 @@ const en = {
 
   business: {
     title: 'For Business',
+    description:
+      'Award search for teams that fly often. A specialist runs account-level searches across 30+ programs, so company travel spend turns into premium seats.',
     hero: {
       eyebrow: 'For business',
       title: 'Turn company travel spend into premium seats.',
@@ -710,6 +721,8 @@ const en = {
 
   about: {
     title: 'About',
+    description:
+      'Award tools are full of seats that aren’t really there. Saver Miles assigns you a real specialist who verifies the seat and hands you one you can actually book.',
     hero: {
       eyebrow: 'About',
       title: 'The system was broken. We’re here to fix it.',
@@ -745,6 +758,8 @@ const en = {
 
   howItWorks: {
     title: 'How It Works',
+    description:
+      'How Saver Miles works: tell us the trip, a specialist searches award space by hand across 30+ programs, and you get a verified, bookable seat with proof.',
     eyebrow: 'How it works',
     heading: 'Three steps, and a specialist doing the work in the middle.',
     intro:
@@ -768,6 +783,8 @@ const en = {
 
   calculator: {
     title: 'Points Calculator',
+    description:
+      'Estimate what your credit card points and airline miles are worth in travel, and what they could realistically book. A free points calculator by Saver Miles.',
     hero: {
       eyebrow: 'Calculator',
       title: 'What are your points actually worth?',
@@ -808,6 +825,8 @@ const en = {
 
   contact: {
     title: 'Contact',
+    description:
+      'Contact Saver Miles for press, partnerships or a question that doesn’t fit a search request. Ready to use your points? Start an individual or business search.',
     hero: {
       eyebrow: 'Contact',
       title: 'Talk to a specialist.',
@@ -822,6 +841,8 @@ const en = {
 
   results: {
     title: 'Results',
+    description:
+      'Verified award bookings and client stories from Saver Miles, published only once they’re real and we have permission to share them. Nothing made up.',
     hero: {
       eyebrow: 'Results',
       title: 'Real results, as they come in.',
@@ -840,7 +861,7 @@ const en = {
   blog: {
     title: 'Blog',
     description:
-      'Guides to booking flights with points and miles, checked by a real specialist — not an algorithm.',
+      'Guides to booking flights with points and miles: transfer partners, award sweet spots and what a seat really costs, checked by a real specialist.',
     home: 'Home',
     hero: {
       eyebrow: 'Blog',

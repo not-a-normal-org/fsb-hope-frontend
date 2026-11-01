@@ -392,6 +392,8 @@ const de: Messages = {
 
   home: {
     title: 'Saver Miles – Ihr persönlicher Prämienflug-Concierge',
+    description:
+      'Ihr Prämienflug-Concierge: Ein echter Spezialist durchsucht über 30 Vielfliegerprogramme von Hand und findet einen buchbaren Platz mit genauem Punktepreis.',
     hero: {
       eyebrow: 'Ihr eigener Punkte-Spezialist',
       title: 'Das Prämiensystem ist kaputt. Ihr Spezialist bringt es zum Laufen.',
@@ -549,6 +551,8 @@ const de: Messages = {
 
   pricing: {
     title: 'Preise',
+    description:
+      'Preise bei Saver Miles: {deposit} Anzahlung, dazu {successFee} pro Person und Richtung, erst wenn wir einen buchbaren Platz bestätigen. Nichts gefunden? Anzahlung zurück.',
     hero: {
       eyebrow: 'Preise',
       title: 'Lassen Sie einen Spezialisten Ihre Punkte einsetzen.',
@@ -572,6 +576,8 @@ const de: Messages = {
 
   alerts: {
     title: 'Alerts',
+    description:
+      'Prämienplätze kommen und gehen. Die Alerts von Saver Miles behalten Ihre Strecken im Blick: ein automatischer Scan für {weeklyMonthly} im Monat oder ein Spezialist.',
     hero: {
       eyebrow: 'Alerts',
       title: 'Behalten Sie Ihre Strecken im Blick: automatisiert oder mit Spezialist.',
@@ -585,6 +591,8 @@ const de: Messages = {
 
   individual: {
     title: 'Für Privatreisende',
+    description:
+      'Viele Punkte, aber keine Ahnung, was sie wert sind? Ein Spezialist von Saver Miles findet den Platz, den Sie damit wirklich buchen können, samt Punktepreis.',
     hero: {
       eyebrow: 'Für Privatreisende',
       title: '200.000 Punkte – und keine Ahnung, was sie wert sind.',
@@ -621,6 +629,8 @@ const de: Messages = {
 
   business: {
     title: 'Für Unternehmen',
+    description:
+      'Prämiensuche für Teams, die oft fliegen. Ein Spezialist sucht auf Kontoebene in über 30 Programmen, damit aus Ihren Reiseausgaben Premium-Plätze werden.',
     hero: {
       eyebrow: 'Für Unternehmen',
       title: 'Machen Sie aus Ihren Reiseausgaben Premium-Plätze.',
@@ -673,6 +683,8 @@ const de: Messages = {
 
   about: {
     title: 'Über uns',
+    description:
+      'Prämien-Tools sind voller Plätze, die es gar nicht gibt. Bei Saver Miles prüft ein echter Spezialist jeden Platz, bevor Sie ihn buchen.',
     hero: {
       eyebrow: 'Über uns',
       title: 'Das System war kaputt. Wir sind hier, um es zu reparieren.',
@@ -708,6 +720,8 @@ const de: Messages = {
 
   howItWorks: {
     title: 'So funktioniert’s',
+    description:
+      'So funktioniert Saver Miles: Sie nennen die Reise, ein Spezialist sucht von Hand in über 30 Programmen, und Sie erhalten einen geprüften, buchbaren Platz.',
     eyebrow: 'So funktioniert’s',
     heading: 'Drei Schritte – und in der Mitte macht ein Spezialist die Arbeit.',
     intro:
@@ -731,6 +745,8 @@ const de: Messages = {
 
   calculator: {
     title: 'Punkte-Rechner',
+    description:
+      'Schätzen Sie, was Ihre Kreditkartenpunkte und Meilen auf Reisen wert sind und was sie realistisch buchen können. Der kostenlose Punkte-Rechner von Saver Miles.',
     hero: {
       eyebrow: 'Rechner',
       title: 'Was sind Ihre Punkte wirklich wert?',
@@ -768,6 +784,8 @@ const de: Messages = {
 
   contact: {
     title: 'Kontakt',
+    description:
+      'Kontakt zu Saver Miles für Presse, Partnerschaften oder Fragen außerhalb einer Suchanfrage. Bereit, Ihre Punkte zu nutzen? Starten Sie direkt eine Suchanfrage.',
     hero: {
       eyebrow: 'Kontakt',
       title: 'Sprechen Sie mit einem Spezialisten.',
@@ -782,6 +800,8 @@ const de: Messages = {
 
   results: {
     title: 'Ergebnisse',
+    description:
+      'Bestätigte Prämienbuchungen und Kundengeschichten von Saver Miles, veröffentlicht erst, wenn sie echt sind und wir sie teilen dürfen. Nichts davon ist erfunden.',
     hero: {
       eyebrow: 'Ergebnisse',
       title: 'Echte Ergebnisse, sobald sie da sind.',
@@ -799,7 +819,7 @@ const de: Messages = {
   blog: {
     title: 'Blog',
     description:
-      'Ratgeber zum Buchen von Flügen mit Punkten und Meilen, geprüft von einem echten Spezialisten – nicht von einem Algorithmus.',
+      'Ratgeber zum Fliegen mit Punkten und Meilen: Transferpartner, Sweet Spots und was ein Prämienplatz wirklich kostet, geprüft von einem echten Spezialisten.',
     home: 'Startseite',
     hero: {
       eyebrow: 'Blog',
