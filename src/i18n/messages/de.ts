@@ -578,6 +578,12 @@ const de: Messages = {
     title: 'Alerts',
     description:
       'Prämienplätze kommen und gehen. Die Alerts von Saver Miles behalten Ihre Strecken im Blick: ein automatischer Scan für {weeklyMonthly} im Monat oder ein Spezialist.',
+    productDescriptions: {
+      weekly:
+        'Weekly Lookup Alert: Jeden Montag scannen wir Ihre Strecken automatisch nach Prämienplätzen und passenden Transferpartnern. {weeklyMonthly} im Monat.',
+      human:
+        'Human Search Alert: Ein Spezialist prüft Ihre Strecken in jedem Zyklus und meldet nur geprüfte Prämienplätze, keine Phantomplätze. {humanMonthly} im Monat.',
+    },
     hero: {
       eyebrow: 'Alerts',
       title: 'Behalten Sie Ihre Strecken im Blick: automatisiert oder mit Spezialist.',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import AlertPurchase from '@/components/site/AlertPurchase';
 import { getMessages, resolveLocale, type LangParams } from '@/i18n/get-messages';
-import { localeMeta } from '@/lib/seo';
+import { pageMeta } from '@/lib/seo';
 
 /**
  * /alerts/human — buy the Human Search Alert ($99.99/mo, $999.90/yr, USD).
@@ -11,12 +11,11 @@ import { localeMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const { name, tagline } = getMessages(locale).products.human;
-  return {
-    title: name,
-    description: tagline,
-    ...localeMeta(locale, '/alerts/human'),
-  };
+  const m = getMessages(locale);
+  return pageMeta(locale, '/alerts/human', {
+    title: m.products.human.name,
+    description: m.alerts.productDescriptions.human,
+  });
 }
 
 export default async function HumanAlertPage({ params }: { params: LangParams }) {
