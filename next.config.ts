@@ -27,4 +27,31 @@ const nextConfig: NextConfig = {
 };
 
 // withPayload wires Payload's admin (/cms) and API (/cms-api) into the Next build.
-export default withPayload(nextConfig);
+const config = withPayload(nextConfig);
+
+// withPayload also sends Accept-CH, Critical-CH and Vary for the
+// Sec-CH-Prefers-Color-Scheme client hint on EVERY path, so its admin can
+// server-render the OS theme. On the public site, Critical-CH makes Chromium
+// discard a first-time visitor's response and request the page again: an extra
+// round trip on every first visit (Lighthouse showed it as a ~0.8 s redirect
+// from the page to itself). Only the admin reads the hint, so it stays on /cms.
+const CMS_ONLY = new Set(['accept-ch', 'critical-ch', 'vary']);
+const isColorSchemeHint = (h: { key: string; value: string }) =>
+  CMS_ONLY.has(h.key.toLowerCase()) && h.value === 'Sec-CH-Prefers-Color-Scheme';
+const payloadHeaders = config.headers;
+
+export default {
+  ...config,
+  async headers() {
+    const rules = (await payloadHeaders?.()) ?? [];
+    return rules.flatMap((rule) => {
+      const hints = rule.headers.filter(isColorSchemeHint);
+      if (rule.source !== '/:path*' || hints.length === 0) return [rule];
+      const rest = rule.headers.filter((h) => !isColorSchemeHint(h));
+      return [
+        ...(rest.length ? [{ ...rule, headers: rest }] : []),
+        { ...rule, source: '/cms/:path*', headers: hints },
+      ];
+    });
+  },
+} satisfies NextConfig;
