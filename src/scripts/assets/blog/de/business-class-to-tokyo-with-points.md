@@ -42,7 +42,9 @@ JAL gehört zur Allianz **oneworld**, und zwei Programme stechen heraus.
 
 **American AAdvantage.** JAL Business von den USA nach Tokio lag historisch bei rund **60.000 AAdvantage-Meilen pro Strecke mit sehr niedrigen Steuern**, in der Größenordnung weniger Dollar, weil American JALs Treibstoffzuschläge nicht weitergibt. Diese Mischung aus fairem Preis und nahezu null Gebühren macht sie zu einer der saubersten Einlösungen auf der Strecke. American hat einige Umsteigeverbindungen in Richtung 80.000 Meilen verschoben, der Preis für den Nonstop-Flug mit einem Teilstück ist also der, den Sie anpeilen sollten.
 
-**Alaska Mileage Plan (jetzt Atmos Rewards).** Alaska veröffentlicht seit Langem einen niedrigen Preis für JAL Business, im Bereich von **55.000–60.000 pro Strecke** mit moderaten Gebühren. Der Nachteil: Die JAL-Verfügbarkeit ist dünn und schwer zu finden, und die Transferpartner des Programms haben sich verschoben. Es belohnt Geduld mehr als die meisten.
+**Alaska Mileage Plan (jetzt Atmos Rewards).** Atmos bepreist alle Partner über eine einzige Asien-Pazifik-Tabelle, gestaffelt nach Distanz, und die Stufengrenze bei 5.000 Meilen verläuft mitten durch die US-Landkarte. Seattle nach Tokio beginnt bei **60.000 Punkten** in Business. San Francisco, Los Angeles und jeder Flughafen an der Ostküste liegen eine Stufe höher bei **75.000**, weil sie alle über 5.000 Meilen liegen. Dazu kommt die nicht erstattungsfähige Partnergebühr von 20 $ pro Person und Richtung, die nur für Summit-Karteninhaber entfällt.
+
+Zwei Vorbehalte sind hier wichtiger als die Zahlen. Die veröffentlichten Werte sind Startpreise, genannt für Nonstop-Verbindungen, und Alaskas eigene Bedingungen warnen, dass manche Städtepaare selbst innerhalb derselben Stufe nicht zum niedrigsten Wert verfügbar sein müssen. Diese Warnung hat Gewicht: Ein Prämiensuchwerkzeug, das bis Oktober 2026 täglich über ein Jahr an Reisedaten erfasste, sah Business von den USA nach Tokio nicht ein einziges Mal zum Tabellenpreis, und der günstigste beobachtete Wert lag bei 130.000. Atmos öffnet Partnerprämien außerdem 330 Tage im Voraus, hinter JALs eigenen 360 und Americans 331, steht also strukturell am Ende der Reihe. Behandeln Sie die Tabelle als besten Fall, nicht als Preis.
 
 ## Wie die Zahlen tatsächlich aussehen
 
@@ -51,7 +53,7 @@ Grobe, dauerhaft nützliche Richtwerte für **Business Class USA–Tokio, einfac
 - **ANA über Virgin Atlantic:** ~52.500–60.000 Punkte plus Treibstoffzuschläge
 - **ANA über ANA Mileage Club:** günstige feste Tabellenpreise plus Treibstoffzuschläge, oft als Hin- und Rückflug gedacht
 - **JAL über American AAdvantage:** ~60.000 Meilen, minimale Steuern
-- **JAL über Alaska/Atmos:** ~55.000–60.000 Meilen, moderate Gebühren, knappe Verfügbarkeit
+- **JAL über Alaska/Atmos:** ab 60.000 Meilen Seattle nach Tokio, 75.000 ab Kalifornien und der Ostküste, plus 20 $ pro Richtung; der Tabellenpreis ist selten verfügbar
 
 Betrachten Sie diese Werte als Orientierung, nicht als aktuelle Angebote. Preise, Transferverhältnisse und Zuschläge ändern sich, und Transferboni (Amex zu Virgin lag schon bei 30 %) können die Rechnung weiter verschieben. Bestätigen Sie den Preis also vor der Übertragung, denn **Übertragungen gehen nur in eine Richtung und lassen sich meist nicht rückgängig machen**.
 
@@ -91,7 +93,7 @@ Genau diese Arbeit machen wir von Hand. Ein echter Spezialist durchsucht die Pr�
 
 ### Wie viele Punkte braucht man für Business Class nach Tokio?
 
-Rechnen Sie zum Zeitpunkt des Schreibens mit rund 52.500–60.000 Punkten pro Strecke für ANA Business über Virgin Atlantic, je nach Abflughafen, oder etwa 60.000 Meilen pro Strecke für JAL Business über American AAdvantage. ANAs eigenes Programm und Alaska/Atmos liegen in ähnlichen Spannen, mit anderen Vor- und Nachteilen. Diese Zahlen ändern sich, bestätigen Sie den aktuellen Preis also vor der Übertragung.
+Rechnen Sie zum Zeitpunkt des Schreibens mit rund 52.500–60.000 Punkten pro Strecke für ANA Business über Virgin Atlantic, je nach Abflughafen, oder etwa 60.000 Meilen pro Strecke für JAL Business über American AAdvantage. ANAs eigenes Programm liegt in einer ähnlichen Spanne. Atmos Rewards veröffentlicht für JAL Business weniger, ab 60.000 Punkten Seattle nach Tokio und 75.000 ab Kalifornien und der Ostküste, doch das sind Startpreise für Nonstop-Verbindungen, und der Tabellenpreis war in der Praxis sehr schwer zu finden. Diese Zahlen ändern sich, bestätigen Sie den aktuellen Preis also vor der Übertragung.
 
 ### Ist ANA oder JAL mit Punkten besser?
 
