@@ -7,7 +7,8 @@ import CaseStudyTeaserView from './CaseStudyTeaserView';
  * Home proof teaser. Renders up to three consented case studies as a filled row —
  * or nothing at all until one exists. No placeholder or fabricated proof on the
  * home page (docs/plans/00); SAMPLE rows are dropped in production by the guard in
- * case-studies.server.ts. The section simply appears the moment real stories land.
+ * case-studies.server.ts. The section simply appears once real stories land
+ * (within five minutes: the home page regenerates on that interval).
  */
 export default async function CaseStudyTeaser({
   m,

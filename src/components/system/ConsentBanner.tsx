@@ -29,7 +29,12 @@ declare global {
 
 export default function ConsentBanner() {
   const { m } = useI18n();
-  const [visible, setVisible] = useState(false);
+  // Starts visible, so it is in the server HTML and a first-time visitor sees it
+  // with the first paint; mounted after hydration instead, its paragraph was the
+  // home page's LCP, 2–4 s late. A returning visitor never sees it: ConsentScript
+  // marks <html data-consent> before paint, CSS hides `.sm-consent`, and the
+  // effect below unmounts it.
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     let stored: string | null = null;
@@ -41,10 +46,14 @@ export default function ConsentBanner() {
     // Reading persisted consent is a client-only external-system sync (localStorage
     // is unavailable during SSR), so the mount-time setState is intentional here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (stored !== 'granted' && stored !== 'denied') setVisible(true);
+    if (stored === 'granted' || stored === 'denied') setVisible(false);
 
     // Let the Footer (and anything else) re-open the banner to change the choice.
-    const open = () => setVisible(true);
+    const open = () => {
+      // Lift the pre-paint hide, or the reopened banner would stay display:none.
+      delete document.documentElement.dataset.consent;
+      setVisible(true);
+    };
     window.smOpenConsent = open;
     return () => {
       if (window.smOpenConsent === open) delete window.smOpenConsent;
@@ -70,7 +79,7 @@ export default function ConsentBanner() {
       role="dialog"
       aria-modal="false"
       aria-label={m.consent.dialog}
-      className="fixed inset-x-0 bottom-0 z-[70] flex justify-center p-4 sm:p-6"
+      className="sm-consent fixed inset-x-0 bottom-0 z-[70] flex justify-center p-4 sm:p-6"
     >
       <div
         className="w-full max-w-2xl rounded-2xl p-5 shadow-2xl backdrop-blur-md sm:p-6"

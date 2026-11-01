@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   reactCompiler: false,
   allowedDevOrigins: ['192.168.0.102'],
   images: {
+    // AVIF first, WebP for browsers without it. AVIF is ~half the bytes here (the
+    // 256px logo: 5.5 KB vs 11 KB WebP) and smaller on the blog covers; its slower
+    // first encode is paid once per rendition, then cached.
+    formats: ['image/avif', 'image/webp'],
     // Cover images are served from the public Supabase Storage bucket (not
     // Payload's wall-gated /cms-api/media route), so next/image needs the host.
     remotePatterns: [

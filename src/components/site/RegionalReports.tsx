@@ -137,7 +137,9 @@ export default function RegionalReports() {
       {/* Card — shakes on change; sits over the inactive bookmarks' right edge. */}
       <motion.div animate={controls} className="relative z-10 -ml-2 min-w-0 flex-1">
         <div id="region-report-panel" role="tabpanel" aria-labelledby={`region-tab-${region.key}`}>
-          <AnimatePresence mode="wait">
+          {/* initial={false}: the first card is in the server HTML at full opacity
+              (it is above the fold); only later region switches fade. */}
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={region.key}
               initial={{ opacity: 0 }}
