@@ -20,6 +20,7 @@ sitemap `lastmod`. Google says it stops trusting `lastmod` when it changes witho
 | `ONLY=slug[,slug]` | Seed only these posts. Unknown slugs fail before any write. |
 | `SEED_DRY_RUN=1` | Validate and print a preflight report, then exit. **Never contacts the database.** |
 | `RESEED_COVERS=1` | Re-upload every image the post owns (cover **and** body images) from source and delete the superseded media. Combine with `ONLY=`. |
+| `SEED_DRAFT=1` | Write the post as a **draft** instead of publishing. It shows up in `/cms` for review, stays invisible publicly (the `/blog` queries filter on `_status`), and does **not** ping IndexNow (the `afterChange` hook only fires on published saves). Refuses to run against an already-published post, because `_status: 'draft'` on a live document unpublishes it. |
 | `LOCALE=de` | Publish the **German** version of existing posts from `src/scripts/assets/blog/de/<slug>.md`. Writes only the translated fields (title, excerpt, body, meta) plus German alt text on the post's existing images and the German category name. Never creates a post, uploads, or changes slug, category, cover or date: publish the English post first. Body images must be the same files as in English. Combine with `ONLY=` and dry-run first, like any seed. |
 
 **German versions.** A German file uses the same header and body format as the English one, with the
@@ -55,11 +56,45 @@ or `TITLE` or `EXCERPT` is empty.
    For a new post, expect exactly `↑ uploaded cover` and `✓ created "<slug>"`.
    **If the log holds only the two npm header lines, nothing ran and nothing was written.** It has
    happened on the first real run of a session (twice on 2026-09-18, exit code still 0); an
-   immediate re-run worked both times. Dry runs never hit it. Root cause is still open, somewhere in
-   `payload run`'s tsx loading. So never trust the exit code: confirm the `✓` line, then confirm on
-   production.
+   immediate re-run worked both times. Dry runs never hit it. So never trust the exit code: confirm
+   the `✓` line, then confirm on production.
+
+   **Likely mechanism, found 2026-11-01.** `payload run` calls `process.exit(0)` the moment the
+   imported module finishes evaluating — `payload/dist/bin/index.js:53`, reached from
+   `payload/bin.js:41`. It does not wait for unsettled promises. A script whose work hangs off a
+   floating promise is therefore killed mid-flight, silently, with **exit code 0 and no output**,
+   which is this symptom exactly. That is why every script here ends in a **top-level `await`**
+   plus a `flush()` of stdout/stderr before `process.exit`, and why a new script must do the same:
+   `main().catch(...)` looks equivalent and is not. Dry runs are immune because they finish inside
+   the same tick. This explains the shape of the failure; it does not yet explain why a correct
+   top-level await occasionally loses the race, so keep confirming the `✓`.
 5. Verify on production (below), then open the PR. The post is already live, so merging just
    lands the source files, which keeps future reseeds consistent.
+
+## Steps: stage a post for review
+
+Use this when someone other than the author should see the post before readers do. Same as a new
+post, but step 4 becomes two steps:
+
+```bash
+# 4a. stage it. Nothing is public, nothing is submitted to search engines.
+ONLY=<slug> SEED_DRAFT=1 npm run seed:articles > /tmp/seed.log 2>&1; echo "exit=$?"
+# then the German version, which mirrors the English document's draft status
+LOCALE=de ONLY=<slug> SEED_DRAFT=1 npm run seed:articles > /tmp/seed-de.log 2>&1
+
+# 4b. after review, publish. Either hit Publish in /cms, or re-run without the flag:
+ONLY=<slug> npm run seed:articles
+```
+
+Two things to know:
+
+- **Re-running without `SEED_DRAFT` publishes the draft.** That is the intended second path, and it
+  is what you want when you have also edited the markdown since staging.
+- **`LOCALE=de` never changes publication status.** It mirrors whatever the English document is, so
+  seeding a translation can't be the thing that accidentally puts a staged post live.
+- `SEED_DRAFT` is for posts that are **not yet live**. To stage a change to a *published* post, edit
+  it in `/cms` and let autosave hold the draft version there; the seed refuses, by design, rather
+  than briefly unpublishing a live page.
 
 ## Steps: editing a live post
 Make a genuine improvement, run the dry run, then `ONLY=<slug> npm run seed:articles`. Its

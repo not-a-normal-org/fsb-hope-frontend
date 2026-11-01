@@ -14,6 +14,10 @@
  *  - `SEED_DRY_RUN=1`    validate + print a preflight report, then exit WITHOUT
  *    connecting to the database.
  *  - `RESEED_COVERS=1`   re-upload covers from <slug>.jpg and delete the old media.
+ *  - `SEED_DRAFT=1`      write the post as a DRAFT instead of publishing it. It
+ *    appears in /cms for review and stays invisible publicly, so a human clicks
+ *    Publish. Refuses to touch an already-published post, because setting a live
+ *    document back to draft would pull it off the site.
  *  - `LOCALE=de`         publish the GERMAN version of existing posts from
  *    `src/scripts/assets/blog/de/<slug>.md`. Writes only the localized fields
  *    (title, excerpt, body, meta) and German alt text on the post's existing
@@ -270,6 +274,28 @@ const LOCALE: Locale = (() => {
 /** Where this run's markdown lives: the English files, or a per-language folder. */
 const ARTICLES = LOCALE === DEFAULT_LOCALE ? ASSETS : path.join(ASSETS, LOCALE);
 
+/**
+ * Stage instead of publish. A draft is invisible publicly (the /blog queries filter
+ * on `_status`) and does not ping IndexNow (the Posts afterChange hook only fires on
+ * published saves), so nothing reaches readers or search engines until someone hits
+ * Publish in /cms.
+ *
+ * Deliberately refuses to re-draft a published post: `_status: 'draft'` on a live
+ * document UNPUBLISHES it, which is never what staging a new post means.
+ */
+const DRAFT = process.env.SEED_DRAFT === '1' || process.env.SEED_DRAFT === 'true';
+const STATUS = DRAFT ? ('draft' as const) : ('published' as const);
+
+/** Guard the one way SEED_DRAFT could do damage. */
+function refuseIfLive(slug: string, status: string | undefined): void {
+  if (DRAFT && status === 'published') {
+    throw new Error(
+      `"${slug}" is already published. SEED_DRAFT would set it back to draft and take it ` +
+        `off the live site. Re-run without SEED_DRAFT to update it in place.`,
+    );
+  }
+}
+
 async function categoryId(payload: Awaited<ReturnType<typeof getPayload>>, slug: string): Promise<number> {
   const found = await payload.find({ collection: 'categories', where: { slug: { equals: slug } }, limit: 1, depth: 0 });
   if (found.docs[0]) return found.docs[0].id as number;
@@ -484,12 +510,19 @@ async function main() {
   const scope = process.env.ONLY ? `ONLY ${selected.map((p) => p.slug).join(', ')}` : `all ${selected.length} posts`;
 
   if (process.env.SEED_DRY_RUN === '1' || process.env.SEED_DRY_RUN === 'true') {
-    console.log(`SEED_DRY_RUN (${LOCALE}): ${scope}. Nothing is written; the database is not contacted.`);
+    console.log(
+      `SEED_DRY_RUN (${LOCALE}): ${scope}${DRAFT ? ', as DRAFTS' : ''}. ` +
+        `Nothing is written; the database is not contacted.`,
+    );
     for (const post of selected) await report(post);
     return;
   }
 
-  console.log(`Seeding ${scope} (${LOCALE}) → PRODUCTION database.`);
+  console.log(
+    DRAFT
+      ? `Seeding ${scope} (${LOCALE}) → PRODUCTION database as DRAFTS. Nothing goes public; publish from /cms.`
+      : `Seeding ${scope} (${LOCALE}) → PRODUCTION database.`,
+  );
   const payload = await getPayload({ config });
   const now = Date.now();
 
@@ -504,7 +537,10 @@ async function main() {
     const catId = await categoryId(payload, article.category);
 
     const existing = await payload.find({ collection: 'posts', where: { slug: { equals: slug } }, limit: 1, depth: 0 });
-    const prev = existing.docs[0] as { id: number; coverImage?: number | null; content?: unknown } | undefined;
+    const prev = existing.docs[0] as
+      | { id: number; coverImage?: number | null; content?: unknown; _status?: string }
+      | undefined;
+    refuseIfLive(slug, prev?._status);
 
     // Images (cover and in-body) are normally reused on a re-run. RESEED_COVERS=1
     // re-uploads every image this post owns from source and replaces it; the
@@ -559,7 +595,7 @@ async function main() {
       content,
       meta: { title: article.metaTitle, description: article.metaDescription },
       ...(coverImage ? { coverImage } : {}),
-      _status: 'published' as const,
+      _status: STATUS,
     };
 
     if (prev) {
@@ -601,9 +637,10 @@ async function seedTranslation(payload: PayloadClient, post: Selected): Promise<
     locale: DEFAULT_LOCALE,
   });
   const english = found.docs[0] as
-    | { id: number; coverImage?: number | null; category?: number | null; content?: unknown }
+    | { id: number; coverImage?: number | null; category?: number | null; content?: unknown; _status?: string }
     | undefined;
   if (!english) throw new Error(`"${slug}": no English post to translate. Publish the English version first.`);
+  refuseIfLive(slug, english._status);
 
   const englishUploads = existingUploads(english.content);
   for (const image of images) {
@@ -633,10 +670,12 @@ async function seedTranslation(payload: PayloadClient, post: Selected): Promise<
       excerpt: article.excerpt,
       content,
       meta: { title: article.metaTitle, description: article.metaDescription },
-      _status: 'published',
+      // Mirror the English document rather than forcing 'published': seeding a
+      // translation must never be what puts a staged post live.
+      _status: english._status === 'draft' ? ('draft' as const) : ('published' as const),
     },
   });
-  console.log(`✓ ${LOCALE} version of "${slug}"`);
+  console.log(`✓ ${LOCALE} version of "${slug}"${english._status === 'draft' ? ' (still a draft)' : ''}`);
 }
 
 /** Drain stdout/stderr before process.exit, or piped output is lost. */
