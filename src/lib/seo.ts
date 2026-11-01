@@ -41,8 +41,12 @@ export function localeMeta(
   opts: { de?: boolean; robots?: Metadata['robots'] } = {},
 ): Pick<Metadata, 'alternates' | 'robots'> {
   const hidden = !LIVE_LOCALES.includes(locale);
-  const robots = hidden ? { index: false, follow: true } : opts.robots;
-  return { alternates: localeAlternates(locale, path, opts), ...(robots ? { robots } : {}) };
+  // max-image-preview:large lets Google show a large image for the page in Search
+  // and Discover; without it, Discover only shows a thumbnail.
+  const robots: Metadata['robots'] = hidden
+    ? { index: false, follow: true }
+    : { ...(typeof opts.robots === 'object' ? opts.robots : {}), 'max-image-preview': 'large' };
+  return { alternates: localeAlternates(locale, path, opts), robots };
 }
 
 /** The site's link-preview card (public/og-image.png, public/twitter-image.png). */
@@ -109,25 +113,42 @@ export function ogImageUrl(post: PostSeo, locale: Locale = 'en'): string {
   return absoluteUrl(localizePath(locale, `/blog/${post.slug}/og`));
 }
 
+/**
+ * The Organization as every JSON-LD block names it. The logo is the square social
+ * avatar (the full lockup on its own dark ground): Google shows the logo on white
+ * and wants it at least 112px square, which the transparent, cream-lettered nav
+ * lockup is not. `@id` ties author/publisher on every page to the one entity.
+ */
 const ORG = {
   '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: { '@type': 'ImageObject', url: absoluteUrl('/savermiles-logo.png'), width: 512, height: 512 },
+  logo: { '@type': 'ImageObject', url: absoluteUrl('/img/savermiles-avatar.png'), width: 1000, height: 1000 },
 } as const;
 
 /** schema.org BlogPosting for a post — inject as application/ld+json. */
 export function articleJsonLd(
   post: PostSeo,
-  opts?: { wordCount?: number; section?: string; keywords?: string[]; locale?: Locale },
+  opts?: {
+    wordCount?: number;
+    section?: string;
+    keywords?: string[];
+    locale?: Locale;
+    /** The cover photo (absolute URL, ideally ≥1200px wide), listed before the generated card. */
+    coverUrl?: string | null;
+  },
 ): Record<string, unknown> {
   const url = absoluteUrl(localizePath(opts?.locale ?? 'en', `/blog/${post.slug}`));
+  // Google's Article guidance: real, high-resolution images (≥1200px wide for
+  // large previews). The cover photo first, then the 1200×630 branded card.
+  const images = [...new Set([opts?.coverUrl, ogImageUrl(post, opts?.locale)].filter(Boolean))];
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.meta?.title || post.title,
     description: post.meta?.description || post.excerpt || undefined,
-    image: ogImageUrl(post, opts?.locale),
+    image: images.length === 1 ? images[0] : images,
     datePublished: post.publishedAt || undefined,
     dateModified: post.updatedAt || post.publishedAt || undefined,
     inLanguage: LOCALE_TAGS[opts?.locale ?? 'en'],
@@ -261,6 +282,8 @@ export function websiteJsonLd(locale: Locale): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
+    // The logo's wordmark reads "SaverMiles"; Google's site-name system accepts both.
+    alternateName: 'SaverMiles',
     url: SITE_URL,
     inLanguage: DE_LIVE ? Object.values(LOCALE_TAGS) : LOCALE_TAGS[locale],
     publisher: ORG,

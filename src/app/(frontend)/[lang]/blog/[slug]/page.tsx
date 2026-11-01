@@ -186,6 +186,7 @@ export default async function BlogPostPage({ params }: Params) {
       wordCount: wordCount(post.content),
       section: category?.name || undefined,
       locale: shown,
+      coverUrl: mediaPublicUrl(cover?.sizes?.wide?.filename ?? cover?.filename),
     }),
     breadcrumbJsonLd(crumbs),
     ...(faqs.length ? [faqJsonLd(faqs)] : []),
