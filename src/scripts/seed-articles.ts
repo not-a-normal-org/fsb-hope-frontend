@@ -234,6 +234,7 @@ function parseArticle(md: string): Article {
 
 /* ── Run order (newest first). Flagship leads. ─────────────────────────────── */
 const ORDER = [
+  'are-transfer-bonuses-worth-it',
   'citi-copa-connectmiles-emirates-business-class',
   'citi-thankyou-japan-airlines-transfer-partner',
   'travel-portal-vs-transfer-partners',
