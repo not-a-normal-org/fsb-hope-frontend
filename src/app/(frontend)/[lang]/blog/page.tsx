@@ -68,7 +68,7 @@ export default async function BlogIndexPage({ params }: { params: LangParams }) 
     blogPost: posts.map((p) => ({
       '@type': 'BlogPosting',
       headline: p.title,
-      url: absoluteUrl(`/blog/${p.slug}`),
+      url: absoluteUrl(localizePath(locale, `/blog/${p.slug}`)),
       datePublished: p.publishedAt || undefined,
     })),
   };
