@@ -1,0 +1,8 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "in": "src/scripts/assets/blog/flying-blue-promo-rewards-business-new-york.base.jpg",
+  "out": "src/scripts/assets/blog/flying-blue-promo-rewards-business-new-york.jpg",
+  "big": "45,000",
+  "small": "Miles each way, business",
+  "note": "Book by November 30, 2026"
+}
