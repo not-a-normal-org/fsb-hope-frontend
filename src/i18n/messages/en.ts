@@ -86,7 +86,7 @@ const en = {
   consent: {
     dialog: 'Cookie consent',
     eyebrow: 'Cookies',
-    body: 'We use essential cookies to run the site and Google Analytics to measure aggregate traffic so we can improve it. No advertising, ever. See our <link>Cookie Policy</link>.',
+    body: 'We use essential cookies to run the site, plus Google Analytics and Microsoft Clarity to measure aggregate traffic and see where pages confuse people, so we can improve them. No advertising, ever. See our <link>Cookie Policy</link>.',
     decline: 'Decline',
     accept: 'Accept',
     preferences: 'Cookie preferences',

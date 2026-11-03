@@ -77,6 +77,16 @@ function Body() {
         <Link href="/legal/cookies">Cookie-Richtlinie</Link> beschrieben. Wir verwenden{' '}
         <strong>keine</strong> Werbe-Cookies und keine Werbepixel von Drittanbietern.
       </p>
+      <p>
+        Für die Seite der Benutzerfreundlichkeit verwenden wir <strong>Microsoft Clarity</strong>:
+        aggregierte Heatmaps von Klicks und Scrollverhalten sowie die Sitzungswiedergabe, die einen
+        Besuch als Folge von Interaktionen (Seiten, Klicks, Scrollen, Mausbewegungen) rekonstruiert und
+        nicht Ihren Bildschirm aufzeichnet. Clarity maskiert in Formularfelder eingegebenen Text. Es wird{' '}
+        <strong>erst geladen, nachdem Sie der Analyse im Cookie-Banner zugestimmt haben</strong> – lehnen
+        Sie ab, wird das Skript nie angefordert –, und wir nutzen es ausschließlich für die
+        Benutzerfreundlichkeit, nie für Werbung. Welche Cookies es setzt und wie Sie Ihre Einwilligung
+        widerrufen, steht in unserer <Link href="/legal/cookies">Cookie-Richtlinie</Link>.
+      </p>
 
       <h2>2. Wie wir Ihre Daten verwenden</h2>
       <ul>
@@ -123,8 +133,9 @@ function Body() {
           <strong>Supabase</strong> (Datenbank und Dateispeicher), <strong>Stripe</strong>
           {' '}(Zahlungsabwicklung), <strong>Vercel</strong> (Website-Hosting) und <strong>Google</strong>
           {' '}(Google Workspace für den Versand von Transaktions- und Newsletter-E-Mails sowie Google
-          Analytics für die aggregierte Reichweitenmessung). Jeder erhält nur die Daten, die für seine
-          Funktion erforderlich sind.
+          Analytics für die aggregierte Reichweitenmessung) sowie <strong>Microsoft</strong> (Clarity für
+          die aggregierte Messung der Benutzerfreundlichkeit, nur wenn Sie der Analyse zustimmen). Jeder
+          erhält nur die Daten, die für seine Funktion erforderlich sind.
         </li>
         <li>
           <strong>Affiliates.</strong> Wenn Sie über einen Affiliate-Link zu uns kommen, ordnen wir Ihre

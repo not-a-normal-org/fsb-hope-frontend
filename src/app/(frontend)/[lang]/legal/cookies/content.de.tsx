@@ -28,8 +28,9 @@ function Body() {
         kleine Informationen auf Ihrem Gerät zu merken. Sie können <em>unbedingt erforderlich</em> (für das
         Funktionieren der Website nötig) oder <em>funktional</em> (zum Speichern Ihrer Einstellungen) sein
         oder für <em>Analyse</em> oder <em>Werbung</em> eingesetzt werden. Wir verwenden unbedingt
-        erforderliche und funktionale Einträge sowie ein einziges <em>Analyse</em>-Tool (Google
-        Analytics) für die aggregierte Reichweitenmessung. Wir verwenden keine Werbe-Cookies.
+        erforderliche und funktionale Einträge sowie zwei <em>Analyse</em>-Tools (Google Analytics und
+        Microsoft Clarity), um den Gesamtverkehr zu messen und zu erkennen, wie Seiten genutzt werden.
+        Wir verwenden keine Werbe-Cookies.
       </p>
 
       <h2>2. Was wir verwenden und warum</h2>
@@ -74,6 +75,16 @@ function Body() {
           gelesen werden und grob, woher Besucher kommen. Sie verraten uns nicht, wer Sie sind, und wir
           verwenden sie niemals für Werbung. Wie Sie widersprechen können, erfahren Sie in Abschnitt 4.
         </li>
+        <li>
+          <strong>Produktanalyse und Sitzungswiedergabe</strong> (Cookies <code>_clck</code> und{' '}
+          <code>_clsk</code>, gesetzt von Microsoft Clarity, sowie die Microsoft-Cookies{' '}
+          <code>CLID</code>, <code>ANONCHK</code>, <code>MR</code>, <code>MUID</code> und{' '}
+          <code>SM</code> auf der Domain <code>clarity.ms</code>) – <em>Analyse.</em> Diese werden{' '}
+          <strong>nur gesetzt, wenn Sie im Cookie-Banner zustimmen</strong>; bei Ablehnung wird Clarity
+          überhaupt nicht geladen. Sie zeigen uns, welche Bereiche einer Seite tatsächlich genutzt
+          werden, und erlauben die Wiedergabe einer anonymisierten Rekonstruktion eines Besuchs, damit
+          wir erkennen, was unklar war. Siehe Abschnitt 4.
+        </li>
       </ul>
 
       <h2>3. Cookies von Drittanbietern</h2>
@@ -114,6 +125,23 @@ function Body() {
         <li>Nutzen Sie die „Do Not Track“- oder Tracking-Schutz-Funktionen Ihres Browsers.</li>
       </ul>
       <p>
+        Wir verwenden außerdem <strong>Microsoft Clarity</strong>, einen Dienst für Produktanalyse von
+        Microsoft, um zu sehen, wie Seiten genutzt werden: aggregierte Heatmaps von Klicks und
+        Scrollverhalten sowie die Sitzungswiedergabe, die einen Besuch als Folge von Interaktionen
+        (Seiten, Klicks, Scrollen, Mausbewegungen) rekonstruiert und nicht Ihren Bildschirm aufzeichnet.
+        Clarity maskiert in Formularfelder eingegebenen Text, und wir nutzen es ausschließlich für die
+        Benutzerfreundlichkeit: Wir verwenden es <strong>nicht</strong> für Werbung oder personalisierte
+        Werbung, und wir verkaufen oder teilen diese Daten nicht. Für den Umgang von Microsoft mit den
+        Daten gilt die{' '}
+        <a href="https://privacy.microsoft.com/de-de/privacystatement" rel="noopener noreferrer" target="_blank">Microsoft-Datenschutzerklärung</a>.
+      </p>
+      <p>
+        Clarity wird <strong>erst geladen, nachdem Sie der Analyse zugestimmt haben</strong>. Lehnen Sie
+        ab, wird das Clarity-Skript nie angefordert und keines seiner Cookies gesetzt. Stimmen Sie zu und
+        ändern Sie später Ihre Meinung, nutzen Sie „Cookie-Einstellungen“ im Footer und lehnen Sie ab:
+        Wir weisen Clarity dann an, seine Cookies zu löschen und die Sitzung zu beenden.
+      </p>
+      <p>
         Wir verwenden keine Werbe-, Remarketing- oder Social-Media-Tracking-Cookies. Wo das Gesetz vor dem
         Setzen nicht unbedingt erforderlicher Cookies eine Einwilligung verlangt (zum Beispiel für Besucher
         in der EU, im Vereinigten Königreich oder in vergleichbaren Rechtsordnungen), gilt diese
@@ -148,7 +176,7 @@ function Body() {
 const cookies: LegalContent = {
   title: 'Cookie-Richtlinie',
   description:
-    'Welche Cookies und welchen Browser-Speicher Saver Miles verwendet, warum wir sie verwenden und wie Sie sie steuern können, einschließlich Google Analytics für die aggregierte Reichweitenmessung. Wir verwenden keine Werbe-Cookies.',
+    'Welche Cookies und welchen Browser-Speicher Saver Miles verwendet, warum wir sie verwenden und wie Sie sie steuern können, einschließlich Google Analytics und Microsoft Clarity für die Messung von Reichweite und Benutzerfreundlichkeit. Wir verwenden keine Werbe-Cookies.',
   intro:
     'Diese Richtlinie erklärt, welche Cookies und welchen Browser-Speicher unsere Website verwendet, wozu sie dienen und wie Sie sie steuern können.',
   Body,

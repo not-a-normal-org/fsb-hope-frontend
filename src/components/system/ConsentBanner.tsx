@@ -17,8 +17,15 @@ import { rich } from '@/i18n/rich';
  *
  * Re-openable for withdrawal (a GDPR requirement): the Footer's "Cookie preferences"
  * control calls `window.smOpenConsent()`, which this component registers on mount.
+ *
+ * The choice is also broadcast as a `sm-consent-change` event, because not every
+ * analytics tag is gated the way GA is: ClarityScript loads nothing until this
+ * fires with `detail: true`, and erases Clarity's cookies when it fires false.
  */
 const STORAGE_KEY = 'sm-consent'; // 'granted' | 'denied'
+// Broadcast the choice so consent-gated tags can react without a reload.
+// ClarityScript listens for this; keep both names in sync.
+const CONSENT_EVENT = 'sm-consent-change';
 
 declare global {
   interface Window {
@@ -69,6 +76,7 @@ export default function ConsentBanner() {
     window.gtag?.('consent', 'update', {
       analytics_storage: granted ? 'granted' : 'denied',
     });
+    window.dispatchEvent(new CustomEvent<boolean>(CONSENT_EVENT, { detail: granted }));
     setVisible(false);
   };
 
