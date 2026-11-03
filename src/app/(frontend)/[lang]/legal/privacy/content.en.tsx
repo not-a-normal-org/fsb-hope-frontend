@@ -64,6 +64,15 @@ function Body() {
         <Link href="/legal/cookies">Cookie Policy</Link>. We do <strong>not</strong> use advertising cookies or
         third-party advertising pixels.
       </p>
+      <p>
+        We use <strong>Microsoft Clarity</strong> for the same purpose from the usability side: aggregate
+        heatmaps of clicks and scrolling, and session replay, which reconstructs a visit as a sequence of
+        interactions (pages, clicks, scrolls, mouse movement) rather than recording your screen. Clarity
+        masks text entered into form fields. It is <strong>loaded only after you accept analytics</strong>{' '}
+        in the cookie banner &mdash; decline and the script is never requested &mdash; and we use it for
+        usability only, never for advertising. See our{' '}
+        <Link href="/legal/cookies">Cookie Policy</Link> for the cookies it sets and how to withdraw.
+      </p>
 
       <h2>2. How we use your information</h2>
       <ul>
@@ -99,7 +108,9 @@ function Body() {
           {' '}<strong>Supabase</strong> (database and file storage), <strong>Stripe</strong> (payment
           processing), <strong>Vercel</strong> (website hosting), and <strong>Google</strong> (Google
           Workspace, for transactional and newsletter email delivery; and Google Analytics, for aggregate
-          traffic measurement). Each receives only the data needed for its function.
+          traffic measurement), and <strong>Microsoft</strong> (Clarity, for aggregate usability
+          measurement, only if you accept analytics). Each receives only the data needed for its
+          function.
         </li>
         <li>
           <strong>Affiliates.</strong> If you arrive through an affiliate link, we attribute your inquiry

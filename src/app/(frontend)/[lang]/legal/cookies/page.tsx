@@ -10,7 +10,9 @@ import de from './content.de';
 /**
  * /legal/cookies — Cookie Policy. Lists the exact cookies/storage the site sets
  * today (referral, session, theme, language, newsletter-popup) plus Google
- * Analytics 4 for aggregate traffic measurement, and how to opt out. No
+ * Analytics 4 for aggregate traffic measurement and Microsoft Clarity for
+ * heatmaps and session replay, and how to opt out. Clarity's cookies are listed
+ * as consent-gated because the tag loads only once a visitor accepts. No
  * advertising cookies. NOTE: structure-reviewed, not legal advice.
  *
  * The text is in content.<locale>.tsx. The German version is a convenience
@@ -19,7 +21,7 @@ import de from './content.de';
 const CONTENT: Record<Locale, LegalContent> = { en, de };
 
 // Shared by both languages: the translation tracks the English text.
-const UPDATED = '2026-10-28';
+const UPDATED = '2026-11-04';
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);

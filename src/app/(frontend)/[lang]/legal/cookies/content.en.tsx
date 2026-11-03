@@ -21,8 +21,9 @@ function Body() {
         &ldquo;local storage&rdquo; and &ldquo;session storage,&rdquo; let a site remember small pieces
         of information on your device. They can be <em>strictly necessary</em> (needed for the site to
         work), <em>functional</em> (remembering your preferences), or used for <em>analytics</em> or{' '}
-        <em>advertising</em>. We use strictly-necessary and functional items, plus a single <em>analytics</em>{' '}
-        tool (Google Analytics) for aggregate traffic measurement. We use no advertising cookies.
+        <em>advertising</em>. We use strictly-necessary and functional items, plus two <em>analytics</em>{' '}
+        tools (Google Analytics and Microsoft Clarity) to measure aggregate traffic and see how pages are
+        used. We use no advertising cookies.
       </p>
 
       <h2>2. What we use, and why</h2>
@@ -66,6 +67,15 @@ function Body() {
           where visitors arrive from. They do not tell us who you are, and we never use them for
           advertising. See section 4 for how to opt out.
         </li>
+        <li>
+          <strong>Product analytics and session replay</strong> (cookies <code>_clck</code> and{' '}
+          <code>_clsk</code>, set by Microsoft Clarity, plus the Microsoft cookies{' '}
+          <code>CLID</code>, <code>ANONCHK</code>, <code>MR</code>, <code>MUID</code> and{' '}
+          <code>SM</code> on the <code>clarity.ms</code> domain) &mdash; <em>analytics.</em> These are
+          set <strong>only if you accept</strong> in the cookie banner; decline and Clarity is never
+          loaded at all. They let us see which parts of a page people actually use, and replay an
+          anonymized reconstruction of a visit so we can find what confused someone. See section 4.
+        </li>
       </ul>
 
       <h2>3. Third-party cookies</h2>
@@ -100,6 +110,23 @@ function Body() {
         <li>Use your browser&rsquo;s &ldquo;Do Not Track&rdquo; or tracking-protection features.</li>
       </ul>
       <p>
+        We also use <strong>Microsoft Clarity</strong>, a product-analytics service provided by
+        Microsoft, to see how pages are used: aggregate heatmaps of clicks and scrolling, and session
+        replay, which reconstructs a visit as a sequence of interactions (pages, clicks, scrolls, mouse
+        movement) rather than recording your screen. Clarity masks text entered into form fields, and we
+        use it for usability only: we do <strong>not</strong> use it for advertising or ad
+        personalization, and we do not sell or share this data. Microsoft&rsquo;s handling of the data is
+        governed by the{' '}
+        <a href="https://privacy.microsoft.com/privacystatement" rel="noopener noreferrer" target="_blank">Microsoft
+        privacy statement</a>.
+      </p>
+      <p>
+        Clarity is loaded <strong>only after you accept analytics</strong> in the cookie banner. If you
+        decline, the Clarity script is never requested and none of its cookies are set. If you accept and
+        later change your mind, use &ldquo;Cookie preferences&rdquo; in the footer and decline: we tell
+        Clarity to erase its cookies and end the session.
+      </p>
+      <p>
         We use no advertising, remarketing, or social-media tracking cookies. Where the law requires
         consent before setting non-essential cookies (for example for visitors in the EU, UK, or similar
         jurisdictions), that requirement applies to the analytics cookies above, and you can exercise the
@@ -131,7 +158,7 @@ function Body() {
 const cookies: LegalContent = {
   title: 'Cookie Policy',
   description:
-    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them, including Google Analytics for aggregate traffic measurement. We use no advertising cookies.',
+    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them, including Google Analytics and Microsoft Clarity for aggregate traffic and usability measurement. We use no advertising cookies.',
   intro:
     'This policy explains the cookies and browser storage our website uses, what they do, and how you can control them.',
   Body,
