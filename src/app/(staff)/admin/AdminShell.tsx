@@ -15,6 +15,7 @@ import {
   ClipboardList,
   Handshake,
   Newspaper,
+  Globe,
   LogOut,
   type LucideIcon,
 } from 'lucide-react';
@@ -35,6 +36,7 @@ const ICONS: Record<string, LucideIcon> = {
   applications: ClipboardList,
   referrals: Handshake,
   blog: Newspaper,
+  access: Globe,
 };
 
 export default function AdminShell({
