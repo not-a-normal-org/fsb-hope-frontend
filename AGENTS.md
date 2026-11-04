@@ -91,6 +91,23 @@ governs `/admin` (roles decide which sections — see `src/lib/access.ts`), the
 in the `/admin` layout (`src/lib/auth.ts`). `MAINTENANCE_MODE=off` drops the wall
 entirely for local work. The wall comes down at launch.
 
+## Region block
+
+Visitors located in the Indian subcontinent (IN, PK, BD, LK, NP, BT, MV, by
+Vercel's `x-vercel-ip-country`) get a 403 "Not available in your region" page
+(`/unavailable`) unless their IP is on the allowlist that admins manage at
+`/admin/access` (table `public.ip_allowlist`, `docs/sql/ip_allowlist.sql`). Logic:
+`src/lib/region-block.ts`; enforcement: `src/proxy.ts`, which reads the allowlist
+only for those visitors and caches it 30 s per instance.
+
+- **Never blocked:** signed-in staff, the staff sign-in screens and APIs, `/admin`'s
+  redirect to sign-in, the `/cms` panel's login, and the Stripe webhook — so the
+  team can't lock itself out when an ISP changes its address. Keep the region
+  check *after* those exits in the proxy.
+- **Fails closed** if the table can't be read and no earlier copy is cached.
+- **Kill switch:** `REGION_BLOCK=off` in the environment (needs a redeploy).
+- Locally there is no country header, so nothing is blocked in dev.
+
 ## Languages (English + German)
 
 The public site is English and German; staff surfaces stay English. Read

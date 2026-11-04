@@ -12,6 +12,13 @@ import {
   type Locale,
 } from '@/i18n/config';
 import { MAINTENANCE_ENABLED } from '@/lib/maintenance';
+import {
+  REGION_BLOCK_ENABLED,
+  clientIp,
+  countryOf,
+  isAllowlisted,
+  isBlockedCountry,
+} from '@/lib/region-block';
 import { verifyStaffToken, isActiveStaff } from '@/lib/session-edge';
 
 // Payload's default session cookie.
@@ -44,6 +51,42 @@ const TEXT_PATHS = new Set(['/robots.txt', '/sitemap.xml']);
 // whose browser matches this by accident just gets English and the switcher.
 const BOT_UA =
   /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|embedly|quora link preview|whatsapp|telegram|discord|slack|lighthouse|google-inspectiontool|headless/i;
+
+/**
+ * Paths the region block leaves open, beyond the sign-in endpoints and /admin
+ * redirect handled before it. Payload's /cms panel is login-gated by Payload
+ * itself, and `/cms-api/users/*` carries the login, refresh and logout calls
+ * that panel makes. `/unavailable` is the block's own notice.
+ */
+function isRegionExempt(pathname: string): boolean {
+  return (
+    pathname === '/unavailable' ||
+    pathname === '/cms' ||
+    pathname.startsWith('/cms/') ||
+    pathname === '/cms-api/users' ||
+    pathname.startsWith('/cms-api/users/')
+  );
+}
+
+/** The 403 a blocked visitor gets, shaped for what they asked for. */
+function regionBlocked(req: NextRequest, pathname: string): NextResponse {
+  // Never cache it: the same URL is served normally to every other country.
+  const headers = { 'Cache-Control': 'private, no-store' };
+  if (pathname.startsWith('/api/') || pathname.startsWith('/cms-api/')) {
+    return NextResponse.json({ error: 'region_unavailable' }, { status: 403, headers });
+  }
+  // robots.txt, sitemap.xml, feeds and llms.txt get text, not an HTML page.
+  if (pathname.slice(pathname.lastIndexOf('/') + 1).includes('.')) {
+    return new NextResponse('Not available in your region.\n', {
+      status: 403,
+      headers: { ...headers, 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
+  const url = req.nextUrl.clone();
+  url.pathname = '/unavailable';
+  url.search = '';
+  return NextResponse.rewrite(url, { status: 403, headers });
+}
 
 /**
  * The language for a visitor on an unprefixed (English) URL. An explicit choice
@@ -103,6 +146,24 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   // Gated in portal/layout.tsx via payload.auth (a real, signed-session check).
   if (pathname.startsWith('/portal')) {
     return pass();
+  }
+
+  // ── Region block (src/lib/region-block.ts) ──────────────────────────────────
+  // Visitors located in the Indian subcontinent get a 403 unless their address
+  // is on the allowlist at /admin/access. Signed-in staff are never blocked, and
+  // the sign-in screens above stay reachable, so a team member whose ISP hands
+  // them a new address can still sign in and allow it. The allowlist is only
+  // read for blocked-country visitors; nobody else pays for the lookup.
+  if (
+    !isStaff &&
+    REGION_BLOCK_ENABLED &&
+    isBlockedCountry(countryOf(req.headers)) &&
+    !isRegionExempt(pathname)
+  ) {
+    const ip = clientIp(req.headers);
+    if (!ip || !(await isAllowlisted(ip))) {
+      return regionBlocked(req, pathname);
+    }
   }
 
   // ── Maintenance wall (TEMPORARY — see docs/maintenance-mode.md) ─────────────

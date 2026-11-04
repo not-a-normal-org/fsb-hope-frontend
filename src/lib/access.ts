@@ -53,6 +53,7 @@ export const ADMIN_NAV: readonly NavItem[] = [
   { key: 'subscriptions', label: 'Subscriptions', href: '/admin/subscriptions', roles: ['admin'] },
   { key: 'products',      label: 'Products',      href: '/admin/products',      roles: ['admin'] },
   { key: 'team',          label: 'Team',          href: '/admin/team',          roles: ['admin'] },
+  { key: 'access',        label: 'Region access', href: '/admin/access',        roles: ['admin'] },
   { key: 'referrals',     label: 'Referrals',     href: '/admin/referrals',     roles: ['admin', 'affiliate'] },
   // Opens the Payload CMS (Posts/Deals/Testimonials/Media). Not an /admin path,
   // so it never matches in canAccessAdminPath — it's a link out to /cms.

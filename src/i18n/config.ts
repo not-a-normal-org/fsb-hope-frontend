@@ -53,7 +53,16 @@ export function hasLocale(value: unknown): value is Locale {
  * Paths that are never localized: staff surfaces, APIs, Payload, and crawler
  * files. Keep in step with the `(staff)` route group and `src/app/*` route files.
  */
-const UNLOCALIZED_PREFIXES = ['/api', '/cms', '/cms-api', '/admin', '/login', '/portal', '/maintenance'];
+const UNLOCALIZED_PREFIXES = [
+  '/api',
+  '/cms',
+  '/cms-api',
+  '/admin',
+  '/login',
+  '/portal',
+  '/maintenance',
+  '/unavailable',
+];
 const UNLOCALIZED_FILES = new Set(['/robots.txt', '/sitemap.xml', '/llms.txt']);
 
 /** The one localized route with a file extension: the per-language RSS feed. */
