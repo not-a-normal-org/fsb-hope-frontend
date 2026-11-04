@@ -29,13 +29,28 @@ const STORAGE_KEY = 'sm-consent'; // 'granted' | 'denied'
 const CONSENT_EVENT = 'sm-consent-change';
 const PROJECT_ID = 'z80885zxms';
 
+/**
+ * The `consentv2` payload, typed here so the key casing is checked at build
+ * time. Both keys carry a capital `S`, and Clarity ignores an object whose keys
+ * it does not recognise — silently, with no console error — which on EEA/UK/CH
+ * traffic would mean recording against a denied signal.
+ */
+type ClarityConsent = {
+  ad_Storage: 'granted' | 'denied';
+  analytics_Storage: 'granted' | 'denied';
+};
+
 declare global {
   interface Window {
-    clarity?: ((...args: unknown[]) => void) & { q?: unknown[] };
+    clarity?: {
+      (cmd: 'consentv2', consent: ClarityConsent): void;
+      (cmd: 'consent', granted: boolean): void;
+      q?: unknown[];
+    };
   }
 }
 
-/** Inject the tag once. Mirrors Microsoft's snippet, minus the `?ref=bwt` param. */
+/** Inject the tag once. Mirrors Microsoft's snippet, minus its `?ref=` attribution param. */
 function loadClarity(): void {
   if (window.clarity || document.getElementById('ms-clarity')) return;
   const w = window as Window & { clarity?: { q?: unknown[] } };
