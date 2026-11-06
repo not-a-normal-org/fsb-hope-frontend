@@ -1,0 +1,28 @@
+{
+  "fontsDir": "/tmp/blog-fonts",
+  "out": "src/scripts/assets/blog/miles-and-more-bundle-and-go-bonus.jpg",
+  "badge": "VS",
+  "blur": 2.2,
+  "left": {
+    "image": "src/scripts/assets/blog/phantom-award-space-why-seats-vanish.jpg",
+    "focusX": 0.62,
+    "eyebrow": "Buy miles for",
+    "title": "First",
+    "items": [
+      "Lufthansa First Class",
+      "Only Miles & More books it"
+    ],
+    "note": "Partners shut out since June 1"
+  },
+  "right": {
+    "image": "src/scripts/assets/blog/citi-thankyou-japan-airlines-transfer-partner-cabin.jpg",
+    "focusX": 0.45,
+    "eyebrow": "Use bank points for",
+    "title": "Business",
+    "items": [
+      "Aeroplan or United",
+      "~$5–$120 in taxes"
+    ],
+    "note": "vs ~$1,500 on Miles & More"
+  }
+}
