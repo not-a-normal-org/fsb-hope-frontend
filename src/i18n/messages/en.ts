@@ -531,7 +531,7 @@ const en = {
         },
         {
           q: 'How long does a search take?',
-          a: 'Most searches come back within five business days, often sooner. Anything time-sensitive we flag the moment we find it.',
+          a: 'Within one business day, usually the same business day. Anything time-sensitive we flag the moment we find it.',
         },
         {
           q: 'Do you need my airline or credit-card logins?',

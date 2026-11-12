@@ -497,7 +497,7 @@ const de: Messages = {
         },
         {
           q: 'Wie lange dauert eine Suche?',
-          a: 'Die meisten Suchen sind innerhalb von fünf Werktagen fertig, oft schneller. Alles Zeitkritische melden wir, sobald wir es finden.',
+          a: 'Innerhalb eines Werktags, meist noch am selben Werktag. Alles Zeitkritische melden wir, sobald wir es finden.',
         },
         {
           q: 'Brauchen Sie meine Zugangsdaten für Airline oder Kreditkarte?',
