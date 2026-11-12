@@ -8,9 +8,9 @@ import type { Messages } from '@/i18n/messages/en';
  * FAQ (Review v3 §8) — answers the top objections the site was silent on:
  * turnaround, whether we need your logins, who books, refunds, and what happens
  * if space vanishes. Native <details>/<summary> so it needs no client JS and stays
- * keyboard-accessible. Answers track existing site copy (docs/plans/03, the
- * transactional emails' "within 5 business days", and the "we hand you a seat you
- * can book" model) — nothing invented.
+ * keyboard-accessible. Answers track existing site copy (docs/plans/03 and the
+ * "we hand you a seat you can book" model) — nothing invented. The turnaround
+ * (one business day, usually the same one) is the team's own commitment.
  */
 export default function FAQ({ m }: { m: Messages['home']['faq'] }) {
   return (
