@@ -497,7 +497,7 @@ const de: Messages = {
         },
         {
           q: 'Wie lange dauert eine Suche?',
-          a: 'Innerhalb eines Werktags, meist noch am selben Werktag. Alles Zeitkritische melden wir, sobald wir es finden.',
+          a: 'Noch am selben Werktag. Alles Zeitkritische melden wir, sobald wir es finden.',
         },
         {
           q: 'Brauchen Sie meine Zugangsdaten für Airline oder Kreditkarte?',

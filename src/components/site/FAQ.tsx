@@ -10,7 +10,7 @@ import type { Messages } from '@/i18n/messages/en';
  * if space vanishes. Native <details>/<summary> so it needs no client JS and stays
  * keyboard-accessible. Answers track existing site copy (docs/plans/03 and the
  * "we hand you a seat you can book" model) — nothing invented. The turnaround
- * (one business day, usually the same one) is the team's own commitment.
+ * (the same business day) is the team's own commitment.
  */
 export default function FAQ({ m }: { m: Messages['home']['faq'] }) {
   return (
