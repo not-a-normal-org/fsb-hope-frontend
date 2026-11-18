@@ -4,16 +4,16 @@ TITLE: Das beste Hotelprogramm hat noch nie einen Transferbonus gegeben
 EXCERPT: Sortieren Sie die großen Hotelprogramme nach dem größten Bonus, den jedes je erhalten hat, und Sie erhalten das Gegenteil des Punktewerts. Das begehrteste musste nie Rabatt geben.
 META_TITLE: Wann sich ein Transferbonus wirklich lohnt
 META_DESCRIPTION: Warum die größten Transferboni auf die schwächsten Punkte fallen, wie Sie ein Angebot in Cent pro Bankpunkt bewerten und welche drei Fragen zuerst kommen.
-COVER_ALT: Geteiltes Titelbild: ein großer Bonus in schwache Hotelpunkte gegen den stärkeren Wert, den diese Bankpunkte schon hatten
+COVER_ALT: Geteiltes Titelbild: 200 % Bonus in schwache Punkte, rund 1,2 Cent je Bankpunkt, gegen 1,4 bis 1,8 Cent ohne Bonus in starke
 ---BODY---
-**Sortieren Sie die großen Hotelprogramme nach dem größten Transferbonus, den jedes je erhalten hat, und Sie erhalten fast genau das Gegenteil dessen, was ihre Punkte wert sind.** Hilton hat 200 Prozent erreicht, IHG 150, Marriott 70. World of Hyatt, das wertvollste der vier, hat nie einen Transferbonus von einem Anbieter erhalten. Ein Bonus ist ein Rabatt, und das Programm, das alle ohnehin wollen, musste nie einen anbieten.
+**Sortieren Sie die großen Hotelprogramme nach dem größten Transferbonus, den jedes je erhalten hat, und Sie erhalten fast genau das Gegenteil dessen, was ihre Punkte wert sind.** Hilton hat 200 Prozent erreicht, IHG 150, Marriott 70. Für World of Hyatt, das wertvollste der vier, ist kein Transferbonus eines Anbieters verzeichnet. Ein Bonus ist ein Rabatt, und das Programm, das alle ohnehin wollen, hat nie einen gebraucht.
 
 ## Das Wichtigste in Kürze
 
-- Unter den Hotelprogrammen ist das Muster auffallend eindeutig: Je tiefer der Rabatt, desto schwächer die Währung, und das stärkste Programm hat überhaupt nie Rabatt gegeben.
+- Unter den vier großen Hotelketten ist das Muster auffallend eindeutig: Je tiefer der Rabatt, desto schwächer die Währung, und die stärkste von ihnen hat überhaupt nie Rabatt gegeben.
 - Bewerten Sie jedes Angebot in Cent pro Bankpunkt, nicht als Prozentwert, denn die Grundkurse unterscheiden sich, und ein Prozentwert verdeckt sie.
 - So gerechnet laufen die Schlagzeilenboni zusammen: Ein Angebot von 200 Prozent in ein schwaches Programm und eines von 70 Prozent in ein mittleres landen beide bei etwa 1,2 Cent, was ein Transfer ohne Rabatt in ein starkes Programm schlägt.
-- Auf Airlines lässt sich das Muster nicht übertragen. Manche Anbieter rotieren große Boni als monatliche Werbung über ihr gesamtes Airline-Portfolio, ein großer Airline-Bonus sagt also wenig über das empfangende Programm.
+- Auf Airlines lässt sich das Muster nicht übertragen. Bilt rotiert jeden Monat große Eintagesboni durch viele seiner Partner, hoch geschätzte Airline-Programme eingeschlossen, ein großer Airline-Bonus sagt also wenig über das empfangende Programm.
 
 Alle paar Wochen erscheint eine Liste: die aktuell laufenden Transferboni, nach Prozent sortiert. Die Listen sind korrekt und fast nutzlos, denn der Prozentwert ist die eine Eigenschaft eines Bonus, die den Kontakt mit dem Rechnen nicht übersteht.
 
@@ -21,15 +21,15 @@ Beginnen wir mit der Tatsache, die Sie gegenüber der ganzen Kategorie misstraui
 
 ## Das Programm, das nie Rabatt gegeben hat
 
-Veröffentlichte Bewertungen setzen World of Hyatt Punkte je nach Quelle zwischen 1,4 und 1,8 Cent, Marriott Bonvoy bei etwa 0,7 bis 0,75, IHG bei etwa 0,6 und Hilton Honors zwischen etwa 0,35 und 0,6. Das ist die Rangfolge.
+Veröffentlichte Bewertungen setzen World of Hyatt Punkte je nach Quelle zwischen 1,4 und 1,8 Cent, Marriott Bonvoy bei etwa 0,7 bis 0,75, IHG bei etwa 0,5 bis 0,6 und Hilton Honors zwischen etwa 0,35 und 0,5. Das ist die Rangfolge.
 
-Nun die Bonusgeschichte. Hilton war Ziel von Angeboten, die mit bis zu 200 Prozent beworben wurden. IHG hat 150 gesehen und mehr als einmal 100. Marriott wurde wiederholt mit 50, 65 und 70 Prozent bonusiert, mehrmals in einem einzigen Jahr. Hyatt hat in der gesamten Geschichte des Programms nie einen Transferbonus von einem Anbieter erhalten.
+Nun die Bonusgeschichte. Hilton war Ziel von Angeboten, die mit bis zu 200 Prozent beworben wurden. IHG hat 150 gesehen und mehr als einmal 100. Marriott wurde wiederholt mit 50, 65 und 70 Prozent bonusiert, mehrmals in einem einzigen Jahr. Für Hyatt ist kein Transferbonus von Chase oder Bilt verzeichnet, seinen einzigen heutigen Bankpartnern, und kein Tracker verzeichnet einen von irgendeinem Anbieter.
 
 Vier Programme, und die Höhe des Rabatts verläuft genau entgegengesetzt zum Wert der Punkte.
 
-## Warum das so ist, mechanisch betrachtet
+## Warum das so ist, wie wir es lesen
 
-Ein Transferbonus ist eine Mengenaktion. Anbieter und Programme setzen sie ein, um Punkte zu bewegen, die sich von allein nicht bewegen, und die Programme, die am tiefsten und häufigsten Rabatt geben, sind jene, deren Währung sich am schwersten verschieben lässt. Das eine Programm, das alle ohnehin wollen, musste es nie.
+Ein Transferbonus ist eine Mengenaktion. Anbieter und Programme setzen sie ein, um Punkte zu bewegen, die sich von allein nicht bewegen, und die Programme, die am tiefsten und häufigsten Rabatt geben, sind jene, deren Währung sich am schwersten verschieben lässt. Das eine Programm, das alle ohnehin wollen, musste es nie. Das ist unsere Deutung, nichts, was die Programme veröffentlichen, und Hyatts kurze Liste an Bankpartnern gehört mit zur Geschichte, doch ohne diese Deutung ist das Muster schwer zu erklären.
 
 So gelesen ist ein großer Bonus eine Information, und die Information ist selten vorteilhaft. Es ist das Treueprogramm-Äquivalent eines dauerhaften Wühltischs.
 
@@ -39,20 +39,20 @@ Erfahrene Kommentatoren schreiben über diese Angebote genau in diesen Worten. D
 
 Die Lösung ist eine einzige Rechnung. Nehmen Sie den Grundkurs, wenden Sie den Bonus an, multiplizieren Sie mit dem realistischen Wert eines Partnerpunkts, und Sie haben den Wert eines *Ihrer* Punkte durch diese Tür. Prozentwerte lassen sich nicht über Partner hinweg vergleichen, weil die Grundkurse verschieden sind, und der Bankpunkt ist die einzige Einheit, die Sie tatsächlich ausgeben.
 
-Die Leiter, mit mittleren veröffentlichten Bewertungen:
+Die Leiter, mit dem Median der aktuellen Bewertungen von fünf Quellen:
 
-- Ein Bonus von **200 Prozent** in das schwächste große Hotelprogramm landet bei etwa **1,2 Cent** pro Bankpunkt.
+- Ein Bonus von **200 Prozent** in das schwächste große Hotelprogramm, bei einem Grundkurs von 1:1, landet bei etwa **1,2 Cent** pro Bankpunkt.
 - Ein Bonus von **100 Prozent** in das nächstschwächste landet bei etwa **1,2 Cent**.
-- Ein Bonus von **70 Prozent** in das mittlere landet bei etwa **1,28 Cent**.
-- Ein einfacher **1:1-Transfer in das stärkste, ganz ohne Bonus**, landet bei etwa **1,4 bis 1,65 Cent**.
+- Ein Bonus von **70 Prozent** in das mittlere landet bei etwa **1,25 Cent**.
+- Ein einfacher **1:1-Transfer in das stärkste, ganz ohne Bonus**, landet bei etwa **1,55 Cent**, je nach Quelle irgendwo zwischen 1,4 und 1,8.
 
-Die Schlagzeilenwerte reichen von 200 Prozent bis null. Die Ergebnisse umfassen etwa vier Zehntel Cent, und das beste davon trägt keinen Bonus. Das ist der Befund, den man mitnehmen sollte: Die tiefsten Rabatte landen auf Währungen, die einem gewöhnlichen Transfer in ein gutes Programm immer noch unterliegen.
+Die Schlagzeilenwerte reichen von 200 Prozent bis null. Die Ergebnisse umfassen etwa ein Drittel Cent, und das beste davon trägt keinen Bonus. Das ist der Befund, den man mitnehmen sollte: Die tiefsten Rabatte landen auf Währungen, die einem gewöhnlichen Transfer in ein gutes Programm immer noch unterliegen.
 
-Eine aktuelle Einschränkung zur letzten Zeile. Chase und Bilt haben ihre Hyatt-Kurse 2026 für die meisten Karten auf 4:3 gesenkt, was diese Tür für betroffene Karteninhaber auf etwa 1,05 bis 1,35 Cent drückt und den Abstand tatsächlich verkleinert. Was dagegen zu tun ist, haben wir in [der Hyatt-Transferfrist](/blog/hyatt-transfer-deadline-what-to-do) durchgearbeitet.
+Eine aktuelle Einschränkung zur letzten Zeile. Chase hat seinen Hyatt-Kurs 2026 für alle Karten außer den Reserve-Karten auf 4:3 gesenkt, und Bilt stellt am 1. Januar 2027 alle Mitglieder auf 4:3 um. Das drückt diese Tür für betroffene Karteninhaber auf etwa 1,05 bis 1,35 Cent und verkleinert den Abstand tatsächlich. Was dagegen zu tun ist, haben wir in [der Hyatt-Transferfrist](/de/blog/hyatt-transfer-deadline-what-to-do) durchgearbeitet.
 
 ## Die Ausnahme, die beweist, dass es ums Ziel geht
 
-Es gibt ein echtes Gegenbeispiel, und es ist lehrreich, nicht unangenehm. Accors Währung wird ungewöhnlich hoch bewertet, nahe der Spitze der Hoteltabelle, und war trotzdem Gegenstand sehr großer Boni. Rechnet man einen davon in Cent pro Bankpunkt, liegt er weit über allem in der Leiter oben.
+Es gibt ein echtes Gegenbeispiel, und es ist lehrreich, nicht unangenehm. Accors Punkte haben einen von Accor festgelegten Wert von 0,02 € pro Punkt, den höchsten aller Hotelwährungen pro Punkt, und trotzdem hat Bilt Transfers dorthin mit bis zu 200 Prozent bonusiert. Rechnet man einen davon in Cent pro Bankpunkt, liegt er weit über allem in der Leiter oben. Der Grundkurs zählt trotzdem: Ein Citi-Bonus von 50 Prozent auf dessen Grundkurs von 2:1 landet bei etwa 1,5 bis 1,7 Cent, nicht besser als Hyatt zu 1:1.
 
 Die Regel lautet also nicht „große Boni sind schlecht“. Sie lautet, dass der Bonus fast nichts sagt und das Ziel fast alles. Wenn ein tiefer Rabatt auf eine wirklich starke Währung fällt, ist er das beste Angebot auf der Seite. Diese Kombination ist nur selten, und sie ist aus dem oben genannten mechanischen Grund selten.
 
@@ -60,17 +60,17 @@ Die Regel lautet also nicht „große Boni sind schlecht“. Sie lautet, dass de
 
 Zwei Details machen Schlagzeilenwerte schlechter als nutzlos, wenn Sie sie direkt vergleichen.
 
-**Die Grundkurse unterscheiden sich.** Manche Programme übertragen 1:1, manche 1:2, manche 3:2. Ein Bonus kommt auf den jeweiligen Grundkurs obendrauf, derselbe Prozentwert erzeugt also je nach Paarung völlig unterschiedliche Mengen.
+**Die Grundkurse unterscheiden sich.** Manche Paarungen übertragen 1:1, manche 1:2, manche 3:2, 2:1 oder 4:3. Ein Bonus kommt auf den jeweiligen Grundkurs obendrauf, derselbe Prozentwert erzeugt also je nach Paarung völlig unterschiedliche Mengen. American Express bot einmal 50 Prozent Bonus zu Hilton auf seinen Grundkurs von 1:2, was pro Bankpunkt genau dieselben drei Hilton-Punkte ergab wie Bilts 200 Prozent auf dessen Grundkurs von 1:1.
 
-**Die größten Zahlen sind meist an Bedingungen geknüpft.** Die tiefsten beworbenen Hotelboni waren in der Regel „bis zu“-Werte, einer obersten Statusstufe vorbehalten, bei einer bestimmten Punktezahl gedeckelt, an einem einzigen Tag verfügbar und mitunter nur durch zusätzliche Ausgaben freizuschalten. Eine bedingte Obergrenze gegen das Dauerangebot eines anderen Anbieters zu stellen, ist überhaupt kein Vergleich.
+**Die größten Zahlen sind meist an Bedingungen geknüpft.** Die tiefsten beworbenen Hotelboni waren in der Regel „bis zu“-Werte, den oberen Statusstufen vorbehalten, bei einer bestimmten Punktezahl gedeckelt, etwa einen Tag lang verfügbar und mitunter nur gegen eine zusätzliche Zahlung in Bilt Cash in voller Höhe freizuschalten. In beiden Hilton-Aktionen von Bilt im Jahr 2026 gab es 200 Prozent nur für die oberste Stufe plus diese Zahlung; die meisten Mitglieder bekamen 75 bis 150 Prozent. Eine bedingte Obergrenze gegen das Dauerangebot eines anderen Anbieters zu stellen, ist überhaupt kein Vergleich.
 
 ## Der Bonus berührt das Risiko nicht
 
 Ein Bonus verändert die Menge auf einer Seite eines unumkehrbaren Tauschs. Am Tausch selbst verändert er nichts weiter.
 
-Transfers sind eine Einbahnstraße, und kein großer Anbieter dreht sie zurück. Die Prämie muss an Ihren Daten weiterhin existieren. Das Programm kann seine Tabelle weiterhin neu bepreisen, nachdem Ihre Punkte angekommen sind. Der Partner kann weiterhin aufhören, das zu verkaufen, was Sie wollten, und das ist nicht hypothetisch: [eine ganze Partnerbeziehung wurde](/blog/when-a-partner-stops-selling-awards) diesen Oktober dunkel, ohne Erklärung und ohne genanntes Enddatum.
+Transfers sind eine Einbahnstraße. Jeder große Anbieter behandelt sie als endgültig, und die seltenen bekannten Rückbuchungen waren einmalige Kulanzfälle. Die Prämie muss an Ihren Daten weiterhin existieren. Das Programm kann seine Tabelle weiterhin neu bepreisen, nachdem Ihre Punkte angekommen sind. Der Partner kann weiterhin aufhören, das zu verkaufen, was Sie wollten, und das ist nicht hypothetisch: [eine ganze Partnerbeziehung wurde](/de/blog/when-a-partner-stops-selling-awards) diesen Oktober dunkel, ohne Erklärung und ohne genanntes Enddatum.
 
-Ein Bonus von 40 Prozent auf Meilen, die Sie nie nutzen, ist kein Gewinn von 40 Prozent. Es ist ein Totalverlust mit einer größeren Zahl daran. Unser [Leitfaden zu Transferpartnern](/blog/transfer-partners-explained-guide) legt die Reihenfolge dar, die das verhindert, und eine Aktion ist kein Grund, sie zu brechen.
+Ein Bonus von 40 Prozent auf Meilen, die Sie nie nutzen, ist kein Gewinn von 40 Prozent. Es ist ein Totalverlust mit einer größeren Zahl daran. Unser [Leitfaden zu Transferpartnern](/de/blog/transfer-partners-explained-guide) legt die Reihenfolge dar, die das verhindert, und eine Aktion ist kein Grund, sie zu brechen.
 
 ## Die drei Fragen, in dieser Reihenfolge
 
@@ -82,7 +82,7 @@ Ein Bonus von 40 Prozent auf Meilen, die Sie nie nutzen, ist kein Gewinn von 40 
 
 ## Wann es sich wirklich lohnt
 
-Die strenge Linie lautet, nur gegen eine bestätigte Buchung zu übertragen, und das ist die richtige Voreinstellung. Dazu gehört die Feststellung, dass das Feld nicht einstimmig ist: Manche angesehenen Kommentatoren übertragen spekulativ, wenn ein großer Bonus auf ein Programm fällt, das sie sicher nutzen werden, und sie nennen dann die starken Programme. Niemand Glaubwürdiger wirbt für spekulative Transfers in die schwachen, was derselbe Befund von der anderen Seite ist.
+Die strenge Linie lautet, nur gegen eine bestätigte Buchung zu übertragen, und das ist die richtige Voreinstellung. Dazu gehört die Feststellung, dass das Feld nicht einstimmig ist: Manche angesehenen Kommentatoren übertragen spekulativ, wenn ein großer Bonus auf ein Programm fällt, das sie sicher nutzen werden, und sie nennen dann die starken Programme. Die meisten namhaften Kommentatoren raten von spekulativen Transfers in die schwachen ab, selbst bei 200 Prozent, was derselbe Befund von der anderen Seite ist.
 
 Die ehrliche Fassung der Ausnahme ist also eng:
 
@@ -96,7 +96,7 @@ Das Aufstocken ist der klarere Fall. Wenn Ihnen wenige Tausend Punkte für eine 
 
 Der schwierige Teil ist nicht die Rechnung. Es ist, Frage zwei richtig zu beantworten, und das heißt, die tatsächliche Prämienverfügbarkeit über mehrere Programme zu prüfen, an Ihren Daten, in der gewünschten Reiseklasse, und zu wissen, was jedes zusätzlich in Bargeld verlangt. Die meisten übertragen, weil der Bonus ausläuft und das Prüfen mühsam ist.
 
-Das ist die Arbeit, die wir von Hand machen. Ein echter Mensch bestätigt, was wirklich buchbar ist, bepreist es über jedes erreichbare Programm und sagt, ob der Bonus Ihre Reise wirklich verbessert oder nur so aussieht. [So funktioniert es](/how-it-works) beschreibt den Ablauf, [Preise](/pricing) nennt die Kosten. Neu bei der Mechanik? Beginnen Sie mit dem [Grundlagenleitfaden](/blog/how-to-fly-for-free-with-credit-card-points), und wenn Sie Punkte gegen Bargeld abwägen, vergleicht [Reiseportal oder Transferpartner](/blog/travel-portal-vs-transfer-partners) beides ehrlich.
+Das ist die Arbeit, die wir von Hand machen. Ein echter Mensch bestätigt, was wirklich buchbar ist, bepreist es über jedes erreichbare Programm und sagt, ob der Bonus Ihre Reise wirklich verbessert oder nur so aussieht. [So funktioniert es](/de/how-it-works) beschreibt den Ablauf, [Preise](/de/pricing) nennt die Kosten. Neu bei der Mechanik? Beginnen Sie mit dem [Grundlagenleitfaden](/de/blog/how-to-fly-for-free-with-credit-card-points), und wenn Sie Punkte gegen Bargeld abwägen, vergleicht [Reiseportal oder Transferpartner](/de/blog/travel-portal-vs-transfer-partners) beides ehrlich.
 
 ## Häufig gestellte Fragen
 
@@ -106,11 +106,11 @@ Nur wenn sie eine Einlösung verbessern, die Sie ohnehin vorgenommen hätten. Ei
 
 ### Warum sind Hotel-Transferboni so viel größer als die von Airlines?
 
-Unter den Hotelprogrammen folgt die Höhe eines Bonus der Schwäche der Währung, denn ein Bonus ist eine Mengenaktion, und die Programme, die am tiefsten Rabatt geben, sind jene, deren Punkte sich am wenigsten bereitwillig bewegen. Das wertvollste Hotelprogramm hat nie einen gebraucht. Übertragen Sie diese Logik vorsichtig auf Airlines: Manche Anbieter rotieren große Boni als regelmäßige Werbung über ihr gesamtes Airline-Portfolio, auch zu Programmen, die in der Szene hoch geschätzt sind. Ein Airline-Bonus trägt also weit weniger Information über das Ziel.
+Unter den Hotelprogrammen folgt die Höhe eines Bonus der Schwäche der Währung, denn ein Bonus ist eine Mengenaktion, und die Programme, die am tiefsten Rabatt geben, sind jene, deren Punkte sich am wenigsten bereitwillig bewegen. Unter den großen Ketten ist für das wertvollste Programm kein Bonus verzeichnet. Übertragen Sie diese Logik vorsichtig auf Airlines: Bilt rotiert jeden Monat große Eintagesboni durch viele seiner Partner, auch zu Airline-Programmen, die in der Szene hoch geschätzt sind, etwa Flying Blue, Virgin Atlantic und Avios. Ein Airline-Bonus trägt also weit weniger Information über das Ziel.
 
 ### Soll ich während eines Bonus spekulativ übertragen?
 
-Die Standardantwort lautet Nein, denn ein spekulativer Transfer nimmt Verfügbarkeitsrisiko, Abwertungsrisiko und Unumkehrbarkeit in Kauf, und ein Bonus gleicht keines davon aus. Die ehrliche Ausnahme, die manche erfahrenen Kommentatoren eingehen, ist ein großer Bonus in ein Programm, das Sie nachweislich nutzen und schätzen, wobei Sie einen Teil eines Guthabens bewegen und nicht alles. Niemand Glaubwürdiger empfiehlt spekulative Transfers in die schwächsten Programme, was derselbe Schluss aus der anderen Richtung ist.
+Die Standardantwort lautet Nein, denn ein spekulativer Transfer nimmt Verfügbarkeitsrisiko, Abwertungsrisiko und Unumkehrbarkeit in Kauf, und ein Bonus gleicht keines davon aus. Die ehrliche Ausnahme, die manche erfahrenen Kommentatoren eingehen, ist ein großer Bonus in ein Programm, das Sie nachweislich nutzen und schätzen, wobei Sie einen Teil eines Guthabens bewegen und nicht alles. Die meisten namhaften Kommentatoren raten von spekulativen Transfers in die schwächsten Programme ab, was derselbe Schluss aus der anderen Richtung ist.
 
 ### Wie vergleiche ich einen Transferbonus mit der Nutzung von Punkten als Bargeld?
 
@@ -118,4 +118,4 @@ Rechnen Sie beide Wege in Cent pro Bankpunkt. Für den Bonus wenden Sie Grundkur
 
 ## Starten Sie Ihre Suche
 
-Wenn ein Bonus läuft und Sie nicht sicher sind, ob er Ihnen konkret hilft, lohnt es sich, das vor der Frist zu klären und nicht danach. [Starten Sie Ihre Suche](/individual): Sagen Sie uns, was Sie halten und was Sie buchen möchten, und ein Spezialist prüft, was verfügbar ist und ob der Transfer wirklich das bessere Geschäft ist.
+Wenn ein Bonus läuft und Sie nicht sicher sind, ob er Ihnen konkret hilft, lohnt es sich, das vor der Frist zu klären und nicht danach. [Starten Sie Ihre Suche](/de/individual): Sagen Sie uns, was Sie halten und was Sie buchen möchten, und ein Spezialist prüft, was verfügbar ist und ob der Transfer wirklich das bessere Geschäft ist.
