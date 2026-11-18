@@ -4,22 +4,24 @@
   "badge": "VS",
   "blur": 2.2,
   "left": {
-    "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/30651229.jpg",
+    "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/covers-src/30651229.jpg",
     "focusX": 0.45,
-    "eyebrow": "70% bonus, hotel points",
-    "title": "1.19\u00a2",
+    "eyebrow": "200% bonus, weak points",
+    "title": "1.2¢",
     "items": [
-      "per card point"
+      "per bank point"
     ],
-    "note": "The bigger headline"
+    "note": "The bigger headline",
+    "source": "https://www.pexels.com/photo/30651229/"
   },
   "right": {
-    "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/cand2/11055938.jpg",
-    "focusX": 0.82,
-    "eyebrow": "No bonus, airline miles",
-    "title": "1.3 to 1.5\u00a2",
+    "source": "https://www.pexels.com/photo/40454343/",
+    "image": "/private/tmp/claude-501/-Users-darklord-flight-search-buddy-website-fsb-hope-frontend/da437f58-6303-4c09-8cb6-78cf2d26486b/scratchpad/covers-src/40454343.jpg",
+    "focusX": 0.55,
+    "eyebrow": "No bonus, strong points",
+    "title": "1.4 to 1.8¢",
     "items": [
-      "per card point"
+      "per bank point"
     ],
     "note": "The better outcome"
   }
