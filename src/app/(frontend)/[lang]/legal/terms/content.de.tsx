@@ -288,7 +288,7 @@ function Body() {
 const terms: LegalContent = {
   title: 'Allgemeine Geschäftsbedingungen',
   description:
-    'Die Bedingungen für die Prämienflugsuche und die Alerts von Saver Miles: Gebühren, Anzahlung und Erfolgsgebühr, Erstattungen und Kündigungen sowie die Grenzen unserer Leistungen.',
+    'Die Bedingungen für Prämienflugsuche und Alerts von Saver Miles: Gebühren, Anzahlung, Erfolgsgebühr, Erstattungen, Kündigung und Grenzen unserer Leistung.',
   intro:
     'Diese Bedingungen erklären, wie unsere Prämienflugsuche und unsere Alerts funktionieren, was sie kosten und wo die Grenzen dessen liegen, was wir zusagen können. Bitte lesen Sie sie, bevor Sie uns beauftragen.',
   Body,

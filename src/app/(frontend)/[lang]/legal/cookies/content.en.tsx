@@ -158,7 +158,7 @@ function Body() {
 const cookies: LegalContent = {
   title: 'Cookie Policy',
   description:
-    'The cookies and browser storage Saver Miles uses, why we use them, and how to control them, including Google Analytics and Microsoft Clarity for aggregate traffic and usability measurement. We use no advertising cookies.',
+    'The cookies and browser storage Saver Miles uses and how to control them, including Google Analytics and Microsoft Clarity. We use no advertising cookies.',
   intro:
     'This policy explains the cookies and browser storage our website uses, what they do, and how you can control them.',
   Body,
