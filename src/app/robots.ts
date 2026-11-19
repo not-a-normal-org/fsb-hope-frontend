@@ -17,7 +17,11 @@ import { SITE_URL } from '@/lib/constants';
 //
 // While the construction wall is up this is unreachable anyway: the proxy
 // returns 503 for it, which tells crawlers to stop and retry later.
-const DISALLOW = ['/admin/', '/api/', '/cms/', '/cms-api/'];
+//
+// No trailing slash on /admin and /cms: robots rules match by prefix, so
+// '/cms/' left the bare /cms (Payload's dashboard, a 200 with a 19-character
+// title) crawlable. '/cms' also covers /cms-api/.
+const DISALLOW = ['/admin', '/api/', '/cms'];
 
 // Answer-engine + training crawlers we want indexing and citing the blog.
 const AI_AGENTS = [

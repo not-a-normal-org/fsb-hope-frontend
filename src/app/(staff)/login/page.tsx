@@ -8,6 +8,8 @@ import LoginForm from './LoginForm';
 
 export const metadata: Metadata = {
   title: 'Sign in',
+  description:
+    'Sign-in for Saver Miles team members and partners. It opens the staff console or the partner portal; travelers start a flight request on the main site.',
   robots: 'noindex, nofollow',
 };
 
