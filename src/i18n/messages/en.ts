@@ -588,6 +588,9 @@ const en = {
 
   pricing: {
     title: 'Pricing',
+    // `metaTitle` is the <title> and social card on pages that have one; `title`
+    // stays the short heading and breadcrumb label.
+    metaTitle: 'Pricing: Award Flight Search by a Specialist',
     description:
       'Saver Miles pricing: a {deposit} deposit, plus {successFee} per person, per direction once we confirm a bookable seat. Nothing found? The deposit comes back in full.',
     hero: {
@@ -614,9 +617,14 @@ const en = {
 
   alerts: {
     title: 'Alerts',
+    metaTitle: 'Award Seat Alerts: Weekly Scan or a Specialist',
     description:
       'Award space comes and goes. Saver Miles alerts watch your routes: an automated weekly scan for {weeklyMonthly} a month, or a specialist checking every cycle.',
     // Meta descriptions of the two product pages (/alerts/weekly, /alerts/human).
+    productMetaTitles: {
+      weekly: 'Weekly Lookup Alert: Automated Award Scan',
+      human: 'Human Search Alert: Seats Checked by Hand',
+    },
     productDescriptions: {
       weekly:
         'Weekly Lookup Alert: every Monday, an automated scan of your routes shows which airlines have award space and which card points transfer in. {weeklyMonthly} a month.',
@@ -636,6 +644,7 @@ const en = {
 
   individual: {
     title: 'For Individuals',
+    metaTitle: 'Award Flight Search for Individual Travelers',
     description:
       'Sitting on points with no idea what they’re worth? A Saver Miles specialist finds the award seat they can actually book and gives you the exact point cost.',
     hero: {
@@ -674,6 +683,7 @@ const en = {
 
   business: {
     title: 'For Business',
+    metaTitle: 'Award Flight Search for Business Travel',
     description:
       'Award search for teams that fly often. A specialist runs account-level searches across 30+ programs, so company travel spend turns into premium seats.',
     hero: {
@@ -728,6 +738,7 @@ const en = {
 
   about: {
     title: 'About',
+    metaTitle: 'About Us: Real Specialists, Not an Algorithm',
     description:
       'Award tools are full of seats that aren’t really there. Saver Miles assigns you a real specialist who verifies the seat and hands you one you can actually book.',
     hero: {
@@ -765,6 +776,7 @@ const en = {
 
   howItWorks: {
     title: 'How It Works',
+    metaTitle: 'How It Works: Award Flights Searched by Hand',
     description:
       'How Saver Miles works: tell us the trip, a specialist searches award space by hand across 30+ programs, and you get a verified, bookable seat with proof.',
     eyebrow: 'How it works',
@@ -790,6 +802,7 @@ const en = {
 
   calculator: {
     title: 'Points Calculator',
+    metaTitle: 'Points Calculator: What Your Miles Are Worth',
     description:
       'Estimate what your credit card points and airline miles are worth in travel, and what they could realistically book. A free points calculator by Saver Miles.',
     hero: {
@@ -832,6 +845,7 @@ const en = {
 
   contact: {
     title: 'Contact',
+    metaTitle: 'Contact Us: Press, Partners and Questions',
     description:
       'Contact Saver Miles for press, partnerships or a question that doesn’t fit a search request. Ready to use your points? Start an individual or business search.',
     hero: {
@@ -848,6 +862,7 @@ const en = {
 
   results: {
     title: 'Results',
+    metaTitle: 'Results: Verified Award Bookings',
     description:
       'Verified award bookings and client stories from Saver Miles, published only once they’re real and we have permission to share them. Nothing made up.',
     hero: {
@@ -867,6 +882,7 @@ const en = {
 
   blog: {
     title: 'Blog',
+    metaTitle: 'Award Travel Blog: Points, Miles and Deals',
     description:
       'Guides to booking flights with points and miles: transfer partners, award sweet spots and what a seat really costs, checked by a real specialist.',
     home: 'Home',
@@ -907,11 +923,13 @@ const en = {
       filedUnder: 'Everything we’ve filed under {name}.',
       guides: {
         title: 'Guides',
+        metaTitle: 'Award Travel Guides and How-Tos',
         intro:
           'How award travel actually works — step-by-step playbooks from real, by-hand searches, not an algorithm’s guess.',
       },
       deals: {
         title: 'Deals',
+        metaTitle: 'Award Flight Deals Found by Hand',
         intro:
           'Standout award space and fare finds our team turned up by hand. Time-sensitive by nature — move while they last.',
       },

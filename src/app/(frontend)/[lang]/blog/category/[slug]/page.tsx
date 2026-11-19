@@ -29,7 +29,10 @@ export const dynamic = 'force-dynamic';
  *  categories; others fall back to the CMS name. */
 const TAILORED = ['guides', 'deals'] as const;
 
-function tailoredCopy(locale: Locale, slug: string): { title: string; intro: string } | undefined {
+function tailoredCopy(
+  locale: Locale,
+  slug: string,
+): { title: string; metaTitle: string; intro: string } | undefined {
   const m = getMessages(locale).blog.category;
   return (TAILORED as readonly string[]).includes(slug)
     ? m[slug as (typeof TAILORED)[number]]
@@ -82,7 +85,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const category = await getCategory(slug, locale);
   const { blog } = getMessages(locale);
   const copy = tailoredCopy(locale, slug);
-  const title = copy?.title ?? category?.name ?? blog.title;
+  const title = copy?.metaTitle ?? category?.name ?? blog.title;
   const description =
     copy?.intro ?? (category ? fmt(blog.category.filedUnder, { name: category.name }) : undefined);
   const path = `/blog/category/${slug}`;

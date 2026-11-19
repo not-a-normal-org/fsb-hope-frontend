@@ -551,6 +551,9 @@ const de: Messages = {
 
   pricing: {
     title: 'Preise',
+    // `metaTitle` is the <title> and social card on pages that have one; `title`
+    // stays the short heading and breadcrumb label.
+    metaTitle: 'Preise: Prämienflugsuche vom Spezialisten',
     description:
       'Preise bei Saver Miles: {deposit} Anzahlung, dazu {successFee} pro Person und Richtung, erst wenn wir einen buchbaren Platz bestätigen. Nichts gefunden? Anzahlung zurück.',
     hero: {
@@ -576,8 +579,13 @@ const de: Messages = {
 
   alerts: {
     title: 'Alerts',
+    metaTitle: 'Alerts für Prämienplätze auf Ihren Strecken',
     description:
       'Prämienplätze kommen und gehen. Die Alerts von Saver Miles behalten Ihre Strecken im Blick: ein automatischer Scan für {weeklyMonthly} im Monat oder ein Spezialist.',
+    productMetaTitles: {
+      weekly: 'Weekly Lookup Alert: automatische Prämiensuche',
+      human: 'Human Search Alert: von Hand geprüfte Plätze',
+    },
     productDescriptions: {
       weekly:
         'Weekly Lookup Alert: Jeden Montag scannen wir Ihre Strecken automatisch nach Prämienplätzen und passenden Transferpartnern. {weeklyMonthly} im Monat.',
@@ -597,6 +605,7 @@ const de: Messages = {
 
   individual: {
     title: 'Für Privatreisende',
+    metaTitle: 'Prämienflugsuche für Privatreisende',
     description:
       'Viele Punkte, aber keine Ahnung, was sie wert sind? Ein Spezialist von Saver Miles findet den Platz, den Sie damit wirklich buchen können, samt Punktepreis.',
     hero: {
@@ -635,6 +644,7 @@ const de: Messages = {
 
   business: {
     title: 'Für Unternehmen',
+    metaTitle: 'Prämienflugsuche für Unternehmen',
     description:
       'Prämiensuche für Teams, die oft fliegen. Ein Spezialist sucht auf Kontoebene in über 30 Programmen, damit aus Ihren Reiseausgaben Premium-Plätze werden.',
     hero: {
@@ -689,6 +699,7 @@ const de: Messages = {
 
   about: {
     title: 'Über uns',
+    metaTitle: 'Über uns: echte Spezialisten statt Algorithmus',
     description:
       'Prämien-Tools sind voller Plätze, die es gar nicht gibt. Bei Saver Miles prüft ein echter Spezialist jeden Platz, bevor Sie ihn buchen.',
     hero: {
@@ -726,6 +737,7 @@ const de: Messages = {
 
   howItWorks: {
     title: 'So funktioniert’s',
+    metaTitle: 'So funktioniert die Prämienflugsuche von Hand',
     description:
       'So funktioniert Saver Miles: Sie nennen die Reise, ein Spezialist sucht von Hand in über 30 Programmen, und Sie erhalten einen geprüften, buchbaren Platz.',
     eyebrow: 'So funktioniert’s',
@@ -751,6 +763,7 @@ const de: Messages = {
 
   calculator: {
     title: 'Punkte-Rechner',
+    metaTitle: 'Punkte-Rechner: was Ihre Meilen wert sind',
     description:
       'Schätzen Sie, was Ihre Kreditkartenpunkte und Meilen auf Reisen wert sind und was sie realistisch buchen können. Der kostenlose Punkte-Rechner von Saver Miles.',
     hero: {
@@ -790,6 +803,7 @@ const de: Messages = {
 
   contact: {
     title: 'Kontakt',
+    metaTitle: 'Kontakt: Presse, Partner und Fragen',
     description:
       'Kontakt zu Saver Miles für Presse, Partnerschaften oder Fragen außerhalb einer Suchanfrage. Bereit, Ihre Punkte zu nutzen? Starten Sie direkt eine Suchanfrage.',
     hero: {
@@ -806,6 +820,7 @@ const de: Messages = {
 
   results: {
     title: 'Ergebnisse',
+    metaTitle: 'Ergebnisse: geprüfte Prämienbuchungen',
     description:
       'Bestätigte Prämienbuchungen und Kundengeschichten von Saver Miles, veröffentlicht erst, wenn sie echt sind und wir sie teilen dürfen. Nichts davon ist erfunden.',
     hero: {
@@ -824,6 +839,7 @@ const de: Messages = {
 
   blog: {
     title: 'Blog',
+    metaTitle: 'Prämienreise-Blog: Punkte, Meilen und Deals',
     description:
       'Ratgeber zum Fliegen mit Punkten und Meilen: Transferpartner, Sweet Spots und was ein Prämienplatz wirklich kostet, geprüft von einem echten Spezialisten.',
     home: 'Startseite',
@@ -861,11 +877,13 @@ const de: Messages = {
       filedUnder: 'Alles, was wir unter {name} abgelegt haben.',
       guides: {
         title: 'Ratgeber',
+        metaTitle: 'Ratgeber für Prämienreisen mit Punkten',
         intro:
           'Wie Prämienreisen wirklich funktionieren – Schritt-für-Schritt-Anleitungen aus echten Suchen von Hand, keine Schätzung eines Algorithmus.',
       },
       deals: {
         title: 'Deals',
+        metaTitle: 'Prämienflug-Deals, von Hand gefunden',
         intro:
           'Herausragende Prämienplätze und Preisfunde, die unser Team von Hand aufgespürt hat. Naturgemäß zeitkritisch – handeln Sie, solange sie verfügbar sind.',
       },
