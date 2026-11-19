@@ -17,7 +17,7 @@ import { pageMeta } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const { title, description } = getMessages(locale).alerts;
+  const { metaTitle: title, description } = getMessages(locale).alerts;
   return pageMeta(locale, '/alerts', { title, description });
 }
 

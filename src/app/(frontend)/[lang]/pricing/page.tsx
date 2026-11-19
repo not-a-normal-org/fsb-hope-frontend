@@ -22,7 +22,7 @@ import { pageMeta, serviceJsonLd } from '@/lib/seo';
  */
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const { title, description } = getMessages(locale).pricing;
+  const { metaTitle: title, description } = getMessages(locale).pricing;
   return pageMeta(locale, '/pricing', { title, description });
 }
 

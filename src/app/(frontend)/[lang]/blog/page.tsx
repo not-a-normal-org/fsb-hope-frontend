@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: LangParams }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const { title, description } = getMessages(locale).blog;
+  const { metaTitle: title, description } = getMessages(locale).blog;
   const meta = pageMeta(locale, '/blog', { title, description, robots: { index: true, follow: true } });
   return {
     ...meta,

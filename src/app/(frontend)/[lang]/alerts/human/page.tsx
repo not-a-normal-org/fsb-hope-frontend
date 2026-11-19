@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
   const locale = await resolveLocale(params);
   const m = getMessages(locale);
   return pageMeta(locale, '/alerts/human', {
-    title: m.products.human.name,
+    title: m.alerts.productMetaTitles.human,
     description: m.alerts.productDescriptions.human,
   });
 }

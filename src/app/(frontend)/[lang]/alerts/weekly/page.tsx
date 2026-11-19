@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: LangParams }): Prom
   const locale = await resolveLocale(params);
   const m = getMessages(locale);
   return pageMeta(locale, '/alerts/weekly', {
-    title: m.products.weekly.name,
+    title: m.alerts.productMetaTitles.weekly,
     description: m.alerts.productDescriptions.weekly,
   });
 }
