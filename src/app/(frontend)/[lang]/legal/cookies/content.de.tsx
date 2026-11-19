@@ -176,7 +176,7 @@ function Body() {
 const cookies: LegalContent = {
   title: 'Cookie-Richtlinie',
   description:
-    'Welche Cookies und welchen Browser-Speicher Saver Miles verwendet, warum wir sie verwenden und wie Sie sie steuern können, einschließlich Google Analytics und Microsoft Clarity für die Messung von Reichweite und Benutzerfreundlichkeit. Wir verwenden keine Werbe-Cookies.',
+    'Welche Cookies und welchen Browser-Speicher Saver Miles nutzt und wie Sie sie steuern, etwa Google Analytics und Microsoft Clarity. Keine Werbe-Cookies.',
   intro:
     'Diese Richtlinie erklärt, welche Cookies und welchen Browser-Speicher unsere Website verwendet, wozu sie dienen und wie Sie sie steuern können.',
   Body,
