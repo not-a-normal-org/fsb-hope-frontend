@@ -1,0 +1,14 @@
+{
+  "_note": "Cover for when-to-book-award-flights. Free-licence Pexels photo, graded into the house look. The image account had no credits (see images.md), so this is stock rather than generation. Re-fetch the source with: curl -o in.jpg 'https://images.pexels.com/photos/36683335/pexels-photo-36683335.jpeg?auto=compress&cs=tinysrgb&w=2400'",
+  "source": "https://www.pexels.com/photo/vintage-alarm-clock-on-wooden-surface-with-shadows-36683335/",
+  "in": "/private/tmp/claude-501/-Users-darklord-Downloads-SoftDent/4a9ca663-d66d-4f34-b89e-e2a0d827959e/scratchpad/photos/cand-36683335.jpg",
+  "out": "src/scripts/assets/blog/when-to-book-award-flights.jpg",
+  "saturation": 0.92,
+  "brightness": 1.16,
+  "contrast": 1.05,
+  "warmth": 0.62,
+  "shadowNavy": 0.08,
+  "vignette": 0.24,
+  "sharpen": true,
+  "quality": 86
+}

@@ -24,6 +24,31 @@ from memory.
 
 ---
 
+### when-to-book-award-flights (2026-11-20): SHIPPED, graded stock
+- Type: editorial photo (a guide about one idea, see images.md section 0). **No generation: the
+  image account is still at 0 credits on the free plan**, so this is free-licence stock graded into
+  the house look, the same route as the Copa body images.
+- Source: Pexels id 36683335, https://www.pexels.com/photo/vintage-alarm-clock-on-wooden-surface-with-shadows-36683335/
+  Re-fetch it byte-identically with
+  `curl -o in.jpg 'https://images.pexels.com/photos/36683335/pexels-photo-36683335.jpeg?auto=compress&cs=tinysrgb&w=2400'`
+- Grade: `tools/when-to-book-award-flights.grade.json`, through `tools/grade-photo.mjs`.
+- Subject: a twin-bell alarm clock on a dark wooden table under a single shaft of light. The post's
+  argument is that one reminder set at schedule open is not enough, so an alarm clock states the
+  topic without a word of text. No brand on the dial, no logo, no face.
+- Selection trap: wristwatches are the obvious first search for a post about timing, and nearly all
+  of them are **branded**, with the maker's name legible on the dial, which images.md rules out.
+  Clock faces carry numerals and no wordmark, so the category is safer. Prefer a landscape source:
+  a 3:2 frame loses only its top and bottom to the 16:9 crop, while a portrait is cut hard by
+  `fit: 'cover'`.
+- Grading lesson: **the house warmth value does not transfer to a cold-lit photograph.** The usual
+  warmth 0.13 with shadowNavy 0.18 left this frame plainly blue: an amber soft-light pass has almost
+  nothing to act on in a near-black image, and the navy pass then cools what is left. It took
+  warmth 0.62 and shadowNavy 0.08 to reach the set's amber-over-navy look. Treat warmth as relative
+  to the source's own colour temperature, not as a constant.
+- Output: src/scripts/assets/blog/when-to-book-award-flights.jpg, 1600 x 893, 95 KB
+- COVER_ALT: A twin-bell alarm clock on a dark wooden table, lit by one shaft of light, the rest of the room in shadow
+
+
 ### citi-copa-connectmiles-emirates-business-class (2026-11-01)
 - **No generation: the image account is at 0 credits on the free plan.** Cover and body images were
   sourced without it, which is the first post done this way.
