@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -16,6 +17,15 @@ import AdminShell from './AdminShell';
  *  - Otherwise render the role-filtered console shell.
  */
 export const dynamic = 'force-dynamic';
+
+// /admin/login and /admin/reset-password are client pages and can't export
+// metadata, so the console's title and description live here.
+export const metadata: Metadata = {
+  title: 'Staff console',
+  description:
+    'The Saver Miles staff console for leads, customers, orders and the team. It is open to signed-in staff only, and each role sees its own sections.',
+  robots: { index: false, follow: false },
+};
 
 const AUTH_SCREENS = new Set(['/admin/login', '/admin/reset-password']);
 
