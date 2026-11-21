@@ -47,21 +47,28 @@ Request:
   mode: 'subscription' | 'payment';
   customerEmail?: string;
   metadata?: Record<string, string>;
+  successPath?: string; // same-origin path, e.g. '/alerts?checkout=success'
+  cancelPath?: string;  // same-origin path, e.g. '/alerts/weekly'
+  locale?: string;      // 'de' localizes both paths and Stripe's own page
 }
 ```
 
-Responds `{ sessionId, url }`. Validates `priceId` and `mode` (400 on bad
-input), then creates a session with:
+Responds `{ url }`. Errors are codes, not sentences: `invalid_request`,
+`invalid_price`, `invalid_mode` (400) and `checkout_failed` (500). On success it
+creates a session with:
 
-- `success_url`: `${NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`
-- `cancel_url`: `${NEXT_PUBLIC_APP_URL}/membership`
+- `success_url`: `<origin><successPath>` plus `session_id={CHECKOUT_SESSION_ID}`,
+  joined with `&` when the path already has a query string and `?` otherwise.
+  `successPath` defaults to `/alerts?checkout=success`.
+- `cancel_url`: `<origin><cancelPath>`, where `cancelPath` defaults to `/alerts`
 - `billing_address_collection: 'required'`
 - `allow_promotion_codes: true` — **subscription mode only**; promo codes are
   meaningless on one-off payments
 
-> **Both redirect targets are deleted pages.** `/dashboard` and `/membership`
-> no longer exist. Unreachable today (the wall 503s the public), but a launch
-> blocker — see [../README.md](../README.md#dangling-references--read-before-launch).
+`<origin>` is the request's own origin (`req.nextUrl.origin`, which on Vercel is
+the domain the visitor is on), **not** `NEXT_PUBLIC_APP_URL`. Production had that env set to `http://localhost:3000`
+until 2026-11-22, and paying customers were sent there. Paths are localized
+(`/de/...`) from the request's `locale`, and must be same-origin paths.
 
 ### `metadata.product_key`
 

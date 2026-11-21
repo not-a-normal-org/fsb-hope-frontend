@@ -66,9 +66,11 @@ behind that prefix to "make it work" — it publishes the secret to every
 visitor. If a value is needed client-side, the answer is a server route, not a
 rename.
 
-`NEXT_PUBLIC_APP_URL` is used to build Stripe `success_url` / `cancel_url` /
-`return_url`. If it is wrong in production, payments succeed and then bounce
-the customer to a dead URL — a failure that never shows up locally.
+`NEXT_PUBLIC_APP_URL` builds the billing-portal `return_url`, the admin
+payment-link redirect and links in emails. If it is wrong in production, those
+send people to a dead URL, a failure that never shows up locally. Checkout's
+`success_url` / `cancel_url` don't depend on it: they use the request's own
+origin.
 
 ## Route → service map
 
