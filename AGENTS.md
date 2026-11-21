@@ -108,6 +108,24 @@ only for those visitors and caches it 30 s per instance.
 - **Kill switch:** `REGION_BLOCK=off` in the environment (needs a redeploy).
 - Locally there is no country header, so nothing is blocked in dev.
 
+## Tracking & consent
+
+The Google tag (GA4 + Google Ads) and the cookie banner load on the **public site
+only** (`<DocumentShell tracking>` in the public layout), never over `/admin`,
+`/cms` or `/portal`. Rules live in `src/lib/consent.ts`; IDs, click attribution and
+the lead conversion in `src/lib/ads.ts`.
+
+- **EEA, UK, CH: opt-in.** Everywhere else: analytics, ad measurement and
+  remarketing are on until the visitor clicks Decline. Global Privacy Control
+  always turns remarketing off. Microsoft Clarity is opt-in everywhere.
+- **Changing what Accept covers means asking again:** bump `CONSENT_KEY`.
+- The proxy keeps a Google Ads click ID (`sm_gclick`, non-opt-in regions only) and
+  `/api/leads` stores it as `details.gclid|gbraid|wbraid`, so deposits and fees
+  paid later on Payment Links can be uploaded to Google Ads against the click.
+- **Adding or removing a tracking tool** means editing the banner copy
+  (`consent.body` in `en.ts` + `de.ts`) and both the cookie and privacy policies
+  (`legal/{cookies,privacy}/content.{en,de}.tsx`) in the same change.
+
 ## Languages (English + German)
 
 The public site is English and German; staff surfaces stay English. Read

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { CLICK_COOKIE, parseClickCookie } from '@/lib/ads';
 import { sendEmail } from '@/lib/email';
 import { REF_COOKIE, sanitizeRefCode } from '@/lib/referral';
 import { LEAD_DETAIL_KEYS, describeLead, hasContactNumber, leadSummary } from '@/lib/leads';
@@ -21,6 +22,10 @@ import { DEFAULT_LOCALE, hasLocale } from '@/i18n/config';
  * visitor's language: `invalid_request`, `invalid_email`, `missing_route`,
  * `missing_contact`, `server_error`. The page's language is stored in
  * details.locale, and a German lead's email subject starts with [DE].
+ *
+ * A Google Ads click ID, if the proxy remembered one (src/lib/ads.ts), is stored
+ * as details.gclid / gbraid / wbraid so later payments can be credited to the
+ * ad — unless the form says the visitor declined cookies.
  */
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +45,8 @@ interface LeadBody {
   whatsapp?: string;
   phone?: string;
   locale?: string;
+  /** The visitor's cookie choice, 'denied' if they declined. */
+  consent?: string;
   details?: Record<string, unknown>;
 }
 
@@ -90,6 +97,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Attribution: the affiliate's code, captured into the sm_ref cookie on landing.
   const referralCode = sanitizeRefCode(req.cookies.get(REF_COOKIE)?.value);
+
+  // Ad attribution: the Google Ads click this visit came from, if any.
+  const click = parseClickCookie(req.cookies.get(CLICK_COOKIE)?.value);
+  if (click && body.consent !== 'denied') details[click.param] = click.id;
 
   const record = {
     type,

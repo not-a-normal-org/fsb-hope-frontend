@@ -7,6 +7,8 @@ import Link from '@/components/system/LocaleLink';
 import { fmt } from '@/i18n/format';
 import { useI18n } from '@/i18n/LocaleProvider';
 import { rich } from '@/i18n/rich';
+import { trackLead } from '@/lib/ads';
+import { readConsent } from '@/lib/consent';
 import { TRIP_TYPE_OPTIONS, hasContactNumber } from '@/lib/leads';
 
 export type LeadType = 'individual' | 'business';
@@ -151,13 +153,15 @@ export default function LeadForm({
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...payload, locale }),
+        body: JSON.stringify({ ...payload, locale, consent: readConsent() }),
       });
       if (!res.ok) {
         const detail = (await res.json().catch(() => ({}))) as { error?: string };
         const key = API_ERRORS[detail.error as keyof typeof API_ERRORS] ?? 'generic';
         throw new Error(m.errors[key]);
       }
+      // Only a saved lead counts as a conversion (Google Ads + GA4, under Consent Mode).
+      trackLead({ type, email: data.email, phone: business ? data.phone : data.whatsapp });
       setStatus('success');
     } catch (err) {
       // A TypeError is the browser's own network failure (in its language, not ours).

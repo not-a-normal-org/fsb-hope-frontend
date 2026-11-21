@@ -11,10 +11,11 @@ import { resolveLocale, type LangParams } from '@/i18n/get-messages';
  * from `/de/...`; both prerender here, so a static page stays static in each
  * language. Staff routes have their own root layout in `app/(staff)`.
  *
- * Clarity (heatmaps + session replay) is mounted here rather than in
- * DocumentShell, which the staff layout shares: replay must never run over
- * /admin or /cms, where lead and customer records are on screen. It loads
- * nothing until the visitor accepts analytics.
+ * `tracking` turns on the Google tag (GA4 + Google Ads) and the cookie banner for
+ * the public site only. Clarity (heatmaps + session replay) is mounted here
+ * rather than in DocumentShell for the same reason: the staff layout shares that
+ * shell, and no tag may run over /admin or /cms, where lead and customer records
+ * are on screen. Clarity loads nothing until the visitor accepts.
  */
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
@@ -32,7 +33,7 @@ export default async function LocaleLayout({
   params: LangParams;
 }>) {
   return (
-    <DocumentShell locale={await resolveLocale(params)}>
+    <DocumentShell locale={await resolveLocale(params)} tracking>
       {children}
       <ClarityScript />
     </DocumentShell>
