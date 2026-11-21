@@ -11,7 +11,9 @@ import { BlockList, isIP } from 'node:net';
  *
  * Who is never blocked, so the team can't lock itself out when an ISP hands it a
  * new address: signed-in staff (any active `payload-token` session), and the
- * staff sign-in screens. Those are exempted in the proxy, not here.
+ * staff sign-in screens. Those are exempted in the proxy, not here. Google's
+ * crawlers (including the ad-review crawler) are never blocked either, matched
+ * against Google's published IP ranges below.
  *
  * Location comes from Vercel's `x-vercel-ip-country` and the address from
  * `x-real-ip`. Vercel sets both at its edge and overwrites anything the client
@@ -113,15 +115,51 @@ export function isAllowed(list: BlockList, ip: string): boolean {
   return list.check(address, family === 4 ? 'ipv4' : 'ipv6');
 }
 
-// ── The live allowlist, as the proxy reads it ────────────────────────────────
+// ── Cached lists, as the proxy reads them ────────────────────────────────────
+
+/**
+ * A remotely loaded address list, cached per instance. Loads at most once per
+ * `ttlMs`, and concurrent callers share one load. If a load fails, the earlier
+ * copy keeps being used (or an empty list, if there is none, so the check fails
+ * closed) and the next attempt waits `retryMs`.
+ */
+function cachedList(name: string, load: () => Promise<BlockList>, ttlMs: number, retryMs: number) {
+  let cached: { list: BlockList; expires: number } | null = null;
+  let inflight: Promise<BlockList> | null = null;
+  return {
+    async get(): Promise<BlockList> {
+      if (!cached || cached.expires <= Date.now()) {
+        inflight ??= load()
+          .then((list) => {
+            cached = { list, expires: Date.now() + ttlMs };
+            return list;
+          })
+          .catch((e: unknown) => {
+            console.warn(`[region-block] ${name}:`, e instanceof Error ? e.message : e);
+            const list = cached?.list ?? new BlockList();
+            cached = { list, expires: Date.now() + retryMs };
+            return list;
+          })
+          .finally(() => {
+            inflight = null;
+          });
+        await inflight;
+      }
+      return cached!.list;
+    },
+    reset(): void {
+      cached = null;
+      inflight = null;
+    },
+  };
+}
+
+// ── The allowlist ────────────────────────────────────────────────────────────
 
 /** How long an instance trusts its copy. Admin changes take effect within this. */
 export const ALLOWLIST_TTL_MS = 30_000;
 /** After a failed read, wait this long before trying the database again. */
 const RETRY_AFTER_FAILURE_MS = 5_000;
-
-let cached: { list: BlockList; expires: number } | null = null;
-let inflight: Promise<BlockList> | null = null;
 
 async function fetchAllowlist(): Promise<BlockList> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -138,6 +176,8 @@ async function fetchAllowlist(): Promise<BlockList> {
   return buildAllowlist(rows.map((r) => r.cidr));
 }
 
+const allowlist = cachedList('allowlist', fetchAllowlist, ALLOWLIST_TTL_MS, RETRY_AFTER_FAILURE_MS);
+
 /**
  * Whether `ip` is on the allowlist. Reads the table at most once per TTL per
  * instance, and only for visitors from a blocked country — everyone else never
@@ -148,29 +188,57 @@ async function fetchAllowlist(): Promise<BlockList> {
  * do, via the proxy). With an earlier copy, that copy keeps being used.
  */
 export async function isAllowlisted(ip: string): Promise<boolean> {
-  const now = Date.now();
-  if (!cached || cached.expires <= now) {
-    inflight ??= fetchAllowlist()
-      .then((list) => {
-        cached = { list, expires: Date.now() + ALLOWLIST_TTL_MS };
-        return list;
-      })
-      .catch((e: unknown) => {
-        console.warn('[region-block]', e instanceof Error ? e.message : e);
-        const list = cached?.list ?? new BlockList();
-        cached = { list, expires: Date.now() + RETRY_AFTER_FAILURE_MS };
-        return list;
-      })
-      .finally(() => {
-        inflight = null;
-      });
-    await inflight;
-  }
-  return isAllowed(cached!.list, ip);
+  return isAllowed(await allowlist.get(), ip);
 }
 
-/** Test seam: forget the cached copy. */
+// ── Google's crawlers ────────────────────────────────────────────────────────
+
+/**
+ * Google's published IP ranges for Googlebot ("common crawlers"), AdsBot and
+ * the other special-case crawlers, and user-triggered fetchers such as the URL
+ * Inspection tool. Google says it "may attempt to crawl from IP addresses
+ * located in other countries", and a 403 to AdsBot gets an ad disapproved for
+ * "Destination not accessible" — so these are never region-blocked. Matched on
+ * the address, never the user agent, which anyone can fake.
+ * https://developers.google.com/crawling/docs/crawlers-fetchers/verify-google-requests
+ */
+export const GOOGLE_CRAWLER_RANGES = [
+  'https://developers.google.com/static/crawling/ipranges/common-crawlers.json',
+  'https://developers.google.com/static/crawling/ipranges/special-crawlers.json',
+  'https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json',
+] as const;
+/** Google regenerates the files about daily. */
+export const CRAWLER_RANGES_TTL_MS = 24 * 60 * 60 * 1000;
+const CRAWLER_RETRY_MS = 5 * 60 * 1000;
+
+type GoogleRanges = { prefixes?: { ipv4Prefix?: string; ipv6Prefix?: string }[] };
+
+async function fetchGoogleCrawlers(): Promise<BlockList> {
+  const files = await Promise.all(
+    GOOGLE_CRAWLER_RANGES.map(async (url) => {
+      const res = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(3_000) });
+      if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+      return (await res.json()) as GoogleRanges;
+    }),
+  );
+  const prefixes = files.flatMap((f) => (f.prefixes ?? []).map((p) => p.ipv4Prefix ?? p.ipv6Prefix ?? ''));
+  if (prefixes.length === 0) throw new Error('Google crawler ranges came back empty');
+  return buildAllowlist(prefixes);
+}
+
+const googleCrawlers = cachedList('google crawlers', fetchGoogleCrawlers, CRAWLER_RANGES_TTL_MS, CRAWLER_RETRY_MS);
+
+/**
+ * Whether `ip` belongs to one of Google's crawlers. Loaded only when a visitor
+ * from a blocked country isn't on the allowlist; fails closed (not a crawler)
+ * if the ranges can't be fetched and no earlier copy exists.
+ */
+export async function isGoogleCrawler(ip: string): Promise<boolean> {
+  return isAllowed(await googleCrawlers.get(), ip);
+}
+
+/** Test seam: forget the cached copies. */
 export function resetAllowlistCache(): void {
-  cached = null;
-  inflight = null;
+  allowlist.reset();
+  googleCrawlers.reset();
 }

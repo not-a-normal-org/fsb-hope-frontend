@@ -104,6 +104,9 @@ only for those visitors and caches it 30 s per instance.
   redirect to sign-in, the `/cms` panel's login, and the Stripe webhook — so the
   team can't lock itself out when an ISP changes its address. Keep the region
   check *after* those exits in the proxy.
+- **Google's crawlers are never blocked** (Googlebot, AdsBot, user-triggered
+  fetchers), matched against Google's published IP ranges, cached 24 h — a 403 to
+  AdsBot gets ads disapproved. Never exempt by user agent; it can be faked.
 - **Fails closed** if the table can't be read and no earlier copy is cached.
 - **Kill switch:** `REGION_BLOCK=off` in the environment (needs a redeploy).
 - Locally there is no country header, so nothing is blocked in dev.
