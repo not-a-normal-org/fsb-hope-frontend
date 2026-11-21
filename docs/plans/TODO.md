@@ -123,7 +123,8 @@ The rest is below; see the `launch-readiness` memory for detail.
 ### Code
 - [~] Drop global `noindex` + PII-form consent links — **PR #49** (open, not merged).
 - [ ] Fix the dead post-payment redirects (only fire once payments go live):
-      `/dashboard` (`admin/applications/actions.ts`, `api/portal/route.ts`). The
+      `/dashboard` (`admin/applications/actions.ts`). The `api/portal` one went
+      with that route (removed: it was unauthenticated). The
       `/research/intake` + `/alerts/preferences` ones went with those products.
 - [ ] Blog: add the `publishedAt <= now` public filter (`blog/page.tsx` TODO), so a
       future-dated post can't show early.

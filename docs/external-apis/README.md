@@ -75,7 +75,6 @@ the customer to a dead URL — a failure that never shows up locally.
 | Route | Stripe | Supabase | Resend |
 |---|:-:|:-:|:-:|
 | `POST /api/checkout` | ✓ | | |
-| `POST /api/portal` | ✓ | | |
 | `POST /api/profile` | ✓ | ✓ | |
 | `GET /api/profile/lookup` | ✓ | ✓ | |
 | `POST /api/webhooks/stripe` | ✓ | ✓ | ✓ |
