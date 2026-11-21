@@ -34,9 +34,8 @@ metadata). The admin portal was untouched — it imports only
 
 ## Dangling references — read before launch
 
-Server code that survived still points at pages that no longer exist. None of
-it is reachable today (the wall 503s the public), so nothing is broken *now* —
-but each one is a live landmine at launch.
+Server code that survived still points at pages that no longer exist. The wall
+is down and real payments run, so each row below is reachable now.
 
 | Where | Points at | Consequence |
 |---|---|---|
@@ -48,14 +47,13 @@ admin, and the customer paying is anonymous — so they hit the construction
 notice (503), not even a 404, after being charged.
 
 These URLs were left as-is deliberately. They are the specification for what
-the rebuild owes: a post-purchase page that resolves a Stripe session, a
-pricing/cancel target, and two intake forms. Redirect targets are a product
+the rebuild owes: a post-purchase page that resolves a Stripe session. Redirect targets are a product
 decision, so they are recorded here rather than guessed at.
 
-Also orphaned: `session.metadata.product_key` is still **read** by the webhook
-to pick an onboarding email, but the component that **wrote** it
-(`CheckoutButton`) is deleted. Until the rebuild stamps it again, that branch
-never fires — silently. See [external-apis/stripe.md](external-apis/stripe.md).
+`session.metadata.product_key` is stamped by the alert checkout
+(`AlertBuyBox` → `CheckoutButton`) but no longer read: the webhook's onboarding
+emails went with the retired Research Report and Seat Alert products. See
+[external-apis/stripe.md](external-apis/stripe.md).
 
 ## Reading order for the rebuild
 
