@@ -16,6 +16,8 @@ import AdminUnlockForm from './AdminUnlockForm';
  */
 export const metadata: Metadata = {
   title: 'Under construction',
+  description:
+    'Saver Miles is briefly offline for maintenance. Our specialists search award space by hand and confirm every seat before you transfer any points.',
   robots: 'noindex, nofollow',
 };
 

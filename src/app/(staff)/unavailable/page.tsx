@@ -12,6 +12,8 @@ import GlassPanel from '@/components/system/GlassPanel';
  */
 export const metadata: Metadata = {
   title: 'Not available in your region',
+  description:
+    'Saver Miles, the hand-checked award flight search service, is not offered in your region right now, so this notice is shown in place of the site.',
   robots: 'noindex, nofollow',
 };
 
