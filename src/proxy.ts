@@ -18,6 +18,7 @@ import {
   countryOf,
   isAllowlisted,
   isBlockedCountry,
+  isGoogleCrawler,
 } from '@/lib/region-block';
 import { verifyStaffToken, isActiveStaff } from '@/lib/session-edge';
 
@@ -152,8 +153,10 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   // Visitors located in the Indian subcontinent get a 403 unless their address
   // is on the allowlist at /admin/access. Signed-in staff are never blocked, and
   // the sign-in screens above stay reachable, so a team member whose ISP hands
-  // them a new address can still sign in and allow it. The allowlist is only
-  // read for blocked-country visitors; nobody else pays for the lookup.
+  // them a new address can still sign in and allow it. Google's crawlers pass
+  // too (by Google's published IP ranges): ad review and indexing can come from
+  // a blocked country. Both lists are only read for blocked-country visitors;
+  // nobody else pays for the lookup.
   if (
     !isStaff &&
     REGION_BLOCK_ENABLED &&
@@ -161,7 +164,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
     !isRegionExempt(pathname)
   ) {
     const ip = clientIp(req.headers);
-    if (!ip || !(await isAllowlisted(ip))) {
+    if (!ip || !((await isAllowlisted(ip)) || (await isGoogleCrawler(ip)))) {
       return regionBlocked(req, pathname);
     }
   }
