@@ -90,6 +90,9 @@ Two things to know:
 
 - **Re-running without `SEED_DRAFT` publishes the draft.** That is the intended second path, and it
   is what you want when you have also edited the markdown since staging.
+- **A draft has no date until it goes live.** The seed leaves `publishedAt` empty on a `SEED_DRAFT`
+  create, and the Posts `beforeChange` hook stamps it the first time the post is published, whether
+  from `/cms` or by re-running the seed. Set a date in `/cms` only to backdate on purpose.
 - **`LOCALE=de` never changes publication status.** It mirrors whatever the English document is, so
   seeding a translation can't be the thing that accidentally puts a staged post live.
 - `SEED_DRAFT` is for posts that are **not yet live**. To stage a change to a *published* post, edit

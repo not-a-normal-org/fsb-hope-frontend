@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload';
 
 import { notifyIndexNow } from '@/lib/indexnow';
+import { withPublishedAt } from '@/lib/post-published-at';
 
 import { contentAccess, publishedOrEditor } from './access';
 
@@ -41,6 +42,8 @@ export const Posts: CollectionConfig = {
   // don't touch the public page, so only published saves ping; a renamed slug
   // pings the old URL too, so engines drop it.
   hooks: {
+    // A published post always has a date; see src/lib/post-published-at.ts.
+    beforeChange: [({ data, originalDoc }) => withPublishedAt(data, originalDoc)],
     afterChange: [
       async ({ doc, previousDoc }) => {
         if (doc._status === 'published' && doc.slug) {
@@ -84,7 +87,14 @@ export const Posts: CollectionConfig = {
       admin: { description: 'Short summary — used for previews and the meta description.' },
     },
     { name: 'content', type: 'richText', localized: true },
-    { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
+    {
+      name: 'publishedAt',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+        description: 'Set automatically the first time the post is published. Fill it in yourself only to backdate.',
+      },
+    },
     {
       name: 'coverImage',
       type: 'upload',
