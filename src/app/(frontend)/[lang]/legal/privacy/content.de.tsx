@@ -239,7 +239,7 @@ function Body() {
 const privacy: LegalContent = {
   title: 'Datenschutzerklärung',
   description:
-    'Wie Saver Miles Ihre personenbezogenen Daten erhebt, verwendet, weitergibt und schützt, welche Auftragsverarbeiter wir einsetzen und welche Datenschutzrechte Sie haben (einschließlich DSGVO und Kalifornien).',
+    'Wie Saver Miles personenbezogene Daten erhebt, nutzt, weitergibt und schützt, welche Auftragsverarbeiter wir einsetzen und welche Rechte Sie haben.',
   intro:
     'Diese Erklärung beschreibt, welche personenbezogenen Daten wir erheben, wie wir sie verwenden und weitergeben und welche Wahlmöglichkeiten und Rechte Sie haben.',
   Body,
