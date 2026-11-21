@@ -34,8 +34,9 @@ Gotchas:
   and `payload run` scripts are left alone, so a local session connection for
   one-off work still behaves as configured.)
 - **`NEXT_PUBLIC_APP_URL`** must be the real production origin
-  (`https://<your-domain>`), no trailing slash — it builds Stripe redirect URLs
-  and email links. Do **not** leave it pointing at a `*.vercel.app` preview URL
+  (`https://<your-domain>`), no trailing slash — it builds email links (e.g.
+  staff password reset) and the billing-portal / admin payment-link redirects.
+  Checkout's return URLs come from the request itself, not from this. Do **not** leave it pointing at a `*.vercel.app` preview URL
   for production.
 - `NEXT_PUBLIC_*` values are compiled into the browser bundle. Never put a secret
   behind that prefix.

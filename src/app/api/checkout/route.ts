@@ -59,7 +59,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'invalid_mode' }, { status: 400 });
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+  // Send the buyer back to the site they started on, read from this request
+  // rather than NEXT_PUBLIC_APP_URL: production had that env set to
+  // http://localhost:3000, so paying customers landed on localhost. A preview
+  // deploy now returns to its own preview URL.
+  const appUrl = req.nextUrl.origin;
 
   // 2. Build session params — subscription-only fields added conditionally
   const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {

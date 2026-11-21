@@ -41,8 +41,6 @@ but each one is a live landmine at launch.
 | Where | Points at | Consequence |
 |---|---|---|
 | `admin/applications/actions.ts` | `/dashboard?success=true&session_id=…` | **Live path.** Approve an applicant → they pay via Stripe payment link → land on a dead URL |
-| `api/checkout` `success_url` | `/dashboard?success=true&session_id=…` | Paid customer lands on a dead URL |
-| `api/checkout` `cancel_url` | `/membership` | Abandoned checkout lands on a dead URL |
 | `api/portal` `return_url` | `/dashboard` | Exiting the billing portal lands on a dead URL |
 
 The admin one is the sharpest: that flow is reachable *right now* by any signed-in

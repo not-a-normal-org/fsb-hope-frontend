@@ -53,15 +53,17 @@ Request:
 Responds `{ sessionId, url }`. Validates `priceId` and `mode` (400 on bad
 input), then creates a session with:
 
-- `success_url`: `${NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`
-- `cancel_url`: `${NEXT_PUBLIC_APP_URL}/membership`
+- `success_url`: `<origin><successPath>&session_id={CHECKOUT_SESSION_ID}`, where
+  `successPath` defaults to `/alerts?checkout=success`
+- `cancel_url`: `<origin><cancelPath>`, where `cancelPath` defaults to `/alerts`
 - `billing_address_collection: 'required'`
 - `allow_promotion_codes: true` — **subscription mode only**; promo codes are
   meaningless on one-off payments
 
-> **Both redirect targets are deleted pages.** `/dashboard` and `/membership`
-> no longer exist. Unreachable today (the wall 503s the public), but a launch
-> blocker — see [../README.md](../README.md#dangling-references--read-before-launch).
+`<origin>` is the request's own origin (`req.nextUrl.origin`), **not**
+`NEXT_PUBLIC_APP_URL`. Production had that env set to `http://localhost:3000`
+until 2026-11-22, and paying customers were sent there. Paths are localized
+(`/de/...`) from the request's `locale`, and must be same-origin paths.
 
 ### `metadata.product_key`
 
