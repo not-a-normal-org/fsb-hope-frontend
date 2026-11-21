@@ -12,6 +12,7 @@ they keep running whether or not any page renders.
 | [external-apis/](external-apis/README.md) | Stripe, Supabase, Resend, Cal.com — keys, call sites, gotchas |
 | [maintenance-mode.md](maintenance-mode.md) | The temporary wall on the site, and how to remove it |
 | [blog-guide/](blog-guide/README.md) | Blog playbook: writing rules, SEO/GEO, keyword research, cover images, publishing + verification |
+| [marketing/google-ads.md](marketing/google-ads.md) | Google Ads: account setup, conversion tracking, offline uploads, the first campaign build, weekly routine |
 
 The old code itself is archived at [`archive/frontend-v1/`](../archive/frontend-v1/ARCHIVE.md)
 and at the git tag `archive/frontend-v1`.
