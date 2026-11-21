@@ -48,21 +48,35 @@ function Body() {
         When you visit the website, our hosting and infrastructure providers automatically process
         technical data such as your IP address, browser and device type, pages viewed, and timestamps,
         as part of delivering and securing the site. Our hosting provider also derives your approximate
-        country from your IP address; we use it only to choose which language to show you first, and we
-        do not store it. We also use a small number of cookies and
-        browser-storage items, described in our{' '}
+        country from your IP address; we use it to choose which language to show you first, to apply the
+        cookie rules for your region, and to decide whether our services are offered where you are, and
+        we do not store it. We also use cookies and browser-storage items, described in our{' '}
         <Link href="/legal/cookies">Cookie Policy</Link>.
       </p>
       <p>
         We use <strong>Google Analytics 4</strong> to understand, in aggregate, how the website is used
-        (for example how many people visit and which articles are read) so we can improve it. It sets
-        analytics cookies and processes usage data such as pages viewed, approximate location, and device
-        type. We use it for <strong>measurement only</strong> &mdash; not for advertising, ad
-        personalization, or Google Ads &mdash; and we do not sell or share this data. Analytics cookies
-        are non-essential; where the law requires it we ask for your consent before they are set, and you
-        can opt out at any time as described in our{' '}
-        <Link href="/legal/cookies">Cookie Policy</Link>. We do <strong>not</strong> use advertising cookies or
-        third-party advertising pixels.
+        (for example how many people visit, which articles are read, and which ads bring visitors) so we
+        can improve it. It sets analytics cookies and processes usage data such as pages viewed,
+        approximate location, and device type.
+      </p>
+      <p>
+        We use <strong>Google Ads</strong> to advertise in Google search results, to measure which ads
+        lead to search requests, and to show our ads to people who have visited our site
+        (&ldquo;remarketing&rdquo;). When you arrive from one of our ads, Google records the click, and we
+        keep that click&rsquo;s ID with your search request so we can later tell Google Ads that a
+        request or payment came from that ad. When you send a search request, the page passes your email
+        address and phone number to Google&rsquo;s tag, which hashes them in your browser before sending
+        them, so Google can match the request to your ad click (&ldquo;enhanced conversions&rdquo;). Google
+        may also use your IP address to measure conversions. See{' '}
+        <a href="https://business.safety.google/privacy/" rel="noopener noreferrer" target="_blank">how
+        Google uses information from sites that use its services</a>.
+      </p>
+      <p>
+        Analytics and advertising cookies are non-essential. In the EEA, the UK, and Switzerland they are
+        used only after you click &ldquo;Accept&rdquo; in the cookie banner. Elsewhere they are on by
+        default and you can turn them off at any time by clicking &ldquo;Decline&rdquo; (or &ldquo;Cookie
+        preferences&rdquo; in the footer); a Global Privacy Control signal from your browser turns off
+        remarketing. Details are in our <Link href="/legal/cookies">Cookie Policy</Link>.
       </p>
       <p>
         We use <strong>Microsoft Clarity</strong> for the same purpose from the usability side: aggregate
@@ -84,6 +98,10 @@ function Body() {
           time.
         </li>
         <li>To attribute a referral when you arrive through an affiliate link (see the Cookie Policy).</li>
+        <li>
+          To measure and improve our advertising, and to show our ads to people who have visited our site,
+          where your cookie choice and the law allow it (see the Cookie Policy).
+        </li>
         <li>To operate, secure, debug, and improve the Services and prevent fraud and abuse.</li>
         <li>To comply with legal obligations and enforce our terms.</li>
       </ul>
@@ -91,8 +109,9 @@ function Body() {
       <h2>3. Legal bases (EEA/UK visitors)</h2>
       <p>
         Where the GDPR or UK GDPR applies, we rely on: <strong>performance of a contract</strong> (to
-        provide a search or subscription you request); <strong>consent</strong> (for marketing emails,
-        which you can withdraw at any time); our <strong>legitimate interests</strong> (to operate,
+        provide a search or subscription you request); <strong>consent</strong> (for marketing emails and
+        for analytics and advertising cookies, which you can withdraw at any time); our{' '}
+        <strong>legitimate interests</strong> (to operate,
         secure, and improve the Services and communicate with you); and <strong>legal obligation</strong>
         {' '}(for example, tax and accounting records).
       </p>
@@ -111,6 +130,15 @@ function Body() {
           traffic measurement), and <strong>Microsoft</strong> (Clarity, for aggregate usability
           measurement, only if you accept analytics). Each receives only the data needed for its
           function.
+        </li>
+        <li>
+          <strong>Google Ads.</strong> Where your cookie choice allows it, Google receives information
+          about your visit, our ad you clicked, whether you sent a search request (with your email address
+          and phone number in hashed form), and, for remarketing, that you visited our site. Google uses
+          some of this for its own purposes, such as ad personalization and fraud prevention, as described
+          on{' '}
+          <a href="https://business.safety.google/privacy/" rel="noopener noreferrer" target="_blank">Google&rsquo;s
+          page for sites that use its services</a>.
         </li>
         <li>
           <strong>Affiliates.</strong> If you arrive through an affiliate link, we attribute your inquiry
@@ -165,9 +193,12 @@ function Body() {
       <p>
         You have the right to know what personal information we collect and how we use and share it, to
         request deletion or correction, and to opt out of the &ldquo;sale&rdquo; or &ldquo;sharing&rdquo;
-        of personal information. <strong>We do not sell or share your personal information</strong> as
-        those terms are defined under California law. We will not discriminate against you for exercising
-        your rights.
+        of personal information. <strong>We do not sell your personal information.</strong> Our use of
+        Google Ads remarketing cookies may count as &ldquo;sharing&rdquo; for cross-context behavioral
+        advertising under California law. You can opt out of it by clicking &ldquo;Decline&rdquo; in the
+        cookie banner (or &ldquo;Cookie preferences&rdquo; in the footer), and we treat a Global Privacy
+        Control signal from your browser as an opt-out too. We will not discriminate against you for
+        exercising your rights.
       </p>
       <p>
         To exercise any of these rights, email us at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. We may need

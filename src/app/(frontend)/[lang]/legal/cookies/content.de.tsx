@@ -28,9 +28,20 @@ function Body() {
         kleine Informationen auf Ihrem Gerät zu merken. Sie können <em>unbedingt erforderlich</em> (für das
         Funktionieren der Website nötig) oder <em>funktional</em> (zum Speichern Ihrer Einstellungen) sein
         oder für <em>Analyse</em> oder <em>Werbung</em> eingesetzt werden. Wir verwenden unbedingt
-        erforderliche und funktionale Einträge sowie zwei <em>Analyse</em>-Tools (Google Analytics und
-        Microsoft Clarity), um den Gesamtverkehr zu messen und zu erkennen, wie Seiten genutzt werden.
-        Wir verwenden keine Werbe-Cookies.
+        erforderliche und funktionale Einträge, zwei <em>Analyse</em>-Tools (Google Analytics und
+        Microsoft Clarity), um den Gesamtverkehr zu messen und zu erkennen, wie Seiten genutzt werden,
+        sowie ein <em>Werbe</em>-Tool, Google Ads, um zu messen, welche unserer Anzeigen zu
+        Suchanfragen führen, und um Personen, die unsere Website besucht haben, unsere Anzeigen zu zeigen
+        („Remarketing“).
+      </p>
+      <p>
+        <strong>Ihr Standort bestimmt die Voreinstellung.</strong> Wenn Sie sich im Europäischen
+        Wirtschaftsraum, im Vereinigten Königreich oder in der Schweiz befinden, wird kein Analyse- oder
+        Werbe-Cookie gesetzt, bevor Sie im Cookie-Banner auf „Akzeptieren“ klicken. Überall sonst sind
+        Google Analytics und Google Ads voreingestellt aktiv, und Sie können sie jederzeit mit
+        „Ablehnen“ (oder später über „Cookie-Einstellungen“ im Footer) ausschalten. Microsoft Clarity wird,
+        egal wo Sie sind, nur geladen, wenn Sie auf „Akzeptieren“ klicken. Sendet Ihr Browser ein
+        Global-Privacy-Control-Signal, verwenden wir für Sie nie Remarketing.
       </p>
 
       <h2>2. Was wir verwenden und warum</h2>
@@ -54,9 +65,10 @@ function Body() {
           Es handelt sich um ein Erstanbieter-Cookie (<code>SameSite=Lax</code>).
         </li>
         <li>
-          <strong>Cookie-Auswahl</strong> (Local Storage <code>sm-consent</code>) –{' '}
-          <em>unbedingt erforderlich.</em> Speichert, ob Sie Analysen im Cookie-Banner akzeptiert oder
-          abgelehnt haben, damit wir diese Wahl beachten und Sie nicht auf jeder Seite erneut fragen.
+          <strong>Cookie-Auswahl</strong> (Local Storage <code>sm-consent-v2</code> und das ältere{' '}
+          <code>sm-consent</code>) – <em>unbedingt erforderlich.</em> Speichert, ob Sie Analyse und
+          Werbung im Cookie-Banner akzeptiert oder abgelehnt haben, damit wir diese Wahl beachten und Sie
+          nicht auf jeder Seite erneut fragen.
         </li>
         <li>
           <strong>Newsletter-Hinweis</strong> (Local/Session Storage <code>sm-nl-dismissed</code>,
@@ -72,8 +84,24 @@ function Body() {
           <strong>Analyse</strong> (Cookies <code>_ga</code> und <code>_ga_&lt;id&gt;</code>, gesetzt
           von Google Analytics, bis zu etwa 13 Monate) – <em>Analyse.</em> Sie helfen uns, den
           Gesamtverkehr zu messen: wie viele Personen die Website besuchen, welche Seiten und Artikel
-          gelesen werden und grob, woher Besucher kommen. Sie verraten uns nicht, wer Sie sind, und wir
-          verwenden sie niemals für Werbung. Wie Sie widersprechen können, erfahren Sie in Abschnitt 4.
+          gelesen werden und grob, woher Besucher kommen, auch über unsere Anzeigen. Sie verraten uns
+          nicht, wer Sie sind. Wie Sie widersprechen können, erfahren Sie in Abschnitt 4.
+        </li>
+        <li>
+          <strong>Werbung</strong> (Cookies <code>_gcl_au</code>, <code>_gcl_aw</code> und ähnliche{' '}
+          <code>_gcl_*</code>-Cookies, gesetzt von Google Ads auf savermiles.com, etwa 90 Tage; und, wo
+          Remarketing erlaubt ist, Googles eigene Werbe-Cookies auf seinen Domains, etwa <code>IDE</code>{' '}
+          auf <code>doubleclick.net</code>) – <em>Werbung.</em> Sie halten fest, dass Sie über eine unserer
+          Anzeigen gekommen sind und ob Sie anschließend eine Suchanfrage gesendet haben, damit wir sehen,
+          welche Anzeigen wirken, und sie ermöglichen es Google, Personen, die unsere Website besucht haben,
+          unsere Anzeigen zu zeigen. Siehe Abschnitt 4.
+        </li>
+        <li>
+          <strong>Zuordnung von Anzeigenklicks</strong> (Cookie <code>sm_gclick</code>, 90 Tage) –{' '}
+          <em>Werbung.</em> Wenn Sie über einen Klick auf eine unserer Google-Anzeigen zu uns kommen, merkt
+          sich dieses Erstanbieter-Cookie die ID dieses Klicks, damit wir eine spätere Zahlung zu Ihrer
+          Suchanfrage Google Ads als Ergebnis dieser Anzeige melden können. Es wird für Besucher im EWR, im
+          Vereinigten Königreich und in der Schweiz nie gesetzt und bei „Ablehnen“ gelöscht.
         </li>
         <li>
           <strong>Produktanalyse und Sitzungswiedergabe</strong> (Cookies <code>_clck</code> und{' '}
@@ -94,7 +122,8 @@ function Body() {
         eigenen Seiten eigene Cookies, um die Zahlung sicher abzuwickeln und Betrug zu verhindern. Für
         diese Cookies gilt die{' '}
         <a href="https://stripe.com/privacy" rel="noopener noreferrer" target="_blank">Datenschutzerklärung
-        von Stripe</a>. Wir setzen keine Werbe- oder Social-Media-Cookies.
+        von Stripe</a>. Google setzt die in den Abschnitten 2 und 4 beschriebenen Werbe-Cookies. Wir
+        verwenden keine Social-Media-Cookies.
       </p>
 
       <h2>4. Analyse und Werbung</h2>
@@ -104,25 +133,48 @@ function Body() {
         Google Analytics setzt die oben aufgeführten Cookies (<code>_ga</code> und{' '}
         <code>_ga_&lt;id&gt;</code>) und verarbeitet Nutzungsdaten wie aufgerufene Seiten, den ungefähren
         Standort (abgeleitet aus einer gekürzten IP-Adresse, die nicht gespeichert wird) sowie Geräte- und
-        Browsertyp. Wir haben es ausschließlich für die Reichweitenmessung konfiguriert: Wir verwenden es{' '}
-        <strong>nicht</strong> für Werbung, personalisierte Werbung oder Google Ads, und wir verkaufen diese
-        Daten nicht und geben sie nicht weiter. Für Googles Umgang mit den Daten gilt die{' '}
+        Browsertyp. Es ist mit unserem Google-Ads-Konto verknüpft, damit wir sehen, welche Anzeigen
+        Besucher bringen. Wir verkaufen diese Daten nicht. Für Googles Umgang mit den Daten gilt die{' '}
         <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Datenschutzerklärung
         von Google</a>.
       </p>
-      <p>Sie können Google Analytics jederzeit widersprechen:</p>
+      <p>
+        Wir verwenden <strong>Google Ads</strong>, um Saver Miles in den Google-Suchergebnissen zu bewerben
+        und zu messen, ob diese Anzeigen wirken. Kommen Sie über eine unserer Anzeigen zu uns, erfasst
+        Google Ads den Klick; senden Sie anschließend eine Suchanfrage, erfasst es dies als Conversion. Um
+        die Anfrage der Anzeige zuzuordnen, übergibt die Seite die von Ihnen eingegebene E-Mail-Adresse und
+        Telefonnummer an das Google-Tag, das sie in Ihrem Browser hasht (in einen Code umwandelt, der sich
+        nicht zurücklesen lässt), bevor es sie sendet („erweiterte Conversions“); das geschieht nur, wenn
+        Werbung für Sie erlaubt ist. Wo Remarketing erlaubt ist, nutzt Google seine Cookies außerdem, um
+        Personen, die unsere Website besucht haben, unsere Anzeigen in Google-Diensten und auf
+        Partnerwebsites zu zeigen. Google kann Ihre IP-Adresse verwenden, um Ihren ungefähren Standort zu
+        schätzen und Conversions zu messen. Lesen Sie,{' '}
+        <a href="https://business.safety.google/intl/de/privacy/" rel="noopener noreferrer" target="_blank">wie
+        Google Informationen von Websites verwendet, die seine Dienste nutzen</a>.
+      </p>
+      <p>Sie können Google Analytics und Google Ads jederzeit ausschalten:</p>
       <ul>
         <li>
-          Installieren Sie das{' '}
+          Klicken Sie im Cookie-Banner auf „Ablehnen“ oder im Footer auf „Cookie-Einstellungen“ und dann
+          auf „Ablehnen“. Das schaltet Analyse, Anzeigenmessung und Remarketing auf dieser Website aus und
+          löscht unser Anzeigenklick-Cookie.
+        </li>
+        <li>
+          Aktivieren Sie Global Privacy Control in Ihrem Browser: Wir behandeln es als Widerspruch gegen
+          Remarketing.
+        </li>
+        <li>
+          Verwalten Sie die Anzeigen, die Google Ihnen zeigt, im{' '}
+          <a href="https://myadcenter.google.com/" rel="noopener noreferrer" target="_blank">Mein Anzeigen-Center</a>,
+          oder installieren Sie das{' '}
           <a href="https://tools.google.com/dlpage/gaoptout" rel="noopener noreferrer" target="_blank">Browser-Add-on
           zur Deaktivierung von Google Analytics</a>, das Google Analytics auf allen von Ihnen besuchten
           Websites unterbindet.
         </li>
         <li>
-          Blockieren oder löschen Sie die <code>_ga</code>-Cookies über Ihre Browsereinstellungen (siehe
-          Abschnitt 5).
+          Blockieren oder löschen Sie die <code>_ga</code>- und <code>_gcl</code>-Cookies über Ihre
+          Browsereinstellungen (siehe Abschnitt 5).
         </li>
-        <li>Nutzen Sie die „Do Not Track“- oder Tracking-Schutz-Funktionen Ihres Browsers.</li>
       </ul>
       <p>
         Wir verwenden außerdem <strong>Microsoft Clarity</strong>, einen Dienst für Produktanalyse von
@@ -142,20 +194,21 @@ function Body() {
         Wir weisen Clarity dann an, seine Cookies zu löschen und die Sitzung zu beenden.
       </p>
       <p>
-        Wir verwenden keine Werbe-, Remarketing- oder Social-Media-Tracking-Cookies. Wo das Gesetz vor dem
-        Setzen nicht unbedingt erforderlicher Cookies eine Einwilligung verlangt (zum Beispiel für Besucher
-        in der EU, im Vereinigten Königreich oder in vergleichbaren Rechtsordnungen), gilt diese
-        Anforderung für die oben genannten Analyse-Cookies, und Sie können die Widerspruchsmöglichkeiten in
-        diesem Abschnitt jederzeit nutzen.
+        Wir verwenden keine Social-Media-Tracking-Cookies. Im EWR, im Vereinigten Königreich und in der
+        Schweiz, wo das Gesetz vor dem Setzen nicht unbedingt erforderlicher Cookies eine Einwilligung
+        verlangt, werden die oben genannten Analyse- und Werbe-Cookies erst gesetzt, nachdem Sie auf
+        „Akzeptieren“ geklickt haben, und Sie können diese Einwilligung jederzeit auf demselben Weg
+        widerrufen, auf dem Sie sie erteilt haben.
       </p>
 
       <h2>5. Wie Sie Cookies steuern können</h2>
       <p>
         Sie können Cookies über Ihre Browsereinstellungen steuern oder löschen und den Local Storage und
-        Session Storage auf dieselbe Weise leeren. Da die oben genannten Einträge unbedingt erforderlich
-        oder funktional sind, hindert Sie ihr Blockieren nicht daran, die Website zu nutzen, aber einige
-        Funktionen (etwa das Speichern Ihres Designs oder Ihrer Sprache, das Angemeldetbleiben oder das
-        Gutschreiben einer Empfehlung) funktionieren dann möglicherweise nicht wie vorgesehen.
+        Session Storage auf dieselbe Weise leeren. Das Blockieren von Analyse- und Werbe-Cookies schränkt
+        nicht ein, was Sie auf der Website tun können. Auch das Blockieren der unbedingt erforderlichen
+        oder funktionalen Einträge hindert Sie nicht daran, die Website zu nutzen, aber einige Funktionen
+        (etwa das Speichern Ihres Designs oder Ihrer Sprache, das Angemeldetbleiben oder das Gutschreiben
+        einer Empfehlung) funktionieren dann möglicherweise nicht wie vorgesehen.
       </p>
 
       <h2>6. Änderungen dieser Richtlinie</h2>
@@ -176,7 +229,7 @@ function Body() {
 const cookies: LegalContent = {
   title: 'Cookie-Richtlinie',
   description:
-    'Welche Cookies und welchen Browser-Speicher Saver Miles nutzt und wie Sie sie steuern, etwa Google Analytics und Microsoft Clarity. Keine Werbe-Cookies.',
+    'Welche Cookies und welchen Browser-Speicher Saver Miles nutzt, darunter Google Analytics, Google Ads und Microsoft Clarity, und wie Sie sie ausschalten.',
   intro:
     'Diese Richtlinie erklärt, welche Cookies und welchen Browser-Speicher unsere Website verwendet, wozu sie dienen und wie Sie sie steuern können.',
   Body,

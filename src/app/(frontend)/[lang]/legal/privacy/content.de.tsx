@@ -59,23 +59,39 @@ function Body() {
         Wenn Sie die Website besuchen, verarbeiten unsere Hosting- und Infrastrukturanbieter automatisch
         technische Daten wie Ihre IP-Adresse, Ihren Browser- und Gerätetyp, die aufgerufenen Seiten und
         Zeitstempel, um die Website bereitzustellen und abzusichern. Unser Hosting-Anbieter leitet aus
-        Ihrer IP-Adresse außerdem Ihr ungefähres Land ab; wir nutzen es ausschließlich, um zu entscheiden,
-        in welcher Sprache wir Ihnen die Website zuerst anzeigen, und speichern es nicht. Außerdem
-        verwenden wir eine kleine
-        Anzahl von Cookies und Einträgen im Browser-Speicher, die in unserer{' '}
+        Ihrer IP-Adresse außerdem Ihr ungefähres Land ab; wir nutzen es, um zu entscheiden, in welcher
+        Sprache wir Ihnen die Website zuerst anzeigen, welche Cookie-Regeln für Ihre Region gelten und ob
+        unsere Leistungen dort angeboten werden, und speichern es nicht. Außerdem verwenden wir Cookies
+        und Einträge im Browser-Speicher, die in unserer{' '}
         <Link href="/legal/cookies">Cookie-Richtlinie</Link> beschrieben sind.
       </p>
       <p>
         Wir verwenden <strong>Google Analytics 4</strong>, um in aggregierter Form zu verstehen, wie die
-        Website genutzt wird (zum Beispiel wie viele Personen sie besuchen und welche Artikel gelesen
-        werden), damit wir sie verbessern können. Google Analytics setzt Analyse-Cookies und verarbeitet
-        Nutzungsdaten wie aufgerufene Seiten, ungefähren Standort und Gerätetyp. Wir verwenden es{' '}
-        <strong>ausschließlich zur Reichweitenmessung</strong> – nicht für Werbung, personalisierte
-        Werbung oder Google Ads –, und wir verkaufen diese Daten nicht und geben sie nicht weiter.
-        Analyse-Cookies sind nicht unbedingt erforderlich; wo das Gesetz es verlangt, bitten wir vor dem
-        Setzen um Ihre Einwilligung, und Sie können jederzeit widersprechen (Opt-out), wie in unserer{' '}
-        <Link href="/legal/cookies">Cookie-Richtlinie</Link> beschrieben. Wir verwenden{' '}
-        <strong>keine</strong> Werbe-Cookies und keine Werbepixel von Drittanbietern.
+        Website genutzt wird (zum Beispiel wie viele Personen sie besuchen, welche Artikel gelesen werden
+        und welche Anzeigen Besucher bringen), damit wir sie verbessern können. Google Analytics setzt
+        Analyse-Cookies und verarbeitet Nutzungsdaten wie aufgerufene Seiten, ungefähren Standort und
+        Gerätetyp.
+      </p>
+      <p>
+        Wir verwenden <strong>Google Ads</strong>, um in den Google-Suchergebnissen zu werben, zu messen,
+        welche Anzeigen zu Suchanfragen führen, und Personen, die unsere Website besucht haben, unsere
+        Anzeigen zu zeigen („Remarketing“). Kommen Sie über eine unserer Anzeigen zu uns, erfasst Google
+        den Klick, und wir speichern die ID dieses Klicks mit Ihrer Suchanfrage, damit wir Google Ads später
+        mitteilen können, dass eine Anfrage oder Zahlung auf diese Anzeige zurückgeht. Wenn Sie eine
+        Suchanfrage senden, übergibt die Seite Ihre E-Mail-Adresse und Telefonnummer an das Google-Tag, das
+        sie in Ihrem Browser hasht, bevor es sie sendet, damit Google die Anfrage Ihrem Anzeigenklick
+        zuordnen kann („erweiterte Conversions“). Google kann außerdem Ihre IP-Adresse verwenden, um
+        Conversions zu messen. Mehr dazu:{' '}
+        <a href="https://business.safety.google/intl/de/privacy/" rel="noopener noreferrer" target="_blank">Wie
+        Google Informationen von Websites verwendet, die seine Dienste nutzen</a>.
+      </p>
+      <p>
+        Analyse- und Werbe-Cookies sind nicht unbedingt erforderlich. Im EWR, im Vereinigten Königreich und
+        in der Schweiz werden sie erst verwendet, nachdem Sie im Cookie-Banner auf „Akzeptieren“ geklickt
+        haben. Anderswo sind sie voreingestellt aktiv, und Sie können sie jederzeit mit „Ablehnen“ (oder
+        über „Cookie-Einstellungen“ im Footer) ausschalten; ein Global-Privacy-Control-Signal Ihres
+        Browsers schaltet Remarketing aus. Einzelheiten stehen in unserer{' '}
+        <Link href="/legal/cookies">Cookie-Richtlinie</Link>.
       </p>
       <p>
         Für die Seite der Benutzerfreundlichkeit verwenden wir <strong>Microsoft Clarity</strong>:
@@ -105,6 +121,11 @@ function Body() {
           Cookie-Richtlinie).
         </li>
         <li>
+          Um unsere Werbung zu messen und zu verbessern und Personen, die unsere Website besucht haben,
+          unsere Anzeigen zu zeigen, soweit Ihre Cookie-Auswahl und das Gesetz es erlauben (siehe
+          Cookie-Richtlinie).
+        </li>
+        <li>
           Um die Leistungen zu betreiben, abzusichern, Fehler zu beheben und sie zu verbessern sowie Betrug
           und Missbrauch zu verhindern.
         </li>
@@ -115,8 +136,9 @@ function Body() {
       <p>
         Soweit die DSGVO (GDPR) oder die UK GDPR gilt, stützen wir uns auf: die{' '}
         <strong>Erfüllung eines Vertrags</strong> (um eine von Ihnen angefragte Suche oder ein Abonnement
-        bereitzustellen); Ihre <strong>Einwilligung</strong> (für Marketing-E-Mails; Sie können sie
-        jederzeit widerrufen); unsere <strong>berechtigten Interessen</strong> (um die Leistungen zu
+        bereitzustellen); Ihre <strong>Einwilligung</strong> (für Marketing-E-Mails sowie für Analyse- und
+        Werbe-Cookies; Sie können sie jederzeit widerrufen); unsere <strong>berechtigten
+        Interessen</strong> (um die Leistungen zu
         betreiben, abzusichern und zu verbessern und mit Ihnen zu kommunizieren); und eine{' '}
         <strong>rechtliche Verpflichtung</strong> (zum Beispiel steuerliche und buchhalterische
         Aufzeichnungen).
@@ -136,6 +158,15 @@ function Body() {
           Analytics für die aggregierte Reichweitenmessung) sowie <strong>Microsoft</strong> (Clarity für
           die aggregierte Messung der Benutzerfreundlichkeit, nur wenn Sie der Analyse zustimmen). Jeder
           erhält nur die Daten, die für seine Funktion erforderlich sind.
+        </li>
+        <li>
+          <strong>Google Ads.</strong> Soweit Ihre Cookie-Auswahl es erlaubt, erhält Google Informationen
+          über Ihren Besuch, die Anzeige, auf die Sie geklickt haben, ob Sie eine Suchanfrage gesendet haben
+          (mit Ihrer E-Mail-Adresse und Telefonnummer in gehashter Form) und, für Remarketing, dass Sie
+          unsere Website besucht haben. Google nutzt einen Teil davon für eigene Zwecke, etwa für
+          personalisierte Werbung und Betrugsprävention, wie auf{' '}
+          <a href="https://business.safety.google/intl/de/privacy/" rel="noopener noreferrer" target="_blank">Googles
+          Seite für Websites, die seine Dienste nutzen</a>, beschrieben.
         </li>
         <li>
           <strong>Affiliates.</strong> Wenn Sie über einen Affiliate-Link zu uns kommen, ordnen wir Ihre
@@ -196,9 +227,12 @@ function Body() {
         Sie haben das Recht zu erfahren, welche personenbezogenen Daten wir erheben und wie wir sie
         verwenden und weitergeben, die Löschung oder Berichtigung zu verlangen und dem „Verkauf“ („sale“)
         oder der „Weitergabe“ („sharing“) personenbezogener Daten zu widersprechen.{' '}
-        <strong>Wir verkaufen Ihre personenbezogenen Daten nicht und geben sie nicht weiter</strong> im
-        Sinne dieser Begriffe nach kalifornischem Recht. Wir werden Sie nicht benachteiligen, wenn Sie Ihre
-        Rechte ausüben.
+        <strong>Wir verkaufen Ihre personenbezogenen Daten nicht.</strong> Unsere Nutzung von
+        Remarketing-Cookies von Google Ads kann nach kalifornischem Recht als „Weitergabe“ („sharing“) für
+        kontextübergreifende verhaltensbasierte Werbung gelten. Sie können dem widersprechen, indem Sie im
+        Cookie-Banner (oder über „Cookie-Einstellungen“ im Footer) auf „Ablehnen“ klicken, und wir
+        behandeln ein Global-Privacy-Control-Signal Ihres Browsers ebenfalls als Widerspruch. Wir werden
+        Sie nicht benachteiligen, wenn Sie Ihre Rechte ausüben.
       </p>
       <p>
         Um eines dieser Rechte auszuüben, schreiben Sie uns an <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
