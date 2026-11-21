@@ -615,7 +615,8 @@ async function main() {
     } else {
       await payload.create({
         collection: 'posts',
-        data: { ...data, publishedAt: new Date(now - idx * 3_600_000).toISOString() },
+        // A draft stays undated; the Posts hook dates it when it is published.
+        data: { ...data, ...(DRAFT ? {} : { publishedAt: new Date(now - idx * 3_600_000).toISOString() }) },
       });
       console.log(`✓ created "${slug}" (${article.category})`);
     }

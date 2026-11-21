@@ -254,6 +254,9 @@ export interface Post {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Set automatically the first time the post is published. Fill it in yourself only to backdate.
+   */
   publishedAt?: string | null;
   /**
    * Upload at 1600 px wide, 16:9 (1600×893). The blog grid crops to 16:10 and the “Latest” featured card crops tighter, so keep the subject in the middle 60% and no text in frame. See docs/blog-guide/images.md.
