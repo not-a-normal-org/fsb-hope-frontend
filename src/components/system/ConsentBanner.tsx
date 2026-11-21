@@ -4,28 +4,28 @@ import { useEffect, useState } from 'react';
 import Link from '@/components/system/LocaleLink';
 import { useI18n } from '@/i18n/LocaleProvider';
 import { rich } from '@/i18n/rich';
+import { CLICK_COOKIE } from '@/lib/ads';
+import { CONSENT_EVENT, CONSENT_KEY, googleConsentFor, hasGpc, readConsent } from '@/lib/consent';
 
 /**
- * Cookie-consent banner, wired to Google Consent Mode v2. Analytics start denied
- * (set pre-paint in the layout's consent-default script); this banner is how the
- * visitor grants or refuses, and it flips `analytics_storage` accordingly.
+ * Cookie-consent banner, wired to Google Consent Mode v2. The defaults are set
+ * pre-paint in DocumentShell, by region (src/lib/consent.ts): opt-in in the
+ * EEA/UK/CH, opt-out elsewhere. This banner is how the visitor grants or refuses,
+ * and it updates all four Google consent signals together.
  *
  * Styled with the design system (`--sm-*` tokens + `.sm-cta` / `.sm-cta-ghost`), so
  * it reads correctly in Dark, Light, and Mono and respects reduced motion via the
- * global CSS rules. The choice persists in localStorage; a returning visitor who
- * accepted has analytics re-granted in the layout script, so the banner stays hidden.
+ * global CSS rules. The choice persists in localStorage and is re-applied in the
+ * <head> script on every page, so a returning visitor never sees the banner again.
  *
  * Re-openable for withdrawal (a GDPR requirement): the Footer's "Cookie preferences"
  * control calls `window.smOpenConsent()`, which this component registers on mount.
  *
  * The choice is also broadcast as a `sm-consent-change` event, because not every
- * analytics tag is gated the way GA is: ClarityScript loads nothing until this
- * fires with `detail: true`, and erases Clarity's cookies when it fires false.
+ * tag is gated the way Google's is: ClarityScript loads nothing until this fires
+ * with `detail: true`, and erases Clarity's cookies when it fires false. Declining
+ * also deletes the stored ad-click ID, so the lead form can't attach it.
  */
-const STORAGE_KEY = 'sm-consent'; // 'granted' | 'denied'
-// Broadcast the choice so consent-gated tags can react without a reload.
-// ClarityScript listens for this; keep both names in sync.
-const CONSENT_EVENT = 'sm-consent-change';
 
 declare global {
   interface Window {
@@ -44,16 +44,11 @@ export default function ConsentBanner() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem(STORAGE_KEY);
-    } catch {
-      /* private mode / storage blocked — show the banner and don't persist */
-    }
     // Reading persisted consent is a client-only external-system sync (localStorage
     // is unavailable during SSR), so the mount-time setState is intentional here.
+    // Storage blocked (private mode) reads as null: show the banner, don't persist.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (stored === 'granted' || stored === 'denied') setVisible(false);
+    if (readConsent()) setVisible(false);
 
     // Let the Footer (and anything else) re-open the banner to change the choice.
     const open = () => {
@@ -68,14 +63,14 @@ export default function ConsentBanner() {
   }, []);
 
   const decide = (granted: boolean) => {
+    const choice = granted ? 'granted' : 'denied';
     try {
-      localStorage.setItem(STORAGE_KEY, granted ? 'granted' : 'denied');
+      localStorage.setItem(CONSENT_KEY, choice);
     } catch {
       /* ignore */
     }
-    window.gtag?.('consent', 'update', {
-      analytics_storage: granted ? 'granted' : 'denied',
-    });
+    window.gtag?.('consent', 'update', googleConsentFor(choice, hasGpc()));
+    if (!granted) document.cookie = `${CLICK_COOKIE}=; path=/; max-age=0; samesite=lax`;
     window.dispatchEvent(new CustomEvent<boolean>(CONSENT_EVENT, { detail: granted }));
     setVisible(false);
   };

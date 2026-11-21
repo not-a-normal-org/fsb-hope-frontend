@@ -11,6 +11,8 @@ import {
   stripLocale,
   type Locale,
 } from '@/i18n/config';
+import { CLICK_COOKIE, CLICK_MAX_AGE_DAYS, clickIdFrom } from '@/lib/ads';
+import { requiresOptIn } from '@/lib/consent';
 import { MAINTENANCE_ENABLED } from '@/lib/maintenance';
 import {
   REGION_BLOCK_ENABLED,
@@ -87,6 +89,29 @@ function regionBlocked(req: NextRequest, pathname: string): NextResponse {
   url.pathname = '/unavailable';
   url.search = '';
   return NextResponse.rewrite(url, { status: 403, headers });
+}
+
+/**
+ * Remember a Google Ads click (`?gclid=`, `gbraid`, `wbraid`) so /api/leads can
+ * store it with the lead, and the deposit and success fee — paid later on Stripe
+ * Payment Links — can be uploaded to Google Ads against that click
+ * (src/lib/ads.ts). Last click wins, like Google's own attribution.
+ *
+ * Only outside the opt-in regions (src/lib/consent.ts), where ad measurement is
+ * on unless the visitor declines; the banner deletes this cookie on Decline. Not
+ * httpOnly for that reason.
+ */
+function rememberAdClick(req: NextRequest, res: NextResponse): NextResponse {
+  const click = clickIdFrom(req.nextUrl.searchParams);
+  if (click && !requiresOptIn(countryOf(req.headers))) {
+    res.cookies.set(CLICK_COOKIE, `${click.param}:${click.id}`, {
+      path: '/',
+      maxAge: CLICK_MAX_AGE_DAYS * 24 * 60 * 60,
+      sameSite: 'lax',
+      secure: req.nextUrl.protocol === 'https:',
+    });
+  }
+  return res;
 }
 
 /**
@@ -208,7 +233,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   }
   const prefix = localeOf(pathname);
   if (prefix === 'de') {
-    return pass();
+    return rememberAdClick(req, pass());
   }
   if (prefix === 'en') {
     // One canonical English URL: /en/pricing → /pricing.
@@ -225,7 +250,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   }
   const url = req.nextUrl.clone();
   url.pathname = pathname === '/' ? '/en' : `/en${pathname}`;
-  return NextResponse.rewrite(url, { request: { headers: forwarded() } });
+  return rememberAdClick(req, NextResponse.rewrite(url, { request: { headers: forwarded() } }));
 }
 
 export const config = {

@@ -2,31 +2,32 @@
 
 import { useEffect } from 'react';
 
+import { CONSENT_EVENT, readConsent } from '@/lib/consent';
+
 /**
  * Microsoft Clarity (heatmaps + session replay), loaded only after the visitor
  * has accepted analytics in the ConsentBanner.
  *
- * Why this doesn't look like the GA4 setup in DocumentShell. GA ships on every
- * page and relies on Consent Mode to stay cookieless until consent; Clarity
- * records interactions rather than counting them, so nothing is loaded at all
- * until consent is granted. Before "Accept" there is no Clarity request, no
- * cookie, and no recording — the strictest reading of the EU/UK rules, which
- * Clarity itself has enforced for EEA/UK/CH traffic since 2025-10-31.
+ * Why this doesn't look like the Google tag in DocumentShell. The Google tag ships
+ * on every public page and relies on Consent Mode, with defaults that differ by
+ * region (opt-out outside the EEA/UK/CH, see src/lib/consent.ts). Clarity records
+ * interactions rather than counting them, so it stays opt-in everywhere: nothing
+ * is loaded at all until the visitor clicks Accept. Before that there is no
+ * Clarity request, no cookie, and no recording — the strictest reading of the
+ * EU/UK rules, which Clarity itself has enforced for EEA/UK/CH traffic since
+ * 2025-10-31.
  *
  * Rendered by the public layout, not DocumentShell: the staff root layout shares
  * that shell, and session replay must never run over /admin or /cms, where lead
  * and customer records are on screen.
  *
  * `consentv2` is Clarity's current consent call (`consent` is deprecated). We
- * grant analytics storage only — ad storage stays denied, because the site runs
- * no advertising, which is also what the cookie banner promises. Withdrawal uses
- * `clarity('consent', false)`, the documented way to erase Clarity's cookies and
- * end the session; the tag itself cannot be unloaded mid-session.
- *
- * Keep the storage key and the event name in sync with ConsentBanner.
+ * grant analytics storage only — ad storage stays denied, because Clarity plays
+ * no part in advertising (Google Ads is the only ad tool, see src/lib/ads.ts).
+ * Withdrawal uses `clarity('consent', false)`, the documented way to erase
+ * Clarity's cookies and end the session; the tag itself cannot be unloaded
+ * mid-session.
  */
-const STORAGE_KEY = 'sm-consent'; // 'granted' | 'denied'
-const CONSENT_EVENT = 'sm-consent-change';
 const PROJECT_ID = 'z80885zxms';
 
 declare global {
@@ -74,13 +75,8 @@ export default function ClarityScript() {
       }
     };
 
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem(STORAGE_KEY);
-    } catch {
-      /* private mode / storage blocked — treat as no consent */
-    }
-    if (stored === 'granted') apply(true);
+    // Only an explicit Accept loads Clarity; no choice (or blocked storage) does not.
+    if (readConsent() === 'granted') apply(true);
 
     // The banner fires this on Accept/Decline so the choice takes effect without
     // a reload, in either direction.

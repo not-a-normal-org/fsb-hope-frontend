@@ -11,6 +11,8 @@
  * notification email. Adding a question means adding it here once.
  */
 
+import { CLICK_ID_PARAMS } from '@/lib/ads';
+
 export const LEAD_STATUSES = ['new', 'contacted', 'searching', 'closed'] as const;
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
@@ -123,6 +125,11 @@ function asText(value: unknown): string | null {
   return s || null;
 }
 
+/** A Google Ads click ID stored by /api/leads; shown under Record, not Notes. */
+function isClickIdKey(key: string): boolean {
+  return (CLICK_ID_PARAMS as readonly string[]).includes(key);
+}
+
 function humanizeKey(key: string): string {
   const spaced = key.replace(/[_-]+/g, ' ').trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
@@ -166,7 +173,7 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
     if (raw) (field.section === 'trip' ? trip : notes).push({ label: field.label, value: displayAnswer(field, raw) });
   }
   for (const [key, value] of Object.entries(details)) {
-    if (!LEAD_DETAIL_KEYS.includes(key)) push(notes, humanizeKey(key), value);
+    if (!LEAD_DETAIL_KEYS.includes(key) && !isClickIdKey(key)) push(notes, humanizeKey(key), value);
   }
 
   push(points, 'Points held', lead.points_held);
@@ -183,6 +190,9 @@ export function describeLead(lead: LeadRecord, opts: { includeContact: boolean }
   push(record, 'Status', lead.status ? humanizeKey(lead.status) : null);
   push(record, 'Received', lead.created_at ? formatReceived(lead.created_at) : null);
   push(record, 'Referral code', lead.referral_code);
+  // Present when the visit came from a Google Ads click: the ID to upload the
+  // deposit / success fee against (docs/marketing/google-ads.md).
+  for (const param of CLICK_ID_PARAMS) push(record, `Google Ads click (${param})`, details[param]);
 
   return [
     { title: 'Trip', rows: trip },

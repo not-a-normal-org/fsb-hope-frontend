@@ -76,7 +76,7 @@ const de: Messages = {
   consent: {
     dialog: 'Cookie-Einwilligung',
     eyebrow: 'Cookies',
-    body: 'Wir verwenden notwendige Cookies für den Betrieb der Website sowie Google Analytics und Microsoft Clarity, um den Gesamtverkehr zu messen und zu erkennen, wo Seiten unklar sind, damit wir sie verbessern können. Niemals Werbung. Mehr dazu in unserer <link>Cookie-Richtlinie</link>.',
+    body: 'Wir verwenden notwendige Cookies für den Betrieb der Website, Google Analytics und Google Ads, um Besuche und unsere Anzeigen zu messen und früheren Besuchern unsere Anzeigen zu zeigen, sowie, nur wenn Sie akzeptieren, Microsoft Clarity, um zu erkennen, wo Seiten unklar sind. Mit „Ablehnen“ bleiben nur die notwendigen Cookies. Mehr dazu in unserer <link>Cookie-Richtlinie</link>.',
     decline: 'Ablehnen',
     accept: 'Akzeptieren',
     preferences: 'Cookie-Einstellungen',

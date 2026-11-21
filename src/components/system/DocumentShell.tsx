@@ -10,6 +10,8 @@ import ReferralCapture from "@/components/system/ReferralCapture";
 import { DE_LIVE, OG_LOCALES, localizePath, type Locale } from "@/i18n/config";
 import { getClientMessages, getMessages } from "@/i18n/get-messages";
 import LocaleProvider from "@/i18n/LocaleProvider";
+import { GA_MEASUREMENT_ID, GOOGLE_ADS_ID } from "@/lib/ads";
+import { CONSENT_REGIONS, consentChoiceJs } from "@/lib/consent";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { OG_IMAGE, TWITTER_IMAGE, absoluteUrl, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
@@ -96,15 +98,49 @@ export function siteMetadata(locale: Locale): Metadata {
   };
 }
 
+/* ========== GOOGLE TAG (src/lib/consent.ts, src/lib/ads.ts) ========== */
+// Consent Mode v2 defaults, set before gtag.js loads. Opt-in regions (EEA, UK,
+// CH) start with everything denied; elsewhere measurement and remarketing start
+// granted, except remarketing for a browser sending Global Privacy Control. A
+// stored choice from the banner then overrides either default. ads_data_redaction
+// strips ad identifiers from pings sent while ad_storage is denied; url_passthrough
+// carries the click ID across pages without a cookie in that case.
+const consentDefaultsJs = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+var gpc=navigator.globalPrivacyControl===true;
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:${JSON.stringify(CONSENT_REGIONS)},wait_for_update:500});
+gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:gpc?'denied':'granted',analytics_storage:'granted'});
+gtag('set','ads_data_redaction',true);
+gtag('set','url_passthrough',true);
+var c=${consentChoiceJs};
+if(c){gtag('consent','update',{ad_storage:c,ad_user_data:c,analytics_storage:c,ad_personalization:c==='granted'&&!gpc?'granted':'denied'});}`;
+
+// GA4, plus the Google Ads destination once GOOGLE_ADS_ID is set (one gtag.js
+// serves both). Enhanced conversions take the email/phone the lead form passes
+// to gtag('set','user_data') — see trackLead().
+const googleConfigJs = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');${
+  GOOGLE_ADS_ID ? `\ngtag('config', '${GOOGLE_ADS_ID}', {allow_enhanced_conversions: true});` : ""
+}`;
+
 /* ========== ROOT DOCUMENT ========== */
 // data-theme="dark" is the SSR default; ThemeScript corrects it pre-paint for
 // visitors who chose light/mono. suppressHydrationWarning covers that one
 // attribute React would otherwise flag as a server/client mismatch.
+//
+// `tracking` is the public site's switch: it loads the Google tag (GA4 + Ads)
+// and the cookie banner that governs it. The staff layout leaves it off, so no
+// analytics or ad tag ever runs over /admin, /cms or /portal, where lead and
+// customer records are on screen.
 export default function DocumentShell({
   locale,
+  tracking = false,
   children,
 }: Readonly<{
   locale: Locale;
+  tracking?: boolean;
   children: React.ReactNode;
 }>) {
   return (
@@ -120,17 +156,14 @@ export default function DocumentShell({
       {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <ThemeScript />
-        <ConsentScript />
-        {/* Google Consent Mode v2 — deny analytics by default (privacy-first), before
-            gtag.js loads. Re-grants immediately for a returning visitor who accepted;
-            the ConsentBanner flips it on the visitor's choice. */}
-        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
-        <Script id="ga-consent-default" strategy="beforeInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
-try{if(localStorage.getItem('sm-consent')==='granted'){gtag('consent','update',{analytics_storage:'granted'});}}catch(e){}`}
-        </Script>
+        {tracking && <ConsentScript />}
+        {/* Google Consent Mode v2 defaults, before gtag.js loads (see consentDefaultsJs). */}
+        {tracking && (
+          // eslint-disable-next-line @next/next/no-before-interactive-script-outside-document
+          <Script id="ga-consent-default" strategy="beforeInteractive">
+            {consentDefaultsJs}
+          </Script>
+        )}
         <meta name="theme-color" content="#060B14" />
         <link rel="manifest" href="/site.webmanifest" />
         {/* Site-wide entity graph — helps search + AI resolve who Saver Miles is. */}
@@ -151,23 +184,24 @@ try{if(localStorage.getItem('sm-consent')==='granted'){gtag('consent','update',{
             <div className="flex-1">{children}</div>
           </MotionProvider>
 
-          <ConsentBanner />
+          {tracking && <ConsentBanner />}
         </LocaleProvider>
 
-        {/* Google Analytics 4 (gtag.js). Loaded after the page is interactive so it
-            never blocks paint. Consent Mode (set in <head>) gates it: it sends only
-            cookieless signals until the visitor accepts. Injected via next/script
-            because a raw inline <script> in App Router JSX would not execute. */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-50ZT6S22C6"
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-50ZT6S22C6');`}
-        </Script>
+        {/* The Google tag (gtag.js) for GA4 and Google Ads. Loaded after the page is
+            interactive so it never blocks paint. Consent Mode (set in <head>) decides
+            what it may store and send. Injected via next/script because a raw inline
+            <script> in App Router JSX would not execute. */}
+        {tracking && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {googleConfigJs}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
