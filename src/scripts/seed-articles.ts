@@ -238,6 +238,7 @@ function parseArticle(md: string): Article {
 
 /* ── Run order (newest first). Flagship leads. ─────────────────────────────── */
 const ORDER = [
+  'book-award-flight-for-someone-else',
   'flying-blue-promo-rewards-business-new-york',
   'hyatt-transfer-deadline-what-to-do',
   'atmos-rewards-what-changed',
