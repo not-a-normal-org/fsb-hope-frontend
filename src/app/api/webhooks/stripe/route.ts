@@ -39,21 +39,29 @@ async function getSessionPriceId(sessionId: string): Promise<string | null> {
  * create a duplicate keyed only by stripe_customer_id, orphaning the
  * application row and breaking the email-keyed profile lookup.
  *
- * Direct purchases (the alert checkout) carry no customer_id and fall back to
- * an upsert keyed by stripe_customer_id.
+ * Direct purchases carry no customer_id. The alert checkout is a subscription,
+ * so Stripe always creates a customer and the row is upserted on
+ * stripe_customer_id. A Payment Link sale (the deposits staff send from the
+ * Stripe dashboard) is one-time and gets no Stripe customer, so that row is
+ * matched on email instead: upserting on a null id inserts a new row per sale.
+ *
+ * A buyer's row is marked 'active' because they paid. Left at the table's
+ * default ('pending') it would show in /admin/applications with an Approve
+ * button that emails them a membership payment link.
  */
 async function resolveCustomer(
   session: Stripe.Checkout.Session,
 ): Promise<{ id: string } | null> {
   const email            = session.customer_details?.email ?? null;
-  const stripeCustomerId = session.customer as string;
+  const stripeCustomerId =
+    typeof session.customer === 'string' ? session.customer : session.customer?.id ?? null;
   const linkedId         = session.metadata?.customer_id;
 
   if (linkedId) {
     const { data, error } = await supabaseAdmin
       .from('customers')
       .update({
-        stripe_customer_id: stripeCustomerId,
+        ...(stripeCustomerId ? { stripe_customer_id: stripeCustomerId } : {}),
         ...(email ? { email } : {}),
         status: 'active',
       })
@@ -65,13 +73,51 @@ async function resolveCustomer(
       throw new Error(`customers link failed: ${error.message}`);
     }
     if (data) return data;
-    // Row missing (e.g. deleted) — fall through to the upsert below.
+    // Row missing (e.g. deleted) — fall through to the lookups below.
+  }
+
+  if (!stripeCustomerId) {
+    if (!email) return null;
+
+    // ilike for case-insensitivity; escape its wildcards, since "_" is common
+    // in addresses and would otherwise match any character.
+    const { data: existing, error: findError } = await supabaseAdmin
+      .from('customers')
+      .select('id')
+      .ilike('email', email.replace(/[\\%_]/g, '\\$&'))
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (findError) {
+      throw new Error(`customers lookup failed: ${findError.message}`);
+    }
+    if (existing) {
+      const { error } = await supabaseAdmin
+        .from('customers')
+        .update({ status: 'active' })
+        .eq('id', existing.id);
+      if (error) {
+        throw new Error(`customers activate failed: ${error.message}`);
+      }
+      return existing;
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('customers')
+      .insert({ email, status: 'active' })
+      .select('id')
+      .single();
+    if (error) {
+      throw new Error(`customers insert failed: ${error.message}`);
+    }
+    return data;
   }
 
   const { data, error } = await supabaseAdmin
     .from('customers')
     .upsert(
-      { stripe_customer_id: stripeCustomerId, email },
+      { stripe_customer_id: stripeCustomerId, email, status: 'active' },
       { onConflict: 'stripe_customer_id' },
     )
     .select('id')
