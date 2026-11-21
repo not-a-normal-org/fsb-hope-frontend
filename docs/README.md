@@ -40,15 +40,14 @@ is down and real payments run, so each row below is reachable now.
 | Where | Points at | Consequence |
 |---|---|---|
 | `admin/applications/actions.ts` | `/dashboard?success=true&session_id=…` | **Live path.** Approve an applicant → they pay via Stripe payment link → land on a dead URL |
-| `api/portal` `return_url` | `/dashboard` | Exiting the billing portal lands on a dead URL |
 
-The admin one is the sharpest: that flow is reachable *right now* by any signed-in
-admin, and the customer paying is anonymous — so they hit the construction
-notice (503), not even a 404, after being charged.
+It is a live path: any signed-in admin can approve an applicant, and the
+customer then pays and lands on a 404.
 
-These URLs were left as-is deliberately. They are the specification for what
-the rebuild owes: a post-purchase page that resolves a Stripe session. Redirect targets are a product
-decision, so they are recorded here rather than guessed at.
+This URL was left as-is deliberately. It is the specification for what the
+rebuild owes: a post-purchase page that resolves a Stripe session. Redirect
+targets are a product decision, so they are recorded here rather than guessed
+at.
 
 `session.metadata.product_key` is stamped by the alert checkout
 (`AlertBuyBox` → `CheckoutButton`) but no longer read: the webhook's onboarding

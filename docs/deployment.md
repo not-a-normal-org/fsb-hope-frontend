@@ -35,7 +35,7 @@ Gotchas:
   one-off work still behaves as configured.)
 - **`NEXT_PUBLIC_APP_URL`** must be the real production origin
   (`https://<your-domain>`), no trailing slash — it builds email links (e.g.
-  staff password reset) and the billing-portal / admin payment-link redirects.
+  staff password reset) and the admin payment-link redirect.
   Checkout's return URLs come from the request itself, not from this. Do
   **not** leave it pointing at a `*.vercel.app` preview URL or at localhost.
 - `NEXT_PUBLIC_*` values are compiled into the browser bundle. Never put a secret

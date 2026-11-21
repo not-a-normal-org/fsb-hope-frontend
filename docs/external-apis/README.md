@@ -4,7 +4,7 @@ Four third-party services.
 
 | Service | Used for | Blast radius if broken | Doc |
 |---|---|---|---|
-| **Stripe** | Checkout, billing portal, subscriptions, webhooks | Live money stops reconciling | [stripe.md](stripe.md) |
+| **Stripe** | Checkout, Payment Links, subscriptions, webhooks | Live money stops reconciling | [stripe.md](stripe.md) |
 | **Supabase** | Postgres — customers, orders, subscriptions, newsletter | Data loss / PII exposure | [supabase.md](supabase.md) |
 | **Resend** | Transactional + onboarding email | Customers get silence | [resend.md](resend.md) |
 | **Cal.com** | Booking embed *and* an authenticated bookings API | A page looks empty | [cal-com.md](cal-com.md) |
@@ -66,8 +66,8 @@ behind that prefix to "make it work" — it publishes the secret to every
 visitor. If a value is needed client-side, the answer is a server route, not a
 rename.
 
-`NEXT_PUBLIC_APP_URL` builds the billing-portal `return_url`, the admin
-payment-link redirect and links in emails. If it is wrong in production, those
+`NEXT_PUBLIC_APP_URL` builds the admin payment-link redirect and links in
+emails (e.g. staff password reset). If it is wrong in production, those
 send people to a dead URL, a failure that never shows up locally. Checkout's
 `success_url` / `cancel_url` don't depend on it: they use the request's own
 origin.
@@ -77,7 +77,6 @@ origin.
 | Route | Stripe | Supabase | Resend |
 |---|:-:|:-:|:-:|
 | `POST /api/checkout` | ✓ | | |
-| `POST /api/portal` | ✓ | | |
 | `POST /api/profile` | ✓ | ✓ | |
 | `GET /api/profile/lookup` | ✓ | ✓ | |
 | `POST /api/webhooks/stripe` | ✓ | ✓ | ✓ |

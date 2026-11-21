@@ -86,11 +86,14 @@ or to `ADMIN_EMAIL`.
 
 `metadata.customer_id` is separate: see *resolveCustomer* below.
 
-## Billing portal — `POST /api/portal`
+## Billing portal
 
-Takes `{ customerId }`, returns a portal URL, `return_url` → `/dashboard`.
-The portal's cancellation policy and product list are configured in the Stripe
-Dashboard (Billing → Customer portal), **not** in code.
+There is no portal route. `POST /api/portal` was removed on 2026-11-22: nothing
+called it, and it opened Stripe's billing portal for whatever `customerId` an
+anonymous request sent, which would let anyone holding a customer id see that
+customer's invoices, change their card or cancel their subscription. If
+self-serve billing comes back, the route must find the customer from a signed-in
+session, never from the request body.
 
 ## Webhook — `POST /api/webhooks/stripe`
 
