@@ -130,8 +130,17 @@ links the Stripe customer onto that **existing** row and activates it.
 
 Without that link it would upsert a new row keyed only on
 `stripe_customer_id` — orphaning the application row and breaking the
-email-keyed profile lookup. Direct purchases (the alert checkout) carry no
-`customer_id` and take the upsert path by design.
+email-keyed profile lookup. Direct purchases carry no `customer_id`:
+
+- **Alert checkout** (subscription): Stripe always creates a customer, so the
+  row is upserted on `stripe_customer_id`.
+- **Payment Links** sent from the Stripe dashboard (e.g. a search deposit):
+  one-time, `customer_creation: if_required`, so `session.customer` is `null`.
+  The row is matched on email (case-insensitive) instead. Upserting on a null
+  id never conflicts in Postgres, so it inserted a duplicate row per sale.
+
+Every buyer's row is set to `active`. The table default is `pending`, which
+puts a row in `/admin/applications` with an "Approve & Send Link" button.
 
 ### Best-effort lookups
 
