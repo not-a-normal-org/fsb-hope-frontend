@@ -143,8 +143,8 @@ links the Stripe customer onto that **existing** row and activates it. It reads
 Links, while an `/api/checkout` session is built from a visitor's request.
 
 Without linking to that row it would upsert a new row keyed only on
-`stripe_customer_id` — orphaning the application row and breaking the
-email-keyed profile lookup. Direct purchases carry no `customer_id`:
+`stripe_customer_id`, orphaning the application row. Direct purchases carry no
+`customer_id`:
 
 - **Alert checkout** (subscription): Stripe always creates a customer, so the
   row is upserted on `stripe_customer_id`.

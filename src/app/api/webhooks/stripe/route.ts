@@ -37,7 +37,7 @@ async function getSessionPriceId(sessionId: string): Promise<string | null> {
  * metadata (stamped onto the admin payment link). When present we link the
  * Stripe customer onto that existing row and activate it — otherwise we'd
  * create a duplicate keyed only by stripe_customer_id, orphaning the
- * application row and breaking the email-keyed profile lookup.
+ * application row.
  *
  * That metadata is trusted only on a Payment Link session: staff make those, so
  * the id is ours. A session from /api/checkout is built from a visitor's
