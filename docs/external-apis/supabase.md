@@ -59,8 +59,9 @@ directory, so it appears unused.
 
 ## `customers` is Stripe-linked
 
-The webhook resolves rows by `session.metadata.customer_id` when present, else
-upserts on `stripe_customer_id`. Two writers touch this table on different
+The webhook resolves rows by `session.metadata.customer_id` on a Payment Link
+session, else upserts on `stripe_customer_id` (or matches on email when the sale
+has no Stripe customer). Two writers touch this table on different
 keys — read [stripe.md](stripe.md#resolvecustomer--the-duplicate-row-trap)
 before changing either path.
 

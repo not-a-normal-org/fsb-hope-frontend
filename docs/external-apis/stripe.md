@@ -124,7 +124,7 @@ production endpoint's are different values.
 
 | Event | Effect |
 |---|---|
-| `checkout.session.completed` | Resolve customer, write `orders` / `subscriptions`, send follow-up |
+| `checkout.session.completed` | Resolve customer, write `orders` / `subscriptions` (no email is sent) |
 | `customer.subscription.updated` | Sync status/period to `subscriptions` |
 | `customer.subscription.deleted` | Mark cancelled |
 | `invoice.paid` | Record payment |
@@ -142,7 +142,7 @@ links the Stripe customer onto that **existing** row and activates it. It reads
 `customer_id` only when `session.payment_link` is set: staff create Payment
 Links, while an `/api/checkout` session is built from a visitor's request.
 
-Without that link it would upsert a new row keyed only on
+Without linking to that row it would upsert a new row keyed only on
 `stripe_customer_id` — orphaning the application row and breaking the
 email-keyed profile lookup. Direct purchases carry no `customer_id`:
 
