@@ -50,6 +50,13 @@ rebuild owes: a post-purchase page that resolves a Stripe session. Redirect
 targets are a product decision, so they are recorded here rather than guessed
 at.
 
+The profile step that page was to host had two API routes, `POST /api/profile`
+and `GET /api/profile/lookup`. Both were removed on 2026-11-22, unused: anyone
+holding a checkout session id could read that buyer's name, phone and company,
+or overwrite them, and session ids sit in success-page URLs that analytics
+record. A rebuilt `/dashboard` needs its own proof of identity, such as a
+signed, short-lived link, not a bare session id.
+
 `session.metadata.product_key` is stamped by the alert checkout
 (`AlertBuyBox` → `CheckoutButton`) but no longer read: the webhook's onboarding
 emails went with the retired Research Report and Seat Alert products. See

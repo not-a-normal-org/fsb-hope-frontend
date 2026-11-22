@@ -1,12 +1,12 @@
 -- customers — the app "account" record for buyers (Stripe-driven, no login).
 -- Written server-side only (service-role key). Created by /api/apply (status
--- 'pending'), promoted to 'active' on profile completion (/api/profile) and on
--- Stripe checkout (webhooks/stripe). The tiered "user" type in admin user-
--- management is this table; tier is stored in `tags` (see src/lib/tiers.ts).
+-- 'pending'), promoted to 'active' on Stripe checkout (webhooks/stripe). The
+-- tiered "user" type in admin user-management is this table; tier is stored in
+-- `tags` (see src/lib/tiers.ts).
 --
--- Columns mirror what the code reads/writes: /api/apply, /api/profile,
--- webhooks/stripe, and the /admin customers/orders/subscriptions/applications
--- pages. Public schema, RLS on with no policies (service-role only).
+-- Columns mirror what the code reads/writes: /api/apply, webhooks/stripe, and
+-- the /admin customers/orders/subscriptions/applications pages. Public schema,
+-- RLS on with no policies (service-role only).
 --
 -- APPLY FIRST — subscriptions.sql and orders.sql reference this table.
 -- Apply once per environment.
