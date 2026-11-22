@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 
 import { stripe } from '@/lib/stripe';
+import { ALERT_PRODUCT_IDS } from '@/lib/products';
 import { DEFAULT_LOCALE, hasLocale, localizePath } from '@/i18n/config';
 
 /**
@@ -19,7 +20,8 @@ interface CheckoutRequestBody {
   priceId: string;
   mode: 'subscription' | 'payment';
   customerEmail?: string;
-  metadata?: Record<string, string>;
+  /** Only the keys in METADATA_VALUES survive; see safeMetadata. */
+  metadata?: unknown;
   /** Internal path to return to after success/cancel (must start with "/"). */
   successPath?: string;
   cancelPath?: string;
@@ -30,6 +32,32 @@ interface CheckoutRequestBody {
 /** Only same-origin paths — never let the client hand us an absolute URL. */
 function safePath(value: unknown): string | null {
   return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : null;
+}
+
+/**
+ * The metadata a visitor may put on a session: which alert and billing interval
+ * they picked, so the session reads clearly in the Stripe dashboard.
+ */
+const METADATA_VALUES: Record<string, readonly string[]> = {
+  product_key: ALERT_PRODUCT_IDS,
+  interval: ['monthly', 'annual'],
+};
+
+/**
+ * Keep only known keys with known values. Session metadata is never forwarded
+ * as sent: the webhook reads `customer_id` from it to link a payment to an
+ * existing customer row, so a forwarded value would let a buyer overwrite
+ * another customer's email and Stripe id with their own.
+ */
+function safeMetadata(value: unknown): Record<string, string> | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+  const sent = value as Record<string, unknown>;
+  const kept: Record<string, string> = {};
+  for (const [key, allowed] of Object.entries(METADATA_VALUES)) {
+    const v = sent[key];
+    if (typeof v === 'string' && allowed.includes(v)) kept[key] = v;
+  }
+  return Object.keys(kept).length ? kept : undefined;
 }
 
 // ── Route handler ─────────────────────────────────────────────────────────────
@@ -43,7 +71,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
   }
 
-  const { priceId, mode, customerEmail, metadata } = body;
+  const { priceId, mode, customerEmail } = body;
+  const metadata = safeMetadata(body.metadata);
   const locale = hasLocale(body.locale) ? body.locale : DEFAULT_LOCALE;
   // Callers pass the English path; localizePath adds /de (and is a no-op on a
   // path that already has it).

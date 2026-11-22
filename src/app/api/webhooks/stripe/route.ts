@@ -39,6 +39,11 @@ async function getSessionPriceId(sessionId: string): Promise<string | null> {
  * create a duplicate keyed only by stripe_customer_id, orphaning the
  * application row and breaking the email-keyed profile lookup.
  *
+ * That metadata is trusted only on a Payment Link session: staff make those, so
+ * the id is ours. A session from /api/checkout is built from a visitor's
+ * request, and a customer_id there could point their payment at someone else's
+ * row (the route drops it, and this check is the second lock).
+ *
  * Direct purchases carry no customer_id. The alert checkout is a subscription,
  * so Stripe always creates a customer and the row is upserted on
  * stripe_customer_id. A Payment Link sale (the deposits staff send from the
@@ -55,7 +60,7 @@ async function resolveCustomer(
   const email            = session.customer_details?.email ?? null;
   const stripeCustomerId =
     typeof session.customer === 'string' ? session.customer : session.customer?.id ?? null;
-  const linkedId         = session.metadata?.customer_id;
+  const linkedId         = session.payment_link ? session.metadata?.customer_id : undefined;
 
   if (linkedId) {
     const { data, error } = await supabaseAdmin
