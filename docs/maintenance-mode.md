@@ -29,10 +29,11 @@ It posts to `/api/account/login`. That one `payload-token` session lifts the wal
 `src/lib/access.ts`. Need accounts? Create them in `/admin/team` or seed test
 users of every role with `npm run seed:staff`.
 
-The cookie is `payload-token`: httpOnly, `sameSite: lax`, ~2-hour expiry, `secure`
-in production. `src/proxy.ts` verifies its JWT at the edge with `jose`
-(`src/lib/session-edge.ts`) as a fast pre-filter; `payload.auth` in the `/admin`
-layout is the authoritative role check.
+The cookie is `payload-token`: httpOnly, `sameSite: lax`, 8-hour expiry
+(`STAFF_SESSION_SECONDS`), `secure` in production. `src/proxy.ts` verifies its
+JWT at the edge with `jose` (`src/lib/session-edge.ts`) as a fast pre-filter.
+The authoritative role check is `payload.auth`, run by each admin page, server
+action and `/api/admin` route itself (`src/lib/auth.ts`), not by the layout.
 
 To sign out, `POST /api/account/logout`.
 

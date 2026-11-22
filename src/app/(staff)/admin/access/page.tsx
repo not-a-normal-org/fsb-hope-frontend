@@ -12,6 +12,7 @@ import {
   isBlockedCountry,
 } from '@/lib/region-block';
 import { AllowlistClient, type AllowlistRow } from './AllowlistClient';
+import { requireAdminPath } from '@/lib/auth';
 
 /**
  * /admin/access — the region block's allowlist (admin-only; see ADMIN_NAV).
@@ -24,6 +25,7 @@ const card = 'bg-[#13182A] border border-[#1E2538] rounded-2xl';
 const label = 'text-[10px] uppercase tracking-widest text-[#5C6378]';
 
 export default async function AccessPage() {
+  await requireAdminPath('/admin/access');
   const h = await headers();
   const ip = clientIp(h);
   const country = countryOf(h);

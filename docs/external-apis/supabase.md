@@ -64,22 +64,35 @@ upserts on `stripe_customer_id`. Two writers touch this table on different
 keys — read [stripe.md](stripe.md#resolvecustomer--the-duplicate-row-trap)
 before changing either path.
 
-## PII exposure — the mistake already made once
+## PII exposure — the mistake already made twice
 
 `/api/admin/applications-data` and `/api/admin/products-data` return customer
-records via `supabaseAdmin`. They are protected **only** by `src/proxy.ts`.
-
-A previous version matched `/admin/:path*` alone. That pattern does **not**
-cover `/api/admin/*` — the two endpoints served customer PII to anyone who
-knew the URL. The current proxy uses a catch-all matcher and checks both
-prefixes.
+records via `supabaseAdmin`. A previous proxy matched `/admin/:path*` alone.
+That pattern does **not** cover `/api/admin/*`, and the two endpoints served
+customer PII to anyone who knew the URL. The current proxy uses a catch-all
+matcher and checks both prefixes.
 
 If you narrow the matcher during the rebuild, re-verify with an
 unauthenticated request:
 
     curl -i https://<host>/api/admin/applications-data   # must be 401
 
-Next's docs also warn that Server Functions are POSTs to their own route, so
-proxy coverage can vanish under a matcher change. The admin server actions in
-`src/app/admin/**/actions.ts` should check authorization themselves rather
-than trusting the proxy.
+The proxy is only a pre-filter, though. It lets through any token whose claims
+say "active staff", whatever the role, and those claims can be 8 hours old.
+Until 2026-11-22 the per-role check lived only in the `/admin` layout, which
+was not enough:
+
+- Next renders a page alongside its layout, so a redirect in the layout still
+  streams the page's data in the response body. Any signed-in searcher or
+  affiliate could read every admin page with a direct request. For an account
+  suspended or deleted since its sign-in, the layout skipped the role check and
+  rendered every page in full.
+- Server actions are POST endpoints that run before any page renders, and only
+  the region-access ones checked their caller.
+
+Now every server-rendered `/admin` page calls `requireAdminPath` before it
+loads anything. Every admin server action and `/api/admin` route calls
+`getAuthorizedUser` or `requireAuthorizedUser` (`src/lib/auth.ts`). All of
+them read the account from the database, so a suspension applies to the next
+request. A new page, action or route needs the same call; the proxy and the
+layout are not the gate.

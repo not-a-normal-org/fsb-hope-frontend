@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { getCurrentUser } from '@/lib/auth';
-import { hasRole } from '@/lib/access';
+import { getAuthorizedUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(): Promise<NextResponse> {
-  // Used by the Applications review flow (admin/agent) to list product options.
-  const user = await getCurrentUser();
-  if (!hasRole(user, ['admin', 'agent'])) {
+  // Used by the Applications review flow to list product options, so it answers
+  // whoever may open that page.
+  if (!(await getAuthorizedUser('/admin/applications'))) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

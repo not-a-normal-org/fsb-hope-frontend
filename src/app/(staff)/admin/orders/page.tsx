@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { planNameByPriceId } from '@/lib/plans';
+import { requireAdminPath } from '@/lib/auth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -108,6 +109,7 @@ export default async function OrdersPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  await requireAdminPath('/admin/orders');
   const { status: rawStatus } = await searchParams;
   const activeTab = TABS.some((t) => t.value === rawStatus) ? (rawStatus ?? 'all') : 'all';
 

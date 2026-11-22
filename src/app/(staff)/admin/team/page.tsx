@@ -4,6 +4,7 @@ import type { Where } from 'payload';
 import { getPayloadClient } from '@/lib/payload';
 import { TeamClient, type TeamUser } from './TeamClient';
 import type { Role } from './actions';
+import { requireAdminPath } from '@/lib/auth';
 
 // Reads the CMS at request time, so it must be dynamic (see src/lib/payload.ts).
 export const dynamic = 'force-dynamic';
@@ -48,6 +49,7 @@ export default async function TeamPage({
 }: {
   searchParams: Promise<{ role?: string }>;
 }) {
+  await requireAdminPath('/admin/team');
   const { role: rawRole } = await searchParams;
   const activeRole = ROLE_TABS.some((t) => t.value === rawRole) ? (rawRole ?? 'all') : 'all';
 

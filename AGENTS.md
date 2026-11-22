@@ -88,8 +88,12 @@ not a shared secret. Sign in at `/admin/login` with a staff account (created in
 governs `/admin` (roles decide which sections — see `src/lib/access.ts`), the
 `/cms` panel, and lifting the wall. The edge middleware verifies that JWT with
 `jose` (`src/lib/session-edge.ts`); the authoritative role check is `payload.auth`
-in the `/admin` layout (`src/lib/auth.ts`). `MAINTENANCE_MODE=off` drops the wall
-entirely for local work. The wall comes down at launch.
+(`src/lib/auth.ts`). Every admin page calls `requireAdminPath` before loading
+data, and every admin server action and `/api/admin` route calls
+`getAuthorizedUser`. The `/admin` layout alone is not a gate: Next renders the
+page alongside it, so a layout redirect still sends the page data.
+`MAINTENANCE_MODE=off` drops the wall entirely for local work. The wall comes
+down at launch.
 
 ## Region block
 

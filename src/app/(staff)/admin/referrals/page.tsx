@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { getCurrentUser } from '@/lib/auth';
+import { requireAdminPath } from '@/lib/auth';
 
 /**
  * /admin/referrals — read-only attribution view. Admins see every referred lead;
@@ -25,9 +25,9 @@ function fmtDate(iso: string): string {
 }
 
 export default async function ReferralsPage() {
-  const user = await getCurrentUser();
-  const isAffiliate = user?.role === 'affiliate';
-  const code = user?.referralCode ?? null;
+  const user = await requireAdminPath('/admin/referrals');
+  const isAffiliate = user.role === 'affiliate';
+  const code = user.referralCode ?? null;
 
   let query = supabaseAdmin
     .from('leads')
