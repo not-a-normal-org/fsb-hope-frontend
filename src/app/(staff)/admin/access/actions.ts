@@ -2,8 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { getCurrentUser } from '@/lib/auth';
-import { hasRole } from '@/lib/access';
+import { getAuthorizedUser } from '@/lib/auth';
 import { logAudit } from '@/lib/audit';
 import { normalizeEntry } from '@/lib/region-block';
 import { supabaseAdmin } from '@/lib/supabase/admin';
@@ -18,13 +17,8 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
-async function requireAdmin() {
-  const user = await getCurrentUser();
-  return user && user.status === 'active' && hasRole(user, ['admin']) ? user : null;
-}
-
 export async function addAllowlistEntry(formData: FormData): Promise<ActionResult> {
-  const user = await requireAdmin();
+  const user = await getAuthorizedUser('/admin/access');
   if (!user) return { ok: false, error: 'Only admins can change the allowlist.' };
 
   const entry = normalizeEntry(String(formData.get('cidr') ?? ''));
@@ -52,7 +46,7 @@ export async function addAllowlistEntry(formData: FormData): Promise<ActionResul
 }
 
 export async function removeAllowlistEntry(id: string): Promise<ActionResult> {
-  const user = await requireAdmin();
+  const user = await getAuthorizedUser('/admin/access');
   if (!user) return { ok: false, error: 'Only admins can change the allowlist.' };
 
   const { data, error } = await supabaseAdmin

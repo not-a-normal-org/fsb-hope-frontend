@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { requireAuthorizedUser } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 /**
@@ -9,6 +10,8 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
  * Sets is_active=false and records the unsubscribe timestamp.
  */
 export async function unsubscribeUser(id: string): Promise<void> {
+  await requireAuthorizedUser('/admin/newsletter');
+
   const { error } = await supabaseAdmin
     .from('newsletter_subscribers')
     .update({

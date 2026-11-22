@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit';
+import { requireAuthorizedUser } from '@/lib/auth';
 import { CUSTOMER_TIERS, isTierTag, type CustomerTierKey } from '@/lib/tiers';
 
 const VALID_TIERS = new Set<string>(CUSTOMER_TIERS.map((t) => t.key));
@@ -15,6 +16,8 @@ const VALID_TIERS = new Set<string>(CUSTOMER_TIERS.map((t) => t.key));
  * `tierKey` clears the tier.
  */
 export async function setCustomerTier(customerId: string, tierKey: string): Promise<void> {
+  await requireAuthorizedUser('/admin/customers');
+
   if (tierKey && !VALID_TIERS.has(tierKey)) {
     throw new Error(`setCustomerTier: unknown tier "${tierKey}"`);
   }

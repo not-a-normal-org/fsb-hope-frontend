@@ -4,14 +4,16 @@ import { revalidatePath } from 'next/cache';
 
 import { getPayloadClient } from '@/lib/payload';
 import { logAudit } from '@/lib/audit';
+import { getAuthorizedUser } from '@/lib/auth';
 
 /**
  * Server actions for the Team console — CRUD over the Payload `users` collection
  * (roles: admin/agent/searcher/affiliate). These run through Payload's local API
  * with access override on, so they are NOT constrained by the collection's access
- * rules; they are privileged and reachable only from the admin-only `/admin/team`
- * page (gated in the /admin layout by role). Every mutation is written to the
- * audit log with the acting user. Passwords are hashed by Payload on create/update.
+ * rules. So each one checks its caller itself (lib/auth.ts `getAuthorizedUser`):
+ * the admin-only gate on the /admin/team page does not cover a server action.
+ * Every mutation is written to the audit log with the acting user. Passwords
+ * are hashed by Payload on create/update.
  */
 
 export type Role = 'admin' | 'agent' | 'searcher' | 'affiliate';
@@ -21,6 +23,7 @@ const ROLES: readonly Role[] = ['admin', 'agent', 'searcher', 'affiliate'];
 const STATUSES: readonly Status[] = ['active', 'suspended'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
+const NOT_ALLOWED = 'Only admins can manage the team.';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -39,6 +42,8 @@ function friendlyError(e: unknown): string {
 }
 
 export async function createUser(formData: FormData): Promise<ActionResult> {
+  if (!(await getAuthorizedUser('/admin/team'))) return { ok: false, error: NOT_ALLOWED };
+
   const name = field(formData, 'name');
   const email = field(formData, 'email').toLowerCase();
   const password = String(formData.get('password') ?? '');
@@ -80,6 +85,8 @@ export async function createUser(formData: FormData): Promise<ActionResult> {
 }
 
 export async function updateUser(id: number, formData: FormData): Promise<ActionResult> {
+  if (!(await getAuthorizedUser('/admin/team'))) return { ok: false, error: NOT_ALLOWED };
+
   const name = field(formData, 'name');
   const role = field(formData, 'role') as Role;
   const status = field(formData, 'status') as Status;
@@ -112,6 +119,7 @@ export async function updateUser(id: number, formData: FormData): Promise<Action
 }
 
 export async function setStatus(id: number, status: Status): Promise<ActionResult> {
+  if (!(await getAuthorizedUser('/admin/team'))) return { ok: false, error: NOT_ALLOWED };
   if (!STATUSES.includes(status)) return { ok: false, error: 'Invalid status.' };
   const payload = await getPayloadClient();
   try {
@@ -125,6 +133,7 @@ export async function setStatus(id: number, status: Status): Promise<ActionResul
 }
 
 export async function resetPassword(id: number, password: string): Promise<ActionResult> {
+  if (!(await getAuthorizedUser('/admin/team'))) return { ok: false, error: NOT_ALLOWED };
   if (password.length < MIN_PASSWORD)
     return { ok: false, error: `Password must be at least ${MIN_PASSWORD} characters.` };
   const payload = await getPayloadClient();
