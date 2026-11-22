@@ -132,7 +132,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
 
   // Pass the request through, forwarding the authoritative pathname so the /admin
-  // server layout can read it (per-role page gate + "auth screens render bare").
+  // server layout can read it (which section to show + "auth screens render bare").
   // Overwritten unconditionally, so a client can't spoof x-pathname.
   const forwarded = () => {
     const headers = new Headers(req.headers);
@@ -148,9 +148,9 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
 
   // Fast edge pre-filter: verify the payload-token JWT (signature + expiry) and
   // read role/status from it — NO DB. This is coarse "is this an active staff
-  // session"; per-role page authorization is enforced authoritatively in the
-  // Node /admin layout + each page via payload.auth (which sees revocations and
-  // post-login role/status changes the JWT can't).
+  // session"; per-role authorization is enforced by each admin page, server
+  // action and /api/admin route via payload.auth (which sees revocations and
+  // post-login role/status changes the JWT can't). See src/lib/auth.ts.
   const staff = await verifyStaffToken(req.cookies.get(SESSION_COOKIE)?.value);
   const isStaff = isActiveStaff(staff);
 

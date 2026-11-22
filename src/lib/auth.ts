@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { cache } from 'react';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -21,8 +22,12 @@ export type CurrentUser = {
   referralCode?: string | null;
 };
 
-/** The logged-in Payload user, or null. Never throws/redirects. */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+/**
+ * The logged-in Payload user, or null. Never throws/redirects. Cached for the
+ * request: the layout, the page and an action's audit log all ask, and each
+ * `payload.auth` is a database read.
+ */
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const payload = await getPayloadClient();
   const { user } = await payload.auth({ headers: await headers() });
   if (!user || user.collection !== 'users' || !isRole(user.role)) return null;
@@ -34,7 +39,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     status: user.status ?? 'active',
     referralCode: user.referralCode ?? null,
   };
-}
+});
 
 /** Require any active staff user; redirect to the login otherwise. */
 export async function requireUser(fromPath?: string): Promise<CurrentUser> {

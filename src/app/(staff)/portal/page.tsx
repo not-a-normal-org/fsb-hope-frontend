@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -25,8 +26,9 @@ export default async function PortalPage() {
   const payload = await getPayloadClient();
   const { user } = await payload.auth({ headers: await headers() });
 
-  // The layout already gates this; re-check to satisfy types and be safe.
-  if (!user || user.collection !== 'users') redirect('/login');
+  // The layout checks this too, but Next renders this page alongside it and would
+  // stream the page even after the layout redirects, so the page checks itself.
+  if (!user || user.collection !== 'users' || user.status !== 'active') redirect('/login');
 
   const roleLabel = ROLE_LABELS[user.role] ?? user.role;
 
@@ -51,12 +53,12 @@ export default async function PortalPage() {
             Use the admin console to manage accounts, customers, and content.
           </p>
           {user.role === 'admin' && (
-            <a
+            <Link
               href="/admin"
               className="sm-cta-ghost mt-5 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium"
             >
               Go to admin console
-            </a>
+            </Link>
           )}
         </GlassPanel>
       )}

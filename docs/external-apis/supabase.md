@@ -79,16 +79,17 @@ unauthenticated request:
 
 The proxy is only a pre-filter, though. It lets through any token whose claims
 say "active staff", whatever the role, and those claims can be 8 hours old.
-Until 2026-11-22 the per-role check lived only in the `/admin` layout, which
-was not enough:
+Until 2026-11-22 the admin pages and most server actions relied on the
+`/admin` layout for that check (these two routes did check the role, but not
+that the account was active). That was not enough:
 
 - Next renders a page alongside its layout, so a redirect in the layout still
   streams the page's data in the response body. Any signed-in searcher or
   affiliate could read every admin page with a direct request. For an account
   suspended or deleted since its sign-in, the layout skipped the role check and
   rendered every page in full.
-- Server actions are POST endpoints that run before any page renders, and only
-  the region-access ones checked their caller.
+- Server actions are POST endpoints that run before any page renders. Only
+  the region-access actions and `updateLead` checked their caller.
 
 Now every server-rendered `/admin` page calls `requireAdminPath` before it
 loads anything. Every admin server action and `/api/admin` route calls

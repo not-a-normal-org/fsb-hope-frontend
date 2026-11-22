@@ -88,7 +88,8 @@ for a missing/expired/tampered `payload-token`, and `MAINTENANCE_ENABLED` defaul
 on — so a deploy that forgets `PAYLOAD_SECRET` or `MAINTENANCE_MODE` shows the
 public the notice rather than leaking the site. The edge check reads role/status
 from the JWT (login-time values, up to the 8h session length); the authoritative
-check is `payload.auth` in the `/admin` layout.
+check is `payload.auth`, run by each admin page, server action and `/api/admin`
+route itself.
 
 **The proxy matcher is a catch-all** covering `/admin/*` and `/api/admin/*`. If you
 narrow it, keep both prefixes: `/api/admin/*` is **not** covered by `/admin/:path*`,

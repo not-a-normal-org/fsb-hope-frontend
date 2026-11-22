@@ -22,7 +22,8 @@ import { hasRole, CMS_CONTENT_ROLES, STAFF_SESSION_SECONDS } from '../lib/access
  *    future per-role portal will build on.
  *  - The app's own admin console (/admin/team) manages users through the *local
  *    API* with `overrideAccess` on, so it is intentionally not constrained by
- *    these rules; it is gated instead by the shared-secret wall in `src/proxy.ts`.
+ *    these rules; each of those actions checks for an active admin itself
+ *    (`getAuthorizedUser` in src/lib/auth.ts).
  *
  * Legacy note: the original seeded operators had no `role` column. `role` is
  * `required` with `defaultValue: 'admin'`, so Payload's push backfills those rows

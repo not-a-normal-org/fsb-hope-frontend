@@ -4,7 +4,7 @@ import { requireAdminPath } from '@/lib/auth';
 /**
  * /admin/referrals — read-only attribution view. Admins see every referred lead;
  * an affiliate sees only the leads carrying their own referral code (no customer
- * PII — route/status only). Access is gated by the /admin layout (admin+affiliate).
+ * PII — route/status only). The page checks its caller itself (admin+affiliate).
  */
 export const dynamic = 'force-dynamic';
 
