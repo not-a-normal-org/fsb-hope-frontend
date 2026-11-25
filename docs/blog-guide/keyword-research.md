@@ -390,7 +390,13 @@ The ranking weighs demand, how useful the human-specialist angle really is, how 
 9. `amex-vs-chase-points`: Amex vs. Chase Points for Award Flights. High demand, strong incumbents, risk of drifting into affiliate content.
 10. `points-devaluation-protect-your-balance`: Points Devaluations: How to Protect Your Balance.
 11. `honeymoon-on-points`: A Honeymoon on Points: Two Seats Up Front. Keep it distinct from the family post.
-12. `when-airlines-release-award-seats`: When Do Airlines Release Award Seats? Partly covered already; competitors win with tables.
+12. ~~`when-airlines-release-award-seats`~~ **DONE 2026-11-20 as `when-to-book-award-flights`.** Written against
+    the ranking's own objection ("competitors win with tables") by not competing on the table. The post's
+    subject is the *first bookable date*, which is arithmetic the reader does for their own program, plus the
+    finding that several large programs (Delta, Atmos, Flying Blue, LifeMiles) publish no award window at all
+    and Qatar says in writing that its limits vary by tier, so the day counts everyone reprints are vendor
+    observations. The dual fact-check is what produced that angle: the primary-source pass could only confirm
+    5 of 13 published windows and found United's own site contradicting every tracker (331 vs 337).
 13. `business-card-points-personal-travel`: Using Business Card Points for Personal Travel. Needs a tax-advice disclaimer.
 14. `hawaii-flights-with-points` (deals): Hawaii on Points After the Alaska and Hawaiian Merger. Wait until Atmos Rewards settles.
 
