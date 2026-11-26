@@ -49,7 +49,7 @@ A handful of programs, several of them among the most useful for premium cabins,
 - **Singapore Airlines KrisFlyer:** up to five redemption nominees. Adding one is free, but a nominee can't be removed or replaced for six months, and changes after that cost a fee for most members. A new nominee can only be booked on flights departing more than 72 hours after being added.
 - **Qatar Airways Privilege Club:** since June 2026, Qatar has limited award tickets to the member and the people on their My List or Family & Friends group, with extra leeway for Gold and Platinum members. It eased some conditions in September, and the details have changed more than once, so check the current terms before you plan around Qatar for someone else.
 
-The common thread is lead time. These lists take effort to set up, some of them lock once set, and none of them help if the person you want to fly isn't eligible to be on one. If one of these programs is the plan, register or nominate the traveler wherever the program requires it, well before you intend to book, not on the day the seat appears.
+The common thread is lead time. These lists take effort to set up, some of them lock once set, and none of them help if the person you want to fly isn't eligible to be on one. If one of these programs is the plan, register or nominate the traveler wherever the program requires it, well before you intend to book, not on the day the seat appears. Our guide to [when award seats open](/blog/when-to-book-award-flights) shows how to work out the first day your program can sell the seat, which is the date to have the traveler registered by.
 
 ## When one program says no, book the same seat through another
 
