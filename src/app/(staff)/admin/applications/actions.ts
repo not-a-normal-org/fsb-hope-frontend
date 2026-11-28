@@ -139,8 +139,8 @@ export async function approveApplication(
     line_items: [{ price: priceId, quantity: 1 }],
     after_completion: {
       type: 'redirect',
-      // {CHECKOUT_SESSION_ID} is required so the dashboard can resolve the
-      // buyer's email server-side and gate the profile-setup step.
+      // /dashboard no longer exists (a 404); see docs/README.md before
+      // rebuilding it. A bare session id must not be its proof of identity.
       redirect: { url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}` },
     },
     metadata: { customer_id: customerId, tier },

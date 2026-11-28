@@ -42,7 +42,7 @@ into dynamic rendering.
 
 | Table | Written by | Notes |
 |---|---|---|
-| `customers` | webhook, `/api/apply`, `/api/profile`, admin actions | PII: name, email |
+| `customers` | webhook, `/api/apply`, admin actions | PII: name, email |
 | `subscriptions` | webhook, `admin/subscriptions` | Mirrors Stripe state |
 | `orders` | webhook | One-off purchases |
 | `products` | `admin/products` | Local catalogue |

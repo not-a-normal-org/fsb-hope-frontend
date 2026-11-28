@@ -77,8 +77,6 @@ origin.
 | Route | Stripe | Supabase | Resend |
 |---|:-:|:-:|:-:|
 | `POST /api/checkout` | ✓ | | |
-| `POST /api/profile` | ✓ | ✓ | |
-| `GET /api/profile/lookup` | ✓ | ✓ | |
 | `POST /api/webhooks/stripe` | ✓ | ✓ | ✓ |
 | `POST /api/apply` | | ✓ | ✓ |
 | `POST /api/contact` | | ✓ | ✓ |
