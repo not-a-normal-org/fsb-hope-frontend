@@ -46,7 +46,7 @@ Request:
   priceId: string;
   mode: 'subscription' | 'payment';
   customerEmail?: string;
-  metadata?: Record<string, string>;
+  metadata?: { product_key?: string; interval?: string }; // anything else is dropped
   successPath?: string; // same-origin path, e.g. '/alerts?checkout=success'
   cancelPath?: string;  // same-origin path, e.g. '/alerts/weekly'
   locale?: string;      // 'de' localizes both paths and Stripe's own page
@@ -70,21 +70,23 @@ the domain the visitor is on), **not** `NEXT_PUBLIC_APP_URL`. Production had tha
 until 2026-11-22, and paying customers were sent there. Paths are localized
 (`/de/...`) from the request's `locale`, and must be same-origin paths.
 
-### `metadata.product_key`
+### Session metadata
 
-The alert checkout (`AlertBuyBox`) stamps `product_key` (`weekly` / `human`)
-and `interval` into session metadata. The webhook does **not** act on it today:
-the only follow-up emails it sent were for the retired Research Report and Seat
-Alert products (`research`, `alerts_*`), and those branches are gone. A new
+The alert checkout (`AlertBuyBox` → `CheckoutButton`) stamps `product_key`
+(`weekly` / `human`) and `interval` (`monthly` / `annual`) into session
+metadata, so a session reads clearly in the Stripe dashboard. The webhook does
+**not** act on it: the only follow-up emails it sent were for the retired
+Research Report and Seat Alert products, and those branches are gone. A new
 alert purchase is recorded in the database but sends no email, to the customer
 or to `ADMIN_EMAIL`.
 
-> **This coupling is currently broken.** `CheckoutButton`, the component that
-> wrote `product_key`, was deleted with the frontend. The webhook still reads
-> it, so the branch is dead until the rebuild stamps it again — silently, with
-> no error anywhere. Whatever replaces that button must set `product_key`.
-
-`metadata.customer_id` is separate: see *resolveCustomer* below.
+The route keeps only those two keys, and only those values (`safeMetadata`).
+Until 2026-11-22 it forwarded whatever the request sent, and the webhook trusts
+`metadata.customer_id` to pick the customer row to update. A buyer could have
+sent another customer's id and had their own email and Stripe id written over
+that customer's row. The webhook now also ignores `customer_id` on any session
+that didn't come from a Payment Link: see *resolveCustomer* below. A new key
+must be added to `METADATA_VALUES` in the route, never passed through.
 
 ## Billing portal
 
@@ -122,7 +124,7 @@ production endpoint's are different values.
 
 | Event | Effect |
 |---|---|
-| `checkout.session.completed` | Resolve customer, write `orders` / `subscriptions`, send follow-up |
+| `checkout.session.completed` | Resolve customer, write `orders` / `subscriptions` (no email is sent) |
 | `customer.subscription.updated` | Sync status/period to `subscriptions` |
 | `customer.subscription.deleted` | Mark cancelled |
 | `invoice.paid` | Record payment |
@@ -136,11 +138,13 @@ event is enabled there too.
 
 Approved applicants carry their internal `customer_id` in session metadata
 (stamped onto the admin-generated payment link). When present, the webhook
-links the Stripe customer onto that **existing** row and activates it.
+links the Stripe customer onto that **existing** row and activates it. It reads
+`customer_id` only when `session.payment_link` is set: staff create Payment
+Links, while an `/api/checkout` session is built from a visitor's request.
 
-Without that link it would upsert a new row keyed only on
-`stripe_customer_id` — orphaning the application row and breaking the
-email-keyed profile lookup. Direct purchases carry no `customer_id`:
+Without linking to that row it would upsert a new row keyed only on
+`stripe_customer_id`, orphaning the application row. Direct purchases carry no
+`customer_id`:
 
 - **Alert checkout** (subscription): Stripe always creates a customer, so the
   row is upserted on `stripe_customer_id`.
