@@ -1,11 +1,13 @@
 SLUG: flying-blue-promo-rewards-business-new-york
 CATEGORY: deals
 TITLE: Air France Business for 45,000 Miles. The Cash Is the Catch.
-EXCERPT: Flying Blue is selling Europe to New York in business for 45,000 miles each way, and Capital One's November bonus makes that 37,500. The surcharge and the fare rules decide whether it is worth it.
+EXCERPT: Flying Blue's November promo put Europe to New York in business at 45,000 miles each way. It ended November 30, 2026; the surcharge and fare-rule lessons apply to every monthly edition.
 META_TITLE: Flying Blue Promo: Business to New York
-META_DESCRIPTION: Air France business between Europe and New York is 45,000 Flying Blue miles each way, or 37,500 Capital One miles with the 20 percent November bonus.
-COVER_ALT: Airline window seat with the promo price stamped over it: 45,000 miles each way in business, book by November 30, 2026
+META_DESCRIPTION: Flying Blue's November 2026 promo priced Air France business to New York at 45,000 miles. It has ended; here is what to check before the next edition.
+COVER_ALT: Two aircraft windows bright with daylight, a seat on the left and seat backs with tray tables on the right
 ---BODY---
+> Update, December 1, 2026: this promo and the Capital One bonus both ended on November 30. Flying Blue publishes new Promo Rewards at the start of every month, and the surcharge, fare-rule and transfer points below apply to each edition.
+
 
 **Air France is selling business class between Europe and New York for 45,000 Flying Blue miles each way, and Capital One's 20 percent transfer bonus brings the cost down to 37,500 Capital One miles.** Both run until November 30, 2026, and the travel window stretches to April 30, 2027. The seat is real and the discount is real. The cash surcharge, the fare rules and the transfer timing are where this one is won or lost.
 

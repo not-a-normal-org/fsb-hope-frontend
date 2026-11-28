@@ -1,11 +1,13 @@
 SLUG: flying-blue-promo-rewards-business-new-york
 CATEGORY: deals
 TITLE: Air France Business für 45.000 Meilen. Der Haken ist das Bargeld.
-EXCERPT: Flying Blue verkauft Europa nach New York in Business für 45.000 Meilen pro Strecke, mit dem Capital-One-Bonus für 37.500. Zuschlag und Tarifregeln entscheiden, ob sich das lohnt.
+EXCERPT: Flying Blues November-Aktion bot Business von Europa nach New York für 45.000 Meilen pro Strecke. Sie endete am 30. November 2026, doch die Lehren zu Zuschlag und Tarifregeln gelten für jede Ausgabe.
 META_TITLE: Flying Blue Promo: Business nach New York
-META_DESCRIPTION: Air France Business zwischen Europa und New York kostet 45.000 Flying-Blue-Meilen pro Strecke, mit dem 20-Prozent-Bonus im November 37.500 Capital-One-Meilen.
-COVER_ALT: Fensterplatz im Flugzeug mit aufgedrucktem Aktionspreis: 45.000 Meilen pro Strecke in Business, Buchung bis 30. November 2026
+META_DESCRIPTION: Flying Blues November-Aktion 2026 bot Air France Business nach New York für 45.000 Meilen. Sie ist vorbei; das sollten Sie vor der nächsten Ausgabe prüfen.
+COVER_ALT: Zwei Flugzeugfenster voller Tageslicht, links ein Sitz, rechts Rückenlehnen mit Klapptischen
 ---BODY---
+> Update vom 1. Dezember 2026: Diese Aktion und der Capital-One-Bonus sind am 30. November ausgelaufen. Flying Blue veröffentlicht zu Beginn jedes Monats neue Promo Rewards, und die Punkte zu Zuschlag, Tarifregeln und Übertragung unten gelten für jede Ausgabe.
+
 
 **Air France verkauft Business Class zwischen Europa und New York für 45.000 Flying-Blue-Meilen pro Strecke, und der 20-Prozent-Transferbonus von Capital One senkt den Preis auf 37.500 Capital-One-Meilen.** Beides läuft bis zum 30. November 2026, der Reisezeitraum reicht bis zum 30. April 2027. Der Platz ist echt und der Rabatt ist echt. Entschieden wird die Sache beim Barzuschlag, bei den Tarifregeln und beim Zeitpunkt des Transfers.
 
