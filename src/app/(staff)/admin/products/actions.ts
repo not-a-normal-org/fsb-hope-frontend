@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { requireAuthorizedUser } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ── Shared ────────────────────────────────────────────────────────────────────
@@ -16,6 +17,8 @@ function parseFeatures(raw: string): string[] {
 // ── Actions ───────────────────────────────────────────────────────────────────
 
 export async function createProduct(formData: FormData): Promise<void> {
+  await requireAuthorizedUser('/admin/products');
+
   const type             = formData.get('type') as 'subscription' | 'one_off';
   const billingInterval  = formData.get('billing_interval') as string;
 
@@ -37,6 +40,8 @@ export async function createProduct(formData: FormData): Promise<void> {
 }
 
 export async function updateProduct(id: string, formData: FormData): Promise<void> {
+  await requireAuthorizedUser('/admin/products');
+
   const { error } = await supabaseAdmin
     .from('products')
     .update({
@@ -58,6 +63,8 @@ export async function toggleProductActive(
   id: string,
   currentActive: boolean,
 ): Promise<void> {
+  await requireAuthorizedUser('/admin/products');
+
   const { error } = await supabaseAdmin
     .from('products')
     .update({ is_active: !currentActive })

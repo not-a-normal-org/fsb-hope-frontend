@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ExportCSVButton } from './ExportCSVButton';
 import { unsubscribeUser } from './actions';
+import { requireAdminPath } from '@/lib/auth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -25,6 +26,7 @@ function fmtDate(iso: string | null): string {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function NewsletterPage() {
+  await requireAdminPath('/admin/newsletter');
   const { data: rows } = await supabaseAdmin
     .from('newsletter_subscribers')
     .select('id, email, full_name, source, is_active, created_at')

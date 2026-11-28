@@ -1,10 +1,10 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { getCurrentUser } from '@/lib/auth';
+import { requireAdminPath } from '@/lib/auth';
 
 /**
  * /admin/referrals — read-only attribution view. Admins see every referred lead;
  * an affiliate sees only the leads carrying their own referral code (no customer
- * PII — route/status only). Access is gated by the /admin layout (admin+affiliate).
+ * PII — route/status only). The page checks its caller itself (admin+affiliate).
  */
 export const dynamic = 'force-dynamic';
 
@@ -25,9 +25,9 @@ function fmtDate(iso: string): string {
 }
 
 export default async function ReferralsPage() {
-  const user = await getCurrentUser();
-  const isAffiliate = user?.role === 'affiliate';
-  const code = user?.referralCode ?? null;
+  const user = await requireAdminPath('/admin/referrals');
+  const isAffiliate = user.role === 'affiliate';
+  const code = user.referralCode ?? null;
 
   let query = supabaseAdmin
     .from('leads')

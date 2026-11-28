@@ -7,14 +7,19 @@ import { navForRole, canAccessAdminPath, adminHome } from '@/lib/access';
 import AdminShell from './AdminShell';
 
 /**
- * /admin layout — the console chrome AND the single per-role page gate.
+ * /admin layout — the console chrome, shown only to a signed-in account whose
+ * role opens the page.
  *
  * Server component: reads the Payload session (`payload.auth`, the authoritative
  * check) and the `x-pathname` header the proxy stamps on each admin request.
- *  - No active user → render children bare (only `/admin/login` reaches here for
- *    anonymous visitors; proxy.ts redirects every other /admin route to login).
+ *  - No active user → redirect to login. The proxy lets through any token whose
+ *    claims say "active staff", including one for an account suspended since.
  *  - Active user on a path their role can't open → redirect to their home section.
  *  - Otherwise render the role-filtered console shell.
+ *
+ * These redirects keep the chrome right but are not the page gate: Next renders
+ * the page alongside this layout and streams its data even when the layout
+ * redirects. Each page checks its caller first (lib/auth.ts `requireAdminPath`).
  */
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await getCurrentUser();
 
   if (!user || user.status !== 'active') {
-    return <>{children}</>;
+    redirect(`/admin/login?from=${encodeURIComponent(pathname || '/admin')}`);
   }
 
   if (pathname && !canAccessAdminPath(user.role, pathname)) {

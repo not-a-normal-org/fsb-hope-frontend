@@ -7,7 +7,8 @@
  * can read them here without a DB call. This proves the token was validly issued
  * and not expired; it CANNOT see a server-side revocation or a role/status change
  * made after issue (for up to the session length, STAFF_SESSION_SECONDS — 8h).
- * The authoritative check stays in the Node `/admin` layout via `payload.auth`.
+ * The authoritative check is `payload.auth`, run by each admin page, server
+ * action and /api/admin route (src/lib/auth.ts).
  *
  * The signing key is NOT the raw PAYLOAD_SECRET — Payload derives it as
  * `sha256(PAYLOAD_SECRET)` hex-encoded, first 32 chars (see Payload's initSecret).

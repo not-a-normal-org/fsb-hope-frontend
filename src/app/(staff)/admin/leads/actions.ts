@@ -4,14 +4,17 @@ import { revalidatePath } from 'next/cache';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { LEAD_DETAIL_KEYS, LEAD_STATUSES } from '@/lib/leads';
-import { getCurrentUser } from '@/lib/auth';
+import { getAuthorizedUser, requireAuthorizedUser } from '@/lib/auth';
 import { hasRole } from '@/lib/access';
 import { logAudit } from '@/lib/audit';
 
 /**
  * Admin actions over the `leads` table. `assigned_to` holds the Payload user id
- * of the searcher/agent working the lead (their portal filters on it). Reachable
- * only behind the /admin proxy gate, like every other admin action.
+ * of the searcher/agent working the lead (their portal filters on it).
+ *
+ * Each action checks its caller (lib/auth.ts `getAuthorizedUser`). Assigning and
+ * setting a status are open to every role that opens /admin/leads, searchers
+ * included, as the page offers them both; editing is admin/agent only.
  */
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,8 +47,8 @@ function clean(v: string | undefined, max = 2000): string | null {
  * user is recorded in the audit log.
  */
 export async function updateLead(leadId: string, input: UpdateLeadInput): Promise<LeadActionResult> {
-  const user = await getCurrentUser();
-  if (!hasRole(user, ['admin', 'agent'])) {
+  const user = await getAuthorizedUser('/admin/leads');
+  if (!user || !hasRole(user, ['admin', 'agent'])) {
     return { ok: false, error: 'You do not have permission to edit leads.' };
   }
 
@@ -91,6 +94,7 @@ export async function updateLead(leadId: string, input: UpdateLeadInput): Promis
 }
 
 export async function assignLead(leadId: string, assignedTo: number | null): Promise<void> {
+  await requireAuthorizedUser('/admin/leads');
   const { error } = await supabaseAdmin
     .from('leads')
     .update({ assigned_to: assignedTo })
@@ -100,6 +104,7 @@ export async function assignLead(leadId: string, assignedTo: number | null): Pro
 }
 
 export async function setLeadStatus(leadId: string, status: string): Promise<void> {
+  await requireAuthorizedUser('/admin/leads');
   if (!(LEAD_STATUSES as readonly string[]).includes(status)) {
     throw new Error(`setLeadStatus: invalid status "${status}"`);
   }

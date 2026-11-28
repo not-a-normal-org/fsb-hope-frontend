@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requireAdminPath } from '@/lib/auth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -107,6 +108,7 @@ function formatDate(iso: string): string {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AdminDashboardPage() {
+  await requireAdminPath('/admin');
   const {
     totalCustomers,
     activeSubscriptions,

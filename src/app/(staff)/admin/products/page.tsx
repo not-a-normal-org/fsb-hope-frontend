@@ -1,7 +1,9 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { ProductsClient, type Product } from './ProductsClient';
+import { requireAdminPath } from '@/lib/auth';
 
 export default async function ProductsPage() {
+  await requireAdminPath('/admin/products');
   const { data, error } = await supabaseAdmin
     .from('products')
     .select(

@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { planNameByPriceId } from '@/lib/plans';
 import { cancelSubscription } from './actions';
+import { requireAdminPath } from '@/lib/auth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -111,6 +112,7 @@ async function fetchData() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function SubscriptionsPage() {
+  await requireAdminPath('/admin/subscriptions');
   const { subscriptions, activeCount, pastDueCount, arrCents, priceMap } = await fetchData();
 
   return (

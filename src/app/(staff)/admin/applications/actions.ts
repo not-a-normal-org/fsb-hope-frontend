@@ -6,6 +6,7 @@ import { sendEmail } from '@/lib/email';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit';
+import { requireAuthorizedUser } from '@/lib/auth';
 import { SITE_LEGAL_NAME, SITE_ADDRESS_INLINE } from '@/lib/constants';
 
 // ── Email helpers ─────────────────────────────────────────────────────────────
@@ -131,6 +132,8 @@ export async function approveApplication(
   customerName: string,
   tier: string,
 ): Promise<void> {
+  await requireAuthorizedUser('/admin/applications');
+
   // 1. Create Stripe Payment Link
   const paymentLink = await stripe.paymentLinks.create({
     line_items: [{ price: priceId, quantity: 1 }],
@@ -181,6 +184,8 @@ export async function rejectApplication(
   customerEmail: string,
   customerName: string,
 ): Promise<void> {
+  await requireAuthorizedUser('/admin/applications');
+
   // 1. Update customer status
   const { error: updateError } = await supabaseAdmin
     .from('customers')

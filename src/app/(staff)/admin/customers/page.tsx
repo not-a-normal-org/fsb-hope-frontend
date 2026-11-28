@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { tierKeyFromTags } from '@/lib/tiers';
 import { TierSelect } from './TierSelect';
+import { requireAdminPath } from '@/lib/auth';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -85,6 +86,7 @@ export default async function CustomersPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  await requireAdminPath('/admin/customers');
   const { status: rawStatus } = await searchParams;
   const activeTab = TABS.some((t) => t.value === rawStatus) ? (rawStatus ?? 'all') : 'all';
 

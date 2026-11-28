@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getPayloadClient } from '@/lib/payload';
-import { getCurrentUser } from '@/lib/auth';
+import { requireAdminPath } from '@/lib/auth';
 import { describeLead, leadSummary, formatReceived } from '@/lib/leads';
 import { AssigneeSelect, StatusSelect, LeadEditButton, LeadViewButton, type Account } from './LeadRowControls';
 
@@ -105,11 +105,11 @@ export default async function LeadsPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  const user = await requireAdminPath('/admin/leads');
   const { status: rawStatus } = await searchParams;
   const activeTab = TABS.some((t) => t.value === rawStatus) ? (rawStatus ?? 'all') : 'all';
 
-  const user = await getCurrentUser();
-  const redactPII = user?.role === 'searcher';
+  const redactPII = user.role === 'searcher';
 
   const [{ leads, totalCount, error }, accounts] = await Promise.all([
     fetchLeads(activeTab, redactPII),

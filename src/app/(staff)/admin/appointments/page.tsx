@@ -1,4 +1,5 @@
 import { Calendar, ExternalLink } from 'lucide-react';
+import { requireAdminPath } from '@/lib/auth';
 
 // Appointments/bookings live in Cal.com, not in our database. This page reads
 // them through the Cal.com API v2 when CAL_API_KEY is configured. Without a key
@@ -126,6 +127,7 @@ function SetupState() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function AppointmentsPage() {
+  await requireAdminPath('/admin/appointments');
   const { configured, bookings, error } = await fetchBookings();
 
   if (!configured) {

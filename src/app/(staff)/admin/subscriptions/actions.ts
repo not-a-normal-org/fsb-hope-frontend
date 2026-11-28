@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { logAudit } from '@/lib/audit';
+import { requireAuthorizedUser } from '@/lib/auth';
 
 /**
  * Cancel an active Stripe subscription and mark it canceled in Supabase.
@@ -14,6 +15,8 @@ export async function cancelSubscription(
   subscriptionId: string,
   stripeSubId: string,
 ): Promise<void> {
+  await requireAuthorizedUser('/admin/subscriptions');
+
   // Cancel immediately in Stripe (at_period_end=false means instant cancellation)
   await stripe.subscriptions.cancel(stripeSubId);
 
